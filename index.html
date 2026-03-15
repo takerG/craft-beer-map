@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Craft Beer Style Map</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:wght@600;700&family=IBM+Plex+Sans:wght@300;400;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="app">
+      <aside class="panel">
+        <div class="brand">
+          <div class="brand-mark"></div>
+          <div>
+            <div class="brand-title">Craft Beer Style Map</div>
+            <div class="brand-subtitle">A visual atlas inspired by BJCP</div>
+          </div>
+        </div>
+
+        <div class="search">
+          <input id="searchInput" type="search" placeholder="Search styles..." />
+        </div>
+
+        <div class="legend" id="legend"></div>
+
+        <div class="details" id="details">
+          <div class="details-title">Select a style</div>
+          <div class="details-body">
+            Hover or click a node to explore its history, flavor, and lineage.
+          </div>
+        </div>
+      </aside>
+
+      <main class="map-area">
+        <div class="map-header">
+          <div class="map-title">Style Evolution Map</div>
+          <div class="map-controls">
+            <button id="zoomIn" type="button">+</button>
+            <button id="zoomOut" type="button">-</button>
+            <button id="resetView" type="button">Reset</button>
+          </div>
+        </div>
+        <div class="map-wrap">
+          <svg id="map" viewBox="0 0 1200 800" role="img" aria-label="Beer style map">
+            <defs>
+              <filter id="softGlow" x="-50%" y="-50%" width="200%" height="200%">
+                <feGaussianBlur in="SourceGraphic" stdDeviation="6" result="blur" />
+                <feMerge>
+                  <feMergeNode in="blur" />
+                  <feMergeNode in="SourceGraphic" />
+                </feMerge>
+              </filter>
+            </defs>
+          </svg>
+        </div>
+      </main>
+    </div>
+
+    <div id="tooltip" class="tooltip" role="status" aria-live="polite"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+    <script src="app.js"></script>
+  </body>
+</html>

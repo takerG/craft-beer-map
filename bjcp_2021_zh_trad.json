@@ -1,0 +1,949 @@
+{
+  "source": {
+    "name": "BJCP 2021 Beer Style Guidelines (Traditional Chinese)",
+    "url": "https://www.bjcp.org/beer-styles/"
+  },
+  "categories": [
+    {
+      "id": "1",
+      "name_zh": "標準型美國啤酒",
+      "name_en": "Standard American Beer"
+    },
+    {
+      "id": "2",
+      "name_zh": "國際拉格啤酒",
+      "name_en": "International Lager"
+    },
+    {
+      "id": "3",
+      "name_zh": "捷克拉格啤酒",
+      "name_en": "Czech Lager"
+    },
+    {
+      "id": "4",
+      "name_zh": "歐洲麥芽型淺色拉格",
+      "name_en": "Pale Malty European Lager"
+    },
+    {
+      "id": "5",
+      "name_zh": "歐洲苦味型淺色拉格",
+      "name_en": "Pale Bitter European Lager"
+    },
+    {
+      "id": "6",
+      "name_zh": "歐洲麥芽型琥珀拉格",
+      "name_en": "Amber European Lager"
+    },
+    {
+      "id": "7",
+      "name_zh": "歐洲苦味型琥珀拉格",
+      "name_en": "Amber Bitter European Lager"
+    },
+    {
+      "id": "9",
+      "name_zh": "歐洲烈啤酒",
+      "name_en": "Strong European Beer"
+    },
+    {
+      "id": "10",
+      "name_zh": "德國小麥啤酒",
+      "name_en": "German Wheat Beer"
+    },
+    {
+      "id": "11",
+      "name_zh": "英國淺色苦愛爾",
+      "name_en": "British Bitter"
+    },
+    {
+      "id": "12",
+      "name_zh": "大英帝國淺色啤酒",
+      "name_en": "Pale Commonwealth Beer"
+    },
+    {
+      "id": "13",
+      "name_zh": "英國棕色啤酒",
+      "name_en": "Brown British Beer"
+    },
+    {
+      "id": "14",
+      "name_zh": "蘇格蘭愛爾",
+      "name_en": "Scottish Ale"
+    },
+    {
+      "id": "15",
+      "name_zh": "愛爾蘭啤酒",
+      "name_en": "Irish Beer"
+    },
+    {
+      "id": "16",
+      "name_zh": "英國深色啤酒",
+      "name_en": "British Dark Beer"
+    },
+    {
+      "id": "17",
+      "name_zh": "英國烈愛爾",
+      "name_en": "Strong British Ale"
+    },
+    {
+      "id": "18",
+      "name_zh": "美國淺色愛爾啤酒",
+      "name_en": "Pale American Ale"
+    },
+    {
+      "id": "20",
+      "name_zh": "美國黑色啤酒",
+      "name_en": "American Porter and Stout"
+    },
+    {
+      "id": "21",
+      "name_zh": "印度淺色愛爾啤酒",
+      "name_en": "IPA"
+    },
+    {
+      "id": "22",
+      "name_zh": "美國烈味愛爾",
+      "name_en": "Strong American Ale"
+    },
+    {
+      "id": "23",
+      "name_zh": "歐洲酸味愛爾",
+      "name_en": "European Sour Ale"
+    },
+    {
+      "id": "24",
+      "name_zh": "比利時愛爾",
+      "name_en": "Belgian Ale"
+    },
+    {
+      "id": "25",
+      "name_zh": "比利時烈味愛爾",
+      "name_en": "Strong Belgian Ale"
+    },
+    {
+      "id": "26",
+      "name_zh": "比利時修道院啤酒",
+      "name_en": "Monastic Ale"
+    },
+    {
+      "id": "27",
+      "name_zh": "歷史傳統類型",
+      "name_en": "Historical Beer"
+    }
+  ],
+  "styles": [
+    {
+      "id": "1A",
+      "code": "1A",
+      "name_zh": "美式淡拉格",
+      "name_en": "American Light Lager",
+      "category": "1",
+      "type": "style"
+    },
+    {
+      "id": "1B",
+      "code": "1B",
+      "name_zh": "美式拉格",
+      "name_en": "American Lager",
+      "category": "1",
+      "type": "style"
+    },
+    {
+      "id": "1C",
+      "code": "1C",
+      "name_zh": "奶油混合愛爾",
+      "name_en": "Cream Ale",
+      "category": "1",
+      "type": "style"
+    },
+    {
+      "id": "1D",
+      "code": "1D",
+      "name_zh": "美式小麥啤酒",
+      "name_en": "American Wheat Beer",
+      "category": "1",
+      "type": "style"
+    },
+    {
+      "id": "2A",
+      "code": "2A",
+      "name_zh": "國際淺色拉格",
+      "name_en": "International Pale Lager",
+      "category": "2",
+      "type": "style"
+    },
+    {
+      "id": "2B",
+      "code": "2B",
+      "name_zh": "國際琥珀拉格",
+      "name_en": "International Amber Lager",
+      "category": "2",
+      "type": "style"
+    },
+    {
+      "id": "2C",
+      "code": "2C",
+      "name_zh": "國際深色拉格",
+      "name_en": "International Dark Lager",
+      "category": "2",
+      "type": "style"
+    },
+    {
+      "id": "3A",
+      "code": "3A",
+      "name_zh": "捷克淺色拉格",
+      "name_en": "Czech Pale Lager",
+      "category": "3",
+      "type": "style"
+    },
+    {
+      "id": "3B",
+      "code": "3B",
+      "name_zh": "捷克特級淺色拉格",
+      "name_en": "Czech Premium Pale Lager",
+      "category": "3",
+      "type": "style"
+    },
+    {
+      "id": "3C",
+      "code": "3C",
+      "name_zh": "捷克琥珀拉格",
+      "name_en": "Czech Amber Lager",
+      "category": "3",
+      "type": "style"
+    },
+    {
+      "id": "3D",
+      "code": "3D",
+      "name_zh": "捷克深色拉格",
+      "name_en": "Czech Dark Lager",
+      "category": "3",
+      "type": "style"
+    },
+    {
+      "id": "4A",
+      "code": "4A",
+      "name_zh": "慕尼黑淺色拉格",
+      "name_en": "Munich Helles",
+      "category": "4",
+      "type": "style"
+    },
+    {
+      "id": "4B",
+      "code": "4B",
+      "name_zh": "慶典啤酒",
+      "name_en": "Festbier",
+      "category": "4",
+      "type": "style"
+    },
+    {
+      "id": "4C",
+      "code": "4C",
+      "name_zh": "淺色烈拉格",
+      "name_en": "Helles Bock",
+      "category": "4",
+      "type": "style"
+    },
+    {
+      "id": "5A",
+      "code": "5A",
+      "name_zh": "德式淡拉格",
+      "name_en": "German Leichtbier",
+      "category": "5",
+      "type": "style"
+    },
+    {
+      "id": "5B",
+      "code": "5B",
+      "name_zh": "科隆啤酒",
+      "name_en": "K ölsch",
+      "category": "5",
+      "type": "style"
+    },
+    {
+      "id": "5C",
+      "code": "5C",
+      "name_zh": "德式出口型淺色拉格",
+      "name_en": "German Helles Exportbier",
+      "category": "5",
+      "type": "style"
+    },
+    {
+      "id": "5D",
+      "code": "5D",
+      "name_zh": "德式皮爾森",
+      "name_en": "German Pils",
+      "category": "5",
+      "type": "style"
+    },
+    {
+      "id": "6A",
+      "code": "6A",
+      "name_zh": "三月啤酒",
+      "name_en": "M ärzen",
+      "category": "6",
+      "type": "style"
+    },
+    {
+      "id": "6B",
+      "code": "6B",
+      "name_zh": "煙燻啤酒",
+      "name_en": "Rauchbier",
+      "category": "6",
+      "type": "style"
+    },
+    {
+      "id": "6C",
+      "code": "6C",
+      "name_zh": "深色烈拉格",
+      "name_en": "Dunkles Bock",
+      "category": "6",
+      "type": "style"
+    },
+    {
+      "id": "7A",
+      "code": "7A",
+      "name_zh": "維也納拉格",
+      "name_en": "Vienna Lager",
+      "category": "7",
+      "type": "style"
+    },
+    {
+      "id": "7B",
+      "code": "7B",
+      "name_zh": "杜塞道夫老啤酒",
+      "name_en": "Altbier",
+      "category": "7",
+      "type": "style"
+    },
+    {
+      "id": "8A",
+      "code": "8A",
+      "name_zh": "慕尼黑深色拉格",
+      "name_en": "Munich Dunkel",
+      "category": "7",
+      "type": "style"
+    },
+    {
+      "id": "8B",
+      "code": "8B",
+      "name_zh": "德式黑拉格",
+      "name_en": "Schwarzbier",
+      "category": "7",
+      "type": "style"
+    },
+    {
+      "id": "9A",
+      "code": "9A",
+      "name_zh": "雙倍烈拉格",
+      "name_en": "Doppelbock",
+      "category": "9",
+      "type": "style"
+    },
+    {
+      "id": "9B",
+      "code": "9B",
+      "name_zh": "冰萃烈拉格",
+      "name_en": "Eisbock",
+      "category": "9",
+      "type": "style"
+    },
+    {
+      "id": "9C",
+      "code": "9C",
+      "name_zh": "波羅的海波特",
+      "name_en": "Baltic Porter",
+      "category": "9",
+      "type": "style"
+    },
+    {
+      "id": "10A",
+      "code": "10A",
+      "name_zh": "德式小麥",
+      "name_en": "Weissbier",
+      "category": "10",
+      "type": "style"
+    },
+    {
+      "id": "10B",
+      "code": "10B",
+      "name_zh": "德式深色小麥",
+      "name_en": "Dunkles Weissbier",
+      "category": "10",
+      "type": "style"
+    },
+    {
+      "id": "10C",
+      "code": "10C",
+      "name_zh": "德式烈小麥啤酒",
+      "name_en": "Weizenbock",
+      "category": "10",
+      "type": "style"
+    },
+    {
+      "id": "11A",
+      "code": "11A",
+      "name_zh": "英式苦愛爾",
+      "name_en": "Ordinary Bitter",
+      "category": "11",
+      "type": "style"
+    },
+    {
+      "id": "11B",
+      "code": "11B",
+      "name_zh": "英式優質苦愛爾",
+      "name_en": "Best Bitter",
+      "category": "11",
+      "type": "style"
+    },
+    {
+      "id": "11C",
+      "code": "11C",
+      "name_zh": "英式特級苦愛爾",
+      "name_en": "Strong Bitter",
+      "category": "11",
+      "type": "style"
+    },
+    {
+      "id": "12A",
+      "code": "12A",
+      "name_zh": "英式金色愛爾",
+      "name_en": "British Golden Ale",
+      "category": "12",
+      "type": "style"
+    },
+    {
+      "id": "12B",
+      "code": "12B",
+      "name_zh": "澳式氣泡愛爾",
+      "name_en": "Australian Sparkling Ale",
+      "category": "12",
+      "type": "style"
+    },
+    {
+      "id": "12C",
+      "code": "12C",
+      "name_zh": "英式印度淺色愛爾",
+      "name_en": "English IPA",
+      "category": "12",
+      "type": "style"
+    },
+    {
+      "id": "13A",
+      "code": "13A",
+      "name_zh": "深色淡愛爾",
+      "name_en": "Dark Mild",
+      "category": "13",
+      "type": "style"
+    },
+    {
+      "id": "13B",
+      "code": "13B",
+      "name_zh": "英式棕色愛爾",
+      "name_en": "British Brown Ale",
+      "category": "13",
+      "type": "style"
+    },
+    {
+      "id": "13C",
+      "code": "13C",
+      "name_zh": "英式波特",
+      "name_en": "English Porter",
+      "category": "13",
+      "type": "style"
+    },
+    {
+      "id": "14A",
+      "code": "14A",
+      "name_zh": "蘇格蘭淡愛爾",
+      "name_en": "Scottish Light",
+      "category": "14",
+      "type": "style"
+    },
+    {
+      "id": "14B",
+      "code": "14B",
+      "name_zh": "蘇格蘭強愛爾",
+      "name_en": "Scottish Heavy",
+      "category": "14",
+      "type": "style"
+    },
+    {
+      "id": "14C",
+      "code": "14C",
+      "name_zh": "蘇格蘭出口型愛爾",
+      "name_en": "Scottish Export",
+      "category": "14",
+      "type": "style"
+    },
+    {
+      "id": "15A",
+      "code": "15A",
+      "name_zh": "愛爾蘭紅愛爾",
+      "name_en": "Irish Red Ale",
+      "category": "15",
+      "type": "style"
+    },
+    {
+      "id": "15B",
+      "code": "15B",
+      "name_zh": "愛爾蘭司陶特",
+      "name_en": "Irish Stout",
+      "category": "15",
+      "type": "style"
+    },
+    {
+      "id": "15C",
+      "code": "15C",
+      "name_zh": "愛爾蘭特級司陶特",
+      "name_en": "Irish Extra Stout",
+      "category": "15",
+      "type": "style"
+    },
+    {
+      "id": "16A",
+      "code": "16A",
+      "name_zh": "甜味型司陶特",
+      "name_en": "Sweet Stout",
+      "category": "16",
+      "type": "style"
+    },
+    {
+      "id": "16B",
+      "code": "16B",
+      "name_zh": "燕麥司陶特",
+      "name_en": "Oatmeal Stout",
+      "category": "16",
+      "type": "style"
+    },
+    {
+      "id": "16C",
+      "code": "16C",
+      "name_zh": "熱帶型司陶特",
+      "name_en": "Tropical Stout",
+      "category": "16",
+      "type": "style"
+    },
+    {
+      "id": "16D",
+      "code": "16D",
+      "name_zh": "出口型司陶特",
+      "name_en": "Foreign Extra Stout",
+      "category": "16",
+      "type": "style"
+    },
+    {
+      "id": "17A",
+      "code": "17A",
+      "name_zh": "英式烈愛爾",
+      "name_en": "British Strong Ale",
+      "category": "17",
+      "type": "style"
+    },
+    {
+      "id": "17B",
+      "code": "17B",
+      "name_zh": "英式陳年愛爾",
+      "name_en": "Old Ale",
+      "category": "17",
+      "type": "style"
+    },
+    {
+      "id": "17C",
+      "code": "17C",
+      "name_zh": "蘇格蘭烈愛爾",
+      "name_en": "Wee Heavy",
+      "category": "17",
+      "type": "style"
+    },
+    {
+      "id": "17D",
+      "code": "17D",
+      "name_zh": "英式大麥酒",
+      "name_en": "English Barley Wine",
+      "category": "17",
+      "type": "style"
+    },
+    {
+      "id": "18A",
+      "code": "18A",
+      "name_zh": "美式金色愛爾",
+      "name_en": "Blonde Ale",
+      "category": "18",
+      "type": "style"
+    },
+    {
+      "id": "18B",
+      "code": "18B",
+      "name_zh": "美式淺色愛爾",
+      "name_en": "American Pale Ale",
+      "category": "18",
+      "type": "style"
+    },
+    {
+      "id": "18B-lichtenhainer",
+      "code": "18B",
+      "name_zh": "BJCP 啤酒類型指南 2021年修訂版 繁體中文譯本 版權所有 © 啤酒霞 圖林根傳統小麥",
+      "name_en": "Lichtenhainer",
+      "category": "18",
+      "type": "variant",
+      "variant_of": "18B"
+    },
+    {
+      "id": "18B-london-brown-ale",
+      "code": "18B",
+      "name_zh": "倫敦棕色愛爾",
+      "name_en": "London Brown Ale",
+      "category": "18",
+      "type": "variant",
+      "variant_of": "18B"
+    },
+    {
+      "id": "18B-piwo-grodziskie",
+      "code": "18B",
+      "name_zh": "波蘭傳統小麥",
+      "name_en": "Piwo Grodziskie",
+      "category": "18",
+      "type": "variant",
+      "variant_of": "18B"
+    },
+    {
+      "id": "18B-pre-prohibition-lager",
+      "code": "18B",
+      "name_zh": "禁酒令前期型拉格",
+      "name_en": "Pre-Prohibition Lager",
+      "category": "18",
+      "type": "variant",
+      "variant_of": "18B"
+    },
+    {
+      "id": "18B-pre-prohibition-porter",
+      "code": "18B",
+      "name_zh": "禁酒令前期型波特",
+      "name_en": "Pre-Prohibition Porter",
+      "category": "18",
+      "type": "variant",
+      "variant_of": "18B"
+    },
+    {
+      "id": "18B-roggenbier",
+      "code": "18B",
+      "name_zh": "德式深色裸麥啤酒",
+      "name_en": "Roggenbier",
+      "category": "18",
+      "type": "variant",
+      "variant_of": "18B"
+    },
+    {
+      "id": "18B-sahti",
+      "code": "18B",
+      "name_zh": "芬蘭農莊啤酒",
+      "name_en": "Sahti",
+      "category": "18",
+      "type": "variant",
+      "variant_of": "18B"
+    },
+    {
+      "id": "19A",
+      "code": "19A",
+      "name_zh": "美式琥珀愛爾",
+      "name_en": "American Amber Ale",
+      "category": "18",
+      "type": "style"
+    },
+    {
+      "id": "19B",
+      "code": "19B",
+      "name_zh": "加州混合拉格",
+      "name_en": "California Common",
+      "category": "18",
+      "type": "style"
+    },
+    {
+      "id": "19C",
+      "code": "19C",
+      "name_zh": "美式棕色愛爾",
+      "name_en": "American Brown Ale",
+      "category": "18",
+      "type": "style"
+    },
+    {
+      "id": "20A",
+      "code": "20A",
+      "name_zh": "美式波特",
+      "name_en": "American Porter",
+      "category": "20",
+      "type": "style"
+    },
+    {
+      "id": "20B",
+      "code": "20B",
+      "name_zh": "美式司陶特",
+      "name_en": "American Stout",
+      "category": "20",
+      "type": "style"
+    },
+    {
+      "id": "20C",
+      "code": "20C",
+      "name_zh": "帝國司陶特",
+      "name_en": "Imperial Stout",
+      "category": "20",
+      "type": "style"
+    },
+    {
+      "id": "21A",
+      "code": "21A",
+      "name_zh": "美式IPA",
+      "name_en": "American IPA",
+      "category": "21",
+      "type": "style"
+    },
+    {
+      "id": "21B",
+      "code": "21B",
+      "name_zh": "特殊型IPA",
+      "name_en": "Specialty IPA",
+      "category": "21",
+      "type": "style"
+    },
+    {
+      "id": "21B-belgian-ipa",
+      "code": "21B",
+      "name_zh": "比利時IPA",
+      "name_en": "Belgian IPA",
+      "category": "21",
+      "type": "variant",
+      "variant_of": "21B"
+    },
+    {
+      "id": "21B-black-ipa",
+      "code": "21B",
+      "name_zh": "黑色IPA",
+      "name_en": "Black IPA",
+      "category": "21",
+      "type": "variant",
+      "variant_of": "21B"
+    },
+    {
+      "id": "21B-brown-ipa",
+      "code": "21B",
+      "name_zh": "棕色IPA",
+      "name_en": "Brown IPA",
+      "category": "21",
+      "type": "variant",
+      "variant_of": "21B"
+    },
+    {
+      "id": "21B-red-ipa",
+      "code": "21B",
+      "name_zh": "紅色IPA",
+      "name_en": "Red IPA",
+      "category": "21",
+      "type": "variant",
+      "variant_of": "21B"
+    },
+    {
+      "id": "21B-rye-ipa",
+      "code": "21B",
+      "name_zh": "裸麥IPA",
+      "name_en": "Rye IPA",
+      "category": "21",
+      "type": "variant",
+      "variant_of": "21B"
+    },
+    {
+      "id": "21B-white-ipa",
+      "code": "21B",
+      "name_zh": "小麥IPA",
+      "name_en": "White IPA",
+      "category": "21",
+      "type": "variant",
+      "variant_of": "21B"
+    },
+    {
+      "id": "21B-brut-ipa",
+      "code": "21B",
+      "name_zh": "乾爽型IPA",
+      "name_en": "Brut IPA",
+      "category": "21",
+      "type": "variant",
+      "variant_of": "21B"
+    },
+    {
+      "id": "21C",
+      "code": "21C",
+      "name_zh": "混濁型IPA",
+      "name_en": "Hazy IPA",
+      "category": "21",
+      "type": "style"
+    },
+    {
+      "id": "22A",
+      "code": "22A",
+      "name_zh": "雙倍IPA",
+      "name_en": "Double IPA",
+      "category": "22",
+      "type": "style"
+    },
+    {
+      "id": "22B",
+      "code": "22B",
+      "name_zh": "美式烈愛爾",
+      "name_en": "American Strong Ale",
+      "category": "22",
+      "type": "style"
+    },
+    {
+      "id": "22C",
+      "code": "22C",
+      "name_zh": "美式大麥酒",
+      "name_en": "American Barleywine",
+      "category": "22",
+      "type": "style"
+    },
+    {
+      "id": "22D",
+      "code": "22D",
+      "name_zh": "美式小麥酒",
+      "name_en": "Wheatwine",
+      "category": "22",
+      "type": "style"
+    },
+    {
+      "id": "23A",
+      "code": "23A",
+      "name_zh": "柏林小麥",
+      "name_en": "Berliner Weisse",
+      "category": "23",
+      "type": "style"
+    },
+    {
+      "id": "23B",
+      "code": "23B",
+      "name_zh": "法蘭德斯紅愛爾",
+      "name_en": "Flanders Red Ale",
+      "category": "23",
+      "type": "style"
+    },
+    {
+      "id": "23C",
+      "code": "23C",
+      "name_zh": "法蘭德斯棕愛爾",
+      "name_en": "Oud Bruin",
+      "category": "23",
+      "type": "style"
+    },
+    {
+      "id": "23D",
+      "code": "23D",
+      "name_zh": "布魯塞爾自然啤酒",
+      "name_en": "Lambic",
+      "category": "23",
+      "type": "style"
+    },
+    {
+      "id": "23E",
+      "code": "23E",
+      "name_zh": "布魯塞爾調和自然啤酒",
+      "name_en": "Gueuze",
+      "category": "23",
+      "type": "style"
+    },
+    {
+      "id": "23F",
+      "code": "23F",
+      "name_zh": "布魯塞爾水果自然啤酒",
+      "name_en": "Fruit Lambic",
+      "category": "23",
+      "type": "style"
+    },
+    {
+      "id": "23G",
+      "code": "23G",
+      "name_zh": "萊比錫小麥",
+      "name_en": "Gose",
+      "category": "23",
+      "type": "style"
+    },
+    {
+      "id": "24A",
+      "code": "24A",
+      "name_zh": "比利時小麥",
+      "name_en": "Witbier",
+      "category": "24",
+      "type": "style"
+    },
+    {
+      "id": "24B",
+      "code": "24B",
+      "name_zh": "比利時淺色愛爾",
+      "name_en": "Belgian Pale Ale",
+      "category": "24",
+      "type": "style"
+    },
+    {
+      "id": "24C",
+      "code": "24C",
+      "name_zh": "法式窖藏啤酒",
+      "name_en": "Bi ère de Garde",
+      "category": "24",
+      "type": "style"
+    },
+    {
+      "id": "25A",
+      "code": "25A",
+      "name_zh": "比利時金色愛爾",
+      "name_en": "Belgian Blond Ale",
+      "category": "25",
+      "type": "style"
+    },
+    {
+      "id": "25B",
+      "code": "25B",
+      "name_zh": "比利時季節啤酒",
+      "name_en": "Saison",
+      "category": "25",
+      "type": "style"
+    },
+    {
+      "id": "25C",
+      "code": "25C",
+      "name_zh": "比利時金黃烈愛爾",
+      "name_en": "Belgian Golden Strong Ale",
+      "category": "25",
+      "type": "style"
+    },
+    {
+      "id": "26A",
+      "code": "26A",
+      "name_zh": "比利時修士啤酒",
+      "name_en": "Belgian Single",
+      "category": "26",
+      "type": "style"
+    },
+    {
+      "id": "26B",
+      "code": "26B",
+      "name_zh": "比利時雙倍啤酒",
+      "name_en": "Belgian Dubbel",
+      "category": "26",
+      "type": "style"
+    },
+    {
+      "id": "26C",
+      "code": "26C",
+      "name_zh": "比利時三倍啤酒",
+      "name_en": "Belgian Tripel",
+      "category": "26",
+      "type": "style"
+    },
+    {
+      "id": "26D",
+      "code": "26D",
+      "name_zh": "比利時深色烈愛爾",
+      "name_en": "Belgian Dark Strong Ale",
+      "category": "26",
+      "type": "style"
+    }
+  ]
+}
