@@ -6,13 +6,20 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "build:data": "python scripts/extract_bjcp_2015_pdf.py && python scripts/parse_bjcp_2015_pdf.py && node scripts/build_bjcp_2015_data.cjs",
+    "build:all": "npm run build:data && npm run build"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/takerG/craft-beer-map.git"
   },
-  "keywords": ["beer", "bjcp", "visualization", "craft-beer"],
+  "keywords": [
+    "beer",
+    "bjcp",
+    "visualization",
+    "craft-beer"
+  ],
   "author": "",
   "license": "ISC",
   "devDependencies": {
