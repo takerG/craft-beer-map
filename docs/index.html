@@ -1,70 +1,81 @@
-<!doctype html>
-<html lang="en">
+<!DOCTYPE html>
+<html lang="zh-CN">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Craft Beer Style Map</title>
+    <title>精酿啤酒风格地图 | Craft Beer Style Map</title>
+    <meta name="description" content="以BJCP 2021指南为基础的精酿啤酒风格可视化地图，展示啤酒风格的分类、演化关系和详细介绍" />
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍺</text></svg>" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Fraunces:wght@600;700&family=IBM+Plex+Sans:wght@300;400;600&display=swap"
-      rel="stylesheet"
-    />
-    <link rel="stylesheet" href="styles.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet" />
+    <script type="module" crossorigin src="/craft-beer-map/assets/index-DKDKlV5N.js"></script>
+    <link rel="stylesheet" crossorigin href="/craft-beer-map/assets/index-BlmB5SOg.css">
   </head>
   <body>
-    <div class="app">
-      <aside class="panel">
-        <div class="brand">
-          <div class="brand-mark"></div>
-          <div>
-            <div class="brand-title">Craft Beer Style Map</div>
-            <div class="brand-subtitle">A visual atlas inspired by BJCP</div>
-          </div>
-        </div>
-
-        <div class="search">
-          <input id="searchInput" type="search" placeholder="Search styles..." />
-        </div>
-
-        <div class="legend" id="legend"></div>
-
-        <div class="details" id="details">
-          <div class="details-title">Select a style</div>
-          <div class="details-body">
-            Hover or click a node to explore its history, flavor, and lineage.
-          </div>
-        </div>
-      </aside>
-
-      <main class="map-area">
-        <div class="map-header">
-          <div class="map-title">Style Evolution Map</div>
-          <div class="map-controls">
-            <button id="zoomIn" type="button">+</button>
-            <button id="zoomOut" type="button">-</button>
-            <button id="resetView" type="button">Reset</button>
-          </div>
-        </div>
-        <div class="map-wrap">
-          <svg id="map" viewBox="0 0 1200 800" role="img" aria-label="Beer style map">
-            <defs>
-              <filter id="softGlow" x="-50%" y="-50%" width="200%" height="200%">
-                <feGaussianBlur in="SourceGraphic" stdDeviation="6" result="blur" />
-                <feMerge>
-                  <feMergeNode in="blur" />
-                  <feMergeNode in="SourceGraphic" />
-                </feMerge>
-              </filter>
-            </defs>
-          </svg>
-        </div>
-      </main>
+    <!-- Loading Overlay -->
+    <div id="loader" class="loader-overlay">
+      <div class="loader-content">
+        <div class="loader-icon">🍺</div>
+        <div class="loader-text">正在汇聚精酿星系...</div>
+      </div>
     </div>
 
-    <div id="tooltip" class="tooltip" role="status" aria-live="polite"></div>
+    <!-- Top Bar -->
+    <header class="top-bar" id="topBar">
+      <div class="brand">
+        <span class="brand-icon">🍺</span>
+        <div>
+          <h1 class="brand-title">精酿啤酒风格地图</h1>
+          <p class="brand-subtitle">BJCP 2021 Beer Style Visualization</p>
+        </div>
+      </div>
+      <div class="search-wrap">
+        <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input id="searchInput" type="search" placeholder="搜索风格名称 / Search styles..." autocomplete="off" />
+        <div id="searchResults" class="search-results"></div>
+      </div>
+      <div class="toolbar">
+        <button id="zoomIn" class="tool-btn" title="放大">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        </button>
+        <button id="zoomOut" class="tool-btn" title="缩小">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        </button>
+        <button id="resetView" class="tool-btn" title="重置视图">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+        </button>
+        <span class="toolbar-sep"></span>
+        <button id="toggleLinks" class="tool-btn active" title="显示/隐藏关系线">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="5" cy="12" r="3"/><circle cx="19" cy="6" r="3"/><circle cx="19" cy="18" r="3"/><line x1="7.5" y1="10.5" x2="16.5" y2="7.5"/><line x1="7.5" y1="13.5" x2="16.5" y2="16.5"/></svg>
+        </button>
+      </div>
+    </header>
 
-    <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
-    <script src="app.js"></script>
+    <!-- Super-genre Navigation -->
+    <nav class="super-nav" id="superNav"></nav>
+
+    <!-- Main Map -->
+    <main class="map-container" id="mapContainer">
+      <svg id="map"></svg>
+    </main>
+
+    <!-- Detail Panel -->
+    <aside class="detail-panel" id="detailPanel">
+      <button class="panel-close" id="panelClose" title="关闭">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+      <div class="panel-content" id="panelContent">
+        <div class="panel-placeholder">
+          <div class="placeholder-icon">🍻</div>
+          <h2>探索啤酒风格</h2>
+          <p>点击地图上的节点查看详细信息</p>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Tooltip -->
+    <div id="tooltip" class="tooltip"></div>
+
   </body>
 </html>

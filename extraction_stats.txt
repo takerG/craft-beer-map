@@ -1,2 +1,0 @@
-styles_found: 103
-with_details: 103

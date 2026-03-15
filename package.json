@@ -1,0 +1,24 @@
+{
+  "name": "craft-beer-map",
+  "version": "1.0.0",
+  "description": "精酿啤酒风格可视化地图 - BJCP 2021 Style Guide Visualization",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/takerG/craft-beer-map.git"
+  },
+  "keywords": ["beer", "bjcp", "visualization", "craft-beer"],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "vite": "^6.2.3"
+  },
+  "dependencies": {
+    "d3": "^7.9.0"
+  }
+}
