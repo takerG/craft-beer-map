@@ -423,7 +423,7 @@ function showDetails(node) {
   const cat = state.categoryMap.get(node.category);
   const sgColor = sg?.color || '#888';
   const details = node.details || {};
-  const stats = parseVitalStats(details.vital_statistics);
+  const stats = parseVitalStats(details.vital_statistics || details.stats);
   const tags = details.tags ? details.tags.split(/[、，,]/).map(t => t.trim()).filter(Boolean) : [];
   const examples = details.commercial_examples ? details.commercial_examples.split(/[,，]/).map(e => e.trim()).filter(Boolean) : [];
 
