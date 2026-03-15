@@ -163,21 +163,29 @@ a { color: inherit; text-decoration: none; }
 
 /* Organic Background Hulls */
 .sg-hull {
-  opacity: 0.08; /* Very subtle amorphous blobs */
-  transition: opacity 0.5s;
-  mix-blend-mode: screen;
+  opacity: var(--sg-hull-opacity, 0.26);
+  stroke: rgba(255, 255, 255, var(--sg-hull-stroke-opacity, 0.24));
+  stroke-width: 1.2px;
+  transition: opacity 0.35s, filter 0.35s, stroke 0.35s;
+  mix-blend-mode: normal;
 }
 .sg-hull-label {
   font-family: 'Outfit', 'Noto Sans SC', sans-serif;
   font-weight: 700; font-size: 56px;
-  fill: currentColor; opacity: 0.04;
+  fill: #fff; opacity: 0.38;
   text-anchor: middle;
   pointer-events: none;
-  letter-spacing: 0.15em;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
   user-select: none;
+  transform-box: fill-box;
+  transform-origin: center;
+  transition: opacity 0.35s, filter 0.35s, transform 0.35s;
 }
-.sg-group.dimmed .sg-hull { opacity: 0.02; }
+.sg-hull-label.is-wrapped { letter-spacing: 0.04em; }
+.sg-hull-label.is-vertical { letter-spacing: 0.02em; }
+.sg-hull-label tspan { dominant-baseline: central; }
+.sg-group.dimmed .sg-hull { opacity: 0.08; }
 .sg-group.dimmed .sg-hull-label { opacity: 0.01; }
 
 /* Typography-based Node */
@@ -187,35 +195,44 @@ a { color: inherit; text-decoration: none; }
   text-anchor: middle;
   dominant-baseline: central;
   fill: rgba(255, 255, 255, 0.95);
-  transition: fill 0.2s, text-shadow 0.2s, font-size 0.2s;
-  font-size: 14px;
+  transition: fill 0.25s, text-shadow 0.25s, font-size 0.25s, opacity 0.25s, filter 0.25s;
+  font-size: 13px;
 }
-.node .node-zh { font-weight: 600; }
+.node .node-zh {
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  opacity: var(--node-zh-opacity, 0.95);
+  filter: blur(var(--node-blur, 0px));
+}
 .node .node-en {
   font-family: 'Outfit', sans-serif;
-  font-weight: 300; font-size: 9px;
+  font-weight: 300; font-size: 8px;
   fill: rgba(255, 255, 255, 0.5);
+  opacity: var(--node-en-opacity, 0.5);
+  filter: blur(var(--node-blur, 0px));
 }
 .node .node-dot {
-  opacity: 0.6;
+  opacity: var(--node-dot-opacity, 0.6);
 }
 
 /* Hover & Focus States */
-.node:hover .node-zh { fill: #fff; text-shadow: 0 0 8px rgba(255,255,255,0.5); font-size: 12px; }
-.node:hover .node-en { fill: rgba(255, 255, 255, 0.7); }
+.node:hover .node-zh { fill: #fff; text-shadow: 0 0 8px rgba(255,255,255,0.5); font-size: 13.5px; opacity: 1; filter: none; }
+.node:hover .node-en { fill: rgba(255, 255, 255, 0.7); opacity: 0.85; filter: none; }
 .node:hover .node-dot { opacity: 1; }
 
 .node.focused .node-zh {
-  fill: #fff; font-size: 13px; font-weight: 700;
+  fill: #fff; font-size: 14px; font-weight: 700;
   text-shadow: 0 0 12px currentColor;
+  opacity: 1;
+  filter: none;
 }
-.node.focused .node-en { fill: rgba(255, 255, 255, 0.8); }
+.node.focused .node-en { fill: rgba(255, 255, 255, 0.8); opacity: 0.88; filter: none; }
 
 .node.dimmed text { opacity: 0.2; }
 .node.dimmed .node-dot { opacity: 0.1; }
 
-.node.highlighted .node-zh { fill: #fff; text-shadow: 0 0 10px currentColor; font-weight: 600; }
-.node.highlighted .node-en { fill: rgba(255, 255, 255, 0.6); }
+.node.highlighted .node-zh { fill: #fff; text-shadow: 0 0 10px currentColor; font-weight: 600; opacity: 1; filter: none; }
+.node.highlighted .node-en { fill: rgba(255, 255, 255, 0.6); opacity: 0.78; filter: none; }
 
 /* SVG Links */
 .relation-link {

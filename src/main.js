@@ -25,14 +25,14 @@ const SECTION_LABELS = [
 ];
 
 const FOCAL_POINT_FACTORS = {
-  american: [0.2, 0.4],
-  international: [0.35, 0.25],
-  czech: [0.5, 0.3],
-  german: [0.65, 0.4],
-  wheat: [0.65, 0.6],
-  british: [0.4, 0.65],
-  belgian: [0.8, 0.6],
-  specialty: [0.5, 0.8],
+  american: [0.23, 0.35],
+  international: [0.41, 0.22],
+  czech: [0.53, 0.22],
+  german: [0.66, 0.27],
+  wheat: [0.67, 0.54],
+  british: [0.31, 0.61],
+  belgian: [0.8, 0.53],
+  specialty: [0.53, 0.69],
 };
 
 const state = {
@@ -47,8 +47,11 @@ const state = {
   selectedNode: null,
   showLinks: true,
   simulation: null,
-  mapWidth: 2600,
-  mapHeight: 1800,
+  regionMap: new Map(),
+  mapWidth: 1900,
+  mapHeight: 1280,
+  hasUserZoomed: false,
+  zoomScale: 1.08,
 };
 
 const dom = {};
@@ -116,6 +119,232 @@ function hideLoader() {
   dom.loader?.classList.add('hidden');
 }
 
+function estimateNodeWidth(node) {
+  const zhLength = (node.name_zh || '').trim().length;
+  const enLength = (node.name_en || '').trim().length;
+  const zhWidth = zhLength * 22;
+  const enWidth = enLength * 8;
+  return Math.max(88, zhWidth, enWidth);
+}
+
+function buildCompactRows(nodes, maxRowWidthOverride) {
+  const sortedNodes = [...nodes].sort((a, b) => {
+    const keyDelta = Number(Boolean(b.key)) - Number(Boolean(a.key));
+    if (keyDelta !== 0) return keyDelta;
+    return estimateNodeWidth(b) - estimateNodeWidth(a);
+  });
+
+  const maxRowWidth = maxRowWidthOverride || Math.max(240, Math.min(460, 180 + sortedNodes.length * 18));
+  const horizontalGap = 22;
+  const rows = [];
+  let currentRow = [];
+  let currentWidth = 0;
+
+  sortedNodes.forEach(node => {
+    const width = estimateNodeWidth(node);
+    const nextWidth = currentRow.length ? currentWidth + horizontalGap + width : width;
+
+    if (currentRow.length && nextWidth > maxRowWidth) {
+      rows.push({ items: currentRow, width: currentWidth });
+      currentRow = [];
+      currentWidth = 0;
+    }
+
+    currentRow.push({ node, width });
+    currentWidth = currentRow.length === 1 ? width : currentWidth + horizontalGap + width;
+  });
+
+  if (currentRow.length) rows.push({ items: currentRow, width: currentWidth });
+
+  return rows;
+}
+
+function assignCompactTargets(nodes, region) {
+  const targetBounds = region?.bounds || {
+    minX: state.mapWidth * 0.3,
+    maxX: state.mapWidth * 0.7,
+    minY: state.mapHeight * 0.3,
+    maxY: state.mapHeight * 0.7,
+    width: state.mapWidth * 0.4,
+    height: state.mapHeight * 0.4,
+    centerX: state.mapWidth / 2,
+    centerY: state.mapHeight / 2,
+  };
+  const maxRowWidth = Math.max(220, Math.min(targetBounds.width * 0.72, 560));
+  const rows = buildCompactRows(nodes, maxRowWidth);
+  const rowGap = Math.max(44, Math.min(68, targetBounds.height * 0.5 / Math.max(rows.length, 1)));
+  const rowCount = rows.length;
+
+  rows.forEach((row, rowIndex) => {
+    const y = targetBounds.centerY + (rowIndex - (rowCount - 1) / 2) * rowGap;
+    const stagger = rowIndex % 2 === 0 ? -12 : 12;
+    let cursor = targetBounds.centerX - row.width / 2;
+
+    row.items.forEach(({ node, width }, itemIndex) => {
+      const unclampedX = cursor + width / 2 + (itemIndex % 2 === 0 ? stagger : -stagger);
+      const x = Math.max(targetBounds.minX + width / 2 + 24, Math.min(targetBounds.maxX - width / 2 - 24, unclampedX));
+      node.fx_target = x;
+      node.fy_target = y;
+      node.x = x + (Math.random() - 0.5) * 20;
+      node.y = y + (Math.random() - 0.5) * 20;
+      cursor += width + 22;
+    });
+  });
+}
+
+function clamp01(value) {
+  return Math.max(0, Math.min(1, value));
+}
+
+function mix(start, end, amount) {
+  return start + (end - start) * amount;
+}
+
+function estimateLabelWidth(text, size) {
+  return Math.max(120, (text || '').trim().length * size * 0.92);
+}
+
+function computePuzzleRegions() {
+  const board = {
+    minX: 80,
+    minY: 70,
+    maxX: state.mapWidth - 80,
+    maxY: state.mapHeight - 80,
+  };
+  const cols = 52;
+  const rows = 34;
+  const cellWidth = (board.maxX - board.minX) / cols;
+  const cellHeight = (board.maxY - board.minY) / rows;
+  const contourGenerator = d3.contours().size([cols, rows]).thresholds([0.5]);
+  const pathGenerator = d3.geoPath(d3.geoIdentity().scale(cellWidth).translate([board.minX, board.minY]));
+  const maxWeight = d3.max(SUPER_GENRES, superGenre => (state.nodesBySg.get(superGenre.id) || []).length) || 1;
+  const assignment = new Array(cols * rows);
+
+  for (let row = 0; row < rows; row += 1) {
+    for (let col = 0; col < cols; col += 1) {
+      const px = board.minX + (col + 0.5) * cellWidth;
+      const py = board.minY + (row + 0.5) * cellHeight;
+      let bestId = SUPER_GENRES[0].id;
+      let bestScore = Infinity;
+
+      SUPER_GENRES.forEach(superGenre => {
+        const weight = (state.nodesBySg.get(superGenre.id) || []).length;
+        const weightFactor = mix(0.9, 1.55, weight / maxWeight);
+        const seedX = state.mapWidth * FOCAL_POINT_FACTORS[superGenre.id][0];
+        const seedY = state.mapHeight * FOCAL_POINT_FACTORS[superGenre.id][1];
+        const dx = px - seedX;
+        const dy = py - seedY;
+        const score = (dx * dx + dy * dy) / (weightFactor * weightFactor);
+
+        if (score < bestScore) {
+          bestScore = score;
+          bestId = superGenre.id;
+        }
+      });
+
+      assignment[row * cols + col] = bestId;
+    }
+  }
+
+  const regions = new Map();
+
+  SUPER_GENRES.forEach(superGenre => {
+    const values = assignment.map(id => (id === superGenre.id ? 1 : 0));
+    const contour = contourGenerator(values)[0];
+    const path = contour ? pathGenerator(contour) : '';
+    const [[minX, minY], [maxX, maxY]] = contour ? pathGenerator.bounds(contour) : [[0, 0], [0, 0]];
+
+    regions.set(superGenre.id, {
+      id: superGenre.id,
+      path,
+      contour,
+      bounds: {
+        minX,
+        maxX,
+        minY,
+        maxY,
+        width: maxX - minX,
+        height: maxY - minY,
+        centerX: (minX + maxX) / 2,
+        centerY: (minY + maxY) / 2,
+      },
+    });
+  });
+
+  return regions;
+}
+
+function buildLabelLayout(superGenre, bounds) {
+  const text = superGenre.name;
+  const characters = [...text];
+  const ratio = bounds.width / Math.max(bounds.height, 1);
+
+  if (ratio < 0.72) {
+    const size = Math.max(28, Math.min(56, bounds.width * 0.18));
+    return {
+      x: bounds.centerX,
+      y: bounds.centerY,
+      size,
+      width: size * 1.4,
+      height: size * characters.length * 1.1,
+      rotation: 0,
+      lines: characters,
+      className: 'sg-hull-label is-vertical',
+    };
+  }
+
+  if (ratio < 1.28 || text.length >= 6) {
+    const midpoint = Math.ceil(characters.length / 2);
+    const lines = [characters.slice(0, midpoint).join(''), characters.slice(midpoint).join('')];
+    const size = Math.max(28, Math.min(58, Math.min(bounds.width / 3.2, bounds.height / 2.8)));
+    return {
+      x: bounds.centerX,
+      y: bounds.centerY,
+      size,
+      width: Math.max(...lines.map(line => estimateLabelWidth(line, size))),
+      height: size * 2.3,
+      rotation: 0,
+      lines,
+      className: 'sg-hull-label is-wrapped',
+    };
+  }
+
+  const size = Math.max(32, Math.min(68, Math.min(bounds.width / (characters.length + 1.5), bounds.height / 2.6)));
+  return {
+    x: bounds.centerX,
+    y: bounds.centerY,
+    size,
+    width: estimateLabelWidth(text, size),
+    height: size * 1.2,
+    rotation: 0,
+    lines: [text],
+    className: 'sg-hull-label',
+  };
+}
+
+function renderHullLabel(selection, layout) {
+  selection
+    .attr('class', layout.className)
+    .attr('x', layout.x)
+    .attr('y', layout.y)
+    .attr('font-size', layout.size)
+    .attr('transform', layout.rotation ? `rotate(${layout.rotation} ${layout.x} ${layout.y})` : null);
+
+  const tspans = selection
+    .selectAll('tspan')
+    .data(layout.lines)
+    .join('tspan')
+    .attr('x', layout.x)
+    .attr('dy', (line, index) => {
+      if (layout.className.includes('is-vertical')) return index === 0 ? `${-((layout.lines.length - 1) * 0.5)}em` : '1.05em';
+      if (layout.lines.length === 1) return '0.35em';
+      return index === 0 ? '-0.2em' : '1.1em';
+    })
+    .text(line => line);
+
+  return tspans;
+}
+
 function setupData() {
   const { styles = [], relations = [] } = state.data || {};
 
@@ -177,12 +406,22 @@ function setupData() {
     ]),
   );
 
-  state.nodes.forEach(node => {
-    const target = focalPoints[node.sgId] || { x: state.mapWidth / 2, y: state.mapHeight / 2 };
-    node.x = target.x + (Math.random() - 0.5) * 400;
-    node.y = target.y + (Math.random() - 0.5) * 400;
-    node.fx_target = target.x;
-    node.fy_target = target.y;
+  state.regionMap = computePuzzleRegions();
+
+  state.nodesBySg.forEach((nodes, sgId) => {
+    const region = state.regionMap.get(sgId) || {
+      bounds: {
+        minX: focalPoints[sgId]?.x - 180 || state.mapWidth / 2 - 180,
+        maxX: focalPoints[sgId]?.x + 180 || state.mapWidth / 2 + 180,
+        minY: focalPoints[sgId]?.y - 140 || state.mapHeight / 2 - 140,
+        maxY: focalPoints[sgId]?.y + 140 || state.mapHeight / 2 + 140,
+        width: 360,
+        height: 280,
+        centerX: focalPoints[sgId]?.x || state.mapWidth / 2,
+        centerY: focalPoints[sgId]?.y || state.mapHeight / 2,
+      },
+    };
+    assignCompactTargets(nodes, region);
   });
 }
 
@@ -197,7 +436,7 @@ function setupSvg() {
     .attr('width', '200%')
     .attr('height', '200%');
 
-  hullFilter.append('feGaussianBlur').attr('in', 'SourceGraphic').attr('stdDeviation', '40');
+  hullFilter.append('feGaussianBlur').attr('in', 'SourceGraphic').attr('stdDeviation', '8');
 
   defs
     .append('marker')
@@ -226,13 +465,13 @@ function runSimulation() {
 
   state.simulation = d3
     .forceSimulation(state.nodes)
-    .force('link', d3.forceLink(simLinks).id(d => d.id).distance(100).strength(0.4))
-    .force('collide', d3.forceCollide().radius(d => d.radius + 25).iterations(3))
-    .force('x', d3.forceX(d => d.fx_target).strength(0.12))
-    .force('y', d3.forceY(d => d.fy_target).strength(0.12))
-    .force('charge', d3.forceManyBody().strength(-400))
+    .force('link', d3.forceLink(simLinks).id(d => d.id).distance(56).strength(0.18))
+    .force('collide', d3.forceCollide().radius(d => d.radius + 12).iterations(2))
+    .force('x', d3.forceX(d => d.fx_target).strength(0.34))
+    .force('y', d3.forceY(d => d.fy_target).strength(0.32))
+    .force('charge', d3.forceManyBody().strength(-80))
     .alphaMin(0.02)
-    .velocityDecay(0.4);
+    .velocityDecay(0.5);
 
   let ticks = 0;
   state.simulation.on('tick', () => {
@@ -247,6 +486,7 @@ function runSimulation() {
     updateHulls();
     updateLinks(simLinks);
     updateNodes();
+    if (!state.hasUserZoomed) applyInitialView(500);
   });
 
   createDomStructure(simLinks);
@@ -269,13 +509,12 @@ function createDomStructure(simLinks) {
         .append('path')
         .attr('class', 'sg-hull')
         .attr('fill', d => d.color)
-        .style('filter', 'url(#hullBlur)');
+        .style('filter', 'none');
 
       group
         .append('text')
         .attr('class', 'sg-hull-label')
-        .attr('fill', d => d.color)
-        .text(d => d.name);
+        .attr('fill', d => d.color);
     });
 
   dom.svg
@@ -295,6 +534,7 @@ function createDomStructure(simLinks) {
     .attr('class', d => `node id-${d.id}`);
 
   dom.selections.hullGroups = hullLayer.selectAll('g.sg-group');
+  dom.selections.hullLabels = dom.selections.hullGroups.selectAll('.sg-hull-label');
   dom.selections.links = dom.svg.select('.link-layer').selectAll('path.relation-link');
   dom.selections.nodes = nodeGroups;
   dom.maps.hullGroupById = new Map(SUPER_GENRES.map(superGenre => [superGenre.id, dom.selections.hullGroups.filter(d => d.id === superGenre.id)]));
@@ -327,35 +567,28 @@ function updateLinks(simLinks) {
 }
 
 function updateHulls() {
-  const curve = d3.line().curve(d3.curveCatmullRomClosed.alpha(0.5));
+  const labelLayouts = [];
 
   SUPER_GENRES.forEach(superGenre => {
-    const nodes = state.nodesBySg.get(superGenre.id) || [];
     const group = dom.maps.hullGroupById?.get(superGenre.id);
+    const region = state.regionMap.get(superGenre.id);
 
-    if (!nodes.length) {
+    if (!region?.path) {
       group.select('path').attr('d', '');
       return;
     }
 
-    const points = [];
-    const padding = 60;
-
-    nodes.forEach(node => {
-      points.push([node.x, node.y - padding]);
-      points.push([node.x + padding * 0.866, node.y - padding * 0.5]);
-      points.push([node.x + padding * 0.866, node.y + padding * 0.5]);
-      points.push([node.x, node.y + padding]);
-      points.push([node.x - padding * 0.866, node.y + padding * 0.5]);
-      points.push([node.x - padding * 0.866, node.y - padding * 0.5]);
-    });
-
-    const hull = d3.polygonHull(points);
-    if (!hull) return;
-
-    group.select('path').attr('d', curve(hull));
-    group.select('.sg-hull-label').attr('x', d3.mean(hull, p => p[0])).attr('y', d3.mean(hull, p => p[1]));
+    group.select('path').attr('d', region.path);
+    labelLayouts.push({ id: superGenre.id, ...buildLabelLayout(superGenre, region.bounds) });
   });
+
+  labelLayouts.forEach(label => {
+    const labelSelection = dom.maps.hullGroupById?.get(label.id)?.select('.sg-hull-label');
+    if (!labelSelection?.node()) return;
+    renderHullLabel(labelSelection, label);
+  });
+
+  applyZoomVisuals(state.zoomScale);
 }
 
 function setupZoom() {
@@ -369,23 +602,21 @@ function setupZoom() {
     .zoom()
     .scaleExtent([0.1, 4])
     .on('zoom', event => {
+      if (event.sourceEvent) state.hasUserZoomed = true;
+      state.zoomScale = event.transform.k;
       wrapper.attr('transform', event.transform);
+      applyZoomVisuals(event.transform.k);
     });
 
   dom.svg.call(zoom);
   dom.zoom = zoom;
 
   setTimeout(() => {
-    const mapRect = dom.mapContainer.getBoundingClientRect();
-    const scale = 0.6;
-    const tx = mapRect.width / 2 - (state.mapWidth / 2) * scale;
-    const ty = mapRect.height / 2 - (state.mapHeight / 2) * scale;
-    const initialTransform = d3.zoomIdentity.translate(tx, ty).scale(scale);
-
-    dom.svg.call(zoom.transform, initialTransform);
+    applyInitialView();
 
     document.getElementById('resetView').addEventListener('click', () => {
-      dom.svg.transition().duration(600).call(zoom.transform, initialTransform);
+      state.hasUserZoomed = false;
+      applyInitialView(600);
     });
   }, 100);
 
@@ -400,6 +631,44 @@ function setupZoom() {
   dom.svg.on('click', () => {
     deselectNode();
   });
+}
+
+function applyInitialView(duration = 0) {
+  if (!dom.zoom) return;
+
+  const mapRect = dom.mapContainer.getBoundingClientRect();
+  const contentCenterX = d3.mean(state.nodes, node => node.x) ?? state.mapWidth / 2;
+  const contentCenterY = d3.mean(state.nodes, node => node.y) ?? state.mapHeight / 2;
+  const scale = 1.08;
+  const tx = mapRect.width / 2 - contentCenterX * scale;
+  const ty = mapRect.height / 2 - contentCenterY * scale;
+  const transform = d3.zoomIdentity.translate(tx, ty).scale(scale);
+  state.zoomScale = scale;
+
+  if (duration > 0) {
+    dom.svg.transition().duration(duration).call(dom.zoom.transform, transform);
+    return;
+  }
+
+  dom.svg.call(dom.zoom.transform, transform);
+}
+
+function applyZoomVisuals(scale = state.zoomScale) {
+  state.zoomScale = scale;
+  const detailT = clamp01((scale - 1.02) / 0.88);
+
+  dom.svg
+    .style('--node-zh-opacity', mix(0.24, 0.96, detailT).toFixed(3))
+    .style('--node-en-opacity', mix(0.06, 0.62, detailT).toFixed(3))
+    .style('--node-dot-opacity', mix(0.14, 0.68, detailT).toFixed(3))
+    .style('--node-blur', `${mix(2.2, 0, detailT).toFixed(2)}px`)
+    .style('--sg-hull-opacity', mix(0.3, 0.12, detailT).toFixed(3))
+    .style('--sg-hull-stroke-opacity', mix(0.32, 0.14, detailT).toFixed(3));
+
+  dom.selections.hullLabels
+    ?.style('opacity', mix(0.42, 0.11, detailT).toFixed(3))
+    .style('filter', 'none')
+    .style('transform', `scale(${mix(1, 0.9, detailT).toFixed(3)})`);
 }
 
 function setupSearch() {
