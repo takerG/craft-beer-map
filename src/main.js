@@ -28,8 +28,8 @@ const state = {
   selectedNode: null,
   showLinks: true,
   simulation: null,
-  mapWidth: 2000,
-  mapHeight: 1400,
+  mapWidth: 2600,
+  mapHeight: 1800,
 };
 
 const dom = {};
@@ -166,14 +166,14 @@ function runSimulation() {
 
   state.simulation = d3.forceSimulation(state.nodes)
     // Link force: pull related nodes together
-    .force('link', d3.forceLink(simLinks).id(d => d.id).distance(80).strength(0.4))
+    .force('link', d3.forceLink(simLinks).id(d => d.id).distance(100).strength(0.4))
     // Collision: prevent nodes overlapping
-    .force('collide', d3.forceCollide().radius(d => d.radius + 20).iterations(3))
+    .force('collide', d3.forceCollide().radius(d => d.radius + 25).iterations(3))
     // Custom attractors to pull into Super Genre groups
     .force('x', d3.forceX(d => d.fx_target).strength(0.12))
     .force('y', d3.forceY(d => d.fy_target).strength(0.12))
-    // Manybody: push nodes apart generally
-    .force('charge', d3.forceManyBody().strength(-300))
+    // Manybody: push nodes apart generally to create more space
+    .force('charge', d3.forceManyBody().strength(-400))
     // Friction
     .velocityDecay(0.4);
 
