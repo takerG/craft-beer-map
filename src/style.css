@@ -731,6 +731,15 @@ button {
   line-height: 1.78;
 }
 
+.detail-section-body-supplement {
+  display: grid;
+  gap: 12px;
+}
+
+.detail-section-body-supplement p {
+  margin: 0;
+}
+
 .detail-chip-list {
   display: flex;
   flex-wrap: wrap;

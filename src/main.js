@@ -781,6 +781,7 @@ function showStyleDetails(style) {
   const details = style.details || {};
   const stats = parseVitalStats(details.vital_statistics || '');
   const related = dedupeRelatedStyles(state.relatedByStyle.get(style.id) || []);
+  const tagContent = classifyTagContent(details.tags);
   dom.panelContent.innerHTML = `
     <div class="panel-hero" style="--panel-color:${style.color}">
       <div class="hero-kicker">BJCP ${escapeHtml(style.code)}</div>
@@ -789,7 +790,8 @@ function showStyleDetails(style) {
     </div>
     ${stats ? buildStatsGrid(stats) : ''}
     ${DETAIL_SECTIONS.map(([key, label]) => buildDetailSection(label, details[key])).join('')}
-    ${buildTagSection(details.tags)}
+    ${buildTagSection(tagContent.tags)}
+    ${buildSupplementSection(tagContent.supplement)}
     ${buildRelatedSection(related)}
   `;
   attachStyleListHandlers();
@@ -817,12 +819,23 @@ function buildDetailSection(label, content) {
 }
 
 function buildTagSection(tagsValue) {
-  const tags = splitList(tagsValue);
-  if (!tags.length) return '';
+  if (!tagsValue?.length) return '';
+  const title = '标签';
   return `
     <div class="detail-section">
-      <div class="detail-section-title">标签</div>
-      <div class="detail-chip-list">${tags.map((tag) => `<span class="detail-tag">${escapeHtml(tag)}</span>`).join('')}</div>
+      <div class="detail-section-title">${title}</div>
+      <div class="detail-chip-list">${tagsValue.map((tag) => `<span class="detail-tag">${escapeHtml(tag)}</span>`).join('')}</div>
+    </div>
+  `;
+}
+
+function buildSupplementSection(content) {
+  if (!content?.length) return '';
+  const title = '补充说明';
+  return `
+    <div class="detail-section">
+      <div class="detail-section-title">${title}</div>
+      <div class="detail-section-body detail-section-body-supplement">${content.map((item) => `<p>${escapeHtml(item)}</p>`).join('')}</div>
     </div>
   `;
 }
@@ -940,6 +953,34 @@ function splitList(value) {
     .split(/[、，,]/)
     .map((item) => item.trim())
     .filter(Boolean);
+}
+
+function classifyTagContent(value) {
+  const rawItems = splitList(value);
+  const tags = [];
+  const supplement = [];
+
+  rawItems.forEach((item) => {
+    if (looksLikeTag(item)) tags.push(item);
+    else supplement.push(item);
+  });
+
+  return { tags, supplement };
+}
+
+function looksLikeTag(value) {
+  if (!value) return false;
+
+  const normalized = value.trim();
+  if (!normalized) return false;
+  if (/[\r\n]/.test(normalized)) return false;
+  if (/[???:??!???()]/.test(normalized)) return false;
+  if (normalized.length > 18) return false;
+
+  const wordCount = normalized.split(/\s+/).filter(Boolean).length;
+  if (wordCount > 4) return false;
+
+  return true;
 }
 
 function dedupeRelatedStyles(relations) {
