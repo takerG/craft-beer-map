@@ -51,6 +51,7 @@ const state = {
   hoveredStyle: null,
   showLinks: true,
   zoomK: INITIAL_SCALE,
+  transform: d3.zoomIdentity,
 };
 
 const dom = {};
@@ -69,6 +70,7 @@ async function init() {
   setupSearch();
   setupSuperNav();
   setupPanelControls();
+  setupViewportObservers();
   hideLoader();
 }
 
@@ -173,18 +175,46 @@ function layoutCategories() {
 function layoutStyles() {
   state.categories.forEach((category) => {
     const styles = state.styleByCategory.get(category.id) || [];
-    const cols = Math.min(3, Math.max(2, Math.ceil(Math.sqrt(styles.length))));
-    const cellX = 74;
-    const cellY = 50;
-    styles.forEach((style, index) => {
-      const col = index % cols;
-      const row = Math.floor(index / cols);
-      const rowWidth = Math.min(cols, styles.length - row * cols);
-      const offsetX = (col - (rowWidth - 1) / 2) * cellX;
-      const offsetY = (row - (Math.ceil(styles.length / cols) - 1) / 2) * cellY;
-      style.x = category.x + offsetX;
-      style.y = category.y + 26 + offsetY;
-    });
+    positionStyleCluster(category, styles);
+  });
+}
+
+function positionStyleCluster(category, styles) {
+  const centerX = category.x;
+  const centerY = category.y + 34;
+
+  if (styles.length === 1) {
+    styles[0].x = centerX;
+    styles[0].y = centerY;
+    return;
+  }
+
+  const rings = [];
+  let remaining = styles.length;
+  let ringIndex = 0;
+
+  while (remaining > 0) {
+    const capacity = ringIndex === 0 ? Math.min(3, remaining) : Math.min(6 + ringIndex * 4, remaining);
+    const radius = 52 + ringIndex * 60;
+    rings.push({ capacity, radius, rotation: ringIndex % 2 === 0 ? -Math.PI / 2 : -Math.PI / 2 + Math.PI / capacity });
+    remaining -= capacity;
+    ringIndex += 1;
+  }
+
+  let cursor = 0;
+  rings.forEach((ring, currentRing) => {
+    const arcSpan = currentRing === 0 && ring.capacity <= 3 ? Math.PI * 0.92 : Math.PI * 1.6;
+    const startAngle = ring.rotation - arcSpan / 2;
+    const step = ring.capacity === 1 ? 0 : arcSpan / (ring.capacity - 1);
+
+    for (let slot = 0; slot < ring.capacity; slot += 1) {
+      const style = styles[cursor];
+      if (!style) break;
+      const angle = startAngle + step * slot;
+      style.x = centerX + Math.cos(angle) * ring.radius;
+      style.y = centerY + Math.sin(angle) * (ring.radius * 0.68);
+      cursor += 1;
+    }
   });
 }
 
@@ -405,14 +435,18 @@ function setupZoom() {
     .scaleExtent([0.55, 3.8])
     .on('zoom', (event) => {
       state.zoomK = event.transform.k;
+      state.transform = event.transform;
       dom.scene.attr('transform', event.transform);
       updateVisibility(event.transform.k);
+      updateFocusLens();
     });
 
   dom.svg.call(zoom);
   dom.zoom = zoom;
   const initial = centerTransform(INITIAL_SCALE, MAP_WIDTH / 2, MAP_HEIGHT / 2);
+  state.transform = initial;
   dom.svg.call(zoom.transform, initial);
+  updateFocusLens();
 }
 
 function setupToolbar() {
@@ -513,6 +547,17 @@ function setupPanelControls() {
   });
 }
 
+function setupViewportObservers() {
+  window.addEventListener(
+    'resize',
+    debounce(() => {
+      updateFocusLens();
+      updateStyleFocus();
+      updateCategoryFocus();
+    }, 80),
+  );
+}
+
 function updateVisibility(scale) {
   const overviewAlpha = scale < ZOOM_LEVELS.overview ? 1 : Math.max(0, 1 - (scale - ZOOM_LEVELS.overview) * 1.6);
   const categoryAlpha = scale < ZOOM_LEVELS.overview ? 0.14 : scale < ZOOM_LEVELS.categories ? 1 : Math.max(0.25, 1 - (scale - ZOOM_LEVELS.categories) * 0.4);
@@ -534,6 +579,7 @@ function updateCategoryFocus() {
   const activeCategory = state.selectedCategory;
   dom.categoryNodes?.classed('is-active', (d) => d.id === activeCategory);
   dom.categoryNodes?.classed('is-dimmed', (d) => Boolean(activeCategory) && d.id !== activeCategory && state.zoomK >= ZOOM_LEVELS.categories);
+  applyCategoryDensity();
 }
 
 function updateStyleFocus() {
@@ -551,6 +597,7 @@ function updateStyleFocus() {
   dom.styleNodes?.classed('is-active', (d) => d.id === activeId);
   dom.styleNodes?.classed('is-related', (d) => activeId && relatedIds.has(d.id) && d.id !== activeId);
   dom.styleNodes?.classed('is-dimmed', (d) => activeId && !relatedIds.has(d.id));
+  applyStyleDensity(activeId, relatedIds);
 
   dom.linkSelection
     ?.classed('is-visible', (d) => {
@@ -558,6 +605,91 @@ function updateStyleFocus() {
       return d.source.id === activeId || d.target.id === activeId;
     })
     .classed('is-muted', () => !activeId);
+}
+
+function updateFocusLens() {
+  const rect = dom.mapContainer.getBoundingClientRect();
+  const focusMode = state.zoomK >= ZOOM_LEVELS.styles;
+  const clearRadius = clamp(Math.min(rect.width, rect.height) * 0.15, 170, 300);
+  const falloffRadius = clamp(clearRadius + Math.min(rect.width, rect.height) * 0.22, 360, 620);
+  const edgeOpacity = focusMode ? clamp((state.zoomK - ZOOM_LEVELS.styles) / 1.35, 0, 0.72) : 0;
+
+  dom.mapContainer.classList.toggle('focus-mode', focusMode);
+  dom.mapContainer.style.setProperty('--focus-x', `${rect.width / 2}px`);
+  dom.mapContainer.style.setProperty('--focus-y', `${rect.height / 2}px`);
+  dom.mapContainer.style.setProperty('--focus-clear-radius', `${clearRadius}px`);
+  dom.mapContainer.style.setProperty('--focus-falloff-radius', `${falloffRadius}px`);
+  dom.mapContainer.style.setProperty('--focus-edge-opacity', edgeOpacity.toFixed(3));
+}
+
+function applyCategoryDensity() {
+  if (!dom.categoryNodes) return;
+
+  const rect = dom.mapContainer.getBoundingClientRect();
+  const focusRadius = clamp(Math.min(rect.width, rect.height) * 0.28, 260, 480);
+  const fadeRadius = focusRadius + 240;
+  const focusMode = state.zoomK >= ZOOM_LEVELS.categories;
+
+  dom.categoryNodes.each(function setCategoryDensity(category) {
+    const distance = projectDistance(category.x, category.y, rect);
+    const focus = focusMode ? Math.max(0, 1 - distance / fadeRadius) : 1;
+    const opacity = focusMode ? 0.2 + focus * 0.8 : 1;
+    const labelOpacity = state.zoomK >= MID_SCALE ? Math.min(1, 0.26 + focus * 0.92) : 0;
+    d3.select(this)
+      .style('--category-opacity', opacity.toFixed(3))
+      .style('--category-label-opacity', labelOpacity.toFixed(3))
+      .classed('is-focus-far', focusMode && distance > fadeRadius);
+  });
+}
+
+function applyStyleDensity(activeId, relatedIds) {
+  if (!dom.styleNodes) return;
+
+  const rect = dom.mapContainer.getBoundingClientRect();
+  const focusMode = state.zoomK >= ZOOM_LEVELS.styles;
+  const nearRadius = clamp(Math.min(rect.width, rect.height) * 0.17, 180, 320);
+  const fadeRadius = clamp(nearRadius + Math.min(rect.width, rect.height) * 0.24, 360, 620);
+  const detailMode = state.zoomK >= DETAIL_SCALE;
+
+  dom.styleNodes.each(function setStyleDensity(style) {
+    const distance = projectDistance(style.x, style.y, rect);
+    const focus = focusMode ? Math.max(0, 1 - distance / fadeRadius) : 1;
+    const isActive = style.id === activeId;
+    const isRelated = Boolean(activeId) && relatedIds.has(style.id) && style.id !== activeId;
+    const isDimmedByRelation = Boolean(activeId) && !relatedIds.has(style.id);
+
+    let nodeOpacity = focusMode ? 0.12 + focus * 0.88 : 1;
+    let labelOpacity = detailMode ? Math.max(0, (focus - 0.2) / 0.8) : 0;
+
+    if (isRelated) {
+      nodeOpacity = Math.max(nodeOpacity, 0.76);
+      labelOpacity = Math.max(labelOpacity, detailMode ? 0.82 : 0.28);
+    }
+
+    if (isActive) {
+      nodeOpacity = 1;
+      labelOpacity = 1;
+    }
+
+    if (isDimmedByRelation) {
+      nodeOpacity *= 0.42;
+      labelOpacity *= 0.18;
+    }
+
+    d3.select(this)
+      .style('--node-opacity', nodeOpacity.toFixed(3))
+      .style('--label-opacity', labelOpacity.toFixed(3))
+      .classed('is-focus-far', focusMode && distance > fadeRadius)
+      .classed('is-focus-near', focusMode && distance <= nearRadius);
+  });
+}
+
+function projectDistance(x, y, rect) {
+  const px = state.transform.applyX(x);
+  const py = state.transform.applyY(y);
+  const dx = px - rect.width / 2;
+  const dy = py - rect.height / 2;
+  return Math.sqrt(dx * dx + dy * dy);
 }
 
 function zoomToSuperGenre(group) {
@@ -583,6 +715,10 @@ function centerTransform(scale, x, y) {
   const tx = rect.width / 2 - x * scale;
   const ty = rect.height / 2 - y * scale;
   return d3.zoomIdentity.translate(tx, ty).scale(scale);
+}
+
+function clamp(value, min, max) {
+  return Math.min(max, Math.max(min, value));
 }
 
 function showSuperGenreDetails(group) {

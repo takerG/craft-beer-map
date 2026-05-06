@@ -334,6 +334,11 @@ button {
 }
 
 .map-container {
+  --focus-x: 50%;
+  --focus-y: 50%;
+  --focus-clear-radius: 220px;
+  --focus-falloff-radius: 520px;
+  --focus-edge-opacity: 0;
   position: fixed;
   inset: calc(var(--topbar-h) + var(--supernav-h)) 0 0 0;
   overflow: hidden;
@@ -345,6 +350,58 @@ button {
 
 .map-container:active {
   cursor: grabbing;
+}
+
+.map-container::before,
+.map-container::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 220ms ease;
+}
+
+.map-container::before {
+  background:
+    radial-gradient(
+      circle at var(--focus-x) var(--focus-y),
+      transparent 0,
+      transparent calc(var(--focus-clear-radius) * 0.82),
+      rgba(6, 8, 12, 0.16) calc(var(--focus-clear-radius) * 1.02),
+      rgba(4, 6, 10, 0.52) calc(var(--focus-falloff-radius) * 0.82),
+      rgba(2, 3, 7, 0.78) 100%
+    );
+  backdrop-filter: blur(9px) saturate(0.76) brightness(0.7);
+  -webkit-backdrop-filter: blur(9px) saturate(0.76) brightness(0.7);
+  -webkit-mask-image: radial-gradient(
+    circle at var(--focus-x) var(--focus-y),
+    transparent 0,
+    transparent calc(var(--focus-clear-radius) * 0.9),
+    rgba(0, 0, 0, 0.35) calc(var(--focus-clear-radius) * 1.08),
+    rgba(0, 0, 0, 0.92) calc(var(--focus-falloff-radius) * 0.9),
+    black 100%
+  );
+  mask-image: radial-gradient(
+    circle at var(--focus-x) var(--focus-y),
+    transparent 0,
+    transparent calc(var(--focus-clear-radius) * 0.9),
+    rgba(0, 0, 0, 0.35) calc(var(--focus-clear-radius) * 1.08),
+    rgba(0, 0, 0, 0.92) calc(var(--focus-falloff-radius) * 0.9),
+    black 100%
+  );
+}
+
+.map-container::after {
+  background:
+    radial-gradient(circle at var(--focus-x) var(--focus-y), rgba(255, 243, 216, 0.07), transparent calc(var(--focus-clear-radius) * 0.92)),
+    radial-gradient(circle at var(--focus-x) var(--focus-y), transparent calc(var(--focus-clear-radius) * 0.72), rgba(255, 255, 255, 0.05) calc(var(--focus-clear-radius) * 1.02), transparent calc(var(--focus-clear-radius) * 1.48));
+  mix-blend-mode: screen;
+}
+
+.map-container.focus-mode::before,
+.map-container.focus-mode::after {
+  opacity: var(--focus-edge-opacity);
 }
 
 .map-container svg {
@@ -395,7 +452,10 @@ button {
 }
 
 .category-node {
+  --category-opacity: 1;
+  --category-label-opacity: 0.7;
   cursor: pointer;
+  opacity: var(--category-opacity);
   transition: opacity var(--ease);
 }
 
@@ -414,7 +474,7 @@ button {
   fill: rgba(255, 244, 224, 0.86);
   font-size: 15px;
   font-weight: 600;
-  opacity: 0.7;
+  opacity: var(--category-label-opacity);
 }
 
 .category-count {
@@ -443,7 +503,10 @@ button {
 }
 
 .style-node {
+  --node-opacity: 1;
+  --label-opacity: 0;
   cursor: pointer;
+  opacity: var(--node-opacity);
   transition: opacity var(--ease);
 }
 
@@ -477,14 +540,11 @@ button {
   font-size: 9px;
   letter-spacing: 0.16em;
   text-transform: uppercase;
+  opacity: calc(var(--label-opacity) * 0.72);
 }
 
-.style-node.labels-visible .style-label,
-.style-node.labels-visible .style-code,
-.style-node.is-active .style-label,
-.style-node.is-active .style-code,
-.style-node.is-related .style-label {
-  opacity: 1;
+.style-node .style-label {
+  opacity: var(--label-opacity);
 }
 
 .style-node.is-active .style-ring {
@@ -497,7 +557,19 @@ button {
 }
 
 .style-node.is-dimmed {
-  opacity: 0.16;
+  opacity: var(--node-opacity);
+}
+
+.style-node.is-focus-far .style-ring {
+  stroke-width: 1.15;
+}
+
+.style-node.is-focus-far .style-core {
+  opacity: 0.74;
+}
+
+.style-node.is-focus-near .style-ring {
+  stroke-width: 2;
 }
 
 .relation-link {
