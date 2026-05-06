@@ -14,6 +14,8 @@ const ZOOM_LEVELS = {
   styles: 2.1,
 };
 
+const OVERVIEW_BASELINE = 1160;
+
 const SUPER_GENRES = [
   { id: 'american', name: '美国啤酒', nameEn: 'American', categories: ['1', '18', '19', '20', '21', '22'], color: '#ffb24c', x: 500, y: 500, rx: 300, ry: 190 },
   { id: 'international', name: '国际拉格', nameEn: 'International', categories: ['2'], color: '#7db8ff', x: 910, y: 280, rx: 170, ry: 110 },
@@ -283,6 +285,36 @@ function renderBackdrop() {
     .attr('cy', (d) => d.y)
     .attr('r', (d) => d.r)
     .attr('fill', (d) => d.color);
+
+  dom.bgLayer
+    .append('path')
+    .attr('class', 'backbar-deck')
+    .attr(
+      'd',
+      `M120,${OVERVIEW_BASELINE - 20}
+       C360,${OVERVIEW_BASELINE - 110} 620,${OVERVIEW_BASELINE - 120} 920,${OVERVIEW_BASELINE - 58}
+       C1180,${OVERVIEW_BASELINE - 4} 1450,${OVERVIEW_BASELINE - 8} 1760,${OVERVIEW_BASELINE - 84}
+       C1900,${OVERVIEW_BASELINE - 120} 2020,${OVERVIEW_BASELINE - 118} 2080,${OVERVIEW_BASELINE - 48}
+       L2080,1418 L120,1418 Z`,
+    );
+
+  dom.bgLayer
+    .append('rect')
+    .attr('class', 'backbar-counter')
+    .attr('x', 0)
+    .attr('y', OVERVIEW_BASELINE + 56)
+    .attr('width', MAP_WIDTH)
+    .attr('height', 220)
+    .attr('rx', 0);
+
+  dom.bgLayer
+    .append('rect')
+    .attr('class', 'backbar-counter-glow')
+    .attr('x', 140)
+    .attr('y', OVERVIEW_BASELINE + 34)
+    .attr('width', MAP_WIDTH - 280)
+    .attr('height', 24)
+    .attr('rx', 12);
 }
 
 function renderOverview() {
@@ -291,36 +323,152 @@ function renderOverview() {
     .data(SUPER_GENRES, (d) => d.id)
     .join('g')
     .attr('class', 'super-genre')
-    .attr('transform', (d) => `translate(${d.x},${d.y})`)
+    .attr('transform', (d, index) => {
+      const profile = getOverviewProfile(d, index);
+      return `translate(${profile.x},${profile.baseY})`;
+    })
     .on('click', (event, group) => {
       event.stopPropagation();
       zoomToSuperGenre(group);
     });
 
-  groups
-    .append('ellipse')
-    .attr('class', 'super-genre-orbit')
-    .attr('rx', (d) => d.rx)
-    .attr('ry', (d) => d.ry)
-    .attr('fill', (d) => d.color);
+  groups.each(function decorateOverview(group, index) {
+    const root = d3.select(this);
+    root.selectAll('*').remove();
+    const profile = getOverviewProfile(group, index);
 
-  groups
-    .append('text')
-    .attr('class', 'super-genre-title')
-    .attr('y', -6)
-    .text((d) => d.name);
+    root
+      .append('ellipse')
+      .attr('class', 'super-genre-aura')
+      .attr('cx', 0)
+      .attr('cy', -profile.height * 0.62)
+      .attr('rx', profile.baseWidth * 1.18)
+      .attr('ry', profile.height * 0.62)
+      .attr('fill', group.color);
 
-  groups
-    .append('text')
-    .attr('class', 'super-genre-subtitle')
-    .attr('y', 24)
-    .text((d) => d.nameEn);
+    root
+      .append('path')
+      .attr('class', 'super-genre-base')
+      .attr(
+        'd',
+        `M${-profile.baseWidth * 0.86},18
+         C${-profile.baseWidth * 0.44},${42 + profile.baseInset * 0.1} ${profile.baseWidth * 0.44},${42 + profile.baseInset * 0.1} ${profile.baseWidth * 0.86},18
+         L${profile.baseWidth * 1.02},120
+         C${profile.baseWidth * 0.54},152 ${-profile.baseWidth * 0.54},152 ${-profile.baseWidth * 1.02},120 Z`,
+      )
+      .attr('fill', group.color);
 
-  groups
-    .append('text')
-    .attr('class', 'super-genre-count')
-    .attr('y', 48)
-    .text((d) => `${state.styleBySuper.get(d.id)?.length || 0} styles`);
+    root
+      .append('path')
+      .attr('class', 'super-genre-column-shell')
+      .attr('d', buildBeerColumnPath(profile, 0))
+      .attr('fill', group.color);
+
+    root
+      .append('path')
+      .attr('class', 'super-genre-column-liquid')
+      .attr('d', buildBeerColumnPath(profile, 16))
+      .attr('fill', group.color);
+
+    root
+      .append('rect')
+      .attr('class', 'super-genre-column-highlight')
+      .attr('x', -profile.topWidth * 0.24)
+      .attr('y', -profile.height + 72)
+      .attr('width', Math.max(16, profile.topWidth * 0.16))
+      .attr('height', profile.height * 0.76)
+      .attr('rx', 12);
+
+    root
+      .append('rect')
+      .attr('class', 'super-genre-handle')
+      .attr('x', -profile.topWidth * 0.16)
+      .attr('y', -profile.height - 54)
+      .attr('width', profile.topWidth * 0.32)
+      .attr('height', 66)
+      .attr('rx', 14);
+
+    root
+      .append('ellipse')
+      .attr('class', 'super-genre-foam-glow')
+      .attr('cx', 0)
+      .attr('cy', -profile.height + 18)
+      .attr('rx', profile.topWidth * 0.74)
+      .attr('ry', 28);
+
+    root
+      .append('ellipse')
+      .attr('class', 'super-genre-foam-cap')
+      .attr('cx', 0)
+      .attr('cy', -profile.height + 10)
+      .attr('rx', profile.topWidth * 0.62)
+      .attr('ry', 20);
+
+    const bubbles = [
+      { x: -profile.topWidth * 0.18, y: -profile.height + 4, r: 11 },
+      { x: profile.topWidth * 0.02, y: -profile.height - 10, r: 14 },
+      { x: profile.topWidth * 0.22, y: -profile.height + 8, r: 9 },
+    ];
+
+    root
+      .selectAll('circle.super-genre-bubble')
+      .data(bubbles)
+      .join('circle')
+      .attr('class', 'super-genre-bubble')
+      .attr('cx', (d) => d.x)
+      .attr('cy', (d) => d.y)
+      .attr('r', (d) => d.r);
+
+    root
+      .append('text')
+      .attr('class', 'super-genre-title')
+      .attr('y', -profile.height * 0.5)
+      .text(group.name);
+
+    root
+      .append('text')
+      .attr('class', 'super-genre-subtitle')
+      .attr('y', -profile.height * 0.5 + 34)
+      .text(group.nameEn);
+
+    root
+      .append('text')
+      .attr('class', 'super-genre-count')
+      .attr('y', -profile.height * 0.5 + 58)
+      .text(`${state.styleBySuper.get(group.id)?.length || 0} styles`);
+  });
+}
+
+function getOverviewProfile(group, index) {
+  const styleCount = state.styleBySuper.get(group.id)?.length || 0;
+  const columns = SUPER_GENRES.length;
+  const spread = MAP_WIDTH - 440;
+  const x = 220 + (spread / Math.max(columns - 1, 1)) * index;
+  const height = 410 + styleCount * 7 + (index % 2 === 0 ? 48 : 0);
+  const topWidth = 124 + styleCount * 1.5;
+  const baseWidth = topWidth + 50;
+  return {
+    x,
+    baseY: OVERVIEW_BASELINE,
+    height,
+    topWidth,
+    baseWidth,
+    baseInset: 26 + index * 2,
+  };
+}
+
+function buildBeerColumnPath(profile, inset = 0) {
+  const topWidth = Math.max(58, profile.topWidth - inset * 1.2);
+  const baseWidth = Math.max(topWidth + 12, profile.baseWidth - inset);
+  const height = Math.max(180, profile.height - inset * 0.6);
+  const neck = topWidth * 0.1;
+  return `
+    M${-topWidth / 2},${-height}
+    C${-topWidth / 2 + neck},${-height + 24} ${-baseWidth / 2 + 18},${-height * 0.56} ${-baseWidth / 2},0
+    L${baseWidth / 2},0
+    C${baseWidth / 2 - 18},${-height * 0.56} ${topWidth / 2 - neck},${-height + 24} ${topWidth / 2},${-height}
+    Z
+  `;
 }
 
 function renderCategories() {

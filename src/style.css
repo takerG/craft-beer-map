@@ -415,38 +415,93 @@ button {
   filter: url(#planetGlow);
 }
 
+.backbar-deck {
+  fill: rgba(18, 12, 8, 0.68);
+  stroke: rgba(255, 210, 150, 0.08);
+  stroke-width: 1.2;
+  filter: url(#planetGlow);
+}
+
+.backbar-counter {
+  fill: rgba(8, 6, 7, 0.9);
+}
+
+.backbar-counter-glow {
+  fill: rgba(255, 204, 138, 0.12);
+  filter: url(#softGlow);
+}
+
 .super-genre {
   cursor: pointer;
 }
 
-.super-genre-orbit {
-  opacity: 0.22;
+.super-genre-aura {
+  opacity: 0.13;
   filter: url(#planetGlow);
 }
 
+.super-genre-base {
+  opacity: 0.12;
+  filter: url(#softGlow);
+}
+
+.super-genre-column-shell {
+  opacity: 0.2;
+  stroke: rgba(255, 240, 223, 0.16);
+  stroke-width: 1.2;
+}
+
+.super-genre-column-liquid {
+  opacity: 0.58;
+  filter: url(#softGlow);
+}
+
+.super-genre-column-highlight {
+  fill: rgba(255, 253, 248, 0.14);
+  mix-blend-mode: screen;
+}
+
+.super-genre-handle {
+  fill: rgba(255, 249, 239, 0.08);
+  stroke: rgba(255, 248, 236, 0.18);
+  stroke-width: 1.1;
+}
+
+.super-genre-foam-glow {
+  fill: rgba(255, 243, 224, 0.18);
+  filter: url(#softGlow);
+}
+
+.super-genre-foam-cap,
+.super-genre-bubble {
+  fill: rgba(255, 247, 234, 0.94);
+  stroke: rgba(255, 255, 255, 0.18);
+  stroke-width: 1;
+}
+
 .super-genre-title {
-  font-size: 48px;
+  font-size: 30px;
   font-weight: 700;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.05em;
   text-anchor: middle;
   fill: rgba(255, 244, 224, 0.95);
   text-shadow: 0 0 30px rgba(0, 0, 0, 0.55);
 }
 
 .super-genre-subtitle {
-  font-size: 14px;
+  font-size: 11px;
   text-transform: uppercase;
-  letter-spacing: 0.3em;
+  letter-spacing: 0.26em;
   text-anchor: middle;
-  fill: rgba(255, 244, 224, 0.46);
+  fill: rgba(255, 244, 224, 0.52);
   text-shadow: 0 0 18px rgba(0, 0, 0, 0.45);
 }
 
 .super-genre-count {
-  font-size: 13px;
+  font-size: 11px;
   text-anchor: middle;
-  fill: rgba(255, 244, 224, 0.32);
-  letter-spacing: 0.12em;
+  fill: rgba(255, 244, 224, 0.34);
+  letter-spacing: 0.18em;
   text-transform: uppercase;
   text-shadow: 0 0 16px rgba(0, 0, 0, 0.42);
 }
