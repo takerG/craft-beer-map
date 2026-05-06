@@ -16,6 +16,7 @@
   --supernav-h: 46px;
   --panel-width: 400px;
   --ease: 220ms cubic-bezier(0.22, 1, 0.36, 1);
+  --atlas-bg: none;
 }
 
 *,
@@ -31,9 +32,8 @@ body {
   overflow: hidden;
   font-family: 'Outfit', 'Noto Sans SC', system-ui, sans-serif;
   background:
-    radial-gradient(circle at 18% 20%, rgba(255, 170, 80, 0.16), transparent 28%),
-    radial-gradient(circle at 82% 22%, rgba(86, 164, 255, 0.12), transparent 24%),
-    radial-gradient(circle at 50% 86%, rgba(172, 108, 255, 0.12), transparent 30%),
+    linear-gradient(180deg, rgba(5, 7, 11, 0.54), rgba(4, 6, 10, 0.72)),
+    var(--atlas-bg) center center / cover no-repeat,
     linear-gradient(180deg, #07090d, #030408 64%, #020307);
   color: var(--text);
   -webkit-font-smoothing: antialiased;
@@ -43,12 +43,24 @@ body::before {
   content: '';
   position: fixed;
   inset: 0;
+  background:
+    radial-gradient(circle at 18% 18%, rgba(255, 181, 89, 0.15), transparent 28%),
+    radial-gradient(circle at 80% 24%, rgba(109, 211, 255, 0.12), transparent 26%),
+    linear-gradient(180deg, rgba(7, 9, 15, 0.08), rgba(2, 3, 7, 0.48));
+  pointer-events: none;
+}
+
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
   background-image:
     linear-gradient(rgba(255, 255, 255, 0.018) 1px, transparent 1px),
     linear-gradient(90deg, rgba(255, 255, 255, 0.018) 1px, transparent 1px);
   background-size: 140px 140px;
   mask-image: radial-gradient(circle at center, black 48%, transparent 100%);
   pointer-events: none;
+  opacity: 0.34;
 }
 
 button,
@@ -326,6 +338,9 @@ button {
   inset: calc(var(--topbar-h) + var(--supernav-h)) 0 0 0;
   overflow: hidden;
   cursor: grab;
+  background:
+    linear-gradient(180deg, rgba(4, 5, 8, 0.14), rgba(4, 5, 8, 0.44)),
+    radial-gradient(circle at center, rgba(255, 255, 255, 0.025), transparent 65%);
 }
 
 .map-container:active {
@@ -348,7 +363,7 @@ button {
 }
 
 .super-genre-orbit {
-  opacity: 0.16;
+  opacity: 0.22;
   filter: url(#planetGlow);
 }
 
@@ -358,6 +373,7 @@ button {
   letter-spacing: 0.08em;
   text-anchor: middle;
   fill: rgba(255, 244, 224, 0.95);
+  text-shadow: 0 0 30px rgba(0, 0, 0, 0.55);
 }
 
 .super-genre-subtitle {
@@ -366,6 +382,7 @@ button {
   letter-spacing: 0.3em;
   text-anchor: middle;
   fill: rgba(255, 244, 224, 0.46);
+  text-shadow: 0 0 18px rgba(0, 0, 0, 0.45);
 }
 
 .super-genre-count {
@@ -374,6 +391,7 @@ button {
   fill: rgba(255, 244, 224, 0.32);
   letter-spacing: 0.12em;
   text-transform: uppercase;
+  text-shadow: 0 0 16px rgba(0, 0, 0, 0.42);
 }
 
 .category-node {

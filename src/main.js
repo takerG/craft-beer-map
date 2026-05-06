@@ -59,6 +59,7 @@ init();
 
 async function init() {
   cacheDom();
+  document.documentElement.style.setProperty('--atlas-bg', `url("${import.meta.env.BASE_URL}beer-atlas-bg.svg")`);
   state.data = await loadData();
   normalizeData();
   setupSvg();
