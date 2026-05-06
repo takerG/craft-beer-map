@@ -44,9 +44,10 @@ body::before {
   position: fixed;
   inset: 0;
   background:
-    radial-gradient(circle at 18% 18%, rgba(255, 181, 89, 0.15), transparent 28%),
-    radial-gradient(circle at 80% 24%, rgba(109, 211, 255, 0.12), transparent 26%),
-    linear-gradient(180deg, rgba(7, 9, 15, 0.08), rgba(2, 3, 7, 0.48));
+    radial-gradient(circle at 22% 18%, rgba(255, 181, 89, 0.18), transparent 30%),
+    radial-gradient(circle at 76% 24%, rgba(88, 224, 204, 0.1), transparent 26%),
+    radial-gradient(circle at 50% 14%, rgba(255, 220, 155, 0.08), transparent 24%),
+    linear-gradient(180deg, rgba(18, 11, 10, 0.08), rgba(3, 3, 7, 0.5));
   pointer-events: none;
 }
 
