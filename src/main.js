@@ -1,6 +1,6 @@
 import './style.css';
 import * as d3 from 'd3';
-import { buildWallBoards, layoutBoardCategories, layoutCategoryStyles } from './wall-layout.js';
+import { buildWallBoards, getOverviewFocusPoint, layoutBoardCategories, layoutCategoryStyles } from './wall-layout.js';
 
 const MAP_WIDTH = 2200;
 const MAP_HEIGHT = 1440;
@@ -476,7 +476,8 @@ function setupZoom() {
 
   dom.svg.call(zoom);
   dom.zoom = zoom;
-  const initial = centerTransform(INITIAL_SCALE, MAP_WIDTH / 2, MAP_HEIGHT / 2);
+  const initialFocus = getOverviewFocusPoint();
+  const initial = centerTransform(INITIAL_SCALE, initialFocus.x, initialFocus.y);
   state.transform = initial;
   dom.svg.call(zoom.transform, initial);
   updateFocusLens();
@@ -496,7 +497,8 @@ function setupToolbar() {
     state.selectedCategory = null;
     updateStyleFocus();
     updateCategoryFocus();
-    dom.svg.transition().duration(700).call(dom.zoom.transform, centerTransform(INITIAL_SCALE, MAP_WIDTH / 2, MAP_HEIGHT / 2));
+    const initialFocus = getOverviewFocusPoint();
+    dom.svg.transition().duration(700).call(dom.zoom.transform, centerTransform(INITIAL_SCALE, initialFocus.x, initialFocus.y));
     showWelcomePanel();
   });
 

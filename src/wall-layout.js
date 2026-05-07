@@ -10,6 +10,13 @@ export const WALL_LAYOUT = {
   categorySidePadding: 14,
 };
 
+export function getOverviewFocusPoint() {
+  return {
+    x: WALL_LAYOUT.x + WALL_LAYOUT.width / 2,
+    y: WALL_LAYOUT.y + WALL_LAYOUT.height / 2 + 12,
+  };
+}
+
 export function buildWallBoards(superGenres, styleCountBySuper) {
   const total = superGenres.length;
   const innerWidth = WALL_LAYOUT.width - WALL_LAYOUT.gap * (total - 1);

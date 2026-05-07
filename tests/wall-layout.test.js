@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 
-import { WALL_LAYOUT, buildWallBoards, layoutBoardCategories } from '../src/wall-layout.js';
+import { WALL_LAYOUT, buildWallBoards, getOverviewFocusPoint, layoutBoardCategories } from '../src/wall-layout.js';
 
 test('buildWallBoards keeps every board inside the wall frame', () => {
   const genres = [
@@ -37,4 +37,12 @@ test('layoutBoardCategories places category rows inside the board inner area', (
     assert.ok(slot.y - slot.height / 2 >= board.innerTop + board.headerHeight);
     assert.ok(slot.y + slot.height / 2 <= board.innerTop + board.innerHeight - board.footerHeight + 0.001);
   });
+});
+
+test('getOverviewFocusPoint targets the visual center of the menu wall', () => {
+  const focus = getOverviewFocusPoint();
+
+  assert.equal(focus.x, WALL_LAYOUT.x + WALL_LAYOUT.width / 2);
+  assert.ok(focus.y > WALL_LAYOUT.y + WALL_LAYOUT.height / 2);
+  assert.ok(focus.y < WALL_LAYOUT.y + WALL_LAYOUT.height);
 });
