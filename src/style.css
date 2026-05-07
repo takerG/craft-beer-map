@@ -561,6 +561,10 @@ button {
   opacity: 0.06;
 }
 
+.category-node.is-category-hidden {
+  opacity: 0.12;
+}
+
 .style-node {
   --node-opacity: 1;
   --label-opacity: 0;
@@ -641,6 +645,10 @@ button {
 
 .style-node.is-board-hidden {
   opacity: 0.02;
+}
+
+.style-node.is-category-hidden {
+  opacity: 0.04;
 }
 
 .relation-link {
