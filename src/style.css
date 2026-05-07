@@ -573,17 +573,6 @@ button {
   transition: opacity var(--ease);
 }
 
-.style-ring {
-  opacity: 0.95;
-  stroke: rgba(255, 248, 232, 0.8);
-  stroke-width: 1.6;
-  filter: url(#softGlow);
-}
-
-.style-core {
-  opacity: 0.98;
-}
-
 .style-label,
 .style-code {
   text-anchor: middle;
@@ -593,23 +582,23 @@ button {
 }
 
 .style-label {
-  fill: rgba(255, 244, 224, 0.9);
-  font-size: 12px;
-  font-weight: 600;
+  fill: rgba(255, 247, 237, 0.96);
+  font-size: 15px;
+  font-weight: 700;
   paint-order: stroke;
-  stroke: rgba(8, 8, 12, 0.82);
-  stroke-width: 4px;
+  stroke: rgba(6, 6, 10, 0.88);
+  stroke-width: 5px;
   stroke-linejoin: round;
 }
 
 .style-code {
-  fill: rgba(255, 244, 224, 0.38);
-  font-size: 9px;
-  letter-spacing: 0.16em;
+  fill: rgba(255, 244, 224, 0.46);
+  font-size: 10px;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
-  opacity: calc(var(--label-opacity) * 0.72);
+  opacity: calc(var(--label-opacity) * 0.5);
   paint-order: stroke;
-  stroke: rgba(8, 8, 12, 0.72);
+  stroke: rgba(6, 6, 10, 0.76);
   stroke-width: 3px;
   stroke-linejoin: round;
 }
@@ -618,29 +607,24 @@ button {
   opacity: var(--label-opacity);
 }
 
-.style-node.is-active .style-ring {
-  stroke-width: 2.4;
-  filter: url(#planetGlow);
+.style-node.is-active .style-label {
+  fill: rgba(255, 251, 242, 1);
 }
 
-.style-node.is-related .style-ring {
-  opacity: 1;
+.style-node.is-related .style-label {
+  fill: rgba(255, 247, 237, 0.92);
 }
 
 .style-node.is-dimmed {
   opacity: var(--node-opacity);
 }
 
-.style-node.is-focus-far .style-ring {
-  stroke-width: 1.15;
+.style-node.is-focus-far .style-label {
+  fill: rgba(226, 218, 202, 0.7);
 }
 
-.style-node.is-focus-far .style-core {
-  opacity: 0.74;
-}
-
-.style-node.is-focus-near .style-ring {
-  stroke-width: 2;
+.style-node.is-focus-near .style-label {
+  fill: rgba(255, 251, 242, 0.98);
 }
 
 .style-node.is-board-hidden {

@@ -428,27 +428,15 @@ function renderStyles() {
     });
 
   styleGroups
-    .append('circle')
-    .attr('class', 'style-ring')
-    .attr('r', (d) => (d.key ? 16 : 11))
-    .attr('fill', (d) => d.color);
-
-  styleGroups
-    .append('circle')
-    .attr('class', 'style-core')
-    .attr('r', (d) => (d.key ? 8 : 5))
-    .attr('fill', '#fff7e7');
-
-  styleGroups
     .append('text')
     .attr('class', 'style-label')
-    .attr('y', 28)
+    .attr('y', 0)
     .text((d) => d.name_zh);
 
   styleGroups
     .append('text')
     .attr('class', 'style-code')
-    .attr('y', 43)
+    .attr('y', 16)
     .text((d) => d.code);
 
   dom.styleNodes = styleGroups;
@@ -712,7 +700,13 @@ function applyCategoryDensity() {
     const boardPenalty = state.activeBoardId && category.superGenreId !== state.activeBoardId && state.zoomK >= ZOOM_LEVELS.styles ? 0.08 : 1;
     const categoryPenalty = state.activeCategoryId && category.id !== state.activeCategoryId && state.zoomK >= DETAIL_SCALE ? 0.22 : 1;
     const opacity = focusMode ? (0.52 + focus * 0.48) * boardPenalty * categoryPenalty : 1;
-    const labelOpacity = state.zoomK >= MID_SCALE ? Math.min(1, (0.68 + focus * 0.32) * boardPenalty * categoryPenalty) : 0;
+    const detailPenalty =
+      state.zoomK >= DETAIL_SCALE
+        ? category.id === state.activeCategoryId
+          ? 0.34
+          : 0.08
+        : 1;
+    const labelOpacity = state.zoomK >= MID_SCALE ? Math.min(1, (0.68 + focus * 0.32) * boardPenalty * categoryPenalty * detailPenalty) : 0;
     d3.select(this)
       .style('--category-opacity', opacity.toFixed(3))
       .style('--category-label-opacity', labelOpacity.toFixed(3))
