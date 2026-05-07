@@ -1,6 +1,6 @@
 import './style.css';
 import * as d3 from 'd3';
-import { buildWallBoards, getNearestBoardId, getOverviewFocusPoint, layoutBoardCategories, layoutCategoryStyles } from './wall-layout.js';
+import { WALL_LAYOUT, buildWallBoards, getNearestBoardId, getOverviewFocusPoint, layoutBoardCategories, layoutCategoryStyles } from './wall-layout.js';
 
 const MAP_WIDTH = 2200;
 const MAP_HEIGHT = 1440;
@@ -479,7 +479,7 @@ function setupZoom() {
   dom.svg.call(zoom);
   dom.zoom = zoom;
   const initialFocus = getOverviewFocusPoint();
-  const initial = centerTransform(INITIAL_SCALE, initialFocus.x, initialFocus.y);
+  const initial = centerTransform(getOverviewScale(), initialFocus.x, initialFocus.y);
   state.transform = initial;
   dom.svg.call(zoom.transform, initial);
   updateFocusLens();
@@ -500,7 +500,7 @@ function setupToolbar() {
     updateStyleFocus();
     updateCategoryFocus();
     const initialFocus = getOverviewFocusPoint();
-    dom.svg.transition().duration(700).call(dom.zoom.transform, centerTransform(INITIAL_SCALE, initialFocus.x, initialFocus.y));
+    dom.svg.transition().duration(700).call(dom.zoom.transform, centerTransform(getOverviewScale(), initialFocus.x, initialFocus.y));
     showWelcomePanel();
   });
 
@@ -799,6 +799,13 @@ function centerTransform(scale, x, y) {
   const tx = rect.width / 2 - x * scale;
   const ty = rect.height / 2 - y * scale;
   return d3.zoomIdentity.translate(tx, ty).scale(scale);
+}
+
+function getOverviewScale() {
+  const rect = dom.mapContainer.getBoundingClientRect();
+  const scaleByWidth = (rect.width / WALL_LAYOUT.width) * 1.08;
+  const scaleByHeight = (rect.height / WALL_LAYOUT.height) * 0.78;
+  return clamp(Math.min(scaleByWidth, scaleByHeight), 0.64, 1.34);
 }
 
 function clamp(value, min, max) {
