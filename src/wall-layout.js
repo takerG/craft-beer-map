@@ -12,8 +12,8 @@ export const WALL_LAYOUT = {
 
 export function getOverviewFocusPoint() {
   return {
-    x: WALL_LAYOUT.x + WALL_LAYOUT.width / 2 - 92,
-    y: WALL_LAYOUT.y + WALL_LAYOUT.height / 2 + 26,
+    x: WALL_LAYOUT.x + WALL_LAYOUT.width / 2,
+    y: WALL_LAYOUT.y + WALL_LAYOUT.height / 2,
   };
 }
 
