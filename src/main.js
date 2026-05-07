@@ -1,6 +1,6 @@
 import './style.css';
 import * as d3 from 'd3';
-import { buildWallBoards, getOverviewFocusPoint, layoutBoardCategories, layoutCategoryStyles } from './wall-layout.js';
+import { buildWallBoards, getNearestBoardId, getOverviewFocusPoint, layoutBoardCategories, layoutCategoryStyles } from './wall-layout.js';
 
 const MAP_WIDTH = 2200;
 const MAP_HEIGHT = 1440;
@@ -54,6 +54,7 @@ const state = {
   zoomK: INITIAL_SCALE,
   transform: d3.zoomIdentity,
   boardMap: new Map(),
+  activeBoardId: null,
 };
 
 const dom = {};
@@ -606,8 +607,28 @@ function updateVisibility(scale) {
   dom.styleNodes?.classed('labels-visible', labelMode);
   dom.categoryNodes?.classed('labels-visible', scale >= MID_SCALE);
 
+  updateBoardFocus();
   updateStyleFocus();
   updateCategoryFocus();
+}
+
+function updateBoardFocus() {
+  if (state.selectedStyle) {
+    state.activeBoardId = state.styleMap.get(state.selectedStyle)?.superGenreId ?? null;
+  } else if (state.selectedCategory) {
+    state.activeBoardId = state.categoryMap.get(state.selectedCategory)?.superGenreId ?? null;
+  } else if (state.zoomK >= ZOOM_LEVELS.categories) {
+    const rect = dom.mapContainer.getBoundingClientRect();
+    const centerWorldX = state.transform.invertX(rect.width / 2);
+    state.activeBoardId = getNearestBoardId(SUPER_GENRES, centerWorldX);
+  } else {
+    state.activeBoardId = null;
+  }
+
+  dom.overviewLayer
+    .selectAll('g.super-genre')
+    .classed('is-focus-board', (d) => d.id === state.activeBoardId)
+    .classed('is-focus-dimmed', (d) => Boolean(state.activeBoardId) && state.zoomK >= ZOOM_LEVELS.styles && d.id !== state.activeBoardId);
 }
 
 function updateCategoryFocus() {
@@ -668,12 +689,14 @@ function applyCategoryDensity() {
   dom.categoryNodes.each(function setCategoryDensity(category) {
     const distance = projectDistance(category.x, category.y, rect);
     const focus = focusMode ? Math.max(0, 1 - distance / fadeRadius) : 1;
-    const opacity = focusMode ? 0.52 + focus * 0.48 : 1;
-    const labelOpacity = state.zoomK >= MID_SCALE ? Math.min(1, 0.68 + focus * 0.32) : 0;
+    const boardPenalty = state.activeBoardId && category.superGenreId !== state.activeBoardId && state.zoomK >= ZOOM_LEVELS.styles ? 0.08 : 1;
+    const opacity = focusMode ? (0.52 + focus * 0.48) * boardPenalty : 1;
+    const labelOpacity = state.zoomK >= MID_SCALE ? Math.min(1, (0.68 + focus * 0.32) * boardPenalty) : 0;
     d3.select(this)
       .style('--category-opacity', opacity.toFixed(3))
       .style('--category-label-opacity', labelOpacity.toFixed(3))
-      .classed('is-focus-far', focusMode && distance > fadeRadius);
+      .classed('is-focus-far', focusMode && distance > fadeRadius)
+      .classed('is-board-hidden', Boolean(state.activeBoardId) && state.zoomK >= ZOOM_LEVELS.styles && category.superGenreId !== state.activeBoardId);
   });
 }
 
@@ -692,9 +715,10 @@ function applyStyleDensity(activeId, relatedIds) {
     const isActive = style.id === activeId;
     const isRelated = Boolean(activeId) && relatedIds.has(style.id) && style.id !== activeId;
     const isDimmedByRelation = Boolean(activeId) && !relatedIds.has(style.id);
+    const boardPenalty = state.activeBoardId && style.superGenreId !== state.activeBoardId && state.zoomK >= ZOOM_LEVELS.styles ? 0.04 : 1;
 
-    let nodeOpacity = focusMode ? 0.44 + focus * 0.56 : 1;
-    let labelOpacity = detailMode ? Math.max(0.32, focus * 0.96) : Math.max(0, focus * 0.28 - 0.08);
+    let nodeOpacity = focusMode ? (0.44 + focus * 0.56) * boardPenalty : 1;
+    let labelOpacity = detailMode ? Math.max(0.32, focus * 0.96) * boardPenalty : Math.max(0, focus * 0.28 - 0.08) * boardPenalty;
 
     if (isRelated) {
       nodeOpacity = Math.max(nodeOpacity, 0.76);
@@ -715,7 +739,8 @@ function applyStyleDensity(activeId, relatedIds) {
       .style('--node-opacity', nodeOpacity.toFixed(3))
       .style('--label-opacity', labelOpacity.toFixed(3))
       .classed('is-focus-far', focusMode && distance > fadeRadius)
-      .classed('is-focus-near', focusMode && distance <= nearRadius);
+      .classed('is-focus-near', focusMode && distance <= nearRadius)
+      .classed('is-board-hidden', Boolean(state.activeBoardId) && state.zoomK >= ZOOM_LEVELS.styles && style.superGenreId !== state.activeBoardId);
   });
 }
 

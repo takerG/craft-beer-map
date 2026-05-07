@@ -423,6 +423,15 @@ button {
 
 .super-genre {
   cursor: pointer;
+  transition: opacity var(--ease), transform var(--ease);
+}
+
+.super-genre.is-focus-dimmed {
+  opacity: 0.14;
+}
+
+.super-genre.is-focus-board {
+  opacity: 1;
 }
 
 .super-genre-aura {
@@ -548,6 +557,10 @@ button {
   opacity: 0.22;
 }
 
+.category-node.is-board-hidden {
+  opacity: 0.06;
+}
+
 .style-node {
   --node-opacity: 1;
   --label-opacity: 0;
@@ -624,6 +637,10 @@ button {
 
 .style-node.is-focus-near .style-ring {
   stroke-width: 2;
+}
+
+.style-node.is-board-hidden {
+  opacity: 0.02;
 }
 
 .relation-link {

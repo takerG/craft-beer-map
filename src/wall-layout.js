@@ -17,6 +17,18 @@ export function getOverviewFocusPoint() {
   };
 }
 
+export function getNearestBoardId(boards, focusX) {
+  if (!boards.length) return null;
+
+  return boards.reduce((best, board) => {
+    const distance = Math.abs(board.x - focusX);
+    if (!best || distance < best.distance) {
+      return { id: board.id, distance };
+    }
+    return best;
+  }, null)?.id ?? null;
+}
+
 export function buildWallBoards(superGenres, styleCountBySuper) {
   const total = superGenres.length;
   const innerWidth = WALL_LAYOUT.width - WALL_LAYOUT.gap * (total - 1);
@@ -76,9 +88,9 @@ export function layoutBoardCategories(categories, board) {
 export function layoutCategoryStyles(styles, category) {
   if (!styles.length) return [];
 
-  const cols = styles.length <= 4 ? 2 : styles.length <= 9 ? 3 : 4;
-  const cellX = 74;
-  const cellY = 54;
+  const cols = styles.length <= 4 ? 2 : styles.length <= 8 ? 3 : 3;
+  const cellX = 92;
+  const cellY = 68;
   const totalRows = Math.ceil(styles.length / cols);
   const originY = category.y + category.height * 0.9;
 

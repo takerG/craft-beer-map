@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 
-import { WALL_LAYOUT, buildWallBoards, getOverviewFocusPoint, layoutBoardCategories } from '../src/wall-layout.js';
+import { WALL_LAYOUT, buildWallBoards, getNearestBoardId, getOverviewFocusPoint, layoutBoardCategories } from '../src/wall-layout.js';
 
 test('buildWallBoards keeps every board inside the wall frame', () => {
   const genres = [
@@ -45,4 +45,12 @@ test('getOverviewFocusPoint targets the visual center of the menu wall', () => {
   assert.equal(focus.x, WALL_LAYOUT.x + WALL_LAYOUT.width / 2);
   assert.ok(focus.y > WALL_LAYOUT.y + WALL_LAYOUT.height / 2);
   assert.ok(focus.y < WALL_LAYOUT.y + WALL_LAYOUT.height);
+});
+
+test('getNearestBoardId returns the board closest to the current focus x', () => {
+  const boards = buildWallBoards([{ id: 'a' }, { id: 'b' }, { id: 'c' }], new Map([['a', 3], ['b', 8], ['c', 5]]));
+
+  assert.equal(getNearestBoardId(boards, boards[0].x + 10), 'a');
+  assert.equal(getNearestBoardId(boards, boards[1].x), 'b');
+  assert.equal(getNearestBoardId(boards, boards[2].x - 12), 'c');
 });
