@@ -1,5 +1,6 @@
 import './style.css';
 import * as d3 from 'd3';
+import { buildWallBoards, layoutBoardCategories, layoutCategoryStyles } from './wall-layout.js';
 
 const MAP_WIDTH = 2200;
 const MAP_HEIGHT = 1440;
@@ -13,8 +14,6 @@ const ZOOM_LEVELS = {
   categories: 1.45,
   styles: 2.1,
 };
-
-const OVERVIEW_BASELINE = 1160;
 
 const SUPER_GENRES = [
   { id: 'american', name: '美国啤酒', nameEn: 'American', categories: ['1', '18', '19', '20', '21', '22'], color: '#ffb24c', x: 500, y: 500, rx: 300, ry: 190 },
@@ -54,6 +53,7 @@ const state = {
   showLinks: true,
   zoomK: INITIAL_SCALE,
   transform: d3.zoomIdentity,
+  boardMap: new Map(),
 };
 
 const dom = {};
@@ -152,6 +152,7 @@ function normalizeData() {
     state.relatedByStyle.get(relation.target.id)?.push(relation);
   });
 
+  layoutWallBoards();
   layoutCategories();
   layoutStyles();
 }
@@ -160,16 +161,26 @@ function findSuperGenre(categoryId) {
   return SUPER_GENRES.find((group) => group.categories.includes(categoryId)) || SUPER_GENRES[0];
 }
 
+function layoutWallBoards() {
+  state.boardMap.clear();
+  const styleCountBySuper = new Map(SUPER_GENRES.map((group) => [group.id, state.styleBySuper.get(group.id)?.length || 0]));
+  const boards = buildWallBoards(SUPER_GENRES, styleCountBySuper);
+  boards.forEach((board, index) => {
+    const group = SUPER_GENRES[index];
+    Object.assign(group, board);
+    state.boardMap.set(group.id, board);
+  });
+}
+
 function layoutCategories() {
   SUPER_GENRES.forEach((group) => {
+    const board = state.boardMap.get(group.id);
     const categories = state.categories.filter((category) => category.superGenreId === group.id);
-    const angleStep = (Math.PI * 2) / Math.max(categories.length, 1);
+    const slots = layoutBoardCategories(categories, board);
     categories.forEach((category, index) => {
-      const angle = -Math.PI / 2 + index * angleStep;
-      const radiusX = Math.max(70, group.rx - 90);
-      const radiusY = Math.max(50, group.ry - 68);
-      category.x = group.x + Math.cos(angle) * radiusX;
-      category.y = group.y + Math.sin(angle) * radiusY;
+      Object.assign(category, slots[index], {
+        boardId: group.id,
+      });
     });
   });
 }
@@ -182,41 +193,11 @@ function layoutStyles() {
 }
 
 function positionStyleCluster(category, styles) {
-  const centerX = category.x;
-  const centerY = category.y + 34;
-
-  if (styles.length === 1) {
-    styles[0].x = centerX;
-    styles[0].y = centerY;
-    return;
-  }
-
-  const rings = [];
-  let remaining = styles.length;
-  let ringIndex = 0;
-
-  while (remaining > 0) {
-    const capacity = ringIndex === 0 ? Math.min(3, remaining) : Math.min(6 + ringIndex * 4, remaining);
-    const radius = 52 + ringIndex * 60;
-    rings.push({ capacity, radius, rotation: ringIndex % 2 === 0 ? -Math.PI / 2 : -Math.PI / 2 + Math.PI / capacity });
-    remaining -= capacity;
-    ringIndex += 1;
-  }
-
-  let cursor = 0;
-  rings.forEach((ring, currentRing) => {
-    const arcSpan = currentRing === 0 && ring.capacity <= 3 ? Math.PI * 0.92 : Math.PI * 1.6;
-    const startAngle = ring.rotation - arcSpan / 2;
-    const step = ring.capacity === 1 ? 0 : arcSpan / (ring.capacity - 1);
-
-    for (let slot = 0; slot < ring.capacity; slot += 1) {
-      const style = styles[cursor];
-      if (!style) break;
-      const angle = startAngle + step * slot;
-      style.x = centerX + Math.cos(angle) * ring.radius;
-      style.y = centerY + Math.sin(angle) * (ring.radius * 0.68);
-      cursor += 1;
-    }
+  const positions = layoutCategoryStyles(styles, category);
+  styles.forEach((style, index) => {
+    const pos = positions[index];
+    style.x = pos.x;
+    style.y = pos.y;
   });
 }
 
@@ -269,52 +250,23 @@ function renderAll() {
 }
 
 function renderBackdrop() {
-  const nebulae = [
-    { x: 340, y: 280, r: 360, color: '#ff9e47' },
-    { x: 1510, y: 250, r: 320, color: '#5ca8ff' },
-    { x: 980, y: 1030, r: 380, color: '#b06cff' },
-    { x: 1870, y: 1130, r: 280, color: '#53d4da' },
-  ];
-
   dom.bgLayer
-    .selectAll('circle.nebula')
-    .data(nebulae)
-    .join('circle')
-    .attr('class', 'nebula')
-    .attr('cx', (d) => d.x)
-    .attr('cy', (d) => d.y)
-    .attr('r', (d) => d.r)
-    .attr('fill', (d) => d.color);
-
-  dom.bgLayer
-    .append('path')
-    .attr('class', 'backbar-deck')
-    .attr(
-      'd',
-      `M120,${OVERVIEW_BASELINE - 20}
-       C360,${OVERVIEW_BASELINE - 110} 620,${OVERVIEW_BASELINE - 120} 920,${OVERVIEW_BASELINE - 58}
-       C1180,${OVERVIEW_BASELINE - 4} 1450,${OVERVIEW_BASELINE - 8} 1760,${OVERVIEW_BASELINE - 84}
-       C1900,${OVERVIEW_BASELINE - 120} 2020,${OVERVIEW_BASELINE - 118} 2080,${OVERVIEW_BASELINE - 48}
-       L2080,1418 L120,1418 Z`,
-    );
+    .append('rect')
+    .attr('class', 'menu-wall-shadow')
+    .attr('x', 220)
+    .attr('y', 188)
+    .attr('width', 1500)
+    .attr('height', 360)
+    .attr('rx', 36);
 
   dom.bgLayer
     .append('rect')
-    .attr('class', 'backbar-counter')
-    .attr('x', 0)
-    .attr('y', OVERVIEW_BASELINE + 56)
-    .attr('width', MAP_WIDTH)
-    .attr('height', 220)
-    .attr('rx', 0);
-
-  dom.bgLayer
-    .append('rect')
-    .attr('class', 'backbar-counter-glow')
-    .attr('x', 140)
-    .attr('y', OVERVIEW_BASELINE + 34)
-    .attr('width', MAP_WIDTH - 280)
-    .attr('height', 24)
-    .attr('rx', 12);
+    .attr('class', 'menu-wall-glow')
+    .attr('x', 250)
+    .attr('y', 206)
+    .attr('width', 1440)
+    .attr('height', 316)
+    .attr('rx', 28);
 }
 
 function renderOverview() {
@@ -323,152 +275,73 @@ function renderOverview() {
     .data(SUPER_GENRES, (d) => d.id)
     .join('g')
     .attr('class', 'super-genre')
-    .attr('transform', (d, index) => {
-      const profile = getOverviewProfile(d, index);
-      return `translate(${profile.x},${profile.baseY})`;
-    })
+    .attr('transform', (d) => `translate(${d.x},${d.y})`)
     .on('click', (event, group) => {
       event.stopPropagation();
       zoomToSuperGenre(group);
     });
 
-  groups.each(function decorateOverview(group, index) {
+  groups.each(function decorateOverview(group) {
     const root = d3.select(this);
     root.selectAll('*').remove();
-    const profile = getOverviewProfile(group, index);
+    const boardX = -group.width / 2;
+    const boardY = -group.height / 2;
 
-    root
-      .append('ellipse')
-      .attr('class', 'super-genre-aura')
-      .attr('cx', 0)
-      .attr('cy', -profile.height * 0.62)
-      .attr('rx', profile.baseWidth * 1.18)
-      .attr('ry', profile.height * 0.62)
-      .attr('fill', group.color);
-
-    root
-      .append('path')
-      .attr('class', 'super-genre-base')
-      .attr(
-        'd',
-        `M${-profile.baseWidth * 0.86},18
-         C${-profile.baseWidth * 0.44},${42 + profile.baseInset * 0.1} ${profile.baseWidth * 0.44},${42 + profile.baseInset * 0.1} ${profile.baseWidth * 0.86},18
-         L${profile.baseWidth * 1.02},120
-         C${profile.baseWidth * 0.54},152 ${-profile.baseWidth * 0.54},152 ${-profile.baseWidth * 1.02},120 Z`,
-      )
-      .attr('fill', group.color);
-
-    root
-      .append('path')
-      .attr('class', 'super-genre-column-shell')
-      .attr('d', buildBeerColumnPath(profile, 0))
-      .attr('fill', group.color);
-
-    root
-      .append('path')
-      .attr('class', 'super-genre-column-liquid')
-      .attr('d', buildBeerColumnPath(profile, 16))
-      .attr('fill', group.color);
+    root.append('rect').attr('class', 'super-genre-aura').attr('x', boardX - 4).attr('y', boardY - 4).attr('width', group.width + 8).attr('height', group.height + 8).attr('rx', 24);
+    root.append('rect').attr('class', 'super-genre-frame').attr('x', boardX).attr('y', boardY).attr('width', group.width).attr('height', group.height).attr('rx', 22);
+    root.append('rect').attr('class', 'super-genre-surface').attr('x', boardX + 10).attr('y', boardY + 10).attr('width', group.width - 20).attr('height', group.height - 20).attr('rx', 18);
+    root.append('rect').attr('class', 'super-genre-accent').attr('x', boardX + 18).attr('y', boardY + 18).attr('width', 10).attr('height', group.height - 36).attr('rx', 5).attr('fill', group.color);
+    root.append('rect').attr('class', 'super-genre-header').attr('x', boardX + 26).attr('y', boardY + 24).attr('width', group.width - 52).attr('height', 86).attr('rx', 16);
+    root.append('rect').attr('class', 'super-genre-divider').attr('x', boardX + 26).attr('y', boardY + 122).attr('width', group.width - 52).attr('height', 2).attr('rx', 1);
 
     root
       .append('rect')
-      .attr('class', 'super-genre-column-highlight')
-      .attr('x', -profile.topWidth * 0.24)
-      .attr('y', -profile.height + 72)
-      .attr('width', Math.max(16, profile.topWidth * 0.16))
-      .attr('height', profile.height * 0.76)
-      .attr('rx', 12);
-
-    root
-      .append('rect')
-      .attr('class', 'super-genre-handle')
-      .attr('x', -profile.topWidth * 0.16)
-      .attr('y', -profile.height - 54)
-      .attr('width', profile.topWidth * 0.32)
-      .attr('height', 66)
+      .attr('class', 'super-genre-tap')
+      .attr('x', -18)
+      .attr('y', boardY + 20)
+      .attr('width', 36)
+      .attr('height', 62)
       .attr('rx', 14);
 
     root
-      .append('ellipse')
-      .attr('class', 'super-genre-foam-glow')
-      .attr('cx', 0)
-      .attr('cy', -profile.height + 18)
-      .attr('rx', profile.topWidth * 0.74)
-      .attr('ry', 28);
+      .append('rect')
+      .attr('class', 'super-genre-pour')
+      .attr('x', -5)
+      .attr('y', boardY + 68)
+      .attr('width', 10)
+      .attr('height', 36)
+      .attr('rx', 5)
+      .attr('fill', group.color);
 
     root
-      .append('ellipse')
-      .attr('class', 'super-genre-foam-cap')
-      .attr('cx', 0)
-      .attr('cy', -profile.height + 10)
-      .attr('rx', profile.topWidth * 0.62)
-      .attr('ry', 20);
-
-    const bubbles = [
-      { x: -profile.topWidth * 0.18, y: -profile.height + 4, r: 11 },
-      { x: profile.topWidth * 0.02, y: -profile.height - 10, r: 14 },
-      { x: profile.topWidth * 0.22, y: -profile.height + 8, r: 9 },
-    ];
-
-    root
-      .selectAll('circle.super-genre-bubble')
-      .data(bubbles)
-      .join('circle')
-      .attr('class', 'super-genre-bubble')
-      .attr('cx', (d) => d.x)
-      .attr('cy', (d) => d.y)
-      .attr('r', (d) => d.r);
+      .selectAll('rect.super-genre-placeholder')
+      .data([0, 1, 2])
+      .join('rect')
+      .attr('class', 'super-genre-placeholder')
+      .attr('x', boardX + 30)
+      .attr('y', (_, index) => boardY + 148 + index * 42)
+      .attr('width', (_, index) => group.width - 64 - index * 18)
+      .attr('height', 16)
+      .attr('rx', 8);
 
     root
       .append('text')
       .attr('class', 'super-genre-title')
-      .attr('y', -profile.height * 0.5)
+      .attr('y', boardY + 58)
       .text(group.name);
 
     root
       .append('text')
       .attr('class', 'super-genre-subtitle')
-      .attr('y', -profile.height * 0.5 + 34)
+      .attr('y', boardY + 86)
       .text(group.nameEn);
 
     root
       .append('text')
       .attr('class', 'super-genre-count')
-      .attr('y', -profile.height * 0.5 + 58)
+      .attr('y', boardY + group.height - 26)
       .text(`${state.styleBySuper.get(group.id)?.length || 0} styles`);
   });
-}
-
-function getOverviewProfile(group, index) {
-  const styleCount = state.styleBySuper.get(group.id)?.length || 0;
-  const columns = SUPER_GENRES.length;
-  const spread = MAP_WIDTH - 440;
-  const x = 220 + (spread / Math.max(columns - 1, 1)) * index;
-  const height = 410 + styleCount * 7 + (index % 2 === 0 ? 48 : 0);
-  const topWidth = 124 + styleCount * 1.5;
-  const baseWidth = topWidth + 50;
-  return {
-    x,
-    baseY: OVERVIEW_BASELINE,
-    height,
-    topWidth,
-    baseWidth,
-    baseInset: 26 + index * 2,
-  };
-}
-
-function buildBeerColumnPath(profile, inset = 0) {
-  const topWidth = Math.max(58, profile.topWidth - inset * 1.2);
-  const baseWidth = Math.max(topWidth + 12, profile.baseWidth - inset);
-  const height = Math.max(180, profile.height - inset * 0.6);
-  const neck = topWidth * 0.1;
-  return `
-    M${-topWidth / 2},${-height}
-    C${-topWidth / 2 + neck},${-height + 24} ${-baseWidth / 2 + 18},${-height * 0.56} ${-baseWidth / 2},0
-    L${baseWidth / 2},0
-    C${baseWidth / 2 - 18},${-height * 0.56} ${topWidth / 2 - neck},${-height + 24} ${topWidth / 2},${-height}
-    Z
-  `;
 }
 
 function renderCategories() {
@@ -487,27 +360,39 @@ function renderCategories() {
     });
 
   categoryGroups
-    .append('circle')
+    .append('rect')
     .attr('class', 'category-aura')
-    .attr('r', 28)
+    .attr('x', (d) => -d.width / 2)
+    .attr('y', (d) => -d.height / 2)
+    .attr('width', (d) => d.width)
+    .attr('height', (d) => d.height)
+    .attr('rx', 12)
     .attr('fill', (d) => d.color);
 
   categoryGroups
-    .append('circle')
+    .append('rect')
     .attr('class', 'category-core')
-    .attr('r', 10)
+    .attr('x', (d) => -d.width / 2 + 8)
+    .attr('y', (d) => -d.height / 2 + 6)
+    .attr('width', 6)
+    .attr('height', (d) => d.height - 12)
+    .attr('rx', 3)
     .attr('fill', (d) => d.color);
 
   categoryGroups
     .append('text')
     .attr('class', 'category-label')
-    .attr('y', 48)
+    .attr('x', (d) => -d.width / 2 + 22)
+    .attr('y', 5)
+    .attr('text-anchor', 'start')
     .text((d) => d.name_zh);
 
   categoryGroups
     .append('text')
     .attr('class', 'category-count')
-    .attr('y', 68)
+    .attr('x', (d) => d.width / 2 - 18)
+    .attr('y', 5)
+    .attr('text-anchor', 'end')
     .text((d) => `${state.styleByCategory.get(d.id)?.length || 0} styles`);
 
   dom.categoryNodes = categoryGroups;

@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
+    "test": "node --test",
     "preview": "vite preview",
     "build:data": "python scripts/extract_bjcp_2015_pdf.py && python scripts/parse_bjcp_2015_pdf.py && node scripts/build_bjcp_2015_data.cjs",
     "build:all": "npm run build:data && npm run build"

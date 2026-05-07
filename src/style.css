@@ -410,25 +410,15 @@ button {
   display: block;
 }
 
-.nebula {
-  opacity: 0.08;
+.menu-wall-shadow {
+  fill: rgba(0, 0, 0, 0.22);
   filter: url(#planetGlow);
 }
 
-.backbar-deck {
-  fill: rgba(18, 12, 8, 0.68);
-  stroke: rgba(255, 210, 150, 0.08);
-  stroke-width: 1.2;
-  filter: url(#planetGlow);
-}
-
-.backbar-counter {
-  fill: rgba(8, 6, 7, 0.9);
-}
-
-.backbar-counter-glow {
-  fill: rgba(255, 204, 138, 0.12);
-  filter: url(#softGlow);
+.menu-wall-glow {
+  fill: rgba(255, 205, 122, 0.04);
+  stroke: rgba(255, 226, 179, 0.06);
+  stroke-width: 1.5;
 }
 
 .super-genre {
@@ -436,72 +426,68 @@ button {
 }
 
 .super-genre-aura {
-  opacity: 0.13;
-  filter: url(#planetGlow);
-}
-
-.super-genre-base {
-  opacity: 0.12;
+  fill: rgba(255, 202, 116, 0.05);
   filter: url(#softGlow);
 }
 
-.super-genre-column-shell {
-  opacity: 0.2;
-  stroke: rgba(255, 240, 223, 0.16);
-  stroke-width: 1.2;
+.super-genre-frame {
+  fill: rgba(73, 47, 31, 0.86);
+  stroke: rgba(255, 224, 176, 0.12);
+  stroke-width: 1.3;
 }
 
-.super-genre-column-liquid {
-  opacity: 0.58;
-  filter: url(#softGlow);
-}
-
-.super-genre-column-highlight {
-  fill: rgba(255, 253, 248, 0.14);
-  mix-blend-mode: screen;
-}
-
-.super-genre-handle {
-  fill: rgba(255, 249, 239, 0.08);
-  stroke: rgba(255, 248, 236, 0.18);
-  stroke-width: 1.1;
-}
-
-.super-genre-foam-glow {
-  fill: rgba(255, 243, 224, 0.18);
-  filter: url(#softGlow);
-}
-
-.super-genre-foam-cap,
-.super-genre-bubble {
-  fill: rgba(255, 247, 234, 0.94);
-  stroke: rgba(255, 255, 255, 0.18);
+.super-genre-surface {
+  fill: rgba(16, 16, 21, 0.92);
+  stroke: rgba(255, 233, 192, 0.05);
   stroke-width: 1;
 }
 
+.super-genre-header {
+  fill: rgba(22, 22, 28, 0.92);
+}
+
+.super-genre-divider {
+  fill: rgba(255, 222, 176, 0.08);
+}
+
+.super-genre-tap {
+  fill: rgba(225, 212, 191, 0.82);
+  stroke: rgba(255, 248, 233, 0.22);
+  stroke-width: 1.2;
+}
+
+.super-genre-placeholder {
+  fill: rgba(255, 246, 228, 0.08);
+}
+
+.super-genre-pour {
+  opacity: 0.74;
+  filter: url(#softGlow);
+}
+
 .super-genre-title {
-  font-size: 30px;
+  font-size: 18px;
   font-weight: 700;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.04em;
   text-anchor: middle;
   fill: rgba(255, 244, 224, 0.95);
   text-shadow: 0 0 30px rgba(0, 0, 0, 0.55);
 }
 
 .super-genre-subtitle {
-  font-size: 11px;
+  font-size: 9px;
   text-transform: uppercase;
-  letter-spacing: 0.26em;
+  letter-spacing: 0.2em;
   text-anchor: middle;
   fill: rgba(255, 244, 224, 0.52);
   text-shadow: 0 0 18px rgba(0, 0, 0, 0.45);
 }
 
 .super-genre-count {
-  font-size: 11px;
+  font-size: 9px;
   text-anchor: middle;
   fill: rgba(255, 244, 224, 0.34);
-  letter-spacing: 0.18em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   text-shadow: 0 0 16px rgba(0, 0, 0, 0.42);
 }
@@ -515,28 +501,25 @@ button {
 }
 
 .category-aura {
-  opacity: 0.18;
+  opacity: 0.22;
   filter: url(#softGlow);
 }
 
 .category-core {
-  stroke: rgba(255, 247, 231, 0.8);
-  stroke-width: 1.5;
+  opacity: 0.88;
 }
 
 .category-label {
-  text-anchor: middle;
   fill: rgba(255, 244, 224, 0.86);
-  font-size: 15px;
+  font-size: 12px;
   font-weight: 600;
   opacity: var(--category-label-opacity);
 }
 
 .category-count {
-  text-anchor: middle;
   fill: rgba(255, 244, 224, 0.36);
-  font-size: 11px;
-  letter-spacing: 0.14em;
+  font-size: 9px;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   opacity: 0;
 }
