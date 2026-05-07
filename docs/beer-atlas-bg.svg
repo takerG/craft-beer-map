@@ -1,62 +1,73 @@
 <svg width="1920" height="1080" viewBox="0 0 1920 1080" fill="none" xmlns="http://www.w3.org/2000/svg">
   <defs>
     <linearGradient id="room" x1="960" y1="0" x2="960" y2="1080" gradientUnits="userSpaceOnUse">
-      <stop offset="0" stop-color="#110D10"/>
-      <stop offset="0.34" stop-color="#171115"/>
-      <stop offset="0.7" stop-color="#0E0B0E"/>
+      <stop offset="0" stop-color="#120D10"/>
+      <stop offset="0.36" stop-color="#191217"/>
+      <stop offset="0.74" stop-color="#100C10"/>
       <stop offset="1" stop-color="#060508"/>
     </linearGradient>
-    <linearGradient id="wallWarm" x1="960" y1="120" x2="960" y2="760" gradientUnits="userSpaceOnUse">
-      <stop offset="0" stop-color="#3C251A" stop-opacity="0.42"/>
-      <stop offset="0.48" stop-color="#241815" stop-opacity="0.18"/>
-      <stop offset="1" stop-color="#0A090C" stop-opacity="0"/>
+    <linearGradient id="wallGlow" x1="960" y1="120" x2="960" y2="760" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#4A2B1D" stop-opacity="0.36"/>
+      <stop offset="0.55" stop-color="#281A17" stop-opacity="0.16"/>
+      <stop offset="1" stop-color="#09080B" stop-opacity="0"/>
     </linearGradient>
-    <linearGradient id="counterFront" x1="960" y1="700" x2="960" y2="1080" gradientUnits="userSpaceOnUse">
-      <stop offset="0" stop-color="#181114"/>
-      <stop offset="0.4" stop-color="#0E0B0D"/>
-      <stop offset="1" stop-color="#050407"/>
+    <linearGradient id="counterFront" x1="960" y1="720" x2="960" y2="1080" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#201519"/>
+      <stop offset="0.38" stop-color="#120D11"/>
+      <stop offset="1" stop-color="#050508"/>
     </linearGradient>
     <linearGradient id="counterTop" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#5B3929"/>
-      <stop offset="1" stop-color="#241611"/>
+      <stop offset="0" stop-color="#7A4B31"/>
+      <stop offset="0.4" stop-color="#553424"/>
+      <stop offset="1" stop-color="#2A1A14"/>
     </linearGradient>
-    <linearGradient id="woodDark" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#2B1D16"/>
-      <stop offset="1" stop-color="#171013"/>
+    <linearGradient id="wood" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#3A241B"/>
+      <stop offset="1" stop-color="#1A1112"/>
     </linearGradient>
     <linearGradient id="frame" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#6B4A34"/>
-      <stop offset="1" stop-color="#332118"/>
+      <stop offset="0" stop-color="#7D5537"/>
+      <stop offset="1" stop-color="#372116"/>
     </linearGradient>
-    <radialGradient id="lampLeft" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(360 160) rotate(90) scale(250 250)">
-      <stop stop-color="#FFD38A" stop-opacity="0.5"/>
-      <stop offset="0.45" stop-color="#F3A854" stop-opacity="0.14"/>
-      <stop offset="1" stop-color="#100D10" stop-opacity="0"/>
+    <linearGradient id="chalkboard" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#18181C"/>
+      <stop offset="1" stop-color="#0F1014"/>
+    </linearGradient>
+    <linearGradient id="glassAmber" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#FFCF6E"/>
+      <stop offset="0.46" stop-color="#DD9136"/>
+      <stop offset="1" stop-color="#7B3618"/>
+    </linearGradient>
+    <linearGradient id="glassRuby" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#E7A37A"/>
+      <stop offset="0.42" stop-color="#A64A30"/>
+      <stop offset="1" stop-color="#481719"/>
+    </linearGradient>
+    <linearGradient id="glassPale" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#FFF1AA"/>
+      <stop offset="0.44" stop-color="#E8B346"/>
+      <stop offset="1" stop-color="#93611C"/>
+    </linearGradient>
+    <radialGradient id="lampLeft" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(350 150) rotate(90) scale(230 230)">
+      <stop stop-color="#FFD488" stop-opacity="0.5"/>
+      <stop offset="0.46" stop-color="#F1A451" stop-opacity="0.14"/>
+      <stop offset="1" stop-color="#120D10" stop-opacity="0"/>
     </radialGradient>
-    <radialGradient id="lampCenter" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(960 130) rotate(90) scale(320 340)">
-      <stop stop-color="#FFE1A7" stop-opacity="0.42"/>
-      <stop offset="0.5" stop-color="#DB9750" stop-opacity="0.16"/>
-      <stop offset="1" stop-color="#100D10" stop-opacity="0"/>
+    <radialGradient id="lampCenter" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(960 126) rotate(90) scale(300 320)">
+      <stop stop-color="#FFE5A8" stop-opacity="0.44"/>
+      <stop offset="0.48" stop-color="#DB9751" stop-opacity="0.16"/>
+      <stop offset="1" stop-color="#120D10" stop-opacity="0"/>
     </radialGradient>
-    <radialGradient id="lampRight" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(1540 170) rotate(90) scale(250 250)">
-      <stop stop-color="#FFD38A" stop-opacity="0.48"/>
-      <stop offset="0.45" stop-color="#F3A854" stop-opacity="0.12"/>
-      <stop offset="1" stop-color="#100D10" stop-opacity="0"/>
+    <radialGradient id="lampRight" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(1560 156) rotate(90) scale(230 230)">
+      <stop stop-color="#FFD488" stop-opacity="0.48"/>
+      <stop offset="0.46" stop-color="#F1A451" stop-opacity="0.12"/>
+      <stop offset="1" stop-color="#120D10" stop-opacity="0"/>
     </radialGradient>
-    <radialGradient id="amberGlow" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(530 620) rotate(90) scale(230 280)">
-      <stop stop-color="#FFB665" stop-opacity="0.12"/>
-      <stop offset="1" stop-color="#FFB665" stop-opacity="0"/>
-    </radialGradient>
-    <radialGradient id="rubyGlow" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(1410 600) rotate(90) scale(250 300)">
-      <stop stop-color="#C96B4B" stop-opacity="0.1"/>
-      <stop offset="1" stop-color="#C96B4B" stop-opacity="0"/>
-    </radialGradient>
-    <filter id="blur18" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="18"/></filter>
     <filter id="blur8" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="8"/></filter>
     <filter id="grain">
-      <feTurbulence type="fractalNoise" baseFrequency="0.82" numOctaves="2" seed="13" stitchTiles="stitch"/>
+      <feTurbulence type="fractalNoise" baseFrequency="0.82" numOctaves="2" seed="17" stitchTiles="stitch"/>
       <feColorMatrix type="saturate" values="0"/>
-      <feComponentTransfer><feFuncA type="table" tableValues="0 0.028"/></feComponentTransfer>
+      <feComponentTransfer><feFuncA type="table" tableValues="0 0.022"/></feComponentTransfer>
     </filter>
   </defs>
 
@@ -64,89 +75,125 @@
   <rect width="1920" height="1080" fill="url(#lampLeft)"/>
   <rect width="1920" height="1080" fill="url(#lampCenter)"/>
   <rect width="1920" height="1080" fill="url(#lampRight)"/>
-  <rect width="1920" height="1080" fill="url(#amberGlow)"/>
-  <rect width="1920" height="1080" fill="url(#rubyGlow)"/>
-  <rect width="1920" height="1080" fill="url(#wallWarm)"/>
+  <rect width="1920" height="1080" fill="url(#wallGlow)"/>
 
-  <g opacity="0.68">
-    <rect x="180" y="170" width="1560" height="390" rx="34" fill="#0D0D11"/>
-    <rect x="220" y="208" width="1480" height="314" rx="24" fill="#121116" stroke="rgba(255,225,184,0.04)" stroke-width="2"/>
-    <rect x="250" y="236" width="1420" height="64" rx="18" fill="#19161A"/>
-    <rect x="250" y="316" width="1420" height="84" rx="22" fill="#141317"/>
-    <rect x="250" y="418" width="1420" height="78" rx="20" fill="#131216"/>
+  <g opacity="0.88">
+    <rect x="212" y="176" width="1496" height="374" rx="34" fill="#0E0E12"/>
+    <rect x="242" y="204" width="1436" height="320" rx="24" fill="#111116" stroke="rgba(255,229,188,0.05)" stroke-width="2"/>
+
+    <rect x="274" y="230" width="310" height="92" rx="18" fill="url(#chalkboard)" stroke="rgba(255,228,184,0.05)" stroke-width="2"/>
+    <rect x="606" y="230" width="324" height="92" rx="18" fill="url(#chalkboard)" stroke="rgba(255,228,184,0.05)" stroke-width="2"/>
+    <rect x="952" y="230" width="314" height="92" rx="18" fill="url(#chalkboard)" stroke="rgba(255,228,184,0.05)" stroke-width="2"/>
+    <rect x="1288" y="230" width="356" height="92" rx="18" fill="url(#chalkboard)" stroke="rgba(255,228,184,0.05)" stroke-width="2"/>
+
+    <rect x="274" y="342" width="1370" height="58" rx="18" fill="#16141A"/>
+    <rect x="274" y="420" width="1370" height="76" rx="20" fill="#131218"/>
   </g>
 
-  <g opacity="0.36">
-    <rect x="286" y="252" width="320" height="30" rx="10" fill="url(#woodDark)"/>
-    <rect x="646" y="252" width="300" height="30" rx="10" fill="url(#woodDark)"/>
-    <rect x="984" y="252" width="290" height="30" rx="10" fill="url(#woodDark)"/>
-    <rect x="1310" y="252" width="310" height="30" rx="10" fill="url(#woodDark)"/>
+  <g opacity="0.56">
+    <rect x="292" y="250" width="274" height="10" rx="5" fill="#2A252B"/>
+    <rect x="292" y="270" width="230" height="8" rx="4" fill="#252128"/>
+    <rect x="292" y="286" width="250" height="8" rx="4" fill="#252128"/>
+    <rect x="292" y="302" width="212" height="8" rx="4" fill="#252128"/>
 
-    <rect x="286" y="336" width="200" height="46" rx="14" fill="#18171C"/>
-    <rect x="502" y="336" width="210" height="46" rx="14" fill="#18171C"/>
-    <rect x="728" y="336" width="184" height="46" rx="14" fill="#18171C"/>
-    <rect x="934" y="336" width="204" height="46" rx="14" fill="#18171C"/>
-    <rect x="1158" y="336" width="190" height="46" rx="14" fill="#18171C"/>
-    <rect x="1370" y="336" width="216" height="46" rx="14" fill="#18171C"/>
+    <rect x="626" y="250" width="286" height="10" rx="5" fill="#2A252B"/>
+    <rect x="626" y="270" width="236" height="8" rx="4" fill="#252128"/>
+    <rect x="626" y="286" width="268" height="8" rx="4" fill="#252128"/>
+    <rect x="626" y="302" width="224" height="8" rx="4" fill="#252128"/>
 
-    <rect x="286" y="434" width="256" height="44" rx="14" fill="#17161A"/>
-    <rect x="562" y="434" width="242" height="44" rx="14" fill="#17161A"/>
-    <rect x="824" y="434" width="260" height="44" rx="14" fill="#17161A"/>
-    <rect x="1104" y="434" width="238" height="44" rx="14" fill="#17161A"/>
-    <rect x="1362" y="434" width="224" height="44" rx="14" fill="#17161A"/>
+    <rect x="972" y="250" width="274" height="10" rx="5" fill="#2A252B"/>
+    <rect x="972" y="270" width="220" height="8" rx="4" fill="#252128"/>
+    <rect x="972" y="286" width="244" height="8" rx="4" fill="#252128"/>
+    <rect x="972" y="302" width="210" height="8" rx="4" fill="#252128"/>
+
+    <rect x="1308" y="250" width="316" height="10" rx="5" fill="#2A252B"/>
+    <rect x="1308" y="270" width="274" height="8" rx="4" fill="#252128"/>
+    <rect x="1308" y="286" width="290" height="8" rx="4" fill="#252128"/>
+    <rect x="1308" y="302" width="248" height="8" rx="4" fill="#252128"/>
   </g>
 
-  <g opacity="0.42">
-    <rect x="274" y="218" width="20" height="286" rx="10" fill="#21171A"/>
-    <rect x="618" y="218" width="18" height="286" rx="9" fill="#21171A"/>
-    <rect x="952" y="218" width="18" height="286" rx="9" fill="#21171A"/>
-    <rect x="1286" y="218" width="18" height="286" rx="9" fill="#21171A"/>
-    <rect x="1618" y="218" width="20" height="286" rx="10" fill="#21171A"/>
-  </g>
-
-  <g opacity="0.26" filter="url(#blur8)">
-    <ellipse cx="470" cy="312" rx="170" ry="36" fill="#FFB45F"/>
-    <ellipse cx="950" cy="286" rx="240" ry="42" fill="#F0C47A"/>
-    <ellipse cx="1430" cy="322" rx="180" ry="36" fill="#CC7D57"/>
-  </g>
-
-  <g opacity="0.5">
-    <rect x="330" y="548" width="1240" height="18" rx="9" fill="url(#frame)"/>
-    <rect x="302" y="562" width="1300" height="8" rx="4" fill="rgba(255,226,176,0.12)"/>
+  <g opacity="0.48">
+    <rect x="304" y="358" width="128" height="26" rx="10" fill="#1F1C21"/>
+    <rect x="452" y="358" width="112" height="26" rx="10" fill="#1F1C21"/>
+    <rect x="584" y="358" width="136" height="26" rx="10" fill="#1F1C21"/>
+    <rect x="740" y="358" width="122" height="26" rx="10" fill="#1F1C21"/>
+    <rect x="882" y="358" width="130" height="26" rx="10" fill="#1F1C21"/>
+    <rect x="1032" y="358" width="118" height="26" rx="10" fill="#1F1C21"/>
+    <rect x="1170" y="358" width="138" height="26" rx="10" fill="#1F1C21"/>
+    <rect x="1328" y="358" width="124" height="26" rx="10" fill="#1F1C21"/>
+    <rect x="1472" y="358" width="140" height="26" rx="10" fill="#1F1C21"/>
   </g>
 
   <g opacity="0.78">
-    <path d="M0 708C180 696 358 704 532 720C714 736 854 760 1018 758C1200 756 1356 722 1548 708C1688 698 1808 698 1920 708V1080H0V708Z" fill="url(#counterFront)"/>
-    <path d="M0 726C206 714 386 724 556 740C742 758 874 782 1026 780C1204 778 1360 746 1556 728C1700 714 1814 714 1920 724V766H0V726Z" fill="url(#counterTop)"/>
-    <rect x="80" y="720" width="1760" height="16" rx="8" fill="rgba(255,214,154,0.12)" filter="url(#blur8)"/>
-    <rect x="0" y="760" width="1920" height="320" fill="rgba(0,0,0,0.34)"/>
+    <rect x="318" y="430" width="108" height="48" rx="16" fill="#1B161A"/>
+    <rect x="446" y="430" width="108" height="48" rx="16" fill="#1B161A"/>
+    <rect x="574" y="430" width="108" height="48" rx="16" fill="#1B161A"/>
+    <rect x="720" y="430" width="120" height="48" rx="16" fill="#1B161A"/>
+    <rect x="860" y="430" width="120" height="48" rx="16" fill="#1B161A"/>
+    <rect x="1000" y="430" width="120" height="48" rx="16" fill="#1B161A"/>
+    <rect x="1140" y="430" width="120" height="48" rx="16" fill="#1B161A"/>
+    <rect x="1280" y="430" width="120" height="48" rx="16" fill="#1B161A"/>
+    <rect x="1420" y="430" width="120" height="48" rx="16" fill="#1B161A"/>
   </g>
 
-  <g opacity="0.42">
-    <path d="M188 1080V874C188 834 220 802 260 802H334C374 802 406 834 406 874V1080" fill="#09090C"/>
-    <path d="M1510 1080V874C1510 834 1542 802 1582 802H1656C1696 802 1728 834 1728 874V1080" fill="#09090C"/>
-    <rect x="178" y="790" width="236" height="18" rx="9" fill="#120F12"/>
-    <rect x="1500" y="790" width="236" height="18" rx="9" fill="#120F12"/>
+  <g opacity="0.94">
+    <path d="M560 394V626" stroke="#D8C5AE" stroke-width="20" stroke-linecap="round"/>
+    <path d="M700 364V626" stroke="#D8C5AE" stroke-width="22" stroke-linecap="round"/>
+    <path d="M850 338V626" stroke="#D8C5AE" stroke-width="24" stroke-linecap="round"/>
+    <path d="M1018 344V626" stroke="#D8C5AE" stroke-width="24" stroke-linecap="round"/>
+    <path d="M1180 372V626" stroke="#D8C5AE" stroke-width="22" stroke-linecap="round"/>
+    <path d="M1328 404V626" stroke="#D8C5AE" stroke-width="20" stroke-linecap="round"/>
+
+    <rect x="516" y="352" width="88" height="74" rx="28" fill="#22181A"/>
+    <rect x="652" y="318" width="96" height="86" rx="32" fill="#221819"/>
+    <rect x="798" y="290" width="104" height="94" rx="36" fill="#231816"/>
+    <rect x="966" y="296" width="104" height="94" rx="36" fill="#1F1718"/>
+    <rect x="1132" y="324" width="96" height="86" rx="32" fill="#201819"/>
+    <rect x="1282" y="356" width="88" height="74" rx="28" fill="#1F1818"/>
+
+    <rect x="534" y="370" width="52" height="34" rx="14" fill="url(#glassPale)"/>
+    <rect x="674" y="338" width="52" height="38" rx="16" fill="url(#glassAmber)"/>
+    <rect x="822" y="308" width="56" height="42" rx="18" fill="url(#glassRuby)"/>
+    <rect x="990" y="314" width="56" height="42" rx="18" fill="url(#glassPale)"/>
+    <rect x="1154" y="344" width="52" height="38" rx="16" fill="url(#glassAmber)"/>
+    <rect x="1300" y="374" width="52" height="34" rx="14" fill="url(#glassRuby)"/>
+
+    <ellipse cx="560" cy="406" rx="20" ry="8" fill="#FFF4DA"/>
+    <ellipse cx="700" cy="378" rx="22" ry="8" fill="#FFF4DA"/>
+    <ellipse cx="850" cy="350" rx="24" ry="9" fill="#FFF4DA"/>
+    <ellipse cx="1018" cy="356" rx="24" ry="9" fill="#FFF4DA"/>
+    <ellipse cx="1180" cy="384" rx="22" ry="8" fill="#FFF4DA"/>
+    <ellipse cx="1328" cy="410" rx="20" ry="8" fill="#FFF4DA"/>
   </g>
 
-  <g opacity="0.32">
-    <rect x="72" y="286" width="116" height="162" rx="12" fill="#161418" stroke="rgba(255,219,171,0.08)" stroke-width="2"/>
-    <rect x="1734" y="260" width="112" height="172" rx="12" fill="#161418" stroke="rgba(255,219,171,0.08)" stroke-width="2"/>
-    <rect x="92" y="304" width="76" height="10" rx="5" fill="#272126"/>
-    <rect x="92" y="326" width="64" height="8" rx="4" fill="#272126"/>
-    <rect x="92" y="344" width="82" height="8" rx="4" fill="#272126"/>
-    <rect x="1754" y="280" width="72" height="10" rx="5" fill="#272126"/>
-    <rect x="1754" y="302" width="56" height="8" rx="4" fill="#272126"/>
-    <rect x="1754" y="320" width="78" height="8" rx="4" fill="#272126"/>
+  <g opacity="0.86">
+    <path d="M0 714C176 702 350 708 522 720C710 734 860 760 1020 758C1190 756 1336 728 1524 714C1680 702 1810 702 1920 712V1080H0V714Z" fill="url(#counterFront)"/>
+    <path d="M0 726C214 714 390 724 562 740C752 758 894 780 1038 778C1206 776 1360 746 1548 728C1704 714 1818 714 1920 722V760H0V726Z" fill="url(#counterTop)"/>
+    <rect x="82" y="720" width="1756" height="12" rx="6" fill="rgba(255,224,170,0.18)"/>
+    <rect x="0" y="758" width="1920" height="322" fill="rgba(0,0,0,0.28)"/>
   </g>
 
-  <g opacity="0.22">
-    <ellipse cx="310" cy="906" rx="136" ry="20" fill="#1A1214"/>
-    <ellipse cx="1618" cy="914" rx="148" ry="22" fill="#171114"/>
-    <ellipse cx="960" cy="816" rx="600" ry="34" fill="rgba(255,201,126,0.08)" filter="url(#blur18)"/>
+  <g opacity="0.44">
+    <rect x="104" y="286" width="112" height="176" rx="12" fill="#181419" stroke="rgba(255,228,184,0.09)" stroke-width="2"/>
+    <rect x="1706" y="266" width="118" height="186" rx="12" fill="#181419" stroke="rgba(255,228,184,0.09)" stroke-width="2"/>
+    <rect x="126" y="310" width="68" height="10" rx="5" fill="#2D272C"/>
+    <rect x="126" y="330" width="54" height="8" rx="4" fill="#2A2428"/>
+    <rect x="126" y="348" width="72" height="8" rx="4" fill="#2A2428"/>
+    <rect x="1730" y="290" width="72" height="10" rx="5" fill="#2D272C"/>
+    <rect x="1730" y="310" width="58" height="8" rx="4" fill="#2A2428"/>
+    <rect x="1730" y="328" width="80" height="8" rx="4" fill="#2A2428"/>
   </g>
 
-  <g opacity="0.26">
+  <g opacity="0.52">
+    <ellipse cx="316" cy="912" rx="156" ry="24" fill="#130E12"/>
+    <ellipse cx="1616" cy="920" rx="168" ry="26" fill="#130E12"/>
+    <path d="M208 1080V876C208 830 244 794 290 794H364C410 794 446 830 446 876V1080" fill="#0B0A0D"/>
+    <path d="M1482 1080V876C1482 830 1518 794 1564 794H1638C1684 794 1720 830 1720 876V1080" fill="#0B0A0D"/>
+    <rect x="196" y="784" width="260" height="18" rx="9" fill="#171216"/>
+    <rect x="1470" y="784" width="262" height="18" rx="9" fill="#171216"/>
+  </g>
+
+  <g opacity="0.3">
     <rect width="1920" height="1080" filter="url(#grain)"/>
   </g>
 </svg>
