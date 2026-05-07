@@ -136,35 +136,7 @@
     <rect x="1420" y="430" width="120" height="48" rx="16" fill="#1B161A"/>
   </g>
 
-  <g opacity="0.94">
-    <path d="M560 394V626" stroke="#D8C5AE" stroke-width="20" stroke-linecap="round"/>
-    <path d="M700 364V626" stroke="#D8C5AE" stroke-width="22" stroke-linecap="round"/>
-    <path d="M850 338V626" stroke="#D8C5AE" stroke-width="24" stroke-linecap="round"/>
-    <path d="M1018 344V626" stroke="#D8C5AE" stroke-width="24" stroke-linecap="round"/>
-    <path d="M1180 372V626" stroke="#D8C5AE" stroke-width="22" stroke-linecap="round"/>
-    <path d="M1328 404V626" stroke="#D8C5AE" stroke-width="20" stroke-linecap="round"/>
-
-    <rect x="516" y="352" width="88" height="74" rx="28" fill="#22181A"/>
-    <rect x="652" y="318" width="96" height="86" rx="32" fill="#221819"/>
-    <rect x="798" y="290" width="104" height="94" rx="36" fill="#231816"/>
-    <rect x="966" y="296" width="104" height="94" rx="36" fill="#1F1718"/>
-    <rect x="1132" y="324" width="96" height="86" rx="32" fill="#201819"/>
-    <rect x="1282" y="356" width="88" height="74" rx="28" fill="#1F1818"/>
-
-    <rect x="534" y="370" width="52" height="34" rx="14" fill="url(#glassPale)"/>
-    <rect x="674" y="338" width="52" height="38" rx="16" fill="url(#glassAmber)"/>
-    <rect x="822" y="308" width="56" height="42" rx="18" fill="url(#glassRuby)"/>
-    <rect x="990" y="314" width="56" height="42" rx="18" fill="url(#glassPale)"/>
-    <rect x="1154" y="344" width="52" height="38" rx="16" fill="url(#glassAmber)"/>
-    <rect x="1300" y="374" width="52" height="34" rx="14" fill="url(#glassRuby)"/>
-
-    <ellipse cx="560" cy="406" rx="20" ry="8" fill="#FFF4DA"/>
-    <ellipse cx="700" cy="378" rx="22" ry="8" fill="#FFF4DA"/>
-    <ellipse cx="850" cy="350" rx="24" ry="9" fill="#FFF4DA"/>
-    <ellipse cx="1018" cy="356" rx="24" ry="9" fill="#FFF4DA"/>
-    <ellipse cx="1180" cy="384" rx="22" ry="8" fill="#FFF4DA"/>
-    <ellipse cx="1328" cy="410" rx="20" ry="8" fill="#FFF4DA"/>
-  </g>
+  
 
   <g opacity="0.86">
     <path d="M0 714C176 702 350 708 522 720C710 734 860 760 1020 758C1190 756 1336 728 1524 714C1680 702 1810 702 1920 712V1080H0V714Z" fill="url(#counterFront)"/>

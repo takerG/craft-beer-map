@@ -367,13 +367,13 @@ button {
     radial-gradient(
       circle at var(--focus-x) var(--focus-y),
       transparent 0,
-      transparent calc(var(--focus-clear-radius) * 0.82),
-      rgba(6, 8, 12, 0.16) calc(var(--focus-clear-radius) * 1.02),
-      rgba(4, 6, 10, 0.52) calc(var(--focus-falloff-radius) * 0.82),
-      rgba(2, 3, 7, 0.78) 100%
+      transparent calc(var(--focus-clear-radius) * 0.9),
+      rgba(6, 8, 12, 0.1) calc(var(--focus-clear-radius) * 1.05),
+      rgba(4, 6, 10, 0.28) calc(var(--focus-falloff-radius) * 0.86),
+      rgba(2, 3, 7, 0.5) 100%
     );
-  backdrop-filter: blur(9px) saturate(0.76) brightness(0.7);
-  -webkit-backdrop-filter: blur(9px) saturate(0.76) brightness(0.7);
+  backdrop-filter: blur(4px) saturate(0.84) brightness(0.86);
+  -webkit-backdrop-filter: blur(4px) saturate(0.84) brightness(0.86);
   -webkit-mask-image: radial-gradient(
     circle at var(--focus-x) var(--focus-y),
     transparent 0,
@@ -514,6 +514,10 @@ button {
   font-size: 12px;
   font-weight: 600;
   opacity: var(--category-label-opacity);
+  paint-order: stroke;
+  stroke: rgba(8, 8, 12, 0.78);
+  stroke-width: 4px;
+  stroke-linejoin: round;
 }
 
 .category-count {
@@ -522,6 +526,10 @@ button {
   letter-spacing: 0.1em;
   text-transform: uppercase;
   opacity: 0;
+  paint-order: stroke;
+  stroke: rgba(8, 8, 12, 0.72);
+  stroke-width: 3px;
+  stroke-linejoin: round;
 }
 
 .category-node.labels-visible .category-count {
@@ -571,6 +579,10 @@ button {
   fill: rgba(255, 244, 224, 0.9);
   font-size: 12px;
   font-weight: 600;
+  paint-order: stroke;
+  stroke: rgba(8, 8, 12, 0.82);
+  stroke-width: 4px;
+  stroke-linejoin: round;
 }
 
 .style-code {
@@ -579,6 +591,10 @@ button {
   letter-spacing: 0.16em;
   text-transform: uppercase;
   opacity: calc(var(--label-opacity) * 0.72);
+  paint-order: stroke;
+  stroke: rgba(8, 8, 12, 0.72);
+  stroke-width: 3px;
+  stroke-linejoin: round;
 }
 
 .style-node .style-label {

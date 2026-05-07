@@ -7,7 +7,7 @@ const MAP_HEIGHT = 1440;
 const INITIAL_SCALE = 0.74;
 const MID_SCALE = 1.1;
 const STYLE_SCALE = 1.8;
-const DETAIL_SCALE = 2.45;
+const DETAIL_SCALE = 1.95;
 
 const ZOOM_LEVELS = {
   overview: 0.9,
@@ -595,7 +595,7 @@ function setupViewportObservers() {
 
 function updateVisibility(scale) {
   const overviewAlpha = scale < ZOOM_LEVELS.overview ? 1 : Math.max(0, 1 - (scale - ZOOM_LEVELS.overview) * 1.6);
-  const categoryAlpha = scale < ZOOM_LEVELS.overview ? 0.14 : scale < ZOOM_LEVELS.categories ? 1 : Math.max(0.25, 1 - (scale - ZOOM_LEVELS.categories) * 0.4);
+  const categoryAlpha = scale < ZOOM_LEVELS.overview ? 0.18 : scale < ZOOM_LEVELS.categories ? 1 : Math.max(0.48, 1 - (scale - ZOOM_LEVELS.categories) * 0.22);
   const styleAlpha = scale < ZOOM_LEVELS.categories ? 0 : 1;
 
   dom.overviewLayer.style('opacity', overviewAlpha);
@@ -645,9 +645,9 @@ function updateStyleFocus() {
 function updateFocusLens() {
   const rect = dom.mapContainer.getBoundingClientRect();
   const focusMode = state.zoomK >= ZOOM_LEVELS.styles;
-  const clearRadius = clamp(Math.min(rect.width, rect.height) * 0.15, 170, 300);
-  const falloffRadius = clamp(clearRadius + Math.min(rect.width, rect.height) * 0.22, 360, 620);
-  const edgeOpacity = focusMode ? clamp((state.zoomK - ZOOM_LEVELS.styles) / 1.35, 0, 0.72) : 0;
+  const clearRadius = clamp(Math.min(rect.width, rect.height) * 0.24, 250, 440);
+  const falloffRadius = clamp(clearRadius + Math.min(rect.width, rect.height) * 0.3, 520, 860);
+  const edgeOpacity = focusMode ? clamp((state.zoomK - ZOOM_LEVELS.styles) / 1.8, 0, 0.42) : 0;
 
   dom.mapContainer.classList.toggle('focus-mode', focusMode);
   dom.mapContainer.style.setProperty('--focus-x', `${rect.width / 2}px`);
@@ -661,15 +661,15 @@ function applyCategoryDensity() {
   if (!dom.categoryNodes) return;
 
   const rect = dom.mapContainer.getBoundingClientRect();
-  const focusRadius = clamp(Math.min(rect.width, rect.height) * 0.28, 260, 480);
-  const fadeRadius = focusRadius + 240;
+  const focusRadius = clamp(Math.min(rect.width, rect.height) * 0.34, 340, 620);
+  const fadeRadius = focusRadius + 320;
   const focusMode = state.zoomK >= ZOOM_LEVELS.categories;
 
   dom.categoryNodes.each(function setCategoryDensity(category) {
     const distance = projectDistance(category.x, category.y, rect);
     const focus = focusMode ? Math.max(0, 1 - distance / fadeRadius) : 1;
-    const opacity = focusMode ? 0.2 + focus * 0.8 : 1;
-    const labelOpacity = state.zoomK >= MID_SCALE ? Math.min(1, 0.26 + focus * 0.92) : 0;
+    const opacity = focusMode ? 0.52 + focus * 0.48 : 1;
+    const labelOpacity = state.zoomK >= MID_SCALE ? Math.min(1, 0.68 + focus * 0.32) : 0;
     d3.select(this)
       .style('--category-opacity', opacity.toFixed(3))
       .style('--category-label-opacity', labelOpacity.toFixed(3))
@@ -682,8 +682,8 @@ function applyStyleDensity(activeId, relatedIds) {
 
   const rect = dom.mapContainer.getBoundingClientRect();
   const focusMode = state.zoomK >= ZOOM_LEVELS.styles;
-  const nearRadius = clamp(Math.min(rect.width, rect.height) * 0.17, 180, 320);
-  const fadeRadius = clamp(nearRadius + Math.min(rect.width, rect.height) * 0.24, 360, 620);
+  const nearRadius = clamp(Math.min(rect.width, rect.height) * 0.24, 260, 430);
+  const fadeRadius = clamp(nearRadius + Math.min(rect.width, rect.height) * 0.28, 520, 840);
   const detailMode = state.zoomK >= DETAIL_SCALE;
 
   dom.styleNodes.each(function setStyleDensity(style) {
@@ -693,8 +693,8 @@ function applyStyleDensity(activeId, relatedIds) {
     const isRelated = Boolean(activeId) && relatedIds.has(style.id) && style.id !== activeId;
     const isDimmedByRelation = Boolean(activeId) && !relatedIds.has(style.id);
 
-    let nodeOpacity = focusMode ? 0.12 + focus * 0.88 : 1;
-    let labelOpacity = detailMode ? Math.max(0, (focus - 0.2) / 0.8) : 0;
+    let nodeOpacity = focusMode ? 0.44 + focus * 0.56 : 1;
+    let labelOpacity = detailMode ? Math.max(0.32, focus * 0.96) : Math.max(0, focus * 0.28 - 0.08);
 
     if (isRelated) {
       nodeOpacity = Math.max(nodeOpacity, 0.76);
@@ -707,8 +707,8 @@ function applyStyleDensity(activeId, relatedIds) {
     }
 
     if (isDimmedByRelation) {
-      nodeOpacity *= 0.42;
-      labelOpacity *= 0.18;
+      nodeOpacity *= 0.72;
+      labelOpacity *= 0.42;
     }
 
     d3.select(this)
