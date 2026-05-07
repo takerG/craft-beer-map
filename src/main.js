@@ -1,6 +1,6 @@
 import './style.css';
 import * as d3 from 'd3';
-import { WALL_LAYOUT, buildWallBoards, getNearestBoardId, getOverviewFocusPoint, layoutBoardCategories, layoutCategoryStyles } from './wall-layout.js';
+import { buildWallBoards, getNearestBoardId, getOverviewFitScale, getOverviewFocusPoint, layoutBoardCategories, layoutCategoryStyles } from './wall-layout.js';
 
 const MAP_WIDTH = 2200;
 const MAP_HEIGHT = 1440;
@@ -8,6 +8,7 @@ const INITIAL_SCALE = 0.74;
 const MID_SCALE = 1.1;
 const STYLE_SCALE = 1.8;
 const DETAIL_SCALE = 1.95;
+const CATEGORY_FOCUS_SCALE = STYLE_SCALE;
 
 const ZOOM_LEVELS = {
   overview: 0.9,
@@ -579,6 +580,7 @@ function setupViewportObservers() {
       updateFocusLens();
       updateStyleFocus();
       updateCategoryFocus();
+      recenterOverviewOnResize();
     }, 80),
   );
 }
@@ -618,7 +620,7 @@ function updateBoardFocus() {
     state.activeCategoryId = state.styleMap.get(state.selectedStyle)?.category ?? null;
   } else if (state.selectedCategory) {
     state.activeCategoryId = state.selectedCategory;
-  } else if (state.activeBoardId && state.zoomK >= DETAIL_SCALE) {
+  } else if (state.activeBoardId && state.zoomK >= CATEGORY_FOCUS_SCALE) {
     const rect = dom.mapContainer.getBoundingClientRect();
     const centerWorldX = state.transform.invertX(rect.width / 2);
     const centerWorldY = state.transform.invertY(rect.height / 2);
@@ -698,10 +700,10 @@ function applyCategoryDensity() {
     const distance = projectDistance(category.x, category.y, rect);
     const focus = focusMode ? Math.max(0, 1 - distance / fadeRadius) : 1;
     const boardPenalty = state.activeBoardId && category.superGenreId !== state.activeBoardId && state.zoomK >= ZOOM_LEVELS.styles ? 0.08 : 1;
-    const categoryPenalty = state.activeCategoryId && category.id !== state.activeCategoryId && state.zoomK >= DETAIL_SCALE ? 0.22 : 1;
+    const categoryPenalty = state.activeCategoryId && category.id !== state.activeCategoryId && state.zoomK >= CATEGORY_FOCUS_SCALE ? 0.18 : 1;
     const opacity = focusMode ? (0.52 + focus * 0.48) * boardPenalty * categoryPenalty : 1;
     const detailPenalty =
-      state.zoomK >= DETAIL_SCALE
+      state.zoomK >= CATEGORY_FOCUS_SCALE
         ? category.id === state.activeCategoryId
           ? 0.34
           : 0.08
@@ -732,10 +734,10 @@ function applyStyleDensity(activeId, relatedIds) {
     const isRelated = Boolean(activeId) && relatedIds.has(style.id) && style.id !== activeId;
     const isDimmedByRelation = Boolean(activeId) && !relatedIds.has(style.id);
     const boardPenalty = state.activeBoardId && style.superGenreId !== state.activeBoardId && state.zoomK >= ZOOM_LEVELS.styles ? 0.04 : 1;
-    const categoryPenalty = state.activeCategoryId && style.category !== state.activeCategoryId && state.zoomK >= DETAIL_SCALE ? 0.06 : 1;
+    const categoryPenalty = state.activeCategoryId && style.category !== state.activeCategoryId && state.zoomK >= CATEGORY_FOCUS_SCALE ? 0.035 : 1;
 
     let nodeOpacity = focusMode ? (0.44 + focus * 0.56) * boardPenalty * categoryPenalty : 1;
-    let labelOpacity = detailMode ? Math.max(0.32, focus * 0.96) * boardPenalty * categoryPenalty : Math.max(0, focus * 0.28 - 0.08) * boardPenalty * categoryPenalty;
+    let labelOpacity = detailMode ? Math.max(0.24, focus * 0.96) * boardPenalty * categoryPenalty : Math.max(0, focus * 0.26 - 0.1) * boardPenalty * categoryPenalty;
 
     if (isRelated) {
       nodeOpacity = Math.max(nodeOpacity, 0.76);
@@ -758,8 +760,18 @@ function applyStyleDensity(activeId, relatedIds) {
       .classed('is-focus-far', focusMode && distance > fadeRadius)
       .classed('is-focus-near', focusMode && distance <= nearRadius)
       .classed('is-board-hidden', Boolean(state.activeBoardId) && state.zoomK >= ZOOM_LEVELS.styles && style.superGenreId !== state.activeBoardId)
-      .classed('is-category-hidden', Boolean(state.activeCategoryId) && state.zoomK >= DETAIL_SCALE && style.category !== state.activeCategoryId);
+      .classed('is-category-hidden', Boolean(state.activeCategoryId) && state.zoomK >= CATEGORY_FOCUS_SCALE && style.category !== state.activeCategoryId);
   });
+}
+
+function recenterOverviewOnResize() {
+  if (state.selectedStyle || state.selectedCategory || state.zoomK > ZOOM_LEVELS.overview + 0.12) return;
+
+  const focus = getOverviewFocusPoint();
+  const transform = centerTransform(getOverviewScale(), focus.x, focus.y);
+  state.transform = transform;
+  state.zoomK = transform.k;
+  dom.svg.call(dom.zoom.transform, transform);
 }
 
 function projectDistance(x, y, rect) {
@@ -797,9 +809,7 @@ function centerTransform(scale, x, y) {
 
 function getOverviewScale() {
   const rect = dom.mapContainer.getBoundingClientRect();
-  const scaleByWidth = (rect.width / WALL_LAYOUT.width) * 1.08;
-  const scaleByHeight = (rect.height / WALL_LAYOUT.height) * 0.78;
-  return clamp(Math.min(scaleByWidth, scaleByHeight), 0.64, 1.34);
+  return getOverviewFitScale(rect.width, rect.height);
 }
 
 function clamp(value, min, max) {

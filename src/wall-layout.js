@@ -10,11 +10,24 @@ export const WALL_LAYOUT = {
   categorySidePadding: 14,
 };
 
+export const OVERVIEW_SCALE = {
+  widthFill: 1.08,
+  heightFill: 0.78,
+  min: 0.64,
+  max: 1.34,
+};
+
 export function getOverviewFocusPoint() {
   return {
     x: WALL_LAYOUT.x + WALL_LAYOUT.width / 2,
     y: WALL_LAYOUT.y + WALL_LAYOUT.height / 2,
   };
+}
+
+export function getOverviewFitScale(viewportWidth, viewportHeight) {
+  const scaleByWidth = (viewportWidth / WALL_LAYOUT.width) * OVERVIEW_SCALE.widthFill;
+  const scaleByHeight = (viewportHeight / WALL_LAYOUT.height) * OVERVIEW_SCALE.heightFill;
+  return clamp(Math.min(scaleByWidth, scaleByHeight), OVERVIEW_SCALE.min, OVERVIEW_SCALE.max);
 }
 
 export function getNearestBoardId(boards, focusX) {
@@ -102,4 +115,8 @@ export function layoutCategoryStyles(styles, category) {
     const y = originY + (row - (totalRows - 1) / 2) * cellY;
     return { id: style.id, x, y };
   });
+}
+
+function clamp(value, min, max) {
+  return Math.min(max, Math.max(min, value));
 }

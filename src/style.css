@@ -542,7 +542,7 @@ button {
 }
 
 .category-node.labels-visible .category-count {
-  opacity: 1;
+  opacity: calc(var(--category-label-opacity) * 0.72);
 }
 
 .category-node.is-active .category-aura {
@@ -558,11 +558,16 @@ button {
 }
 
 .category-node.is-board-hidden {
-  opacity: 0.06;
+  opacity: 0.045;
 }
 
 .category-node.is-category-hidden {
-  opacity: 0.12;
+  opacity: 0.075;
+}
+
+.category-node.is-category-hidden .category-label,
+.category-node.is-board-hidden .category-label {
+  fill: rgba(183, 174, 158, 0.46);
 }
 
 .style-node {
@@ -596,7 +601,7 @@ button {
   font-size: 10px;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  opacity: calc(var(--label-opacity) * 0.5);
+  opacity: calc(var(--label-opacity) * 0.32);
   paint-order: stroke;
   stroke: rgba(6, 6, 10, 0.76);
   stroke-width: 3px;
@@ -620,7 +625,7 @@ button {
 }
 
 .style-node.is-focus-far .style-label {
-  fill: rgba(226, 218, 202, 0.7);
+  fill: rgba(207, 198, 180, 0.5);
 }
 
 .style-node.is-focus-near .style-label {
@@ -628,11 +633,16 @@ button {
 }
 
 .style-node.is-board-hidden {
-  opacity: 0.02;
+  opacity: 0.012;
 }
 
 .style-node.is-category-hidden {
-  opacity: 0.04;
+  opacity: 0.018;
+}
+
+.style-node.is-category-hidden .style-label,
+.style-node.is-board-hidden .style-label {
+  fill: rgba(165, 156, 140, 0.38);
 }
 
 .relation-link {
