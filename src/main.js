@@ -1,5 +1,6 @@
 import './style.css';
 import * as d3 from 'd3';
+import { shouldUseDiscoveryExperience } from './discovery-mode.js';
 import { buildWallBoards, getNearestBoardId, getOverviewFitScale, getOverviewFocusPoint, layoutBoardCategories, layoutCategoryStyles } from './wall-layout.js';
 
 const MAP_WIDTH = 2200;
@@ -9,6 +10,7 @@ const MID_SCALE = 1.1;
 const STYLE_SCALE = 1.8;
 const DETAIL_SCALE = 1.95;
 const CATEGORY_FOCUS_SCALE = STYLE_SCALE;
+const MOBILE_BREAKPOINT = 760;
 
 const ZOOM_LEVELS = {
   overview: 0.9,
@@ -57,6 +59,7 @@ const state = {
   boardMap: new Map(),
   activeBoardId: null,
   activeCategoryId: null,
+  mobileSuperId: null,
 };
 
 const dom = {};
@@ -74,6 +77,7 @@ async function init() {
   setupToolbar();
   setupSearch();
   setupSuperNav();
+  setupMobileDiscovery();
   setupPanelControls();
   setupViewportObservers();
   hideLoader();
@@ -94,6 +98,7 @@ function cacheDom() {
   dom.searchInput = document.getElementById('searchInput');
   dom.searchResults = document.getElementById('searchResults');
   dom.superNav = document.getElementById('superNav');
+  dom.mobileDiscovery = document.getElementById('mobileDiscovery');
   dom.mapContainer = document.getElementById('mapContainer');
   dom.zoomInBtn = document.getElementById('zoomIn');
   dom.zoomOutBtn = document.getElementById('zoomOut');
@@ -476,16 +481,26 @@ function setupZoom() {
 
 function setupToolbar() {
   dom.zoomInBtn?.addEventListener('click', () => {
+    if (shouldUseDiscoveryExperience()) {
+      mobileZoomIn();
+      return;
+    }
     dom.svg.transition().duration(220).call(dom.zoom.scaleBy, 1.3);
   });
 
   dom.zoomOutBtn?.addEventListener('click', () => {
+    if (shouldUseDiscoveryExperience()) {
+      clearMobileFocus();
+      return;
+    }
     dom.svg.transition().duration(220).call(dom.zoom.scaleBy, 0.78);
   });
 
   dom.resetViewBtn?.addEventListener('click', () => {
     state.selectedStyle = null;
     state.selectedCategory = null;
+    state.mobileSuperId = null;
+    updateMobileDiscoveryState();
     updateStyleFocus();
     updateCategoryFocus();
     const initialFocus = getOverviewFocusPoint();
@@ -540,7 +555,7 @@ function setupSearch() {
         showStyleDetails(style);
         updateStyleFocus();
         updateCategoryFocus();
-        zoomToStyle(style);
+        focusStyleInDiscovery(style);
         dom.searchInput.value = '';
         dom.searchResults.classList.remove('open');
       });
@@ -560,16 +575,192 @@ function setupSuperNav() {
     button.className = 'sg-pill';
     button.style.setProperty('--pill-color', group.color);
     button.innerHTML = `<span class="sg-dot" style="background:${group.color}"></span>${escapeHtml(group.name)}`;
-    button.addEventListener('click', () => zoomToSuperGenre(group));
+    button.addEventListener('click', () => {
+      if (shouldUseDiscoveryExperience()) focusMobileSuperGenre(group.id);
+      else zoomToSuperGenre(group);
+    });
     dom.superNav.appendChild(button);
+  });
+}
+
+function setupMobileDiscovery() {
+  if (!dom.mobileDiscovery) return;
+
+  dom.mobileDiscovery.innerHTML = SUPER_GENRES.map((group) => {
+    const styleCount = state.styleBySuper.get(group.id)?.length || 0;
+    const categories = state.categories.filter((category) => category.superGenreId === group.id);
+    return `
+      <article class="mobile-discovery-card" data-super-id="${escapeHtml(group.id)}" style="--card-color:${group.color}">
+        <button class="mobile-card-head" data-mobile-super-id="${escapeHtml(group.id)}">
+          <span class="mobile-card-orbit" aria-hidden="true"></span>
+          <span class="mobile-card-title">${escapeHtml(group.name)}</span>
+          <span class="mobile-card-en">${escapeHtml(group.nameEn)}</span>
+          <span class="mobile-card-meta">${categories.length} categories · ${styleCount} styles</span>
+        </button>
+        <div class="mobile-card-map">
+          ${categories.map((category) => buildMobileCategoryRow(category)).join('')}
+          ${buildMobileRelationSection(group)}
+        </div>
+      </article>
+    `;
+  }).join('');
+
+  dom.mobileDiscovery.querySelectorAll('[data-mobile-super-id]').forEach((button) => {
+    button.addEventListener('click', () => {
+      focusMobileSuperGenre(button.dataset.mobileSuperId);
+    });
+  });
+
+  dom.mobileDiscovery.querySelectorAll('[data-mobile-category-id]').forEach((button) => {
+    button.addEventListener('click', () => {
+      const category = state.categoryMap.get(button.dataset.mobileCategoryId);
+      if (!category) return;
+      state.selectedCategory = category.id;
+      state.selectedStyle = null;
+      state.mobileSuperId = category.superGenreId;
+      updateMobileDiscoveryState();
+      showCategoryDetails(category);
+    });
+  });
+
+  dom.mobileDiscovery.querySelectorAll('[data-mobile-style-id]').forEach((button) => {
+    button.addEventListener('click', () => {
+      const style = state.styleMap.get(button.dataset.mobileStyleId);
+      if (!style) return;
+      state.selectedStyle = style.id;
+      state.selectedCategory = style.category;
+      state.mobileSuperId = style.superGenreId;
+      updateMobileDiscoveryState();
+      showStyleDetails(style);
+    });
+  });
+
+  dom.mobileDiscovery.querySelectorAll('[data-mobile-relation-style-id]').forEach((button) => {
+    button.addEventListener('click', () => {
+      const style = state.styleMap.get(button.dataset.mobileRelationStyleId);
+      if (!style) return;
+      state.selectedStyle = style.id;
+      state.selectedCategory = style.category;
+      state.mobileSuperId = style.superGenreId;
+      updateMobileDiscoveryState();
+      showStyleDetails(style);
+    });
+  });
+
+  updateMobileDiscoveryState();
+}
+
+function buildMobileCategoryRow(category) {
+  const styles = state.styleByCategory.get(category.id) || [];
+  return `
+    <section class="mobile-category-row">
+      <button class="mobile-category-title" data-mobile-category-id="${escapeHtml(category.id)}">
+        <span>${escapeHtml(category.id)}</span>
+        ${escapeHtml(category.name_zh)}
+      </button>
+      <div class="mobile-style-strip">
+        ${styles
+          .slice(0, 6)
+          .map(
+            (style) => `
+              <button class="mobile-style-chip" data-mobile-style-id="${escapeHtml(style.id)}">
+                <span>${escapeHtml(style.code || '')}</span>${escapeHtml(style.name_zh || style.name_en)}
+              </button>
+            `,
+          )
+          .join('')}
+      </div>
+    </section>
+  `;
+}
+
+function buildMobileRelationSection(group) {
+  const relations = state.relations
+    .filter((relation) => relation.source.superGenreId === group.id || relation.target.superGenreId === group.id)
+    .slice(0, 10);
+
+  if (!relations.length) {
+    return `
+      <section class="mobile-relation-section is-empty">
+        <div class="mobile-section-title">风格关联</div>
+        <p>这个风格群岛暂无整理好的跨风格关系。</p>
+      </section>
+    `;
+  }
+
+  return `
+    <section class="mobile-relation-section">
+      <div class="mobile-section-title">风格关联</div>
+      <div class="mobile-relation-list">
+        ${relations
+          .map(
+            (relation) => `
+              <div class="mobile-relation-row" data-relation-type="${escapeHtml(relation.type)}">
+                <button class="mobile-relation-node" data-mobile-relation-style-id="${escapeHtml(relation.source.id)}">
+                  <span>${escapeHtml(relation.source.code || relation.source.id)}</span>
+                  ${escapeHtml(relation.source.name_zh || relation.source.name_en)}
+                </button>
+                <span class="mobile-relation-line">${escapeHtml(relTypeLabel(relation.type))}</span>
+                <button class="mobile-relation-node" data-mobile-relation-style-id="${escapeHtml(relation.target.id)}">
+                  <span>${escapeHtml(relation.target.code || relation.target.id)}</span>
+                  ${escapeHtml(relation.target.name_zh || relation.target.name_en)}
+                </button>
+              </div>
+            `,
+          )
+          .join('')}
+      </div>
+    </section>
+  `;
+}
+
+function focusMobileSuperGenre(superId) {
+  if (!superId) return;
+  state.mobileSuperId = superId;
+  state.selectedCategory = null;
+  state.selectedStyle = null;
+  updateMobileDiscoveryState();
+  updateMobileExplorationMode();
+}
+
+function focusStyleInDiscovery(style) {
+  state.selectedStyle = style.id;
+  state.selectedCategory = style.category;
+  state.mobileSuperId = style.superGenreId;
+  updateMobileDiscoveryState();
+  updateMobileExplorationMode();
+}
+
+function clearMobileFocus() {
+  state.mobileSuperId = null;
+  state.selectedCategory = null;
+  state.selectedStyle = null;
+  closeDetailPanel();
+  updateMobileDiscoveryState();
+}
+
+function mobileZoomIn() {
+  if (state.mobileSuperId) return;
+  focusMobileSuperGenre(SUPER_GENRES[0]?.id);
+}
+
+function updateMobileDiscoveryState() {
+  if (!dom.mobileDiscovery) return;
+  const isFocused = Boolean(state.mobileSuperId);
+  dom.mobileDiscovery.classList.toggle('is-focused', isFocused);
+  dom.mobileDiscovery.querySelectorAll('[data-super-id]').forEach((card) => {
+    card.classList.toggle('is-active', card.dataset.superId === state.mobileSuperId);
+    card.classList.toggle('is-inactive', isFocused && card.dataset.superId !== state.mobileSuperId);
   });
 }
 
 function setupPanelControls() {
   dom.panelCloseBtn?.addEventListener('click', () => {
-    dom.detailPanel.classList.remove('open');
+    closeDetailPanel();
     state.selectedStyle = null;
+    state.selectedCategory = null;
     updateStyleFocus();
+    updateCategoryFocus();
   });
 }
 
@@ -601,6 +792,7 @@ function updateVisibility(scale) {
   updateBoardFocus();
   updateStyleFocus();
   updateCategoryFocus();
+  updateMobileExplorationMode();
 }
 
 function updateBoardFocus() {
@@ -783,20 +975,38 @@ function projectDistance(x, y, rect) {
 }
 
 function zoomToSuperGenre(group) {
+  if (shouldUseDiscoveryExperience()) {
+    focusMobileSuperGenre(group.id);
+    showSuperGenreDetails(group);
+    return;
+  }
   state.selectedCategory = null;
   updateCategoryFocus();
-  const transform = centerTransform(MID_SCALE, group.x, group.y);
+  const transform = centerTransform(getSuperGenreScale(), group.x, group.y);
   dom.svg.transition().duration(700).call(dom.zoom.transform, transform);
   showSuperGenreDetails(group);
 }
 
 function zoomToCategory(category) {
-  const transform = centerTransform(STYLE_SCALE, category.x, category.y);
+  if (shouldUseDiscoveryExperience()) {
+    state.selectedCategory = category.id;
+    state.selectedStyle = null;
+    state.mobileSuperId = category.superGenreId;
+    updateMobileDiscoveryState();
+    showCategoryDetails(category);
+    return;
+  }
+  const transform = centerTransform(getCategoryScale(), category.x, category.y);
   dom.svg.transition().duration(700).call(dom.zoom.transform, transform);
 }
 
 function zoomToStyle(style) {
-  const transform = centerTransform(DETAIL_SCALE, style.x, style.y);
+  if (shouldUseDiscoveryExperience()) {
+    focusStyleInDiscovery(style);
+    showStyleDetails(style);
+    return;
+  }
+  const transform = centerTransform(getDetailScale(), style.x, style.y);
   dom.svg.transition().duration(720).call(dom.zoom.transform, transform);
 }
 
@@ -812,8 +1022,48 @@ function getOverviewScale() {
   return getOverviewFitScale(rect.width, rect.height);
 }
 
+function getSuperGenreScale() {
+  return isMobileViewport() ? 1.28 : MID_SCALE;
+}
+
+function getCategoryScale() {
+  return isMobileViewport() ? 2.05 : STYLE_SCALE;
+}
+
+function getDetailScale() {
+  return isMobileViewport() ? 2.48 : DETAIL_SCALE;
+}
+
+function isMobileViewport() {
+  return window.matchMedia(`(max-width: ${MOBILE_BREAKPOINT}px)`).matches;
+}
+
+function isMobileOverviewMode() {
+  if (!shouldUseDiscoveryExperience()) return false;
+  if (state.mobileSuperId) return false;
+  if (state.selectedStyle || state.selectedCategory) return false;
+  const overviewScale = getOverviewScale();
+  return state.zoomK <= overviewScale + 0.08;
+}
+
+function updateMobileExplorationMode() {
+  document.body.classList.toggle('mobile-map-exploring', shouldUseDiscoveryExperience() && !isMobileOverviewMode());
+}
+
 function clamp(value, min, max) {
   return Math.min(max, Math.max(min, value));
+}
+
+function openDetailPanel() {
+  dom.detailPanel.classList.add('open');
+  document.body.classList.add('detail-panel-open');
+  updateMobileExplorationMode();
+}
+
+function closeDetailPanel() {
+  dom.detailPanel.classList.remove('open');
+  document.body.classList.remove('detail-panel-open');
+  updateMobileExplorationMode();
 }
 
 function showSuperGenreDetails(group) {
@@ -837,7 +1087,7 @@ function showSuperGenreDetails(group) {
     </div>
   `;
   attachCategoryChipHandlers();
-  dom.detailPanel.classList.add('open');
+  openDetailPanel();
 }
 
 function showCategoryDetails(category) {
@@ -869,13 +1119,13 @@ function showCategoryDetails(category) {
     </div>
   `;
   attachStyleListHandlers();
-  dom.detailPanel.classList.add('open');
+  openDetailPanel();
 }
 
 function showStyleDetails(style) {
   const details = style.details || {};
-  const stats = parseVitalStats(details.vital_statistics || '');
-  const related = dedupeRelatedStyles(state.relatedByStyle.get(style.id) || []);
+  const stats = parseVitalStats(details.stats || details.vital_statistics || '');
+  const relatedGroups = groupRelatedStylesForDetail(state.relatedByStyle.get(style.id) || [], style.id);
   const tagContent = classifyTagContent(details.tags);
   dom.panelContent.innerHTML = `
     <div class="panel-hero" style="--panel-color:${style.color}">
@@ -887,10 +1137,10 @@ function showStyleDetails(style) {
     ${DETAIL_SECTIONS.map(([key, label]) => buildDetailSection(label, details[key])).join('')}
     ${buildTagSection(tagContent.tags)}
     ${buildSupplementSection(tagContent.supplement)}
-    ${buildRelatedSection(related)}
+    ${buildRelatedSection(relatedGroups)}
   `;
   attachStyleListHandlers();
-  dom.detailPanel.classList.add('open');
+  openDetailPanel();
 }
 
 function buildStatsGrid(stats) {
@@ -935,20 +1185,33 @@ function buildSupplementSection(content) {
   `;
 }
 
-function buildRelatedSection(related) {
-  if (!related.length) return '';
+function buildRelatedSection(groups) {
+  if (!groups.length) return '';
   return `
     <div class="detail-section">
       <div class="detail-section-title">关联风格</div>
-      <div class="detail-list">
-        ${related
+      <div class="detail-relation-groups">
+        ${groups
           .map(
-            (item) => `
-              <button class="detail-list-item" data-style-id="${escapeHtml(item.node.id)}">
-                <span class="detail-list-code">${escapeHtml(item.node.code)}</span>
-                <span>${escapeHtml(item.node.name_zh || item.node.name_en)}</span>
-                <span class="detail-list-meta">${escapeHtml(relTypeLabel(item.type))}</span>
-              </button>
+            (group) => `
+              <div class="detail-relation-group" data-relation-type="${escapeHtml(group.type)}">
+                <div class="detail-relation-heading">
+                  <span>${escapeHtml(group.label)}</span>
+                  <strong>${group.items.length}</strong>
+                </div>
+                <div class="detail-list">
+                  ${group.items
+                    .map(
+                      (item) => `
+                        <button class="detail-list-item detail-relation-item" data-style-id="${escapeHtml(item.node.id)}">
+                          <span class="detail-list-code">${escapeHtml(item.node.code)}</span>
+                          <span>${escapeHtml(item.node.name_zh || item.node.name_en)}</span>
+                        </button>
+                      `,
+                    )
+                    .join('')}
+                </div>
+              </div>
             `,
           )
           .join('')}
@@ -993,9 +1256,12 @@ function showWelcomePanel() {
       <p>缩小时先看超类分布，放大到类别，再继续钻取具体风格与关系线。</p>
     </div>
   `;
+  closeDetailPanel();
 }
 
 function showTooltip(event, style) {
+  if (shouldUseDiscoveryExperience()) return;
+
   const summary = style.details?.overall_impression || style.details?.history || '';
   dom.tooltip.innerHTML = `
     <div class="tooltip-name">${escapeHtml(style.name_zh || style.name_en)}</div>
@@ -1078,19 +1344,54 @@ function looksLikeTag(value) {
   return true;
 }
 
-function dedupeRelatedStyles(relations) {
-  const seen = new Set();
-  return relations
-    .map((relation) => {
-      const node = relation.source.id === state.selectedStyle ? relation.target : relation.source;
-      return { node, type: relation.type };
-    })
-    .filter((item) => {
-      const key = `${item.node.id}-${item.type}`;
-      if (seen.has(key)) return false;
-      seen.add(key);
-      return true;
-    });
+function groupRelatedStylesForDetail(relations, styleId) {
+  const groups = new Map();
+  relations.forEach((relation) => {
+    const item = relationForStyle(relation, styleId);
+    if (!item) return;
+    if (!groups.has(item.type)) {
+      groups.set(item.type, {
+        type: item.type,
+        label: relationGroupLabel(item.type),
+        items: [],
+        seen: new Set(),
+      });
+    }
+    const group = groups.get(item.type);
+    if (group.seen.has(item.node.id)) return;
+    group.seen.add(item.node.id);
+    group.items.push(item);
+  });
+
+  return ['influenced', 'influenced_by', 'compared_to', 'related']
+    .map((type) => groups.get(type))
+    .filter(Boolean)
+    .map((group) => ({
+      type: group.type,
+      label: group.label,
+      items: group.items,
+    }));
+}
+
+function relationForStyle(relation, styleId) {
+  const isSource = relation.source.id === styleId;
+  const isTarget = relation.target.id === styleId;
+  if (!isSource && !isTarget) return null;
+
+  const node = isSource ? relation.target : relation.source;
+  let type = relation.type;
+  if (relation.type === 'influenced_by') type = isSource ? 'influenced_by' : 'influenced';
+  if (relation.type === 'influenced') type = isSource ? 'influenced' : 'influenced_by';
+  return { node, type };
+}
+
+function relationGroupLabel(type) {
+  return {
+    influenced: '影响了这些风格',
+    influenced_by: '受这些风格影响',
+    compared_to: '可对比风格',
+    related: '相关风格',
+  }[type] || relTypeLabel(type);
 }
 
 function relTypeLabel(type) {
