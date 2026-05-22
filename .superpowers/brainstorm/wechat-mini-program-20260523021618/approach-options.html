@@ -1,0 +1,74 @@
+<h2>微信小程序重构方向</h2>
+<p class="subtitle">基于你选择的混合版 C：首页微信化，局部保留地图探索。下面是三个实现路径，点击你偏好的方案也可以。</p>
+
+<div class="cards">
+  <div class="card" data-choice="native-hybrid" onclick="toggleSelect(this)">
+    <div class="card-image">
+      <div style="height:280px;background:#0f1720;border-radius:18px;padding:18px;color:#f8fafc;display:grid;grid-template-rows:auto 1fr auto;gap:14px">
+        <div style="display:flex;align-items:center;justify-content:space-between">
+          <strong>精酿啤酒风格地图</strong>
+          <span style="font-size:12px;color:#a7f3d0">小程序原生</span>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+          <div style="background:#1f2937;border-left:5px solid #ffb24c;border-radius:10px;padding:12px">
+            <div style="font-size:16px;font-weight:700">美国啤酒</div>
+            <div style="font-size:12px;color:#cbd5e1;margin-top:6px">6 类 / 24 styles</div>
+          </div>
+          <div style="background:#1f2937;border-left:5px solid #ff7a3d;border-radius:10px;padding:12px">
+            <div style="font-size:16px;font-weight:700">德奥体系</div>
+            <div style="font-size:12px;color:#cbd5e1;margin-top:6px">7 类 / 26 styles</div>
+          </div>
+          <div style="background:#1f2937;border-left:5px solid #a86dff;border-radius:10px;padding:12px">
+            <div style="font-size:16px;font-weight:700">比利时与酸啤</div>
+            <div style="font-size:12px;color:#cbd5e1;margin-top:6px">4 类 / 17 styles</div>
+          </div>
+          <div style="background:#1f2937;border-left:5px solid #53d4da;border-radius:10px;padding:12px">
+            <div style="font-size:16px;font-weight:700">特种与增味</div>
+            <div style="font-size:12px;color:#cbd5e1;margin-top:6px">6 类 / 11 styles</div>
+          </div>
+        </div>
+        <div style="height:42px;border-radius:12px;background:#111827;display:flex;align-items:center;justify-content:space-around;color:#cbd5e1;font-size:12px">
+          <span>探索</span><span>搜索</span><span>收藏</span>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>A. 原生混合版</h3>
+      <p>用 WXML/WXSS 做首页、列表和详情；用 Canvas 只承载大类内的局部地图。性能稳，后续发布到微信最直接。</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="canvas-first" onclick="toggleSelect(this)">
+    <div class="card-image">
+      <div style="height:280px;background:#10131a;border-radius:18px;padding:18px;color:#f8fafc;position:relative;overflow:hidden">
+        <div style="position:absolute;left:34px;top:54px;width:110px;height:72px;border-radius:999px;background:#ffb24c55"></div>
+        <div style="position:absolute;right:28px;top:76px;width:128px;height:84px;border-radius:999px;background:#ff7a3d55"></div>
+        <div style="position:absolute;left:92px;bottom:56px;width:150px;height:90px;border-radius:999px;background:#a86dff55"></div>
+        <div style="position:relative;z-index:1;font-weight:700">Canvas 地图首页</div>
+        <div style="position:absolute;left:60px;top:84px;z-index:1;background:#111827;border:1px solid #334155;border-radius:999px;padding:8px 12px">1A 美式淡爽拉格</div>
+        <div style="position:absolute;right:38px;top:126px;z-index:1;background:#111827;border:1px solid #334155;border-radius:999px;padding:8px 12px">4A 慕尼黑清亮</div>
+        <div style="position:absolute;left:118px;bottom:92px;z-index:1;background:#111827;border:1px solid #334155;border-radius:999px;padding:8px 12px">23E 贵兹</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>B. 地图优先混合版</h3>
+      <p>首页就进入 Canvas 地图，卡片和详情作为抽屉。视觉最接近原站，但小程序首屏、触屏缩放和低端机性能风险更高。</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="cross-platform" onclick="toggleSelect(this)">
+    <div class="card-image">
+      <div style="height:280px;background:#f8fafc;border-radius:18px;padding:18px;color:#0f172a;display:grid;grid-template-columns:1fr;gap:10px">
+        <div style="font-weight:800">跨端版本</div>
+        <div style="height:46px;border-radius:12px;background:#e2e8f0;display:flex;align-items:center;padding:0 14px">Web / H5 保持 Vite</div>
+        <div style="height:46px;border-radius:12px;background:#dbeafe;display:flex;align-items:center;padding:0 14px">Taro / uni-app 输出小程序</div>
+        <div style="height:46px;border-radius:12px;background:#dcfce7;display:flex;align-items:center;padding:0 14px">共享数据与少量布局函数</div>
+        <div style="height:82px;border-radius:14px;background:#0f172a;color:#e2e8f0;display:flex;align-items:center;padding:0 14px">适合长期维护多端，但本次重构成本最高。</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>C. 跨端框架版</h3>
+      <p>引入 Taro 或 uni-app，用组件模型统一 Web 和小程序。适合未来多端，但会改变项目技术栈和构建方式。</p>
+    </div>
+  </div>
+</div>

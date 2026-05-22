@@ -1,0 +1,59 @@
+<view class="page group-page" wx:if="{{group}}">
+  <view class="group-hero" style="border-left-color: {{group.color}}">
+    <text class="group-title">{{group.name}}</text>
+    <text class="group-en">{{group.nameEn}}</text>
+    <view class="group-stats">
+      <text>{{group.categoryCount}} 类别</text>
+      <text>{{group.styleCount}} 风格</text>
+      <text>{{relationCount}} 关系</text>
+    </view>
+  </view>
+
+  <view class="map-panel">
+    <view class="map-head">
+      <view>
+        <text class="map-title">局部关系图</text>
+        <text class="map-subtitle">点击节点可查看风格</text>
+      </view>
+      <view class="map-actions">
+        <button bindtap="toggleLinks">{{linkToggleText}}</button>
+        <button bindtap="resetMap">重置</button>
+      </view>
+    </view>
+    <canvas canvas-id="miniMap" class="mini-map-canvas" style="{{canvasStyle}}" bindtouchend="onCanvasTap"></canvas>
+    <view wx:if="{{selectedNodeId}}" class="selected-node" bindtap="openSelectedStyle">
+      <text>{{selectedNodeName}}</text>
+      <text>查看详情</text>
+    </view>
+  </view>
+
+  <view class="section-head">
+    <text>分类与风格</text>
+  </view>
+
+  <view class="category-list">
+    <view wx:for="{{categories}}" wx:key="id" class="category-card">
+      <view class="category-head">
+        <text class="category-code">{{item.id}}</text>
+        <view class="category-title">
+          <text>{{item.name_zh}}</text>
+          <text>{{item.name_en}}</text>
+        </view>
+        <text class="category-count">{{item.styleCount}}</text>
+      </view>
+      <view class="style-list">
+        <view
+          wx:for="{{item.styles}}"
+          wx:for-item="style"
+          wx:key="id"
+          class="style-row"
+          data-style-id="{{style.id}}"
+          bindtap="openStyle"
+        >
+          <text class="style-code">{{style.code}}</text>
+          <text class="style-name">{{style.displayName}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>

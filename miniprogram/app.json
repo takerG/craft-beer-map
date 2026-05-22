@@ -1,0 +1,33 @@
+{
+  "pages": [
+    "pages/explore/index",
+    "pages/search/index",
+    "pages/group/index",
+    "pages/style/index"
+  ],
+  "window": {
+    "navigationBarTitleText": "精酿啤酒风格地图",
+    "navigationBarBackgroundColor": "#111820",
+    "navigationBarTextStyle": "white",
+    "backgroundColor": "#10151d",
+    "backgroundTextStyle": "dark"
+  },
+  "tabBar": {
+    "color": "#8d9aad",
+    "selectedColor": "#f6ad55",
+    "backgroundColor": "#111820",
+    "borderStyle": "black",
+    "list": [
+      {
+        "pagePath": "pages/explore/index",
+        "text": "探索"
+      },
+      {
+        "pagePath": "pages/search/index",
+        "text": "搜索"
+      }
+    ]
+  },
+  "style": "v2",
+  "sitemapLocation": "sitemap.json"
+}

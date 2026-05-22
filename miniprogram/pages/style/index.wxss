@@ -1,0 +1,147 @@
+.style-page {
+  padding-bottom: 64rpx;
+}
+
+.style-hero {
+  padding: 30rpx;
+  border: 1rpx solid rgba(255, 255, 255, 0.08);
+  border-left-width: 10rpx;
+  border-radius: 16rpx;
+  background: #182231;
+}
+
+.style-code {
+  display: inline-flex;
+  align-items: center;
+  height: 48rpx;
+  padding: 0 18rpx;
+  border-radius: 999rpx;
+  background: rgba(246, 173, 85, 0.14);
+  color: #f6ad55;
+  font-size: 24rpx;
+  font-weight: 800;
+}
+
+.style-name {
+  display: block;
+  margin-top: 22rpx;
+  color: #f8fafc;
+  font-size: 42rpx;
+  font-weight: 850;
+  line-height: 1.2;
+}
+
+.style-en {
+  display: block;
+  margin-top: 10rpx;
+  color: #a9b5c7;
+  font-size: 25rpx;
+  line-height: 1.45;
+}
+
+.group-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 58rpx;
+  margin-top: 24rpx;
+  padding: 0 18rpx;
+  border-radius: 999rpx;
+  background: rgba(255, 255, 255, 0.08);
+  color: #dce5f2;
+  font-size: 22rpx;
+}
+
+.stats-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  margin-top: 20rpx;
+}
+
+.stat-card {
+  width: 49%;
+  min-height: 92rpx;
+  margin-bottom: 14rpx;
+  padding: 16rpx;
+  border: 1rpx solid rgba(255, 255, 255, 0.08);
+  border-radius: 14rpx;
+  background: #182231;
+}
+
+.stat-card text:first-child {
+  display: block;
+  color: #9aa8bb;
+  font-size: 20rpx;
+}
+
+.stat-card text:last-child {
+  display: block;
+  margin-top: 8rpx;
+  color: #f8fafc;
+  font-size: 26rpx;
+  font-weight: 800;
+}
+
+.detail-section {
+  margin-top: 20rpx;
+  padding: 24rpx;
+  border: 1rpx solid rgba(255, 255, 255, 0.08);
+  border-radius: 16rpx;
+  background: #182231;
+}
+
+.detail-title {
+  display: block;
+  color: #f6ad55;
+  font-size: 24rpx;
+  font-weight: 800;
+}
+
+.detail-body {
+  display: block;
+  margin-top: 14rpx;
+  color: #e8eef7;
+  font-size: 26rpx;
+  line-height: 1.75;
+  white-space: pre-wrap;
+}
+
+.tag-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12rpx;
+  margin-top: 18rpx;
+}
+
+.tag {
+  padding: 10rpx 16rpx;
+  border-radius: 999rpx;
+  background: rgba(255, 255, 255, 0.08);
+  color: #dce5f2;
+  font-size: 22rpx;
+}
+
+.related-row {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  min-height: 72rpx;
+  margin-top: 12rpx;
+  padding: 0 14rpx;
+  border-radius: 10rpx;
+  background: rgba(255, 255, 255, 0.05);
+  text-align: left;
+}
+
+.related-type {
+  width: 112rpx;
+  color: #f6ad55;
+  font-size: 22rpx;
+  font-weight: 800;
+}
+
+.related-name {
+  flex: 1;
+  color: #e8eef7;
+  font-size: 24rpx;
+}

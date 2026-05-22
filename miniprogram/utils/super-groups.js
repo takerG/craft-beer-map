@@ -1,0 +1,58 @@
+export const SUPER_GROUPS = [
+  {
+    id: 'american',
+    name: '美国啤酒',
+    nameEn: 'American',
+    color: '#ffb24c',
+    categories: ['1', '18', '19', '20', '21', '22'],
+  },
+  {
+    id: 'international',
+    name: '国际拉格',
+    nameEn: 'International',
+    color: '#7db8ff',
+    categories: ['2'],
+  },
+  {
+    id: 'czech',
+    name: '捷克拉格',
+    nameEn: 'Czech',
+    color: '#58c886',
+    categories: ['3'],
+  },
+  {
+    id: 'german',
+    name: '德奥与德国系',
+    nameEn: 'Germanic',
+    color: '#ff7a3d',
+    categories: ['4', '5', '6', '7', '8', '9', '10'],
+  },
+  {
+    id: 'british',
+    name: '英伦、爱尔兰与英联邦',
+    nameEn: 'British, Irish & Commonwealth',
+    color: '#ff5a43',
+    categories: ['11', '12', '13', '14', '15', '16', '17'],
+  },
+  {
+    id: 'belgian',
+    name: '比利时、法式与欧洲酸啤',
+    nameEn: 'Belgian, French & European Sour',
+    color: '#a86dff',
+    categories: ['23', '24', '25', '26'],
+  },
+  {
+    id: 'historical-wild',
+    name: '历史与野菌啤酒',
+    nameEn: 'Historical & Wild',
+    color: '#46c1ff',
+    categories: ['27', '28'],
+  },
+  {
+    id: 'specialty',
+    name: '特种与增味啤酒',
+    nameEn: 'Specialty & Flavor Beer',
+    color: '#53d4da',
+    categories: ['29', '30', '31', '32', '33', '34'],
+  },
+];

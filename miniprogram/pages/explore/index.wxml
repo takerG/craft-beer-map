@@ -1,0 +1,55 @@
+<view class="page explore-page">
+  <view class="hero">
+    <text class="page-title">精酿啤酒风格地图</text>
+    <text class="page-subtitle">从 8 个风格大类进入 BJCP 2021 体系，在局部地图里看关系，在详情页里查风味。</text>
+    <view class="search-entry" bindtap="openSearch">
+      <text>搜索编号 / 中文 / English</text>
+      <text class="search-entry-icon">⌕</text>
+    </view>
+  </view>
+
+  <view class="section-head">
+    <text>风格大类</text>
+    <text>{{groups.length}} groups</text>
+  </view>
+
+  <view class="group-grid">
+    <view
+      wx:for="{{groups}}"
+      wx:key="id"
+      class="group-card"
+      style="border-left-color: {{item.color}}"
+      data-group-id="{{item.id}}"
+      bindtap="openGroup"
+    >
+      <view class="group-card-bar" style="background: {{item.color}}"></view>
+      <view class="group-card-main">
+        <text class="group-name">{{item.name}}</text>
+        <text class="group-en">{{item.nameEn}}</text>
+      </view>
+      <view class="group-meta">
+        <text>{{item.categoryCount}} 类</text>
+        <text>{{item.styleCount}} styles</text>
+      </view>
+    </view>
+  </view>
+
+  <view class="section-head">
+    <text>快速入口</text>
+    <text>IPA</text>
+  </view>
+
+  <scroll-view scroll-x class="featured-strip">
+    <view
+      wx:for="{{featured}}"
+      wx:key="id"
+      class="style-chip-card"
+      data-style-id="{{item.id}}"
+      bindtap="openStyle"
+    >
+      <text class="style-code">{{item.code}}</text>
+      <text class="style-name">{{item.displayName}}</text>
+      <text class="style-en">{{item.name_en}}</text>
+    </view>
+  </scroll-view>
+</view>

@@ -1,0 +1,47 @@
+<view class="page style-page" wx:if="{{detail}}">
+  <view class="style-hero" style="border-left-color: {{detail.style.color}}">
+    <text class="style-code">{{detail.style.code}}</text>
+    <text class="style-name">{{detail.style.displayName}}</text>
+    <text class="style-en">{{detail.style.name_en}}</text>
+    <view class="group-link" bindtap="openGroup">
+      {{detail.category.id}} {{detail.category.name_zh}} · {{detail.group.name}}
+    </view>
+  </view>
+
+  <view wx:if="{{detail.stats.length}}" class="stats-grid">
+    <view wx:for="{{detail.stats}}" wx:key="label" class="stat-card">
+      <text>{{item.label}}</text>
+      <text>{{item.value}}</text>
+    </view>
+  </view>
+
+  <view class="detail-section" wx:for="{{detail.sections}}" wx:key="key">
+    <text class="detail-title">{{item.label}}</text>
+    <text class="detail-body">{{item.content}}</text>
+  </view>
+
+  <view wx:if="{{detail.tags.length}}" class="detail-section">
+    <text class="detail-title">标签</text>
+    <view class="tag-list">
+      <text wx:for="{{detail.tags}}" wx:key="*this" class="tag">{{item}}</text>
+    </view>
+  </view>
+
+  <view wx:if="{{detail.related.length}}" class="detail-section">
+    <text class="detail-title">关联风格</text>
+    <view
+      wx:for="{{detail.related}}"
+      wx:key="styleId"
+      class="related-row"
+      data-style-id="{{item.styleId}}"
+      bindtap="openRelated"
+    >
+      <text class="related-type">{{item.label}}</text>
+      <text class="related-name">{{item.styleCode}} {{item.styleName}}</text>
+    </view>
+  </view>
+</view>
+
+<view class="page" wx:else>
+  <view class="empty">没有找到这个啤酒风格。</view>
+</view>

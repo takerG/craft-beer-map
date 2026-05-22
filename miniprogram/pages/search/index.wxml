@@ -1,0 +1,36 @@
+<view class="page search-page">
+  <view class="search-box">
+    <input
+      value="{{query}}"
+      placeholder="输入 BJCP 编号、中英文名"
+      placeholder-class="search-placeholder"
+      bindinput="onInput"
+      confirm-type="search"
+    />
+    <button wx:if="{{query}}" class="clear-btn" bindtap="clearSearch">清除</button>
+  </view>
+
+  <view wx:if="{{!hasQuery}}" class="empty">
+    试试搜索 “1A”、“IPA”、“贵兹” 或 “淡爽”。
+  </view>
+
+  <view wx:elif="{{!hasResults}}" class="empty">
+    没有找到匹配风格。
+  </view>
+
+  <view wx:else class="result-list">
+    <view
+      wx:for="{{results}}"
+      wx:key="id"
+      class="result-row"
+      data-style-id="{{item.id}}"
+      bindtap="openStyle"
+    >
+      <text class="result-code">{{item.code}}</text>
+      <view class="result-main">
+        <text class="result-name">{{item.displayName}}</text>
+        <text class="result-en">{{item.name_en}}</text>
+      </view>
+    </view>
+  </view>
+</view>
