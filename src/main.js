@@ -1,6 +1,7 @@
 import './style.css';
 import * as d3 from 'd3';
 import { shouldUseDiscoveryExperience } from './discovery-mode.js';
+import { SUPER_GENRES } from './super-genres.js';
 import { buildWallBoards, getNearestBoardId, getOverviewFitScale, getOverviewFocusPoint, layoutBoardCategories, layoutCategoryStyles } from './wall-layout.js';
 
 const MAP_WIDTH = 2200;
@@ -17,16 +18,6 @@ const ZOOM_LEVELS = {
   categories: 1.45,
   styles: 2.1,
 };
-
-const SUPER_GENRES = [
-  { id: 'american', name: '美国啤酒', nameEn: 'American', categories: ['1', '18', '19', '20', '21', '22'], color: '#ffb24c', x: 500, y: 500, rx: 300, ry: 190 },
-  { id: 'international', name: '国际拉格', nameEn: 'International', categories: ['2'], color: '#7db8ff', x: 910, y: 280, rx: 170, ry: 110 },
-  { id: 'czech', name: '捷克拉格', nameEn: 'Czech', categories: ['3'], color: '#58c886', x: 1260, y: 270, rx: 170, ry: 110 },
-  { id: 'german', name: '德奥与德国系', nameEn: 'Germanic', categories: ['4', '5', '6', '7', '8', '9', '10'], color: '#ff7a3d', x: 1580, y: 500, rx: 330, ry: 220 },
-  { id: 'british', name: '英伦与爱尔兰', nameEn: 'British & Irish', categories: ['11', '12', '13', '14', '15', '16', '17'], color: '#ff5a43', x: 620, y: 930, rx: 340, ry: 220 },
-  { id: 'belgian', name: '比利时与酸啤', nameEn: 'Belgian & Sour', categories: ['23', '24', '25', '26'], color: '#a86dff', x: 1420, y: 860, rx: 280, ry: 180 },
-  { id: 'specialty', name: '特色与实验啤酒', nameEn: 'Specialty', categories: ['27', '28', '29', '30', '31', '32', '33', '34'], color: '#53d4da', x: 1820, y: 1030, rx: 300, ry: 220 },
-];
 
 const DETAIL_SECTIONS = [
   ['overall_impression', '整体印象'],
