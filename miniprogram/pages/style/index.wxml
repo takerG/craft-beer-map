@@ -1,10 +1,34 @@
-<view class="page style-page" wx:if="{{detail}}">
+<view class="page style-page" wx:if="{{loadStatus === 'loading'}}">
+  <view class="state-card">
+    <text class="state-title">正在加载风格详情</text>
+    <text class="state-copy">准备风味描述、参数和关联风格。</text>
+  </view>
+</view>
+
+<view class="page style-page" wx:elif="{{loadStatus === 'not-found'}}">
+  <view class="state-card">
+    <text class="state-title">没有找到这个风格</text>
+    <text class="state-copy">{{errorMessage}}</text>
+    <view class="state-action" bindtap="goSearch">去搜索</view>
+  </view>
+</view>
+
+<view class="page style-page" wx:elif="{{loadStatus === 'error'}}">
+  <view class="state-card">
+    <text class="state-title">详情加载失败</text>
+    <text class="state-copy">{{errorMessage}}</text>
+    <view class="state-action" bindtap="goSearch">去搜索</view>
+  </view>
+</view>
+
+<view class="page style-page" wx:elif="{{detail}}">
   <view class="style-hero" style="border-left-color: {{detail.style.color}}">
     <text class="style-code">{{detail.style.code}}</text>
     <text class="style-name">{{detail.style.displayName}}</text>
     <text class="style-en">{{detail.style.name_en}}</text>
-    <view class="group-link" bindtap="openGroup">
-      {{detail.category.id}} {{detail.category.name_zh}} · {{detail.group.name}}
+    <view class="style-path" bindtap="openGroup">
+      <text>返回风格大类</text>
+      <text>{{detail.category.id}} {{detail.category.name_zh}} · {{detail.group.name}}</text>
     </view>
   </view>
 
@@ -15,7 +39,7 @@
     </view>
   </view>
 
-  <view class="detail-section" wx:for="{{detail.sections}}" wx:key="key">
+  <view class="reading-section" wx:for="{{detail.sections}}" wx:key="key">
     <text class="detail-title">{{item.label}}</text>
     <text class="detail-body">{{item.content}}</text>
   </view>
@@ -38,10 +62,7 @@
     >
       <text class="related-type">{{item.label}}</text>
       <text class="related-name">{{item.styleCode}} {{item.styleName}}</text>
+      <text class="related-action">查看</text>
     </view>
   </view>
-</view>
-
-<view class="page" wx:else>
-  <view class="empty">没有找到这个啤酒风格。</view>
 </view>

@@ -1,29 +1,25 @@
-<view class="page group-page" wx:if="{{group}}">
+<view class="page group-page" wx:if="{{loadStatus === 'loading'}}">
+  <view class="state-card">
+    <text class="state-title">正在准备风格列表</text>
+    <text class="state-copy">加载当前大类的类别与标准风格。</text>
+  </view>
+</view>
+
+<view class="page group-page" wx:elif="{{loadStatus === 'error'}}">
+  <view class="state-card">
+    <text class="state-title">没有找到这个大类</text>
+    <text class="state-copy">{{errorMessage}}</text>
+    <view class="state-action" bindtap="goExplore">回到探寻</view>
+  </view>
+</view>
+
+<view class="page group-page" wx:elif="{{group}}">
   <view class="group-hero" style="border-left-color: {{group.color}}">
     <text class="group-title">{{group.name}}</text>
     <text class="group-en">{{group.nameEn}}</text>
     <view class="group-stats">
       <text>{{group.categoryCount}} 类别</text>
       <text>{{group.styleCount}} 风格</text>
-      <text>{{relationCount}} 关系</text>
-    </view>
-  </view>
-
-  <view class="map-panel">
-    <view class="map-head">
-      <view>
-        <text class="map-title">局部关系图</text>
-        <text class="map-subtitle">点击节点可查看风格</text>
-      </view>
-      <view class="map-actions">
-        <button bindtap="toggleLinks">{{linkToggleText}}</button>
-        <button bindtap="resetMap">重置</button>
-      </view>
-    </view>
-    <canvas canvas-id="miniMap" class="mini-map-canvas" style="{{canvasStyle}}" bindtouchend="onCanvasTap"></canvas>
-    <view wx:if="{{selectedNodeId}}" class="selected-node" bindtap="openSelectedStyle">
-      <text>{{selectedNodeName}}</text>
-      <text>查看详情</text>
     </view>
   </view>
 

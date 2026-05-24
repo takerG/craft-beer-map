@@ -2,8 +2,6 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 
 import {
-  buildMiniMap,
-  findMiniMapNodeAt,
   getGroupDetail,
   getStyleDetail,
   getSuperGroups,
@@ -31,7 +29,7 @@ test('mini program browse group labels match the PC atlas labels', () => {
   );
 });
 
-test('getGroupDetail returns categories, styles, and scoped relations', () => {
+test('getGroupDetail returns categories and styles without local relation map data', () => {
   const detail = getGroupDetail('belgian');
 
   assert.equal(detail.group.id, 'belgian');
@@ -40,7 +38,7 @@ test('getGroupDetail returns categories, styles, and scoped relations', () => {
     ['23', '24', '25', '26'],
   );
   assert.ok(detail.styles.some((style) => style.code === '23E'));
-  assert.ok(detail.relations.every((relation) => relation.source.superGenreId === 'belgian' || relation.target.superGenreId === 'belgian'));
+  assert.equal(Object.hasOwn(detail, 'relations'), false);
 });
 
 test('group and search list payloads stay lightweight for setData', () => {
@@ -71,20 +69,4 @@ test('searchStyles matches code, Chinese name, and English name', () => {
   assert.equal(searchStyles('1a')[0].code, '1A');
   assert.ok(searchStyles('淡爽').some((style) => style.code === '1A'));
   assert.ok(searchStyles('gueuze').some((style) => style.code === '23E'));
-});
-
-test('buildMiniMap creates tappable canvas nodes for one group', () => {
-  const map = buildMiniMap('american', { width: 375, height: 420 });
-
-  assert.equal(map.group.id, 'american');
-  assert.ok(map.nodes.length > 0);
-  assert.ok(map.nodes.every((node) => node.x >= 0 && node.x <= 375));
-  assert.ok(map.nodes.every((node) => node.y >= 0 && node.y <= 420));
-  assert.ok(map.links.every((link) => link.source && link.target));
-
-  const first = map.nodes[0];
-  assert.equal(first.label, first.name);
-  assert.notEqual(first.label, first.code);
-  assert.equal(findMiniMapNodeAt(map, first.x, first.y).id, first.id);
-  assert.equal(findMiniMapNodeAt(map, -20, -20), null);
 });

@@ -25,7 +25,7 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "vite": "^6.2.3"
+    "vite": "^8.0.0"
   },
   "dependencies": {
     "d3": "^7.9.0"

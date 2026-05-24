@@ -118,9 +118,6 @@ export function getGroupDetail(groupId) {
       styleCount: (stylesByCategory.get(category.id) || []).length,
     })),
     styles: groupStyles.map(toStyleSummary),
-    relations: relations
-      .filter((relation) => relation.source.groupId === group.id || relation.target.groupId === group.id)
-      .map(toRelationSummary),
   };
 }
 
@@ -168,83 +165,6 @@ export function searchStyles(query, limit = 30) {
     .map(toStyleSummary);
 }
 
-export function buildMiniMap(groupId, size = {}) {
-  const width = Number(size.width) || 375;
-  const height = Number(size.height) || 420;
-  const detail = getGroupDetail(groupId);
-  const nodeById = new Map();
-  const nodes = [];
-  const marginX = 34;
-  const marginY = 52;
-  const usableWidth = Math.max(1, width - marginX * 2);
-  const usableHeight = Math.max(1, height - marginY * 2);
-
-  const columnCount = width >= 330 ? 3 : 2;
-  const rowCount = Math.ceil(detail.styles.length / columnCount);
-  const columnGap = usableWidth / Math.max(columnCount - 1, 1);
-  const rowGap = usableHeight / Math.max(rowCount - 1, 1);
-
-  detail.styles.forEach((style, index) => {
-    const row = Math.floor(index / columnCount);
-    const col = index % columnCount;
-    const label = style.displayName;
-    const labelWidth = clamp(label.length * 12 + 26, 82, columnCount === 2 ? 138 : 112);
-    const labelHeight = label.length > 6 ? 42 : 34;
-    const x = columnCount === 1 ? width / 2 : marginX + col * columnGap;
-    const y = rowCount === 1 ? height / 2 : marginY + row * rowGap;
-    const node = {
-      id: style.id,
-      code: style.code,
-      name: style.displayName,
-      nameEn: style.name_en || '',
-      label,
-      categoryId: style.category,
-      groupId: style.groupId,
-      color: style.color,
-      x: clamp(x, labelWidth / 2 + 8, width - labelWidth / 2 - 8),
-      y: clamp(y, labelHeight / 2 + 8, height - labelHeight / 2 - 8),
-      width: labelWidth,
-      height: labelHeight,
-      radius: 8,
-      hitRadius: Math.max(labelWidth, labelHeight) / 2,
-    };
-    nodes.push(node);
-    nodeById.set(node.id, node);
-  });
-
-  const links = detail.relations
-    .map((relation) => ({
-      type: relation.type,
-      label: relation.label,
-      source: nodeById.get(relation.source.id),
-      target: nodeById.get(relation.target.id),
-    }))
-    .filter((link) => link.source && link.target);
-
-  return {
-    group: detail.group,
-    width,
-    height,
-    nodes,
-    links,
-  };
-}
-
-export function findMiniMapNodeAt(miniMap, x, y) {
-  if (!miniMap) return null;
-  for (let index = miniMap.nodes.length - 1; index >= 0; index -= 1) {
-    const node = miniMap.nodes[index];
-    if (node.width && node.height) {
-      const withinX = x >= node.x - node.width / 2 && x <= node.x + node.width / 2;
-      const withinY = y >= node.y - node.height / 2 && y <= node.y + node.height / 2;
-      if (withinX && withinY) return node;
-    }
-    const distance = Math.hypot(node.x - x, node.y - y);
-    if (distance <= node.hitRadius) return node;
-  }
-  return null;
-}
-
 export function getCategoryStyles(categoryId) {
   return stylesByCategory.get(categoryId) || [];
 }
@@ -280,15 +200,6 @@ function toStyleSummary(style) {
   };
 }
 
-function toRelationSummary(relation) {
-  return {
-    type: relation.type,
-    label: relation.label,
-    source: toStyleSummary(relation.source),
-    target: toStyleSummary(relation.target),
-  };
-}
-
 function normalizeStats(stats) {
   if (!stats) return [];
   if (typeof stats === 'object' && !Array.isArray(stats)) {
@@ -321,8 +232,4 @@ function scoreSearchResult(style, query) {
   if (nameZh.includes(query)) return 2;
   if (nameEn.includes(query)) return 3;
   return 4;
-}
-
-function clamp(value, min, max) {
-  return Math.min(max, Math.max(min, value));
 }

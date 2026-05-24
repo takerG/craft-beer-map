@@ -6,6 +6,7 @@ Page({
     results: [],
     hasQuery: false,
     hasResults: false,
+    suggestions: ['IPA', '拉格', '世涛', '贵兹'],
   },
 
   onInput(event) {
@@ -25,6 +26,17 @@ Page({
       results: [],
       hasQuery: false,
       hasResults: false,
+    });
+  },
+
+  useSuggestion(event) {
+    const query = event.currentTarget.dataset.query || '';
+    const results = searchStyles(query);
+    this.setData({
+      query,
+      results,
+      hasQuery: Boolean(query.trim()),
+      hasResults: results.length > 0,
     });
   },
 

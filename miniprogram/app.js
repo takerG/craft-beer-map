@@ -1,5 +1,5 @@
 App({
   globalData: {
-    appName: '精酿啤酒风格地图',
+    appName: '精酿风格指南',
   },
 });

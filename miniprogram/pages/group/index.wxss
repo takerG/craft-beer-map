@@ -2,6 +2,43 @@
   padding-bottom: 64rpx;
 }
 
+.state-card {
+  padding: 46rpx 30rpx;
+  border: 1rpx solid rgba(255, 255, 255, 0.08);
+  border-radius: 16rpx;
+  background: #182231;
+  text-align: center;
+}
+
+.state-title {
+  display: block;
+  color: #f8fafc;
+  font-size: 31rpx;
+  font-weight: 800;
+}
+
+.state-copy {
+  display: block;
+  margin-top: 14rpx;
+  color: #9aa8bb;
+  font-size: 24rpx;
+  line-height: 1.6;
+}
+
+.state-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 58rpx;
+  margin-top: 24rpx;
+  padding: 0 24rpx;
+  border-radius: 999rpx;
+  background: rgba(246, 173, 85, 0.14);
+  color: #f6ad55;
+  font-size: 23rpx;
+  font-weight: 800;
+}
+
 .group-hero {
   padding: 30rpx;
   border: 1rpx solid rgba(255, 255, 255, 0.08);
@@ -37,73 +74,6 @@
   background: rgba(255, 255, 255, 0.08);
   color: #dce5f2;
   font-size: 22rpx;
-}
-
-.map-panel {
-  margin-top: 24rpx;
-  padding: 22rpx;
-  border: 1rpx solid rgba(255, 255, 255, 0.08);
-  border-radius: 16rpx;
-  background: #182231;
-}
-
-.map-head {
-  display: block;
-  margin-bottom: 18rpx;
-}
-
-.map-title {
-  display: block;
-  color: #f8fafc;
-  font-size: 28rpx;
-  font-weight: 800;
-}
-
-.map-subtitle {
-  display: block;
-  margin-top: 6rpx;
-  color: #9aa8bb;
-  font-size: 21rpx;
-}
-
-.map-actions {
-  display: flex;
-  width: 100%;
-  gap: 10rpx;
-  margin-top: 18rpx;
-}
-
-.map-actions button {
-  flex: 1;
-  height: 54rpx;
-  padding: 0 18rpx;
-  border-radius: 999rpx;
-  background: rgba(255, 255, 255, 0.08);
-  color: #dce5f2;
-  font-size: 22rpx;
-}
-
-.mini-map-canvas {
-  overflow: hidden;
-  border-radius: 14rpx;
-  background: #111820;
-}
-
-.selected-node {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  min-height: 72rpx;
-  margin-top: 16rpx;
-  padding: 0 20rpx;
-  border-radius: 12rpx;
-  background: rgba(246, 173, 85, 0.12);
-  color: #f8fafc;
-  font-size: 24rpx;
-}
-
-.selected-node text:last-child {
-  color: #f6ad55;
 }
 
 .section-head {

@@ -10,12 +10,26 @@
     <button wx:if="{{query}}" class="clear-btn" bindtap="clearSearch">清除</button>
   </view>
 
-  <view wx:if="{{!hasQuery}}" class="empty">
-    试试搜索 “1A”、“IPA”、“贵兹” 或 “淡爽”。
+  <view wx:if="{{!hasQuery}}" class="empty-state">
+    <text class="empty-title">搜索风格</text>
+    <text class="empty-copy">输入 BJCP 编号、中文名或英文名，结果会直接进入详情页。</text>
+    <view class="suggestion-list">
+      <text
+        wx:for="{{suggestions}}"
+        wx:key="*this"
+        class="suggestion-chip"
+        data-query="{{item}}"
+        bindtap="useSuggestion"
+      >{{item}}</text>
+    </view>
   </view>
 
-  <view wx:elif="{{!hasResults}}" class="empty">
-    没有找到匹配风格。
+  <view wx:elif="{{!hasResults}}" class="empty-state">
+    <text class="empty-title">没有找到匹配风格</text>
+    <text class="empty-copy">当前只收录 BJCP 官方标准风格。</text>
+    <text class="empty-copy">水果酸艾尔、冷 IPA 等未被 BJCP 收录的风格暂时搜不到。</text>
+    <text class="empty-copy">可以换一个编号、中文关键词或英文名称再试。</text>
+    <view class="empty-action" bindtap="clearSearch">清空重新搜索</view>
   </view>
 
   <view wx:else class="result-list">
