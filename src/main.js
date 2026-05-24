@@ -116,14 +116,16 @@ function normalizeData() {
     const category = state.categoryMap.get(style.category);
     const superGenre = category ? findSuperGenre(category.id) : SUPER_GENRES[0];
     const details = style.details || {};
+    const aliases = Array.isArray(style.aliases) ? style.aliases : [];
     return {
       ...style,
       id: style.id || style.code,
       code: style.code || style.id,
+      aliases,
       details,
       superGenreId: superGenre.id,
       color: superGenre.color,
-      searchText: `${style.code || ''} ${style.name_zh || ''} ${style.name_en || ''}`.toLowerCase(),
+      searchText: `${style.code || ''} ${style.name_zh || ''} ${style.name_en || ''} ${aliases.join(' ')}`.toLowerCase(),
     };
   });
 

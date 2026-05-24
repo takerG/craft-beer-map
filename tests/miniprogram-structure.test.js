@@ -130,6 +130,20 @@ test('search empty result explains BJCP official coverage', () => {
   assert.match(searchWxml, /冷 IPA/);
 });
 
+test('search results and style details expose community aliases', () => {
+  const searchWxml = readMiniPage('pages/search/index.wxml');
+  const searchWxss = readMiniPage('pages/search/index.wxss');
+  const styleWxml = readMiniPage('pages/style/index.wxml');
+  const styleWxss = readMiniPage('pages/style/index.wxss');
+
+  assert.match(searchWxml, /class="result-alias-list"/);
+  assert.match(searchWxml, /wx:for="{{item.aliases}}"/);
+  assert.match(searchWxss, /\.result-alias-list/);
+  assert.match(styleWxml, /class="alias-list"/);
+  assert.match(styleWxml, /wx:for="{{detail.style.aliases}}"/);
+  assert.match(styleWxss, /\.alias-list/);
+});
+
 function listFiles(dir, extension) {
   return fs.readdirSync(dir, { withFileTypes: true }).flatMap((entry) => {
     const filePath = path.join(dir, entry.name);

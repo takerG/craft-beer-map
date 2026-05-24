@@ -9,6 +9,7 @@
     "test": "node --test",
     "preview": "vite preview",
     "build:data": "python scripts/extract_bjcp_2015_pdf.py && python scripts/parse_bjcp_2015_pdf.py && node scripts/build_bjcp_2015_data.cjs",
+    "apply:aliases": "node scripts/apply_style_aliases.cjs",
     "build:mini-data": "node scripts/build_miniprogram_data.cjs",
     "build:all": "npm run build:data && npm run build"
   },

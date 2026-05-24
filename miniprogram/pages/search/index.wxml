@@ -44,6 +44,14 @@
       <view class="result-main">
         <text class="result-name">{{item.displayName}}</text>
         <text class="result-en">{{item.name_en}}</text>
+        <view wx:if="{{item.aliases.length}}" class="result-alias-list">
+          <text
+            wx:for="{{item.aliases}}"
+            wx:for-item="alias"
+            wx:key="*this"
+            class="result-alias"
+          >{{alias}}</text>
+        </view>
       </view>
     </view>
   </view>

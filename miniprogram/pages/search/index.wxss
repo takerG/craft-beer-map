@@ -143,3 +143,19 @@
   font-size: 22rpx;
   line-height: 1.35;
 }
+
+.result-alias-list {
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: 12rpx;
+}
+
+.result-alias {
+  margin: 0 8rpx 8rpx 0;
+  padding: 6rpx 12rpx;
+  border-radius: 999rpx;
+  background: rgba(246, 173, 85, 0.12);
+  color: #f6ad55;
+  font-size: 20rpx;
+  line-height: 1.3;
+}

@@ -32,6 +32,18 @@
     </view>
   </view>
 
+  <view wx:if="{{detail.style.aliases.length}}" class="detail-section alias-section">
+    <text class="detail-title">常用叫法</text>
+    <view class="alias-list">
+      <text
+        wx:for="{{detail.style.aliases}}"
+        wx:for-item="alias"
+        wx:key="*this"
+        class="alias"
+      >{{alias}}</text>
+    </view>
+  </view>
+
   <view wx:if="{{detail.stats.length}}" class="stats-grid">
     <view wx:for="{{detail.stats}}" wx:key="label" class="stat-card">
       <text>{{item.label}}</text>

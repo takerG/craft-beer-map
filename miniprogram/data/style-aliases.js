@@ -1,0 +1,438 @@
+// Generated from public/data.json. Run npm run build:mini-data after alias changes.
+export const styleAliases = {
+  "1A": [
+    "美式淡拉格",
+    "美国淡拉格"
+  ],
+  "1B": [
+    "美国拉格"
+  ],
+  "1C": [
+    "奶油爱尔",
+    "Cream Ale"
+  ],
+  "1D": [
+    "美式小麦啤酒",
+    "美国小麦",
+    "American Wheat"
+  ],
+  "2A": [
+    "国际淡拉格",
+    "国际淡色拉格"
+  ],
+  "2B": [
+    "国际琥珀拉格"
+  ],
+  "2C": [
+    "国际深色拉格"
+  ],
+  "3A": [
+    "捷克浅色拉格"
+  ],
+  "3B": [
+    "捷克皮尔森",
+    "捷克皮尔斯纳",
+    "波西米亚皮尔森"
+  ],
+  "3D": [
+    "捷克黑啤"
+  ],
+  "4A": [
+    "慕尼黑赫雷斯",
+    "德式清亮",
+    "Helles"
+  ],
+  "4B": [
+    "节庆啤酒",
+    "Festbier"
+  ],
+  "4C": [
+    "浅色博克",
+    "五月博克",
+    "Maibock",
+    "Helles Bock"
+  ],
+  "5A": [
+    "低度德啤",
+    "Leichtbier"
+  ],
+  "5B": [
+    "科尔施",
+    "科隆",
+    "Kolsch",
+    "Kölsch"
+  ],
+  "5C": [
+    "出口型清亮",
+    "Helles Exportbier"
+  ],
+  "5D": [
+    "德国皮尔森",
+    "德式皮尔斯纳",
+    "德啤"
+  ],
+  "6A": [
+    "三月啤",
+    "Marzen",
+    "Märzen",
+    "十月节啤酒"
+  ],
+  "6B": [
+    "劳赫啤",
+    "Rauchbier"
+  ],
+  "6C": [
+    "黑博克",
+    "Dunkles Bock"
+  ],
+  "7A": [
+    "维也纳啤酒"
+  ],
+  "7B": [
+    "老啤酒",
+    "老式艾尔",
+    "阿尔特",
+    "Altbier"
+  ],
+  "8A": [
+    "慕尼黑黑啤",
+    "深色慕尼黑",
+    "Dunkel"
+  ],
+  "8B": [
+    "黑啤",
+    "施瓦茨",
+    "Schwarzbier"
+  ],
+  "9A": [
+    "双倍博克",
+    "Doppelbock"
+  ],
+  "9B": [
+    "冰博克",
+    "Eisbock"
+  ],
+  "9C": [
+    "波罗的海",
+    "Baltic Porter"
+  ],
+  "10A": [
+    "德式白啤",
+    "小麦白啤",
+    "赫菲",
+    "Weissbier",
+    "Hefeweizen"
+  ],
+  "10B": [
+    "深色小麦",
+    "Dunkelweizen"
+  ],
+  "10C": [
+    "Weizenbock"
+  ],
+  "11A": [
+    "普通苦",
+    "Ordinary Bitter"
+  ],
+  "11B": [
+    "最佳苦啤",
+    "Best Bitter"
+  ],
+  "11C": [
+    "特苦",
+    "ESB",
+    "Extra Special Bitter"
+  ],
+  "12A": [
+    "英式金艾",
+    "Golden Ale"
+  ],
+  "12B": [
+    "澳式起泡",
+    "Sparkling Ale"
+  ],
+  "12C": [
+    "英伦IPA"
+  ],
+  "13A": [
+    "深色淡啤",
+    "Mild",
+    "Dark Mild"
+  ],
+  "13B": [
+    "英伦棕艾",
+    "Brown Ale"
+  ],
+  "13C": [
+    "英伦波特",
+    "Porter"
+  ],
+  "14B": [
+    "苏格兰重啤",
+    "Scottish Heavy"
+  ],
+  "15A": [
+    "爱尔兰红",
+    "Irish Red"
+  ],
+  "15B": [
+    "干世涛",
+    "爱尔兰干世涛",
+    "Irish Stout"
+  ],
+  "15C": [
+    "爱尔兰加强世涛",
+    "Extra Stout"
+  ],
+  "16A": [
+    "牛奶世涛",
+    "奶世涛",
+    "Milk Stout"
+  ],
+  "16B": [
+    "Oatmeal Stout"
+  ],
+  "16D": [
+    "外国出口世涛",
+    "FES",
+    "Foreign Extra Stout"
+  ],
+  "17B": [
+    "老艾尔",
+    "Old Ale"
+  ],
+  "17C": [
+    "苏格兰烈性艾尔",
+    "Wee Heavy"
+  ],
+  "17D": [
+    "英式大麦烈酒",
+    "Barleywine"
+  ],
+  "18A": [
+    "Blonde Ale"
+  ],
+  "18B": [
+    "美式淡艾",
+    "APA",
+    "American Pale Ale"
+  ],
+  "19A": [
+    "美式琥珀",
+    "American Amber"
+  ],
+  "19B": [
+    "加州普通",
+    "蒸汽啤酒",
+    "California Common"
+  ],
+  "20C": [
+    "俄罗斯帝国世涛",
+    "RIS"
+  ],
+  "21A": [
+    "美国IPA",
+    "American IPA",
+    "西海岸IPA",
+    "West Coast IPA"
+  ],
+  "21B": [
+    "特殊IPA",
+    "Specialty IPA",
+    "白IPA",
+    "黑IPA",
+    "红IPA",
+    "黑麦IPA",
+    "Brut IPA"
+  ],
+  "21C": [
+    "NEIPA",
+    "新英格兰IPA",
+    "多汁IPA",
+    "Hazy IPA"
+  ],
+  "22A": [
+    "双倍IPA",
+    "双倍 IPA",
+    "Double IPA",
+    "DIPA",
+    "帝国IPA",
+    "帝国 IPA",
+    "Imperial IPA"
+  ],
+  "22B": [
+    "American Strong Ale"
+  ],
+  "22C": [
+    "American Barleywine"
+  ],
+  "22D": [
+    "小麦烈酒",
+    "Wheatwine"
+  ],
+  "23A": [
+    "柏林酸小麦",
+    "Berliner Weisse"
+  ],
+  "23B": [
+    "法兰德斯红",
+    "Flanders Red"
+  ],
+  "23C": [
+    "法兰德斯棕",
+    "Oud Bruin"
+  ],
+  "23E": [
+    "格兹",
+    "吉兹",
+    "Gueuze"
+  ],
+  "23G": [
+    "古斯酸小麦",
+    "Gose"
+  ],
+  "24A": [
+    "比利时白啤",
+    "白啤",
+    "Witbier"
+  ],
+  "24C": [
+    "法式窖藏",
+    "Biere de Garde",
+    "Bière de Garde"
+  ],
+  "25A": [
+    "比利时金艾",
+    "Belgian Blond"
+  ],
+  "25B": [
+    "赛松",
+    "Saison"
+  ],
+  "25C": [
+    "比利时金色烈性",
+    "Belgian Golden Strong"
+  ],
+  "26A": [
+    "单料",
+    "Single",
+    "Belgian Single"
+  ],
+  "26B": [
+    "双料",
+    "Dubbel",
+    "Belgian Dubbel"
+  ],
+  "26C": [
+    "三料",
+    "Tripel",
+    "Belgian Tripel"
+  ],
+  "26D": [
+    "比利时深色烈性艾尔",
+    "Belgian Dark Strong"
+  ],
+  "27A": [
+    "酒窖啤酒",
+    "凯勒啤酒",
+    "Kellerbier"
+  ],
+  "27B": [
+    "Kentucky Common"
+  ],
+  "27C": [
+    "Lichtenhainer"
+  ],
+  "27D": [
+    "London Brown"
+  ],
+  "27E": [
+    "格罗济斯基",
+    "波兰烟熏小麦",
+    "Grodziskie"
+  ],
+  "27F": [
+    "Pre-Prohibition Lager"
+  ],
+  "27G": [
+    "Pre-Prohibition Porter"
+  ],
+  "27H": [
+    "德式黑麦",
+    "Roggenbier"
+  ],
+  "27I": [
+    "萨赫蒂",
+    "Sahti"
+  ],
+  "28A": [
+    "野菌啤酒",
+    "Brett Beer",
+    "Brett"
+  ],
+  "28B": [
+    "混合发酵酸啤",
+    "混发酸",
+    "Mixed-Fermentation Sour"
+  ],
+  "28C": [
+    "Wild Specialty"
+  ],
+  "28D": [
+    "Straight Sour"
+  ],
+  "29A": [
+    "水果啤酒",
+    "Fruit Beer"
+  ],
+  "29B": [
+    "水果香料啤",
+    "Fruit and Spice Beer"
+  ],
+  "29C": [
+    "特种水果啤",
+    "Specialty Fruit Beer"
+  ],
+  "29D": [
+    "葡萄啤酒",
+    "Grape Ale"
+  ],
+  "30A": [
+    "SHV",
+    "香草蔬菜啤"
+  ],
+  "30B": [
+    "南瓜啤酒",
+    "Pumpkin Ale"
+  ],
+  "30C": [
+    "圣诞啤酒",
+    "Winter Warmer"
+  ],
+  "31A": [
+    "替代谷物啤酒"
+  ],
+  "31B": [
+    "替代糖啤酒",
+    "蜂蜜啤酒"
+  ],
+  "33A": [
+    "木桶陈酿",
+    "Barrel-Aged Beer"
+  ],
+  "33B": [
+    "增味木桶陈酿啤酒",
+    "桶陈增味啤酒"
+  ],
+  "34A": [
+    "商业特色啤酒",
+    "克隆啤酒",
+    "Clone Beer"
+  ],
+  "34B": [
+    "混合风格"
+  ],
+  "34C": [
+    "Experimental Beer"
+  ]
+};

@@ -137,3 +137,14 @@ test('beer data matches the BJCP 2021 main guideline style set', () => {
     assert.equal(normalizeName(byCode.get(code).name_en), name);
   });
 });
+
+test('beer data includes searchable community aliases for official Chinese style names', () => {
+  const byCode = new Map(data.styles.map((style) => [style.code || style.id, style]));
+  const doubleIpa = byCode.get('22A');
+
+  assert.equal(data.styles.every((style) => Array.isArray(style.aliases)), true);
+  assert.equal(doubleIpa.name_zh, '双料');
+  assert.ok(Array.isArray(doubleIpa.aliases));
+  assert.ok(doubleIpa.aliases.includes('双倍IPA'));
+  assert.ok(doubleIpa.aliases.includes('帝国IPA'));
+});

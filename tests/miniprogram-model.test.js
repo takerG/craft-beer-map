@@ -1,5 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import path from 'node:path';
 
 import {
   getGroupDetail,
@@ -9,6 +11,8 @@ import {
 } from '../miniprogram/utils/beer-model.js';
 import { SUPER_GROUPS } from '../miniprogram/utils/super-groups.js';
 import { SUPER_GENRES } from '../src/super-genres.js';
+
+const root = process.cwd();
 
 test('getSuperGroups returns the eight browse groups with counts', () => {
   const groups = getSuperGroups();
@@ -69,4 +73,32 @@ test('searchStyles matches code, Chinese name, and English name', () => {
   assert.equal(searchStyles('1a')[0].code, '1A');
   assert.ok(searchStyles('淡爽').some((style) => style.code === '1A'));
   assert.ok(searchStyles('gueuze').some((style) => style.code === '23E'));
+});
+
+test('searchStyles matches community style aliases', () => {
+  const imperialIpa = searchStyles('帝国IPA')[0];
+
+  assert.ok(searchStyles('双倍').some((style) => style.code === '22A'));
+  assert.equal(imperialIpa.code, '22A');
+  assert.ok(imperialIpa.aliases.includes('双倍IPA'));
+  assert.ok(imperialIpa.aliases.includes('帝国IPA'));
+});
+
+test('getStyleDetail returns community aliases for display', () => {
+  const detail = getStyleDetail('22A');
+
+  assert.ok(detail.style.aliases.includes('双倍IPA'));
+  assert.ok(detail.style.aliases.includes('帝国IPA'));
+});
+
+test('mini program keeps community aliases outside the generated BJCP payload', () => {
+  const beerDataPath = path.join(root, 'miniprogram', 'data', 'beer-data.js');
+  const styleAliasesPath = path.join(root, 'miniprogram', 'data', 'style-aliases.js');
+  const beerDataSource = fs.readFileSync(beerDataPath, 'utf8');
+  const styleAliasesSource = fs.readFileSync(styleAliasesPath, 'utf8');
+
+  assert.equal(beerDataSource.includes('"aliases"'), false);
+  assert.ok(Buffer.byteLength(styleAliasesSource) < 20 * 1024);
+  assert.match(styleAliasesSource, /22A/);
+  assert.match(styleAliasesSource, /双倍IPA/);
 });

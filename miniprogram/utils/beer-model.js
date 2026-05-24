@@ -1,4 +1,5 @@
 import { beerData } from '../data/beer-data.js';
+import { styleAliases } from '../data/style-aliases.js';
 import { SUPER_GROUPS } from './super-groups.js';
 
 const DETAIL_SECTIONS = [
@@ -47,16 +48,18 @@ const categories = beerData.categories.map((category) => {
 const styles = beerData.styles.map((style) => {
   const category = categoryById.get(style.category);
   const group = category ? groupById.get(category.groupId) : SUPER_GROUPS[0];
+  const aliases = styleAliases[style.code || style.id] || [];
   const enriched = {
     ...style,
     id: style.id || style.code,
     code: style.code || style.id,
+    aliases,
     displayName: style.name_zh || style.name_en || style.code || style.id,
     details: style.details || {},
     superGenreId: group.id,
     groupId: group.id,
     color: group.color,
-    searchText: `${style.id || ''} ${style.code || ''} ${style.name_zh || ''} ${style.name_en || ''}`.toLowerCase(),
+    searchText: `${style.id || ''} ${style.code || ''} ${style.name_zh || ''} ${style.name_en || ''} ${aliases.join(' ')}`.toLowerCase(),
   };
   styleById.set(enriched.id, enriched);
   styleById.set(enriched.code, enriched);
@@ -190,6 +193,7 @@ function toStyleSummary(style) {
   return {
     id: style.id,
     code: style.code,
+    aliases: style.aliases || [],
     displayName: style.displayName,
     name_zh: style.name_zh,
     name_en: style.name_en,
@@ -227,9 +231,13 @@ function scoreSearchResult(style, query) {
   const code = (style.code || '').toLowerCase();
   const nameZh = (style.name_zh || '').toLowerCase();
   const nameEn = (style.name_en || '').toLowerCase();
+  const aliases = (style.aliases || []).map((alias) => alias.toLowerCase());
   if (code === query) return 0;
   if (code.startsWith(query)) return 1;
   if (nameZh.includes(query)) return 2;
-  if (nameEn.includes(query)) return 3;
-  return 4;
+  if (aliases.some((alias) => alias === query)) return 3;
+  if (aliases.some((alias) => alias.startsWith(query))) return 4;
+  if (aliases.some((alias) => alias.includes(query))) return 5;
+  if (nameEn.includes(query)) return 6;
+  return 7;
 }
