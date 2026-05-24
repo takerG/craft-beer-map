@@ -1,6 +1,6 @@
 <view class="page explore-page">
   <view class="hero">
-    <text class="page-title">精酿啤酒风格指南</text>
+    <text class="page-title">精酿风格指南</text>
     <text class="page-subtitle">从 8 个风格大类进入 BJCP 2021 体系，按类别探寻标准风格，在详情页里查风味。</text>
     <view class="search-entry" bindtap="openSearch">
       <text>搜索编号 / 中文 / English</text>

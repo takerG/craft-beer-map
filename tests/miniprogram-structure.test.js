@@ -56,6 +56,13 @@ test('mini program navigation title stays fixed to the app name', () => {
   });
 });
 
+test('explore hero title matches the app name', () => {
+  const exploreWxml = readMiniPage('pages/explore/index.wxml');
+
+  assert.match(exploreWxml, /<text class="page-title">精酿风格指南<\/text>/);
+  assert.doesNotMatch(exploreWxml, /精酿啤酒风格指南/);
+});
+
 test('mini program copy avoids removed local map messaging', () => {
   const visibleCopy = [
     readMiniPage('pages/explore/index.wxml'),
