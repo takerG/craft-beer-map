@@ -31,7 +31,6 @@
       <text>返回扩展分组</text>
       <text>{{detail.group.name}}</text>
     </view>
-    <button class="share-button page-share-button" open-type="share">转发</button>
   </view>
 
   <view wx:if="{{!contentReady}}" class="content-skeleton">

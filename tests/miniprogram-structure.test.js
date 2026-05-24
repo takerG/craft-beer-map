@@ -146,19 +146,6 @@ test('heavy destination pages defer below-the-fold hydration', () => {
   });
 });
 
-test('primary pages expose native share entry points', () => {
-  [
-    'pages/explore/index.wxml',
-    'pages/group/index.wxml',
-    'pages/style/index.wxml',
-    'pages/extension-group/index.wxml',
-    'pages/extension-style/index.wxml',
-  ].forEach((relativePath) => {
-    const source = readMiniPage(relativePath);
-    assert.match(source, /open-type="share"/, `${relativePath} should include a native share button`);
-  });
-});
-
 test('primary pages provide share message handlers', () => {
   [
     'pages/explore/index.js',

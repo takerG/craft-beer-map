@@ -129,7 +129,7 @@ function normalizeName(value) {
 test('beer data matches the BJCP 2021 main guideline style set', () => {
   const byCode = new Map(data.styles.map((style) => [style.code || style.id, style]));
 
-  assert.equal(data.styles.length, 116);
+  assert.equal(data.styles.length, expected2021Styles.length);
   assert.equal(byCode.has('7C'), false);
 
   expected2021Styles.forEach(([code, name]) => {

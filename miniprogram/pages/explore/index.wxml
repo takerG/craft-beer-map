@@ -28,13 +28,6 @@
       </view>
       <text class="search-entry-icon">›</text>
     </view>
-    <view class="hero-share-card">
-      <view class="hero-share-copy">
-        <text>发给酒友一起查</text>
-        <text>一起查风格、聊风味、点下一杯</text>
-      </view>
-      <button class="share-button hero-share-button" open-type="share">转发</button>
-    </view>
   </view>
 
   <view class="section-switch">
@@ -70,15 +63,27 @@
         hover-stay-time="80"
         bindtap="openGroup"
       >
+        <view class="group-card-glow" style="background: {{item.color}}"></view>
+        <view class="group-card-orbit" style="border-color: {{item.color}}"></view>
+        <view class="group-card-scan" style="background: {{item.color}}"></view>
         <view class="group-card-bar" style="background: {{item.color}}"></view>
         <view class="group-card-main">
-          <text class="group-index">0{{index + 1}}</text>
+          <view class="group-code-pill">
+            <text class="group-index">0{{index + 1}}</text>
+            <view class="group-code-dot" style="background: {{item.color}}"></view>
+          </view>
           <text class="group-name">{{item.name}}</text>
           <text class="group-en">{{item.nameEn}}</text>
         </view>
         <view class="group-card-meta">
-          <text>{{item.categoryCount}} 类</text>
-          <text>{{item.styleCount}} 风格</text>
+          <view class="meta-block">
+            <text class="meta-value">{{item.categoryCount}}</text>
+            <text class="meta-label">类别</text>
+          </view>
+          <view class="meta-block">
+            <text class="meta-value">{{item.styleCount}}</text>
+            <text class="meta-label">风格</text>
+          </view>
         </view>
       </view>
     </view>
@@ -97,6 +102,7 @@
     <view class="group-grid">
       <view
         wx:for="{{extensionGroups}}"
+        wx:for-index="index"
         wx:key="id"
         class="group-card extension-group-card"
         style="border-left-color: {{item.color}}"
@@ -105,15 +111,25 @@
         hover-stay-time="80"
         bindtap="openExtensionGroup"
       >
+        <view class="group-card-glow" style="background: {{item.color}}"></view>
+        <view class="group-card-orbit" style="border-color: {{item.color}}"></view>
+        <view class="group-card-scan" style="background: {{item.color}}"></view>
         <view class="group-card-bar" style="background: {{item.color}}"></view>
         <view class="group-card-main">
+          <view class="group-code-pill">
+            <text class="group-index">M{{index + 1}}</text>
+            <view class="group-code-dot" style="background: {{item.color}}"></view>
+          </view>
           <text class="group-name">{{item.name}}</text>
           <text class="group-en">{{item.nameEn}}</text>
           <text class="extension-summary">{{item.summary}}</text>
         </view>
         <view class="group-card-meta">
-          <text>{{item.styleCount}} 风格</text>
-          <text>扩展</text>
+          <view class="meta-block">
+            <text class="meta-value">{{item.styleCount}}</text>
+            <text class="meta-label">风格</text>
+          </view>
+          <text class="meta-tag">扩展</text>
         </view>
       </view>
     </view>

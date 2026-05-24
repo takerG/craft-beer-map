@@ -7,43 +7,58 @@ import {
   getExtensionGroupDetail,
   getExtensionGroups,
   getExtensionStyleDetail,
+  getGuideOverview,
   getGroupDetail,
   getStyleDetail,
   getSuperGroups,
   searchStyles,
 } from '../miniprogram/utils/beer-model.js';
+import { beerData } from '../miniprogram/data/beer-data.js';
+import { extensionGroups, extensionStyles } from '../miniprogram/data/extension-styles.js';
 import { SUPER_GROUPS } from '../miniprogram/utils/super-groups.js';
 
 const root = process.cwd();
 
-test('getSuperGroups returns the eight browse groups with counts', () => {
+test('guide overview counts are derived from current model data', () => {
+  const overview = getGuideOverview();
+
+  assert.equal(overview.groupCount, getSuperGroups().length);
+  assert.equal(overview.standardStyleCount, beerData.styles.length);
+  assert.equal(overview.extensionGroupCount, extensionGroups.length);
+  assert.equal(overview.extensionStyleCount, extensionStyles.length);
+});
+
+test('getSuperGroups returns the browse groups with computed counts', () => {
   const groups = getSuperGroups();
 
-  assert.equal(groups.length, 8);
+  assert.equal(groups.length, SUPER_GROUPS.length);
   assert.deepEqual(
     groups.map((group) => group.id),
     ['american', 'international', 'czech', 'german', 'british', 'belgian', 'historical-wild', 'specialty'],
   );
-  assert.equal(groups.find((group) => group.id === 'american').categoryCount, 6);
-  assert.equal(groups.reduce((total, group) => total + group.styleCount, 0), 116);
+  assert.equal(
+    groups.find((group) => group.id === 'american').categoryCount,
+    beerData.categories.filter((category) => SUPER_GROUPS.find((group) => group.id === 'american').categories.includes(category.id)).length,
+  );
+  assert.equal(groups.reduce((total, group) => total + group.styleCount, 0), beerData.styles.length);
 });
 
 test('extension groups expose the full market style learning layer', () => {
   const groups = getExtensionGroups();
 
-  assert.equal(groups.length, 5);
+  assert.equal(groups.length, extensionGroups.length);
   assert.deepEqual(
     groups.map((group) => group.styleCount),
-    [20, 7, 11, 12, 15],
+    extensionGroups.map((group) => extensionStyles.filter((style) => style.groupId === group.id).length),
   );
-  assert.equal(groups.reduce((total, group) => total + group.styleCount, 0), 65);
+  assert.equal(groups.reduce((total, group) => total + group.styleCount, 0), extensionStyles.length);
 });
 
 test('extension group detail returns lightweight style summaries', () => {
   const detail = getExtensionGroupDetail('modern-ipa-hops');
 
   assert.equal(detail.group.id, 'modern-ipa-hops');
-  assert.equal(detail.styles.length, 20);
+  assert.equal(detail.styles.length, extensionStyles.filter((style) => style.groupId === 'modern-ipa-hops').length);
   assert.equal(detail.styles[0].kind, 'extension');
   assert.equal(Object.hasOwn(detail.styles[0], 'description'), false);
   assert.equal(Object.hasOwn(detail.styles[0], 'bjcp_note'), false);

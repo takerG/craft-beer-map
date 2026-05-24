@@ -133,6 +133,17 @@ export function getExtensionGroups() {
   }));
 }
 
+export function getGuideOverview() {
+  const groups = getSuperGroups();
+  const marketGroups = getExtensionGroups();
+  return {
+    groupCount: groups.length,
+    standardStyleCount: groups.reduce((sum, group) => sum + group.styleCount, 0),
+    extensionGroupCount: marketGroups.length,
+    extensionStyleCount: marketGroups.reduce((sum, group) => sum + group.styleCount, 0),
+  };
+}
+
 export function getExtensionGroupDetail(groupId) {
   const group = extensionGroupById.get(groupId);
   if (!group) throw new Error(`Unknown extension group: ${groupId}`);

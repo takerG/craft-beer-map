@@ -30,7 +30,6 @@
       <text>返回风格大类</text>
       <text>{{detail.category.id}} {{detail.category.name_zh}} · {{detail.group.name}}</text>
     </view>
-    <button class="share-button page-share-button" open-type="share">转发</button>
   </view>
 
   <view wx:if="{{!contentReady}}" class="content-skeleton">

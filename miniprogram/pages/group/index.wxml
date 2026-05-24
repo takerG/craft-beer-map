@@ -21,7 +21,6 @@
       <text>{{group.categoryCount}} 类别</text>
       <text>{{group.styleCount}} 风格</text>
     </view>
-    <button class="share-button page-share-button" open-type="share">转发</button>
   </view>
 
   <view class="section-head">

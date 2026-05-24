@@ -1,4 +1,4 @@
-import { getExtensionGroups, getSuperGroups, searchStyles } from '../../utils/beer-model.js';
+import { getExtensionGroups, getGuideOverview, getSuperGroups, searchStyles } from '../../utils/beer-model.js';
 import { navigateOnce, switchTabOnce } from '../../utils/page-performance.js';
 
 Page({
@@ -14,22 +14,21 @@ Page({
   onLoad() {
     const groups = getSuperGroups();
     const extensionGroups = getExtensionGroups();
+    const overview = getGuideOverview();
     const featured = searchStyles('ipa', 6);
-    const standardStyleCount = groups.reduce((sum, group) => sum + group.styleCount, 0);
-    const extensionStyleCount = extensionGroups.reduce((sum, group) => sum + group.styleCount, 0);
 
     this.setData({
       groups,
       extensionGroups,
       featured,
       overviewStats: [
-        { label: '风格大类', value: groups.length },
-        { label: '标准风格', value: standardStyleCount },
-        { label: '市场扩展', value: extensionStyleCount },
+        { label: '风格大类', value: overview.groupCount },
+        { label: '标准风格', value: overview.standardStyleCount },
+        { label: '市场扩展', value: overview.extensionStyleCount },
       ],
       sectionTabs: [
-        { id: 'bjcp', label: 'BJCP 大类', countLabel: `${groups.length} 入口` },
-        { id: 'extension', label: '市场扩展', countLabel: `${extensionGroups.length} 组` },
+        { id: 'bjcp', label: 'BJCP 大类', countLabel: `${overview.groupCount} 入口` },
+        { id: 'extension', label: '市场扩展', countLabel: `${overview.extensionGroupCount} 组` },
       ],
     });
   },

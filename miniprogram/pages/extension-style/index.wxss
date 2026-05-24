@@ -111,11 +111,6 @@
   line-height: 1.4;
 }
 
-.page-share-button {
-  min-width: 92rpx;
-  margin-top: 20rpx;
-}
-
 .content-skeleton {
   margin-top: 20rpx;
   padding: 28rpx;

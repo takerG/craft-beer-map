@@ -80,11 +80,6 @@
   font-size: 22rpx;
 }
 
-.page-share-button {
-  min-width: 92rpx;
-  margin-top: 20rpx;
-}
-
 .section-head {
   margin: 36rpx 4rpx 18rpx;
   color: #f8fafc;
