@@ -1,5 +1,6 @@
 import { searchStyles } from '../../utils/beer-model.js';
 import { navigateOnce } from '../../utils/page-performance.js';
+import { trackEvent } from '../../utils/telemetry.js';
 
 Page({
   data: {
@@ -22,6 +23,7 @@ Page({
   },
 
   clearSearch() {
+    trackEvent('search_clear', { hadQuery: this.data.hasQuery });
     this.setData({
       query: '',
       results: [],
@@ -33,6 +35,11 @@ Page({
   useSuggestion(event) {
     const query = event.currentTarget.dataset.query || '';
     const results = searchStyles(query);
+    trackEvent('search_submit', {
+      query,
+      resultCount: results.length,
+      source: 'suggestion',
+    });
     this.setData({
       query,
       results,
@@ -41,8 +48,18 @@ Page({
     });
   },
 
+  submitSearch() {
+    const query = this.data.query || '';
+    trackEvent('search_submit', {
+      query,
+      resultCount: this.data.results.length,
+      source: 'keyboard',
+    });
+  },
+
   openStyle(event) {
     const { styleId, itemKind } = event.currentTarget.dataset;
+    trackEvent('search_result_open', { styleId, itemKind, query: this.data.query });
     if (itemKind === 'extension') {
       navigateOnce(this, `/pages/extension-style/index?styleId=${styleId}`);
       return;

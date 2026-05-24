@@ -1,5 +1,6 @@
 import { getStyleDetail } from '../../utils/beer-model.js';
 import { deferSetData, navigateOnce, redirectOnce, switchTabOnce } from '../../utils/page-performance.js';
+import { trackEvent } from '../../utils/telemetry.js';
 
 Page({
   data: {
@@ -53,6 +54,7 @@ Page({
   onShareAppMessage() {
     const detail = this.data.detail;
     const style = detail && detail.style;
+    trackEvent('style_share', { styleId: style ? style.id : '' });
     return {
       title: style ? `精酿风格名片：${style.code} ${style.displayName}` : '精酿风格指南',
       path: `/pages/style/index?styleId=${style ? style.id : ''}`,
@@ -61,16 +63,19 @@ Page({
 
   openRelated(event) {
     const { styleId } = event.currentTarget.dataset;
+    trackEvent('style_open', { styleId, source: 'related_style' });
     redirectOnce(this, `/pages/style/index?styleId=${styleId}`);
   },
 
   openGroup() {
     const groupId = this.data.detail && this.data.detail.group && this.data.detail.group.id;
     if (!groupId) return;
+    trackEvent('back_to_group', { groupId, source: 'style_detail' });
     navigateOnce(this, `/pages/group/index?groupId=${groupId}`);
   },
 
   goSearch() {
+    trackEvent('back_to_search', { source: 'style_fallback' });
     switchTabOnce(this, '/pages/search/index');
   },
 });

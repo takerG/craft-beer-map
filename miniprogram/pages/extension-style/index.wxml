@@ -9,7 +9,7 @@
   <view class="state-card">
     <text class="state-title">没有找到这个扩展风格</text>
     <text class="state-copy">{{errorMessage}}</text>
-    <view class="state-action" bindtap="goSearch">去搜索</view>
+    <view class="state-action" hover-class="tap-hover" hover-stay-time="80" bindtap="goSearch">去搜索</view>
   </view>
 </view>
 
@@ -17,7 +17,7 @@
   <view class="state-card">
     <text class="state-title">详情加载失败</text>
     <text class="state-copy">{{errorMessage}}</text>
-    <view class="state-action" bindtap="goSearch">去搜索</view>
+    <view class="state-action" hover-class="tap-hover" hover-stay-time="80" bindtap="goSearch">去搜索</view>
   </view>
 </view>
 
@@ -27,7 +27,7 @@
     <text class="style-name">{{detail.style.displayName}}</text>
     <text class="style-en">{{detail.style.name_en}}</text>
     <text class="style-source">{{detail.sourceLabel}}</text>
-    <view class="style-path" bindtap="openGroup">
+    <view class="style-path" hover-class="tap-hover" hover-stay-time="80" bindtap="openGroup">
       <text>返回扩展分组</text>
       <text>{{detail.group.name}}</text>
     </view>
@@ -68,6 +68,8 @@
         wx:for="{{detail.bjcp_refs}}"
         wx:key="id"
         class="bjcp-row"
+        hover-class="tap-hover"
+        hover-stay-time="80"
         data-style-id="{{item.id}}"
         bindtap="openBjcpStyle"
       >

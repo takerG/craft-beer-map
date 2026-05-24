@@ -70,6 +70,11 @@ button::after {
   font-size: 22rpx;
 }
 
+.tap-hover {
+  opacity: 0.74;
+  transform: scale(0.985);
+}
+
 .empty {
   padding: 48rpx 24rpx;
   color: #9aa8bb;

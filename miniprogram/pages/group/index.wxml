@@ -9,7 +9,7 @@
   <view class="state-card">
     <text class="state-title">没有找到这个大类</text>
     <text class="state-copy">{{errorMessage}}</text>
-    <view class="state-action" bindtap="goExplore">回到探寻</view>
+    <view class="state-action" hover-class="tap-hover" hover-stay-time="80" bindtap="goExplore">回到探寻</view>
   </view>
 </view>
 
@@ -49,6 +49,8 @@
           wx:for-item="style"
           wx:key="id"
           class="style-row"
+          hover-class="tap-hover"
+          hover-stay-time="80"
           data-style-id="{{style.id}}"
           bindtap="openStyle"
         >

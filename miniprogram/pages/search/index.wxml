@@ -5,9 +5,10 @@
       placeholder="输入 BJCP 编号、中英文名"
       placeholder-class="search-placeholder"
       bindinput="onInput"
+      bindconfirm="submitSearch"
       confirm-type="search"
     />
-    <button wx:if="{{query}}" class="clear-btn" bindtap="clearSearch">清除</button>
+    <button wx:if="{{query}}" class="clear-btn" hover-class="tap-hover" hover-stay-time="80" bindtap="clearSearch">清除</button>
   </view>
 
   <view wx:if="{{!hasQuery}}" class="empty-state">
@@ -18,6 +19,8 @@
         wx:for="{{suggestions}}"
         wx:key="*this"
         class="suggestion-chip"
+        hover-class="tap-hover"
+        hover-stay-time="80"
         data-query="{{item}}"
         bindtap="useSuggestion"
       >{{item}}</text>
@@ -29,7 +32,7 @@
     <text class="empty-copy">当前只收录 BJCP 官方标准风格。</text>
     <text class="empty-copy">水果酸艾尔、冷 IPA 等未被 BJCP 收录的风格暂时搜不到。</text>
     <text class="empty-copy">可以换一个编号、中文关键词或英文名称再试。</text>
-    <view class="empty-action" bindtap="clearSearch">清空重新搜索</view>
+    <view class="empty-action" hover-class="tap-hover" hover-stay-time="80" bindtap="clearSearch">清空重新搜索</view>
   </view>
 
   <view wx:else class="result-list">
@@ -37,6 +40,8 @@
       wx:for="{{results}}"
       wx:key="id"
       class="result-row"
+      hover-class="tap-hover"
+      hover-stay-time="80"
       data-style-id="{{item.id}}"
       data-item-kind="{{item.kind}}"
       bindtap="openStyle"

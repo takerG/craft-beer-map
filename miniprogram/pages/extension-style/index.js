@@ -1,5 +1,6 @@
 import { getExtensionStyleDetail } from '../../utils/beer-model.js';
 import { deferSetData, navigateOnce, redirectOnce, switchTabOnce } from '../../utils/page-performance.js';
+import { trackEvent } from '../../utils/telemetry.js';
 
 Page({
   data: {
@@ -56,6 +57,7 @@ Page({
   onShareAppMessage() {
     const detail = this.data.detail;
     const style = detail && detail.style;
+    trackEvent('extension_style_share', { styleId: style ? style.id : '' });
     return {
       title: style ? `市场风格名片：${style.displayName}` : '精酿风格指南',
       path: `/pages/extension-style/index?styleId=${style ? style.id : ''}`,
@@ -64,16 +66,19 @@ Page({
 
   openBjcpStyle(event) {
     const { styleId } = event.currentTarget.dataset;
+    trackEvent('style_open', { styleId, source: 'extension_crosswalk' });
     navigateOnce(this, `/pages/style/index?styleId=${styleId}`);
   },
 
   openGroup() {
     const groupId = this.data.detail && this.data.detail.group && this.data.detail.group.id;
     if (!groupId) return;
+    trackEvent('back_to_extension_group', { groupId, source: 'extension_style_detail' });
     redirectOnce(this, `/pages/extension-group/index?groupId=${groupId}`);
   },
 
   goSearch() {
+    trackEvent('back_to_search', { source: 'extension_style_fallback' });
     switchTabOnce(this, '/pages/search/index');
   },
 });

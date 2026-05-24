@@ -159,6 +159,67 @@ test('primary pages provide share message handlers', () => {
   });
 });
 
+test('core user behaviors are instrumented for release analytics', () => {
+  const telemetryPath = path.join(miniprogramRoot, 'utils', 'telemetry.js');
+  assert.equal(fs.existsSync(telemetryPath), true, 'utils/telemetry.js should exist');
+
+  const telemetrySource = fs.readFileSync(telemetryPath, 'utf8');
+  assert.match(telemetrySource, /export function trackEvent/);
+  assert.match(telemetrySource, /reportEvent|reportAnalytics/);
+
+  const expectedEvents = [
+    ['pages/explore/index.js', 'explore_search_open'],
+    ['pages/explore/index.js', 'explore_section_switch'],
+    ['pages/explore/index.js', 'style_open'],
+    ['pages/search/index.js', 'search_submit'],
+    ['pages/search/index.js', 'search_result_open'],
+    ['pages/group/index.js', 'style_open'],
+    ['pages/style/index.js', 'style_share'],
+    ['pages/style/index.js', 'back_to_group'],
+    ['pages/extension-group/index.js', 'extension_style_open'],
+    ['pages/extension-style/index.js', 'extension_style_share'],
+  ];
+
+  expectedEvents.forEach(([relativePath, eventName]) => {
+    const source = readMiniPage(relativePath);
+    assert.match(source, /trackEvent/, `${relativePath} should import and call trackEvent`);
+    assert.match(source, new RegExp(eventName), `${relativePath} should track ${eventName}`);
+  });
+});
+
+test('tap targets expose consistent pressed feedback before release', () => {
+  [
+    'pages/search/index.wxml',
+    'pages/group/index.wxml',
+    'pages/style/index.wxml',
+    'pages/extension-group/index.wxml',
+    'pages/extension-style/index.wxml',
+  ].forEach((relativePath) => {
+    const source = readMiniPage(relativePath);
+    assert.match(source, /hover-class="tap-hover"/, `${relativePath} should use shared tap hover feedback`);
+    assert.match(source, /hover-stay-time="80"/, `${relativePath} should keep tap feedback snappy`);
+  });
+});
+
+test('release checklist covers the first shipping gate', () => {
+  const checklistPath = path.join(root, 'docs', 'release-checklist.md');
+  assert.equal(fs.existsSync(checklistPath), true, 'docs/release-checklist.md should exist');
+
+  const checklist = fs.readFileSync(checklistPath, 'utf8');
+  [
+    '微信开发者工具',
+    '真机 QA',
+    'loading',
+    '空状态',
+    '错误状态',
+    '埋点',
+    '首屏',
+    '60 秒',
+  ].forEach((keyword) => {
+    assert.match(checklist, new RegExp(keyword), `release checklist should cover ${keyword}`);
+  });
+});
+
 test('extension learning pages are declared and linked from explore and search', () => {
   const exploreWxml = readMiniPage('pages/explore/index.wxml');
   const searchJs = readMiniPage('pages/search/index.js');

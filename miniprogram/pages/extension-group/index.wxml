@@ -9,7 +9,7 @@
   <view class="state-card">
     <text class="state-title">没有找到这个扩展分组</text>
     <text class="state-copy">{{errorMessage}}</text>
-    <view class="state-action" bindtap="goExplore">回到探索</view>
+    <view class="state-action" hover-class="tap-hover" hover-stay-time="80" bindtap="goExplore">回到探寻</view>
   </view>
 </view>
 
@@ -33,6 +33,8 @@
       wx:for="{{styles}}"
       wx:key="id"
       class="extension-row"
+      hover-class="tap-hover"
+      hover-stay-time="80"
       data-style-id="{{item.id}}"
       bindtap="openExtensionStyle"
     >
