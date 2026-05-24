@@ -1,4 +1,5 @@
 import { beerData } from '../data/beer-data.js';
+import { extensionGroups, extensionStyles } from '../data/extension-styles.js';
 import { styleAliases } from '../data/style-aliases.js';
 import { SUPER_GROUPS } from './super-groups.js';
 
@@ -28,6 +29,9 @@ const stylesByGroup = new Map();
 const relationsByStyle = new Map();
 const groupById = new Map(SUPER_GROUPS.map((group) => [group.id, group]));
 const groupByCategory = new Map();
+const extensionGroupById = new Map(extensionGroups.map((group) => [group.id, group]));
+const extensionStyleById = new Map();
+const extensionStylesByGroup = new Map();
 
 SUPER_GROUPS.forEach((group) => {
   group.categories.forEach((categoryId) => groupByCategory.set(categoryId, group));
@@ -71,6 +75,23 @@ const styles = beerData.styles.map((style) => {
   return enriched;
 });
 
+const enrichedExtensionStyles = extensionStyles.map((style) => {
+  const group = extensionGroupById.get(style.groupId);
+  const enriched = {
+    ...style,
+    kind: 'extension',
+    aliases: Array.isArray(style.aliases) ? style.aliases : [],
+    displayName: style.name_zh || style.name_en || style.id,
+    color: group ? group.color : '#f6ad55',
+    sourceLabel: style.sourceLabel || 'BA/WBC/GABF 扩展风格',
+    searchText: `${style.id || ''} ${style.name_zh || ''} ${style.name_en || ''} ${(style.aliases || []).join(' ')}`.toLowerCase(),
+  };
+  extensionStyleById.set(enriched.id, enriched);
+  if (!extensionStylesByGroup.has(enriched.groupId)) extensionStylesByGroup.set(enriched.groupId, []);
+  extensionStylesByGroup.get(enriched.groupId).push(enriched);
+  return enriched;
+});
+
 const relations = (beerData.relations || [])
   .map((relation) => {
     const source = styleById.get(relation.source);
@@ -103,6 +124,47 @@ export function getSuperGroups() {
       categories: [...group.categories],
     };
   });
+}
+
+export function getExtensionGroups() {
+  return extensionGroups.map((group) => ({
+    ...group,
+    styleCount: (extensionStylesByGroup.get(group.id) || []).length,
+  }));
+}
+
+export function getExtensionGroupDetail(groupId) {
+  const group = extensionGroupById.get(groupId);
+  if (!group) throw new Error(`Unknown extension group: ${groupId}`);
+  const groupStyles = extensionStylesByGroup.get(group.id) || [];
+  return {
+    group: {
+      ...group,
+      styleCount: groupStyles.length,
+    },
+    styles: groupStyles.map(toExtensionSummary),
+  };
+}
+
+export function getExtensionStyleDetail(styleId) {
+  const style = extensionStyleById.get(styleId);
+  if (!style) return null;
+
+  const group = extensionGroupById.get(style.groupId);
+  return {
+    style: toExtensionSummary(style),
+    group: {
+      ...group,
+      styleCount: (extensionStylesByGroup.get(style.groupId) || []).length,
+    },
+    sourceLabel: style.sourceLabel,
+    description: normalizeContent(style.description),
+    bjcp_note: normalizeContent(style.bjcp_note),
+    bjcp_refs: (style.bjcp_refs || [])
+      .map((id) => styleById.get(id))
+      .filter(Boolean)
+      .map(toStyleSummary),
+  };
 }
 
 export function getGroupDetail(groupId) {
@@ -161,11 +223,13 @@ export function searchStyles(query, limit = 30) {
   const normalized = String(query || '').trim().toLowerCase();
   if (!normalized) return [];
 
-  return styles
-    .filter((style) => style.searchText.includes(normalized))
+  return [
+    ...styles.filter((style) => style.searchText.includes(normalized)),
+    ...enrichedExtensionStyles.filter((style) => style.searchText.includes(normalized)),
+  ]
     .sort((a, b) => scoreSearchResult(a, normalized) - scoreSearchResult(b, normalized))
     .slice(0, limit)
-    .map(toStyleSummary);
+    .map((style) => (style.kind === 'extension' ? toExtensionSummary(style) : toStyleSummary(style)));
 }
 
 export function getCategoryStyles(categoryId) {
@@ -192,6 +256,7 @@ function toCategorySummary(category) {
 function toStyleSummary(style) {
   return {
     id: style.id,
+    kind: 'bjcp',
     code: style.code,
     aliases: style.aliases || [],
     displayName: style.displayName,
@@ -201,6 +266,21 @@ function toStyleSummary(style) {
     superGenreId: style.superGenreId,
     groupId: style.groupId,
     color: style.color,
+  };
+}
+
+function toExtensionSummary(style) {
+  return {
+    id: style.id,
+    kind: 'extension',
+    code: '',
+    aliases: style.aliases || [],
+    displayName: style.displayName,
+    name_zh: style.name_zh,
+    name_en: style.name_en,
+    groupId: style.groupId,
+    color: style.color,
+    sourceLabel: style.sourceLabel,
   };
 }
 
@@ -228,6 +308,18 @@ function normalizeContent(content) {
 }
 
 function scoreSearchResult(style, query) {
+  if (style.kind === 'extension') {
+    const nameZh = (style.name_zh || '').toLowerCase();
+    const nameEn = (style.name_en || '').toLowerCase();
+    const aliases = (style.aliases || []).map((alias) => alias.toLowerCase());
+    if (nameZh === query || nameEn === query) return 2.5;
+    if (aliases.some((alias) => alias === query)) return 3.5;
+    if (nameZh.includes(query)) return 4.5;
+    if (aliases.some((alias) => alias.startsWith(query))) return 5.5;
+    if (aliases.some((alias) => alias.includes(query))) return 6.5;
+    if (nameEn.includes(query)) return 7.5;
+    return 8;
+  }
   const code = (style.code || '').toLowerCase();
   const nameZh = (style.name_zh || '').toLowerCase();
   const nameEn = (style.name_en || '').toLowerCase();

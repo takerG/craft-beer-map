@@ -111,6 +111,33 @@
   margin-top: 10rpx;
 }
 
+.extension-intro {
+  margin-bottom: 16rpx;
+  padding: 22rpx 24rpx;
+  border: 1rpx solid rgba(246, 173, 85, 0.12);
+  border-radius: 14rpx;
+  background: rgba(246, 173, 85, 0.08);
+}
+
+.extension-intro text {
+  display: block;
+  color: #dce5f2;
+  font-size: 24rpx;
+  line-height: 1.65;
+}
+
+.extension-group-card {
+  background: #151f2c;
+}
+
+.extension-summary {
+  display: block;
+  margin-top: 10rpx;
+  color: #8390a2;
+  font-size: 21rpx;
+  line-height: 1.45;
+}
+
 .featured-strip {
   width: 100%;
   white-space: nowrap;

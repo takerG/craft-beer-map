@@ -41,7 +41,11 @@ Page({
   },
 
   openStyle(event) {
-    const { styleId } = event.currentTarget.dataset;
+    const { styleId, itemKind } = event.currentTarget.dataset;
+    if (itemKind === 'extension') {
+      wx.navigateTo({ url: `/pages/extension-style/index?styleId=${styleId}` });
+      return;
+    }
     wx.navigateTo({ url: `/pages/style/index?styleId=${styleId}` });
   },
 });

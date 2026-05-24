@@ -124,6 +124,14 @@
   font-weight: 800;
 }
 
+.result-kind {
+  width: 104rpx;
+  padding: 0 8rpx;
+  font-size: 20rpx;
+  line-height: 1.2;
+  text-align: center;
+}
+
 .result-main {
   flex: 1;
   min-width: 0;
@@ -141,6 +149,14 @@
   margin-top: 8rpx;
   color: #9aa8bb;
   font-size: 22rpx;
+  line-height: 1.35;
+}
+
+.result-source {
+  display: block;
+  margin-top: 8rpx;
+  color: #f6ad55;
+  font-size: 21rpx;
   line-height: 1.35;
 }
 

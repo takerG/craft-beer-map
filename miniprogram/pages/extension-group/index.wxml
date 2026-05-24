@@ -1,0 +1,42 @@
+<view class="page extension-group-page" wx:if="{{loadStatus === 'loading'}}">
+  <view class="state-card">
+    <text class="state-title">正在加载扩展风格</text>
+    <text class="state-copy">准备市场常见叫法和 BJCP 对照。</text>
+  </view>
+</view>
+
+<view class="page extension-group-page" wx:elif="{{loadStatus === 'error'}}">
+  <view class="state-card">
+    <text class="state-title">没有找到这个扩展分组</text>
+    <text class="state-copy">{{errorMessage}}</text>
+    <view class="state-action" bindtap="goExplore">回到探索</view>
+  </view>
+</view>
+
+<view class="page extension-group-page" wx:elif="{{group}}">
+  <view class="group-hero" style="border-left-color: {{group.color}}">
+    <text class="group-kicker">市场扩展风格</text>
+    <text class="group-name">{{group.name}}</text>
+    <text class="group-en">{{group.nameEn}}</text>
+    <text class="group-summary">{{group.summary}}</text>
+    <text class="group-count">{{group.styleCount}} 个扩展风格</text>
+  </view>
+
+  <view class="extension-list">
+    <view
+      wx:for="{{styles}}"
+      wx:key="id"
+      class="extension-row"
+      data-style-id="{{item.id}}"
+      bindtap="openExtensionStyle"
+    >
+      <view class="extension-dot" style="background: {{item.color}}"></view>
+      <view class="extension-main">
+        <text class="extension-name">{{item.displayName}}</text>
+        <text class="extension-en">{{item.name_en}}</text>
+        <text class="extension-source">{{item.sourceLabel}}</text>
+      </view>
+      <text class="extension-action">查看</text>
+    </view>
+  </view>
+</view>

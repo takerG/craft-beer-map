@@ -38,12 +38,15 @@
       wx:key="id"
       class="result-row"
       data-style-id="{{item.id}}"
+      data-item-kind="{{item.kind}}"
       bindtap="openStyle"
     >
-      <text class="result-code">{{item.code}}</text>
+      <text class="result-code" wx:if="{{item.kind !== 'extension'}}">{{item.code}}</text>
+      <text class="result-code result-kind" wx:else>扩展风格</text>
       <view class="result-main">
         <text class="result-name">{{item.displayName}}</text>
         <text class="result-en">{{item.name_en}}</text>
+        <text wx:if="{{item.kind === 'extension'}}" class="result-source">{{item.sourceLabel}}</text>
         <view wx:if="{{item.aliases.length}}" class="result-alias-list">
           <text
             wx:for="{{item.aliases}}"

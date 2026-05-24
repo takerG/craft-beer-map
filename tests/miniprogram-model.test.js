@@ -4,6 +4,9 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 import {
+  getExtensionGroupDetail,
+  getExtensionGroups,
+  getExtensionStyleDetail,
   getGroupDetail,
   getStyleDetail,
   getSuperGroups,
@@ -24,6 +27,54 @@ test('getSuperGroups returns the eight browse groups with counts', () => {
   );
   assert.equal(groups.find((group) => group.id === 'american').categoryCount, 6);
   assert.equal(groups.reduce((total, group) => total + group.styleCount, 0), 116);
+});
+
+test('extension groups expose the full market style learning layer', () => {
+  const groups = getExtensionGroups();
+
+  assert.equal(groups.length, 5);
+  assert.deepEqual(
+    groups.map((group) => group.styleCount),
+    [20, 7, 11, 12, 15],
+  );
+  assert.equal(groups.reduce((total, group) => total + group.styleCount, 0), 65);
+});
+
+test('extension group detail returns lightweight style summaries', () => {
+  const detail = getExtensionGroupDetail('modern-ipa-hops');
+
+  assert.equal(detail.group.id, 'modern-ipa-hops');
+  assert.equal(detail.styles.length, 20);
+  assert.equal(detail.styles[0].kind, 'extension');
+  assert.equal(Object.hasOwn(detail.styles[0], 'description'), false);
+  assert.equal(Object.hasOwn(detail.styles[0], 'bjcp_note'), false);
+});
+
+test('extension style detail returns source label and BJCP crosswalk', () => {
+  const detail = getExtensionStyleDetail('ext-west-coast-ipa');
+
+  assert.equal(detail.style.kind, 'extension');
+  assert.equal(detail.style.name_zh, '西海岸 IPA');
+  assert.equal(detail.sourceLabel, 'BA/WBC/GABF 扩展风格');
+  assert.match(detail.description, /干爽/);
+  assert.match(detail.bjcp_note, /American IPA/);
+  assert.ok(detail.bjcp_refs.some((style) => style.id === '21A'));
+});
+
+test('searchStyles returns BJCP and extension style results with routing kind', () => {
+  const westCoast = searchStyles('西海岸 IPA')[0];
+  const riceLager = searchStyles('Rice Lager')[0];
+  const pastry = searchStyles('Pastry')[0];
+  const bjcpIpa = searchStyles('21A')[0];
+
+  assert.equal(westCoast.kind, 'extension');
+  assert.equal(westCoast.id, 'ext-west-coast-ipa');
+  assert.equal(riceLager.kind, 'extension');
+  assert.equal(riceLager.id, 'ext-rice-lager');
+  assert.equal(pastry.kind, 'extension');
+  assert.equal(pastry.id, 'ext-dessert-pastry-beer');
+  assert.equal(bjcpIpa.kind, 'bjcp');
+  assert.equal(bjcpIpa.code, '21A');
 });
 
 test('mini program browse group labels match the PC atlas labels', () => {

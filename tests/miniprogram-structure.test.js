@@ -113,6 +113,21 @@ test('mini program pages expose clear exploration and fallback states', () => {
   assert.match(styleWxml, /class="reading-section"/);
 });
 
+test('extension learning pages are declared and linked from explore and search', () => {
+  const exploreWxml = readMiniPage('pages/explore/index.wxml');
+  const searchJs = readMiniPage('pages/search/index.js');
+  const searchWxml = readMiniPage('pages/search/index.wxml');
+
+  assert.ok(appJson.pages.includes('pages/extension-group/index'));
+  assert.ok(appJson.pages.includes('pages/extension-style/index'));
+  assert.match(exploreWxml, /市场扩展风格/);
+  assert.match(exploreWxml, /openExtensionGroup/);
+  assert.match(searchJs, /itemKind/);
+  assert.match(searchJs, /extension-style/);
+  assert.match(searchWxml, /result-kind/);
+  assert.match(searchWxml, /扩展风格/);
+});
+
 test('search clear button keeps its label centered', () => {
   const searchWxss = readMiniPage('pages/search/index.wxss');
 
