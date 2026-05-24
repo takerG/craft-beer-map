@@ -4,8 +4,7 @@ const styleAliases = require('./style_aliases.cjs');
 
 const root = path.resolve(__dirname, '..');
 const dataPaths = [
-  path.join(root, 'public', 'data.json'),
-  path.join(root, 'docs', 'data.json'),
+  path.join(root, 'data', 'beer-data-source.json'),
 ];
 
 function uniqueAliases(aliases) {

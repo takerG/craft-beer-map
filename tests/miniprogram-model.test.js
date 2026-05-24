@@ -13,7 +13,6 @@ import {
   searchStyles,
 } from '../miniprogram/utils/beer-model.js';
 import { SUPER_GROUPS } from '../miniprogram/utils/super-groups.js';
-import { SUPER_GENRES } from '../src/super-genres.js';
 
 const root = process.cwd();
 
@@ -77,10 +76,19 @@ test('searchStyles returns BJCP and extension style results with routing kind', 
   assert.equal(bjcpIpa.code, '21A');
 });
 
-test('mini program browse group labels match the PC atlas labels', () => {
+test('mini program browse group labels stay stable', () => {
   assert.deepEqual(
-    SUPER_GROUPS.map((group) => ({ id: group.id, name: group.name, nameEn: group.nameEn })),
-    SUPER_GENRES.map((group) => ({ id: group.id, name: group.name, nameEn: group.nameEn })),
+    SUPER_GROUPS.map((group) => ({ id: group.id, nameEn: group.nameEn })),
+    [
+      { id: 'american', nameEn: 'American' },
+      { id: 'international', nameEn: 'International' },
+      { id: 'czech', nameEn: 'Czech' },
+      { id: 'german', nameEn: 'Germanic' },
+      { id: 'british', nameEn: 'British, Irish & Commonwealth' },
+      { id: 'belgian', nameEn: 'Belgian, French & European Sour' },
+      { id: 'historical-wild', nameEn: 'Historical & Wild' },
+      { id: 'specialty', nameEn: 'Specialty & Flavor Beer' },
+    ],
   );
 });
 

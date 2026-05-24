@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 
 const root = path.resolve(__dirname, '..');
-const inputPath = path.join(root, 'public', 'data.json');
+const inputPath = path.join(root, 'data', 'beer-data-source.json');
 const outputDir = path.join(root, 'miniprogram', 'data');
 const outputPath = path.join(outputDir, 'beer-data.js');
 const aliasesOutputPath = path.join(outputDir, 'style-aliases.js');
@@ -21,12 +21,12 @@ const styleAliases = Object.fromEntries(
 fs.mkdirSync(outputDir, { recursive: true });
 fs.writeFileSync(
   outputPath,
-  `// Generated from public/data.json. Run npm run build:mini-data after BJCP data changes.\nexport const beerData = ${JSON.stringify(miniProgramData, null, 2)};\n`,
+  `// Generated from data/beer-data-source.json. Run npm run build:mini-data after BJCP data changes.\nexport const beerData = ${JSON.stringify(miniProgramData, null, 2)};\n`,
   'utf8',
 );
 fs.writeFileSync(
   aliasesOutputPath,
-  `// Generated from public/data.json. Run npm run build:mini-data after alias changes.\nexport const styleAliases = ${JSON.stringify(styleAliases, null, 2)};\n`,
+  `// Generated from data/beer-data-source.json. Run npm run build:mini-data after alias changes.\nexport const styleAliases = ${JSON.stringify(styleAliases, null, 2)};\n`,
   'utf8',
 );
 

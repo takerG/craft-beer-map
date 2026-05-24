@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 
-import data from '../public/data.json' with { type: 'json' };
+import data from '../data/beer-data-source.json' with { type: 'json' };
 
 const expected2021Styles = [
   ['1A', 'American Light Lager'],

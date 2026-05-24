@@ -1,17 +1,13 @@
 {
   "name": "craft-beer-map",
   "version": "1.0.0",
-  "description": "精酿啤酒风格可视化地图 - BJCP 2021 Style Guide Visualization",
+  "description": "BJCP beer style guide WeChat mini program",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
     "test": "node --test",
-    "preview": "vite preview",
-    "build:data": "python scripts/extract_bjcp_2015_pdf.py && python scripts/parse_bjcp_2015_pdf.py && node scripts/build_bjcp_2015_data.cjs",
-    "apply:aliases": "node scripts/apply_style_aliases.cjs",
-    "build:mini-data": "node scripts/build_miniprogram_data.cjs",
-    "build:all": "npm run build:data && npm run build"
+    "build:data": "python scripts/extract_bjcp_2015_pdf.py && python scripts/parse_bjcp_2015_pdf.py && node scripts/build_bjcp_2015_data.cjs && node scripts/apply_bjcp_2021_updates.cjs && node scripts/apply_style_aliases.cjs && npm run build:mini-data",
+    "apply:aliases": "node scripts/apply_style_aliases.cjs && npm run build:mini-data",
+    "build:mini-data": "node scripts/build_miniprogram_data.cjs"
   },
   "repository": {
     "type": "git",
@@ -20,15 +16,9 @@
   "keywords": [
     "beer",
     "bjcp",
-    "visualization",
-    "craft-beer"
+    "wechat",
+    "miniprogram"
   ],
   "author": "",
-  "license": "ISC",
-  "devDependencies": {
-    "vite": "^8.0.0"
-  },
-  "dependencies": {
-    "d3": "^7.9.0"
-  }
+  "license": "ISC"
 }

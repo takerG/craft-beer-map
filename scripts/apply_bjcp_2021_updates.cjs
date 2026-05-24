@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 
 const root = process.cwd();
-const dataPath = path.join(root, 'public', 'data.json');
+const dataPath = path.join(root, 'data', 'beer-data-source.json');
 const data = require(dataPath);
 
 const officialOrder = [
@@ -266,7 +266,6 @@ const styles = officialOrder.map((key) => {
 
 const output = { categories, styles, relations };
 fs.writeFileSync(dataPath, `${JSON.stringify(output, null, 2)}\n`, 'utf8');
-fs.writeFileSync(path.join(root, 'docs', 'data.json'), `${JSON.stringify(output, null, 2)}\n`, 'utf8');
 
 console.log(`styles=${styles.length}`);
 console.log(`output=${dataPath}`);

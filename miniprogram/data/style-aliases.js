@@ -1,4 +1,4 @@
-// Generated from public/data.json. Run npm run build:mini-data after alias changes.
+// Generated from data/beer-data-source.json. Run npm run build:mini-data after alias changes.
 export const styleAliases = {
   "1A": [
     "美式淡拉格",

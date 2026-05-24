@@ -1,4 +1,4 @@
-// Generated from public/data.json. Run npm run build:mini-data after BJCP data changes.
+// Generated from data/beer-data-source.json. Run npm run build:mini-data after BJCP data changes.
 export const beerData = {
   "categories": [
     {

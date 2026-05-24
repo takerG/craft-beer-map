@@ -3,7 +3,8 @@ const path = require('path');
 
 const root = process.cwd();
 const parsed = require(path.join(root, 'artifacts', 'bjcp_2015_parsed.json'));
-const current = require(path.join(root, 'public', 'data.json'));
+const dataPath = path.join(root, 'data', 'beer-data-source.json');
+const current = require(dataPath);
 
 const categories = current.categories;
 const relations = current.relations;
@@ -59,6 +60,6 @@ const styles = parsed.styles.map(style => {
 });
 
 const output = { categories, styles, relations };
-fs.writeFileSync(path.join(root, 'public', 'data.json'), JSON.stringify(output, null, 2));
+fs.writeFileSync(dataPath, `${JSON.stringify(output, null, 2)}\n`, 'utf8');
 console.log(`styles=${styles.length}`);
-console.log('output=' + path.join(root, 'public', 'data.json'));
+console.log(`output=${dataPath}`);
