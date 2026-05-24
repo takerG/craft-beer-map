@@ -1,66 +1,120 @@
 <view class="page explore-page">
   <view class="hero">
-    <text class="page-title">精酿风格指南</text>
-    <text class="page-subtitle">从 8 个风格大类进入 BJCP 2021 体系，按类别探索标准风格，也可以学习市场扩展风格。</text>
-    <view class="search-entry" bindtap="openSearch">
-      <text>搜索编号 / 中文 / English</text>
-      <text class="search-entry-icon">&gt;</text>
+    <view class="hero-visual">
+      <view class="hero-glass">
+        <view class="hero-glass-head"></view>
+        <view class="hero-glass-fill"></view>
+        <view class="hero-glass-line"></view>
+      </view>
+      <view class="hero-ring hero-ring-one"></view>
+      <view class="hero-ring hero-ring-two"></view>
+      <view class="hero-spark hero-spark-one"></view>
+      <view class="hero-spark hero-spark-two"></view>
+    </view>
+    <view class="hero-copy">
+      <text class="page-title">精酿风格指南</text>
+      <text class="page-subtitle">从 BJCP 2021 标准到市场高频叫法，用大类、风格与快速搜索建立一张更清晰的味觉坐标。</text>
+    </view>
+    <view class="hero-stats">
+      <view wx:for="{{overviewStats}}" wx:key="label" class="hero-stat">
+        <text class="hero-stat-value">{{item.value}}</text>
+        <text class="hero-stat-label">{{item.label}}</text>
+      </view>
+    </view>
+    <view class="search-entry" hover-class="entry-hover" hover-stay-time="80" bindtap="openSearch">
+      <view class="search-copy">
+        <text class="search-label">搜索编号 / 中文 / English</text>
+        <text class="search-hint">例如 21A、浑浊、West Coast IPA</text>
+      </view>
+      <text class="search-entry-icon">›</text>
+    </view>
+    <view class="hero-share-card">
+      <view class="hero-share-copy">
+        <text>发给酒友一起查</text>
+        <text>一起查风格、聊风味、点下一杯</text>
+      </view>
+      <button class="share-button hero-share-button" open-type="share">转发</button>
     </view>
   </view>
 
-  <view class="section-head">
-    <text>风格大类</text>
-    <text>{{groups.length}} 个入口</text>
+  <view class="section-switch">
+    <view
+      wx:for="{{sectionTabs}}"
+      wx:key="id"
+      class="section-tab {{activeSection === item.id ? 'section-tab-active' : ''}}"
+      data-section-id="{{item.id}}"
+      hover-class="tab-hover"
+      hover-stay-time="80"
+      bindtap="switchSection"
+    >
+      <text>{{item.label}}</text>
+      <text>{{item.countLabel}}</text>
+    </view>
   </view>
 
-  <view class="group-grid">
-    <view
-      wx:for="{{groups}}"
-      wx:key="id"
-      class="group-card"
-      style="border-left-color: {{item.color}}"
-      data-group-id="{{item.id}}"
-      bindtap="openGroup"
-    >
-      <view class="group-card-bar" style="background: {{item.color}}"></view>
-      <view class="group-card-main">
-        <text class="group-name">{{item.name}}</text>
-        <text class="group-en">{{item.nameEn}}</text>
-      </view>
-      <view class="group-card-meta">
-        <text>{{item.categoryCount}} 类</text>
-        <text>{{item.styleCount}} 风格</text>
+  <view wx:if="{{activeSection === 'bjcp'}}" class="section-panel">
+    <view class="section-head">
+      <text>风格大类</text>
+      <text>{{groups.length}} 个入口</text>
+    </view>
+
+    <view class="group-grid">
+      <view
+        wx:for="{{groups}}"
+        wx:for-index="index"
+        wx:key="id"
+        class="group-card"
+        style="border-left-color: {{item.color}}"
+        data-group-id="{{item.id}}"
+        hover-class="card-hover"
+        hover-stay-time="80"
+        bindtap="openGroup"
+      >
+        <view class="group-card-bar" style="background: {{item.color}}"></view>
+        <view class="group-card-main">
+          <text class="group-index">0{{index + 1}}</text>
+          <text class="group-name">{{item.name}}</text>
+          <text class="group-en">{{item.nameEn}}</text>
+        </view>
+        <view class="group-card-meta">
+          <text>{{item.categoryCount}} 类</text>
+          <text>{{item.styleCount}} 风格</text>
+        </view>
       </view>
     </view>
   </view>
 
-  <view class="section-head">
-    <text>市场扩展风格</text>
-    <text>{{extensionGroups.length}} 组</text>
-  </view>
+  <view wx:else class="section-panel">
+    <view class="section-head">
+      <text>市场扩展风格</text>
+      <text>{{extensionGroups.length}} 组</text>
+    </view>
 
-  <view class="extension-intro">
-    <text>BA/WBC/GABF 体系中常见、但 BJCP 未独立编号的市场风格。先认识市场叫法，再回到近似 BJCP 入口继续学习。</text>
-  </view>
+    <view class="extension-intro">
+      <text>BA/WBC/GABF 体系中常见、但 BJCP 未独立编号的市场风格。先认识市场叫法，再回到近似 BJCP 入口继续学习。</text>
+    </view>
 
-  <view class="group-grid">
-    <view
-      wx:for="{{extensionGroups}}"
-      wx:key="id"
-      class="group-card extension-group-card"
-      style="border-left-color: {{item.color}}"
-      data-group-id="{{item.id}}"
-      bindtap="openExtensionGroup"
-    >
-      <view class="group-card-bar" style="background: {{item.color}}"></view>
-      <view class="group-card-main">
-        <text class="group-name">{{item.name}}</text>
-        <text class="group-en">{{item.nameEn}}</text>
-        <text class="extension-summary">{{item.summary}}</text>
-      </view>
-      <view class="group-card-meta">
-        <text>{{item.styleCount}} 风格</text>
-        <text>扩展</text>
+    <view class="group-grid">
+      <view
+        wx:for="{{extensionGroups}}"
+        wx:key="id"
+        class="group-card extension-group-card"
+        style="border-left-color: {{item.color}}"
+        data-group-id="{{item.id}}"
+        hover-class="card-hover"
+        hover-stay-time="80"
+        bindtap="openExtensionGroup"
+      >
+        <view class="group-card-bar" style="background: {{item.color}}"></view>
+        <view class="group-card-main">
+          <text class="group-name">{{item.name}}</text>
+          <text class="group-en">{{item.nameEn}}</text>
+          <text class="extension-summary">{{item.summary}}</text>
+        </view>
+        <view class="group-card-meta">
+          <text>{{item.styleCount}} 风格</text>
+          <text>扩展</text>
+        </view>
       </view>
     </view>
   </view>
@@ -75,8 +129,11 @@
       wx:for="{{featured}}"
       wx:key="id"
       class="style-chip-card"
+      style="border-top-color: {{item.color}}"
       data-style-id="{{item.id}}"
       data-item-kind="{{item.kind}}"
+      hover-class="chip-hover"
+      hover-stay-time="80"
       bindtap="openStyle"
     >
       <text class="style-code" wx:if="{{item.kind !== 'extension'}}">{{item.code}}</text>

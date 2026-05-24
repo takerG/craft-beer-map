@@ -20,9 +20,16 @@
     <text class="group-en">{{group.nameEn}}</text>
     <text class="group-summary">{{group.summary}}</text>
     <text class="group-count">{{group.styleCount}} 个扩展风格</text>
+    <button class="share-button page-share-button" open-type="share">转发</button>
   </view>
 
-  <view class="extension-list">
+  <view wx:if="{{!contentReady}}" class="content-skeleton">
+    <view class="skeleton-line skeleton-strong"></view>
+    <view class="skeleton-line"></view>
+    <view class="skeleton-line skeleton-short"></view>
+  </view>
+
+  <view wx:else class="extension-list">
     <view
       wx:for="{{styles}}"
       wx:key="id"

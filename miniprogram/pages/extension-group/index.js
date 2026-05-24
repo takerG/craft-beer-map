@@ -1,4 +1,5 @@
 import { getExtensionGroupDetail } from '../../utils/beer-model.js';
+import { deferSetData, navigateOnce, switchTabOnce } from '../../utils/page-performance.js';
 
 Page({
   data: {
@@ -6,6 +7,7 @@ Page({
     errorMessage: '',
     groupId: '',
     group: null,
+    contentReady: false,
     styles: [],
   },
 
@@ -19,6 +21,11 @@ Page({
         errorMessage: '',
         groupId,
         group: detail.group,
+        contentReady: false,
+        styles: [],
+      });
+      deferSetData(this, {
+        contentReady: true,
         styles: detail.styles,
       });
     } catch (error) {
@@ -30,12 +37,20 @@ Page({
     }
   },
 
+  onShareAppMessage() {
+    const group = this.data.group;
+    return {
+      title: group ? `市场扩展风格：${group.name}` : '精酿风格指南',
+      path: `/pages/extension-group/index?groupId=${this.data.groupId || 'modern-ipa-hops'}`,
+    };
+  },
+
   openExtensionStyle(event) {
     const { styleId } = event.currentTarget.dataset;
-    wx.navigateTo({ url: `/pages/extension-style/index?styleId=${styleId}` });
+    navigateOnce(this, `/pages/extension-style/index?styleId=${styleId}`);
   },
 
   goExplore() {
-    wx.switchTab({ url: '/pages/explore/index' });
+    switchTabOnce(this, '/pages/explore/index');
   },
 });

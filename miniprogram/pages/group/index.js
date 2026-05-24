@@ -1,4 +1,5 @@
 import { getGroupDetail } from '../../utils/beer-model.js';
+import { deferSetData, navigateOnce, switchTabOnce } from '../../utils/page-performance.js';
 
 Page({
   data: {
@@ -6,6 +7,7 @@ Page({
     errorMessage: '',
     groupId: '',
     group: null,
+    contentReady: false,
     categories: [],
   },
 
@@ -19,6 +21,11 @@ Page({
         errorMessage: '',
         groupId,
         group: detail.group,
+        contentReady: false,
+        categories: [],
+      });
+      deferSetData(this, {
+        contentReady: true,
         categories: detail.categories,
       });
     } catch (error) {
@@ -30,12 +37,20 @@ Page({
     }
   },
 
+  onShareAppMessage() {
+    const group = this.data.group;
+    return {
+      title: group ? `精酿风格指南：${group.name}的 ${group.styleCount} 个风格入口` : '精酿风格指南',
+      path: `/pages/group/index?groupId=${this.data.groupId || 'american'}`,
+    };
+  },
+
   openStyle(event) {
     const { styleId } = event.currentTarget.dataset;
-    wx.navigateTo({ url: `/pages/style/index?styleId=${styleId}` });
+    navigateOnce(this, `/pages/style/index?styleId=${styleId}`);
   },
 
   goExplore() {
-    wx.switchTab({ url: '/pages/explore/index' });
+    switchTabOnce(this, '/pages/explore/index');
   },
 });

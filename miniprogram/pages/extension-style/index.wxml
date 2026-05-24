@@ -31,45 +31,54 @@
       <text>返回扩展分组</text>
       <text>{{detail.group.name}}</text>
     </view>
+    <button class="share-button page-share-button" open-type="share">转发</button>
   </view>
 
-  <view wx:if="{{detail.style.aliases.length}}" class="detail-section">
-    <text class="detail-title">常用叫法</text>
-    <view class="alias-list">
-      <text
-        wx:for="{{detail.style.aliases}}"
-        wx:for-item="alias"
-        wx:key="*this"
-        class="alias"
-      >{{alias}}</text>
-    </view>
+  <view wx:if="{{!contentReady}}" class="content-skeleton">
+    <view class="skeleton-line skeleton-strong"></view>
+    <view class="skeleton-line"></view>
+    <view class="skeleton-line skeleton-short"></view>
   </view>
 
-  <view class="reading-section">
-    <text class="detail-title">市场定义</text>
-    <text class="detail-body">{{detail.description}}</text>
-  </view>
-
-  <view class="reading-section">
-    <text class="detail-title">BJCP 对照说明</text>
-    <text class="detail-body">{{detail.bjcp_note}}</text>
-  </view>
-
-  <view wx:if="{{detail.bjcp_refs.length}}" class="detail-section">
-    <text class="detail-title">近似 BJCP 入口</text>
-    <view
-      wx:for="{{detail.bjcp_refs}}"
-      wx:key="id"
-      class="bjcp-row"
-      data-style-id="{{item.id}}"
-      bindtap="openBjcpStyle"
-    >
-      <text class="bjcp-code">{{item.code}}</text>
-      <view class="bjcp-main">
-        <text class="bjcp-name">{{item.displayName}}</text>
-        <text class="bjcp-en">{{item.name_en}}</text>
+  <block wx:else>
+    <view wx:if="{{detail.style.aliases.length}}" class="detail-section">
+      <text class="detail-title">常用叫法</text>
+      <view class="alias-list">
+        <text
+          wx:for="{{detail.style.aliases}}"
+          wx:for-item="alias"
+          wx:key="*this"
+          class="alias"
+        >{{alias}}</text>
       </view>
-      <text class="bjcp-action">学习</text>
     </view>
-  </view>
+
+    <view class="reading-section">
+      <text class="detail-title">市场定义</text>
+      <text class="detail-body">{{detail.description}}</text>
+    </view>
+
+    <view class="reading-section">
+      <text class="detail-title">BJCP 对照说明</text>
+      <text class="detail-body">{{detail.bjcp_note}}</text>
+    </view>
+
+    <view wx:if="{{detail.bjcp_refs.length}}" class="detail-section">
+      <text class="detail-title">近似 BJCP 入口</text>
+      <view
+        wx:for="{{detail.bjcp_refs}}"
+        wx:key="id"
+        class="bjcp-row"
+        data-style-id="{{item.id}}"
+        bindtap="openBjcpStyle"
+      >
+        <text class="bjcp-code">{{item.code}}</text>
+        <view class="bjcp-main">
+          <text class="bjcp-name">{{item.displayName}}</text>
+          <text class="bjcp-en">{{item.name_en}}</text>
+        </view>
+        <text class="bjcp-action">学习</text>
+      </view>
+    </view>
+  </block>
 </view>

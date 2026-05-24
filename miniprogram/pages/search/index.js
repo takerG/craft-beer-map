@@ -1,4 +1,5 @@
 import { searchStyles } from '../../utils/beer-model.js';
+import { navigateOnce } from '../../utils/page-performance.js';
 
 Page({
   data: {
@@ -43,9 +44,9 @@ Page({
   openStyle(event) {
     const { styleId, itemKind } = event.currentTarget.dataset;
     if (itemKind === 'extension') {
-      wx.navigateTo({ url: `/pages/extension-style/index?styleId=${styleId}` });
+      navigateOnce(this, `/pages/extension-style/index?styleId=${styleId}`);
       return;
     }
-    wx.navigateTo({ url: `/pages/style/index?styleId=${styleId}` });
+    navigateOnce(this, `/pages/style/index?styleId=${styleId}`);
   },
 });

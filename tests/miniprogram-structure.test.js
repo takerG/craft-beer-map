@@ -63,6 +63,12 @@ test('explore hero title matches the app name', () => {
   assert.doesNotMatch(exploreWxml, /精酿啤酒风格指南/);
 });
 
+test('explore search entry does not render escaped entity text', () => {
+  const exploreWxml = readMiniPage('pages/explore/index.wxml');
+
+  assert.doesNotMatch(exploreWxml, /&gt;/);
+});
+
 test('mini program copy avoids removed local map messaging', () => {
   const visibleCopy = [
     readMiniPage('pages/explore/index.wxml'),
@@ -113,6 +119,59 @@ test('mini program pages expose clear exploration and fallback states', () => {
   assert.match(styleWxml, /class="reading-section"/);
 });
 
+test('navigation handlers use shared guarded navigation helpers', () => {
+  [
+    'pages/explore/index.js',
+    'pages/search/index.js',
+    'pages/group/index.js',
+    'pages/style/index.js',
+    'pages/extension-group/index.js',
+    'pages/extension-style/index.js',
+  ].forEach((relativePath) => {
+    const source = readMiniPage(relativePath);
+    assert.match(source, /navigateOnce|switchTabOnce|redirectOnce/, `${relativePath} should guard duplicate taps`);
+  });
+});
+
+test('heavy destination pages defer below-the-fold hydration', () => {
+  [
+    'pages/group/index.js',
+    'pages/style/index.js',
+    'pages/extension-group/index.js',
+    'pages/extension-style/index.js',
+  ].forEach((relativePath) => {
+    const source = readMiniPage(relativePath);
+    assert.match(source, /deferSetData/, `${relativePath} should defer large setData payloads`);
+    assert.match(source, /contentReady/, `${relativePath} should expose a staged content state`);
+  });
+});
+
+test('primary pages expose native share entry points', () => {
+  [
+    'pages/explore/index.wxml',
+    'pages/group/index.wxml',
+    'pages/style/index.wxml',
+    'pages/extension-group/index.wxml',
+    'pages/extension-style/index.wxml',
+  ].forEach((relativePath) => {
+    const source = readMiniPage(relativePath);
+    assert.match(source, /open-type="share"/, `${relativePath} should include a native share button`);
+  });
+});
+
+test('primary pages provide share message handlers', () => {
+  [
+    'pages/explore/index.js',
+    'pages/group/index.js',
+    'pages/style/index.js',
+    'pages/extension-group/index.js',
+    'pages/extension-style/index.js',
+  ].forEach((relativePath) => {
+    const source = readMiniPage(relativePath);
+    assert.match(source, /onShareAppMessage\(\)/, `${relativePath} should define onShareAppMessage`);
+  });
+});
+
 test('extension learning pages are declared and linked from explore and search', () => {
   const exploreWxml = readMiniPage('pages/explore/index.wxml');
   const searchJs = readMiniPage('pages/search/index.js');
@@ -135,6 +194,15 @@ test('search clear button keeps its label centered', () => {
   assert.match(searchWxss, /\.clear-btn\s*\{[^}]*align-items:\s*center;/s);
   assert.match(searchWxss, /\.clear-btn\s*\{[^}]*justify-content:\s*center;/s);
   assert.match(searchWxss, /\.clear-btn\s*\{[^}]*line-height:\s*56rpx;/s);
+});
+
+test('featured style card text truncates overflowing copy', () => {
+  const exploreWxss = readMiniPage('pages/explore/index.wxss');
+
+  ['style-name', 'style-en'].forEach((className) => {
+    const rulePattern = new RegExp(`\\.${className}\\s*\\{[^}]*overflow:\\s*hidden;[^}]*text-overflow:\\s*ellipsis;[^}]*white-space:\\s*nowrap;`, 's');
+    assert.match(exploreWxss, rulePattern, `${className} should truncate overflow text`);
+  });
 });
 
 test('search empty result explains BJCP official coverage', () => {

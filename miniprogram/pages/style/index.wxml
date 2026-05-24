@@ -30,51 +30,60 @@
       <text>返回风格大类</text>
       <text>{{detail.category.id}} {{detail.category.name_zh}} · {{detail.group.name}}</text>
     </view>
+    <button class="share-button page-share-button" open-type="share">转发</button>
   </view>
 
-  <view wx:if="{{detail.style.aliases.length}}" class="detail-section alias-section">
-    <text class="detail-title">常用叫法</text>
-    <view class="alias-list">
-      <text
-        wx:for="{{detail.style.aliases}}"
-        wx:for-item="alias"
-        wx:key="*this"
-        class="alias"
-      >{{alias}}</text>
+  <view wx:if="{{!contentReady}}" class="content-skeleton">
+    <view class="skeleton-line skeleton-strong"></view>
+    <view class="skeleton-line"></view>
+    <view class="skeleton-line skeleton-short"></view>
+  </view>
+
+  <block wx:else>
+    <view wx:if="{{detail.style.aliases.length}}" class="detail-section alias-section">
+      <text class="detail-title">常用叫法</text>
+      <view class="alias-list">
+        <text
+          wx:for="{{detail.style.aliases}}"
+          wx:for-item="alias"
+          wx:key="*this"
+          class="alias"
+        >{{alias}}</text>
+      </view>
     </view>
-  </view>
 
-  <view wx:if="{{detail.stats.length}}" class="stats-grid">
-    <view wx:for="{{detail.stats}}" wx:key="label" class="stat-card">
-      <text>{{item.label}}</text>
-      <text>{{item.value}}</text>
+    <view wx:if="{{detail.stats.length}}" class="stats-grid">
+      <view wx:for="{{detail.stats}}" wx:key="label" class="stat-card">
+        <text>{{item.label}}</text>
+        <text>{{item.value}}</text>
+      </view>
     </view>
-  </view>
 
-  <view class="reading-section" wx:for="{{detail.sections}}" wx:key="key">
-    <text class="detail-title">{{item.label}}</text>
-    <text class="detail-body">{{item.content}}</text>
-  </view>
-
-  <view wx:if="{{detail.tags.length}}" class="detail-section">
-    <text class="detail-title">标签</text>
-    <view class="tag-list">
-      <text wx:for="{{detail.tags}}" wx:key="*this" class="tag">{{item}}</text>
+    <view class="reading-section" wx:for="{{detail.sections}}" wx:key="key">
+      <text class="detail-title">{{item.label}}</text>
+      <text class="detail-body">{{item.content}}</text>
     </view>
-  </view>
 
-  <view wx:if="{{detail.related.length}}" class="detail-section">
-    <text class="detail-title">关联风格</text>
-    <view
-      wx:for="{{detail.related}}"
-      wx:key="styleId"
-      class="related-row"
-      data-style-id="{{item.styleId}}"
-      bindtap="openRelated"
-    >
-      <text class="related-type">{{item.label}}</text>
-      <text class="related-name">{{item.styleCode}} {{item.styleName}}</text>
-      <text class="related-action">查看</text>
+    <view wx:if="{{detail.tags.length}}" class="detail-section">
+      <text class="detail-title">标签</text>
+      <view class="tag-list">
+        <text wx:for="{{detail.tags}}" wx:key="*this" class="tag">{{item}}</text>
+      </view>
     </view>
-  </view>
+
+    <view wx:if="{{detail.related.length}}" class="detail-section">
+      <text class="detail-title">关联风格</text>
+      <view
+        wx:for="{{detail.related}}"
+        wx:key="styleId"
+        class="related-row"
+        data-style-id="{{item.styleId}}"
+        bindtap="openRelated"
+      >
+        <text class="related-type">{{item.label}}</text>
+        <text class="related-name">{{item.styleCode}} {{item.styleName}}</text>
+        <text class="related-action">查看</text>
+      </view>
+    </view>
+  </block>
 </view>
