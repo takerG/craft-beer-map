@@ -122,6 +122,15 @@ const expected2021Styles = [
   ['34C', 'Experimental Beer'],
 ];
 
+const tasteProfileDimensions = [
+  'sweetness',
+  'sourness',
+  'bitterness',
+  'body',
+  'roast',
+  'fruitiness',
+];
+
 function normalizeName(value) {
   return value.normalize('NFKD').replace(/[\u0300-\u036f]/g, '');
 }
@@ -147,4 +156,18 @@ test('beer data includes searchable community aliases for official Chinese style
   assert.ok(Array.isArray(doubleIpa.aliases));
   assert.ok(doubleIpa.aliases.includes('双倍IPA'));
   assert.ok(doubleIpa.aliases.includes('帝国IPA'));
+});
+
+test('beer data assigns three-state taste profiles for choose filters', () => {
+  data.styles.forEach((style) => {
+    assert.equal(typeof style.taste_profile, 'object', `${style.code} should define taste_profile`);
+
+    tasteProfileDimensions.forEach((dimension) => {
+      assert.ok(Object.hasOwn(style.taste_profile, dimension), `${style.code} should define ${dimension}`);
+      assert.ok(
+        [-1, 0, 1].includes(style.taste_profile[dimension]),
+        `${style.code} ${dimension} should be -1, 0, or 1`,
+      );
+    });
+  });
 });

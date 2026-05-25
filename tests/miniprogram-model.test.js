@@ -11,6 +11,8 @@ import {
   getGroupDetail,
   getStyleDetail,
   getSuperGroups,
+  getTasteFilters,
+  getTasteMatches,
   searchStyles,
 } from '../miniprogram/utils/beer-model.js';
 import { beerData } from '../miniprogram/data/beer-data.js';
@@ -163,6 +165,37 @@ test('getStyleDetail returns community aliases for display', () => {
 
   assert.ok(detail.style.aliases.includes('双倍IPA'));
   assert.ok(detail.style.aliases.includes('帝国IPA'));
+});
+
+test('taste filters expose three-state dimensions for the choose tab', () => {
+  const filters = getTasteFilters();
+
+  assert.deepEqual(
+    filters.map((filter) => filter.id),
+    ['sweetness', 'sourness', 'bitterness', 'body', 'roast', 'fruitiness'],
+  );
+  filters.forEach((filter) => {
+    assert.equal(filter.options.length, 3);
+    assert.deepEqual(
+      filter.options.map((option) => option.value),
+      [-1, 0, 1],
+    );
+  });
+});
+
+test('taste matching returns lightweight scored style summaries', () => {
+  const matches = getTasteMatches({ sweetness: 1, sourness: -1, bitterness: 0, body: 0, roast: 0, fruitiness: 0 }, 12);
+
+  assert.ok(matches.length > 0);
+  assert.ok(matches.some((match) => match.code === '16A'));
+  assert.equal(matches.some((match) => match.details), false);
+  matches.forEach((match) => {
+    assert.equal(match.kind, 'bjcp');
+    assert.equal(typeof match.matchScore, 'number');
+    assert.ok(match.matchScore >= 0 && match.matchScore <= 100);
+    assert.ok(Array.isArray(match.matchReasons));
+    assert.equal(typeof match.taste_profile, 'object');
+  });
 });
 
 test('mini program keeps community aliases outside the generated BJCP payload', () => {

@@ -196,7 +196,15 @@
       "aliases": [
         "美式淡拉格",
         "美国淡拉格"
-      ]
+      ],
+      "taste_profile": {
+        "sweetness": -1,
+        "sourness": -1,
+        "bitterness": -1,
+        "body": -1,
+        "roast": -1,
+        "fruitiness": -1
+      }
     },
     {
       "id": "1B",
@@ -221,7 +229,15 @@
       },
       "aliases": [
         "美国拉格"
-      ]
+      ],
+      "taste_profile": {
+        "sweetness": -1,
+        "sourness": -1,
+        "bitterness": -1,
+        "body": -1,
+        "roast": -1,
+        "fruitiness": -1
+      }
     },
     {
       "id": "1C",
@@ -247,7 +263,15 @@
       "aliases": [
         "奶油爱尔",
         "Cream Ale"
-      ]
+      ],
+      "taste_profile": {
+        "sweetness": 1,
+        "sourness": -1,
+        "bitterness": 1,
+        "body": -1,
+        "roast": -1,
+        "fruitiness": 1
+      }
     },
     {
       "id": "1D",
@@ -274,7 +298,15 @@
         "美式小麦啤酒",
         "美国小麦",
         "American Wheat"
-      ]
+      ],
+      "taste_profile": {
+        "sweetness": 1,
+        "sourness": -1,
+        "bitterness": 1,
+        "body": 0,
+        "roast": -1,
+        "fruitiness": 1
+      }
     },
     {
       "id": "2A",
@@ -300,7 +332,15 @@
       "aliases": [
         "国际淡拉格",
         "国际淡色拉格"
-      ]
+      ],
+      "taste_profile": {
+        "sweetness": 1,
+        "sourness": -1,
+        "bitterness": 1,
+        "body": 1,
+        "roast": -1,
+        "fruitiness": -1
+      }
     },
     {
       "id": "2B",
@@ -324,7 +364,15 @@
       },
       "aliases": [
         "国际琥珀拉格"
-      ]
+      ],
+      "taste_profile": {
+        "sweetness": 1,
+        "sourness": -1,
+        "bitterness": 1,
+        "body": 0,
+        "roast": 0,
+        "fruitiness": -1
+      }
     },
     {
       "id": "2C",
@@ -348,7 +396,15 @@
       },
       "aliases": [
         "国际深色拉格"
-      ]
+      ],
+      "taste_profile": {
+        "sweetness": 1,
+        "sourness": -1,
+        "bitterness": 1,
+        "body": 1,
+        "roast": 1,
+        "fruitiness": -1
+      }
     },
     {
       "id": "3A",
@@ -372,7 +428,15 @@
       },
       "aliases": [
         "捷克浅色拉格"
-      ]
+      ],
+      "taste_profile": {
+        "sweetness": -1,
+        "sourness": 1,
+        "bitterness": 1,
+        "body": 0,
+        "roast": -1,
+        "fruitiness": 1
+      }
     },
     {
       "id": "3B",
@@ -399,7 +463,15 @@
         "捷克皮尔森",
         "捷克皮尔斯纳",
         "波西米亚皮尔森"
-      ]
+      ],
+      "taste_profile": {
+        "sweetness": -1,
+        "sourness": 1,
+        "bitterness": 1,
+        "body": 0,
+        "roast": -1,
+        "fruitiness": 1
+      }
     },
     {
       "id": "3C",
@@ -422,7 +494,15 @@
         "commercial_examples": "Bernard Jantarový ležák，Pivovar Vysoký Chlumec D é mon ， Prim á tor polotmav ý 13 ° ， Strakonický Dudák Klostermann polotmavý ležák 13°",
         "tags": "中等度数，琥珀色，下发酵，储藏啤酒，中欧， 传统风格，琥珀拉格家族，协调性（平衡性）"
       },
-      "aliases": []
+      "aliases": [],
+      "taste_profile": {
+        "sweetness": 1,
+        "sourness": -1,
+        "bitterness": 1,
+        "body": 0,
+        "roast": 1,
+        "fruitiness": 1
+      }
     },
     {
       "id": "3D",
@@ -446,7 +526,15 @@
       },
       "aliases": [
         "捷克黑啤"
-      ]
+      ],
+      "taste_profile": {
+        "sweetness": 1,
+        "sourness": -1,
+        "bitterness": 1,
+        "body": 0,
+        "roast": 1,
+        "fruitiness": 1
+      }
     },
     {
       "id": "4A",
@@ -472,7 +560,15 @@
         "慕尼黑赫雷斯",
         "德式清亮",
         "Helles"
-      ]
+      ],
+      "taste_profile": {
+        "sweetness": 1,
+        "sourness": -1,
+        "bitterness": 1,
+        "body": 0,
+        "roast": -1,
+        "fruitiness": -1
+      }
     },
     {
       "id": "4B",
@@ -497,7 +593,15 @@
       "aliases": [
         "节庆啤酒",
         "Festbier"
-      ]
+      ],
+      "taste_profile": {
+        "sweetness": 1,
+        "sourness": -1,
+        "bitterness": 1,
+        "body": 0,
+        "roast": -1,
+        "fruitiness": -1
+      }
     },
     {
       "id": "4C",
@@ -525,7 +629,15 @@
         "五月博克",
         "Maibock",
         "Helles Bock"
-      ]
+      ],
+      "taste_profile": {
+        "sweetness": 1,
+        "sourness": -1,
+        "bitterness": 1,
+        "body": 1,
+        "roast": -1,
+        "fruitiness": 1
+      }
     },
     {
       "id": "5A",
@@ -550,7 +662,15 @@
       "aliases": [
         "低度德啤",
         "Leichtbier"
-      ]
+      ],
+      "taste_profile": {
+        "sweetness": 1,
+        "sourness": -1,
+        "bitterness": 1,
+        "body": -1,
+        "roast": -1,
+        "fruitiness": -1
+      }
     },
     {
       "id": "5B",
@@ -577,7 +697,15 @@
         "科隆",
         "Kolsch",
         "Kölsch"
-      ]
+      ],
+      "taste_profile": {
+        "sweetness": 1,
+        "sourness": -1,
+        "bitterness": 1,
+        "body": 1,
+        "roast": -1,
+        "fruitiness": 1
+      }
     },
     {
       "id": "5C",
@@ -603,7 +731,15 @@
       "aliases": [
         "出口型清亮",
         "Helles Exportbier"
-      ]
+      ],
+      "taste_profile": {
+        "sweetness": 1,
+        "sourness": 1,
+        "bitterness": 1,
+        "body": 0,
+        "roast": -1,
+        "fruitiness": -1
+      }
     },
     {
       "id": "5D",
@@ -630,7 +766,15 @@
         "德国皮尔森",
         "德式皮尔斯纳",
         "德啤"
-      ]
+      ],
+      "taste_profile": {
+        "sweetness": 1,
+        "sourness": 1,
+        "bitterness": 1,
+        "body": 1,
+        "roast": -1,
+        "fruitiness": -1
+      }
     },
     {
       "id": "6A",
@@ -656,7 +800,15 @@
         "Marzen",
         "Märzen",
         "十月节啤酒"
-      ]
+      ],
+      "taste_profile": {
+        "sweetness": 1,
+        "sourness": -1,
+        "bitterness": 1,
+        "body": 0,
+        "roast": 1,
+        "fruitiness": -1
+      }
     },
     {
       "id": "6B",
@@ -682,7 +834,15 @@
       "aliases": [
         "劳赫啤",
         "Rauchbier"
-      ]
+      ],
+      "taste_profile": {
+        "sweetness": 1,
+        "sourness": -1,
+        "bitterness": 1,
+        "body": 0,
+        "roast": 1,
+        "fruitiness": -1
+      }
     },
     {
       "id": "6C",
@@ -708,7 +868,15 @@
       "aliases": [
         "黑博克",
         "Dunkles Bock"
-      ]
+      ],
+      "taste_profile": {
+        "sweetness": 1,
+        "sourness": -1,
+        "bitterness": 1,
+        "body": 1,
+        "roast": 1,
+        "fruitiness": 1
+      }
     },
     {
       "id": "7A",
@@ -732,7 +900,15 @@
       },
       "aliases": [
         "维也纳啤酒"
-      ]
+      ],
+      "taste_profile": {
+        "sweetness": 1,
+        "sourness": -1,
+        "bitterness": 1,
+        "body": 0,
+        "roast": 1,
+        "fruitiness": -1
+      }
     },
     {
       "id": "7B",
@@ -760,7 +936,15 @@
         "老式艾尔",
         "阿尔特",
         "Altbier"
-      ]
+      ],
+      "taste_profile": {
+        "sweetness": 1,
+        "sourness": -1,
+        "bitterness": 1,
+        "body": -1,
+        "roast": 1,
+        "fruitiness": 1
+      }
     },
     {
       "id": "8A",
@@ -786,7 +970,15 @@
         "慕尼黑黑啤",
         "深色慕尼黑",
         "Dunkel"
-      ]
+      ],
+      "taste_profile": {
+        "sweetness": 1,
+        "sourness": -1,
+        "bitterness": 1,
+        "body": 1,
+        "roast": 1,
+        "fruitiness": -1
+      }
     },
     {
       "id": "8B",
@@ -812,7 +1004,15 @@
         "黑啤",
         "施瓦茨",
         "Schwarzbier"
-      ]
+      ],
+      "taste_profile": {
+        "sweetness": 1,
+        "sourness": -1,
+        "bitterness": 1,
+        "body": -1,
+        "roast": 1,
+        "fruitiness": -1
+      }
     },
     {
       "id": "9A",
@@ -838,7 +1038,15 @@
       "aliases": [
         "双倍博克",
         "Doppelbock"
-      ]
+      ],
+      "taste_profile": {
+        "sweetness": 1,
+        "sourness": -1,
+        "bitterness": 1,
+        "body": 1,
+        "roast": 1,
+        "fruitiness": 1
+      }
     },
     {
       "id": "9B",
@@ -864,7 +1072,15 @@
       "aliases": [
         "冰博克",
         "Eisbock"
-      ]
+      ],
+      "taste_profile": {
+        "sweetness": 1,
+        "sourness": -1,
+        "bitterness": 1,
+        "body": 1,
+        "roast": 1,
+        "fruitiness": 1
+      }
     },
     {
       "id": "9C",
@@ -890,7 +1106,15 @@
       "aliases": [
         "波罗的海",
         "Baltic Porter"
-      ]
+      ],
+      "taste_profile": {
+        "sweetness": 1,
+        "sourness": 1,
+        "bitterness": 1,
+        "body": 1,
+        "roast": 1,
+        "fruitiness": 1
+      }
     },
     {
       "id": "10A",
@@ -918,7 +1142,15 @@
         "赫菲",
         "Weissbier",
         "Hefeweizen"
-      ]
+      ],
+      "taste_profile": {
+        "sweetness": 1,
+        "sourness": -1,
+        "bitterness": 1,
+        "body": 0,
+        "roast": -1,
+        "fruitiness": 1
+      }
     },
     {
       "id": "10B",
@@ -944,7 +1176,15 @@
       "aliases": [
         "深色小麦",
         "Dunkelweizen"
-      ]
+      ],
+      "taste_profile": {
+        "sweetness": 1,
+        "sourness": -1,
+        "bitterness": 1,
+        "body": 0,
+        "roast": 1,
+        "fruitiness": 1
+      }
     },
     {
       "id": "10C",
@@ -967,7 +1207,15 @@
       },
       "aliases": [
         "Weizenbock"
-      ]
+      ],
+      "taste_profile": {
+        "sweetness": 1,
+        "sourness": -1,
+        "bitterness": 1,
+        "body": 1,
+        "roast": 1,
+        "fruitiness": 1
+      }
     },
     {
       "id": "11A",
@@ -993,7 +1241,15 @@
       "aliases": [
         "普通苦",
         "Ordinary Bitter"
-      ]
+      ],
+      "taste_profile": {
+        "sweetness": -1,
+        "sourness": -1,
+        "bitterness": 1,
+        "body": 0,
+        "roast": 1,
+        "fruitiness": 1
+      }
     },
     {
       "id": "11B",
@@ -1019,7 +1275,15 @@
       "aliases": [
         "最佳苦啤",
         "Best Bitter"
-      ]
+      ],
+      "taste_profile": {
+        "sweetness": 1,
+        "sourness": -1,
+        "bitterness": 1,
+        "body": 0,
+        "roast": 1,
+        "fruitiness": 1
+      }
     },
     {
       "id": "11C",
@@ -1046,7 +1310,15 @@
         "特苦",
         "ESB",
         "Extra Special Bitter"
-      ]
+      ],
+      "taste_profile": {
+        "sweetness": 1,
+        "sourness": 1,
+        "bitterness": 1,
+        "body": 1,
+        "roast": 1,
+        "fruitiness": 1
+      }
     },
     {
       "id": "12A",
@@ -1072,7 +1344,15 @@
       "aliases": [
         "英式金艾",
         "Golden Ale"
-      ]
+      ],
+      "taste_profile": {
+        "sweetness": 1,
+        "sourness": -1,
+        "bitterness": 1,
+        "body": 0,
+        "roast": -1,
+        "fruitiness": 1
+      }
     },
     {
       "id": "12B",
@@ -1098,7 +1378,15 @@
       "aliases": [
         "澳式起泡",
         "Sparkling Ale"
-      ]
+      ],
+      "taste_profile": {
+        "sweetness": 1,
+        "sourness": 1,
+        "bitterness": 1,
+        "body": 0,
+        "roast": -1,
+        "fruitiness": 1
+      }
     },
     {
       "id": "12C",
@@ -1122,7 +1410,15 @@
       },
       "aliases": [
         "英伦IPA"
-      ]
+      ],
+      "taste_profile": {
+        "sweetness": 1,
+        "sourness": 1,
+        "bitterness": 1,
+        "body": 1,
+        "roast": -1,
+        "fruitiness": 1
+      }
     },
     {
       "id": "13A",
@@ -1147,7 +1443,15 @@
         "深色淡啤",
         "Mild",
         "Dark Mild"
-      ]
+      ],
+      "taste_profile": {
+        "sweetness": 1,
+        "sourness": -1,
+        "bitterness": 1,
+        "body": 1,
+        "roast": 1,
+        "fruitiness": 1
+      }
     },
     {
       "id": "13B",
@@ -1173,7 +1477,15 @@
       "aliases": [
         "英伦棕艾",
         "Brown Ale"
-      ]
+      ],
+      "taste_profile": {
+        "sweetness": 1,
+        "sourness": -1,
+        "bitterness": 1,
+        "body": 0,
+        "roast": 1,
+        "fruitiness": 1
+      }
     },
     {
       "id": "13C",
@@ -1198,7 +1510,15 @@
       "aliases": [
         "英伦波特",
         "Porter"
-      ]
+      ],
+      "taste_profile": {
+        "sweetness": 1,
+        "sourness": -1,
+        "bitterness": 1,
+        "body": 1,
+        "roast": 1,
+        "fruitiness": 1
+      }
     },
     {
       "id": "14A",
@@ -1219,7 +1539,15 @@
         "commercial_examples": "McEwan's 60",
         "tags": "社交啤酒度数，琥珀色，上发酵，英伦三岛，传 统风格，琥珀艾尔家族，麦香。"
       },
-      "aliases": []
+      "aliases": [],
+      "taste_profile": {
+        "sweetness": 1,
+        "sourness": -1,
+        "bitterness": 1,
+        "body": 0,
+        "roast": 1,
+        "fruitiness": 1
+      }
     },
     {
       "id": "14B",
@@ -1244,7 +1572,15 @@
       "aliases": [
         "苏格兰重啤",
         "Scottish Heavy"
-      ]
+      ],
+      "taste_profile": {
+        "sweetness": 1,
+        "sourness": -1,
+        "bitterness": 1,
+        "body": 1,
+        "roast": 1,
+        "fruitiness": 1
+      }
     },
     {
       "id": "14C",
@@ -1265,7 +1601,15 @@
         "stats": "OG: 1.040-1.060 | FG: 1.010-1.016 | IBU: 15-30 | SRM: 13-22 | ABV: 3.9-6.0%",
         "tags": "中等度数，琥珀色，上发酵，英国群岛，传统风 格，琥珀艾尔家族，突出麦香"
       },
-      "aliases": []
+      "aliases": [],
+      "taste_profile": {
+        "sweetness": 1,
+        "sourness": -1,
+        "bitterness": 1,
+        "body": 1,
+        "roast": 1,
+        "fruitiness": 1
+      }
     },
     {
       "id": "15A",
@@ -1290,7 +1634,15 @@
       "aliases": [
         "爱尔兰红",
         "Irish Red"
-      ]
+      ],
+      "taste_profile": {
+        "sweetness": 1,
+        "sourness": -1,
+        "bitterness": 1,
+        "body": 0,
+        "roast": 1,
+        "fruitiness": 1
+      }
     },
     {
       "id": "15B",
@@ -1317,7 +1669,15 @@
         "干世涛",
         "爱尔兰干世涛",
         "Irish Stout"
-      ]
+      ],
+      "taste_profile": {
+        "sweetness": 1,
+        "sourness": -1,
+        "bitterness": 1,
+        "body": 1,
+        "roast": 1,
+        "fruitiness": 1
+      }
     },
     {
       "id": "15C",
@@ -1342,7 +1702,15 @@
       "aliases": [
         "爱尔兰加强世涛",
         "Extra Stout"
-      ]
+      ],
+      "taste_profile": {
+        "sweetness": 1,
+        "sourness": -1,
+        "bitterness": 1,
+        "body": 1,
+        "roast": 1,
+        "fruitiness": 1
+      }
     },
     {
       "id": "16A",
@@ -1367,7 +1735,15 @@
         "牛奶世涛",
         "奶世涛",
         "Milk Stout"
-      ]
+      ],
+      "taste_profile": {
+        "sweetness": 1,
+        "sourness": -1,
+        "bitterness": 0,
+        "body": 1,
+        "roast": 1,
+        "fruitiness": -1
+      }
     },
     {
       "id": "16B",
@@ -1392,7 +1768,15 @@
       },
       "aliases": [
         "Oatmeal Stout"
-      ]
+      ],
+      "taste_profile": {
+        "sweetness": 1,
+        "sourness": -1,
+        "bitterness": 1,
+        "body": 1,
+        "roast": 1,
+        "fruitiness": 1
+      }
     },
     {
       "id": "16C",
@@ -1415,7 +1799,15 @@
         "commercial_examples": "ABC Extra Stout ，Dragon Stout，Jamaica Stout，Lion Stout，Royal Extra Stout",
         "tags": "高度数，深色，上层发酵，不列颠群岛，传统风 格，世涛家族，麦芽香，烘焙味，甜。"
       },
-      "aliases": []
+      "aliases": [],
+      "taste_profile": {
+        "sweetness": 1,
+        "sourness": -1,
+        "bitterness": 1,
+        "body": 1,
+        "roast": 1,
+        "fruitiness": 1
+      }
     },
     {
       "id": "16D",
@@ -1442,7 +1834,15 @@
         "外国出口世涛",
         "FES",
         "Foreign Extra Stout"
-      ]
+      ],
+      "taste_profile": {
+        "sweetness": 1,
+        "sourness": 1,
+        "bitterness": 1,
+        "body": 1,
+        "roast": 1,
+        "fruitiness": 1
+      }
     },
     {
       "id": "17A",
@@ -1465,7 +1865,15 @@
         "commercial_examples": "Fuller’s 1845， Harvey’s Elizabethan Ale， J.W. Lees Manchester Star ， Samuel Smith’s Winter Welcome， Young's Winter Warmer",
         "tags": "高烈度，琥珀色，上层发酵，不列颠群岛，传统 风格，烈性艾尔家族，麦芽味。"
       },
-      "aliases": []
+      "aliases": [],
+      "taste_profile": {
+        "sweetness": 1,
+        "sourness": -1,
+        "bitterness": 1,
+        "body": 1,
+        "roast": 1,
+        "fruitiness": 1
+      }
     },
     {
       "id": "17B",
@@ -1491,7 +1899,15 @@
       "aliases": [
         "老艾尔",
         "Old Ale"
-      ]
+      ],
+      "taste_profile": {
+        "sweetness": 1,
+        "sourness": 1,
+        "bitterness": 1,
+        "body": 1,
+        "roast": 1,
+        "fruitiness": 1
+      }
     },
     {
       "id": "17C",
@@ -1517,7 +1933,15 @@
       "aliases": [
         "苏格兰烈性艾尔",
         "Wee Heavy"
-      ]
+      ],
+      "taste_profile": {
+        "sweetness": 1,
+        "sourness": -1,
+        "bitterness": 0,
+        "body": 1,
+        "roast": 0,
+        "fruitiness": -1
+      }
     },
     {
       "id": "17D",
@@ -1543,7 +1967,15 @@
       "aliases": [
         "英式大麦烈酒",
         "Barleywine"
-      ]
+      ],
+      "taste_profile": {
+        "sweetness": 1,
+        "sourness": -1,
+        "bitterness": 1,
+        "body": 1,
+        "roast": 1,
+        "fruitiness": 1
+      }
     },
     {
       "id": "18A",
@@ -1568,7 +2000,15 @@
       },
       "aliases": [
         "Blonde Ale"
-      ]
+      ],
+      "taste_profile": {
+        "sweetness": 1,
+        "sourness": -1,
+        "bitterness": 1,
+        "body": 0,
+        "roast": -1,
+        "fruitiness": 1
+      }
     },
     {
       "id": "18B",
@@ -1594,7 +2034,15 @@
         "美式淡艾",
         "APA",
         "American Pale Ale"
-      ]
+      ],
+      "taste_profile": {
+        "sweetness": 1,
+        "sourness": -1,
+        "bitterness": 1,
+        "body": 1,
+        "roast": -1,
+        "fruitiness": 1
+      }
     },
     {
       "id": "19A",
@@ -1619,7 +2067,15 @@
       "aliases": [
         "美式琥珀",
         "American Amber"
-      ]
+      ],
+      "taste_profile": {
+        "sweetness": 1,
+        "sourness": -1,
+        "bitterness": 1,
+        "body": 1,
+        "roast": 1,
+        "fruitiness": 1
+      }
     },
     {
       "id": "19B",
@@ -1645,7 +2101,15 @@
         "加州普通",
         "蒸汽啤酒",
         "California Common"
-      ]
+      ],
+      "taste_profile": {
+        "sweetness": 1,
+        "sourness": -1,
+        "bitterness": 1,
+        "body": 0,
+        "roast": -1,
+        "fruitiness": 1
+      }
     },
     {
       "id": "19C",
@@ -1668,7 +2132,15 @@
         "commercial_examples": "Anchor Brekle’s Brown ，Big Sky Moose Drool Brown Ale ，Brooklyn Brown Ale ，Bell’s Best Brown，Cigar City Maduro Brown Ale，Smuttynose Old Brown Dog Ale，Telluride Face Down Brown",
         "tags": "中等度数，深色，上层发酵，北美，精酿风格， 棕艾家族，平衡，富含酒花。"
       },
-      "aliases": []
+      "aliases": [],
+      "taste_profile": {
+        "sweetness": 1,
+        "sourness": -1,
+        "bitterness": 1,
+        "body": 1,
+        "roast": 1,
+        "fruitiness": 1
+      }
     },
     {
       "id": "20A",
@@ -1691,7 +2163,15 @@
         "commercial_examples": "Anchor Porter， Boulevard Bully! Porter， Deschutes Black Butte Porter ，Founders Porter ， Great Lakes Edmund Fitzgerald Porter ，Smuttynose Robust Porter，Sierra Nevada Porter",
         "tags": "中等度数，深色，上层发酵，北美，精酿风格， 波特家族，苦，烘焙味，富含酒花。"
       },
-      "aliases": []
+      "aliases": [],
+      "taste_profile": {
+        "sweetness": 1,
+        "sourness": -1,
+        "bitterness": 1,
+        "body": 1,
+        "roast": 1,
+        "fruitiness": 1
+      }
     },
     {
       "id": "20B",
@@ -1713,7 +2193,15 @@
         "stats": "OG: 1.050-1.075 | FG: 1.010-1.022 | IBU: 35-75 | SRM: 30-40 | ABV: 5.0-7.0%",
         "tags": "烈性，深色，上层发酵，北美，精酿风格，世涛 家族，苦，烘焙味，富含酒花。"
       },
-      "aliases": []
+      "aliases": [],
+      "taste_profile": {
+        "sweetness": 1,
+        "sourness": -1,
+        "bitterness": 1,
+        "body": 1,
+        "roast": 1,
+        "fruitiness": 1
+      }
     },
     {
       "id": "20C",
@@ -1739,7 +2227,15 @@
       "aliases": [
         "俄罗斯帝国世涛",
         "RIS"
-      ]
+      ],
+      "taste_profile": {
+        "sweetness": 1,
+        "sourness": 1,
+        "bitterness": 1,
+        "body": 1,
+        "roast": 1,
+        "fruitiness": 1
+      }
     },
     {
       "id": "21A",
@@ -1767,7 +2263,15 @@
         "American IPA",
         "西海岸IPA",
         "West Coast IPA"
-      ]
+      ],
+      "taste_profile": {
+        "sweetness": -1,
+        "sourness": -1,
+        "bitterness": 1,
+        "body": 0,
+        "roast": -1,
+        "fruitiness": 1
+      }
     },
     {
       "id": "21B",
@@ -1794,7 +2298,15 @@
         "红IPA",
         "黑麦IPA",
         "Brut IPA"
-      ]
+      ],
+      "taste_profile": {
+        "sweetness": -1,
+        "sourness": 1,
+        "bitterness": 1,
+        "body": -1,
+        "roast": 1,
+        "fruitiness": 1
+      }
     },
     {
       "id": "21C",
@@ -1818,7 +2330,15 @@
         "新英格兰IPA",
         "多汁IPA",
         "Hazy IPA"
-      ]
+      ],
+      "taste_profile": {
+        "sweetness": 0,
+        "sourness": -1,
+        "bitterness": 0,
+        "body": 0,
+        "roast": -1,
+        "fruitiness": 1
+      }
     },
     {
       "id": "22A",
@@ -1848,7 +2368,15 @@
         "帝国IPA",
         "帝国 IPA",
         "Imperial IPA"
-      ]
+      ],
+      "taste_profile": {
+        "sweetness": 1,
+        "sourness": -1,
+        "bitterness": 1,
+        "body": 0,
+        "roast": 1,
+        "fruitiness": 1
+      }
     },
     {
       "id": "22B",
@@ -1873,7 +2401,15 @@
       },
       "aliases": [
         "American Strong Ale"
-      ]
+      ],
+      "taste_profile": {
+        "sweetness": 1,
+        "sourness": -1,
+        "bitterness": 1,
+        "body": 1,
+        "roast": 1,
+        "fruitiness": 1
+      }
     },
     {
       "id": "22C",
@@ -1898,7 +2434,15 @@
       },
       "aliases": [
         "American Barleywine"
-      ]
+      ],
+      "taste_profile": {
+        "sweetness": 1,
+        "sourness": -1,
+        "bitterness": 1,
+        "body": 1,
+        "roast": 1,
+        "fruitiness": 1
+      }
     },
     {
       "id": "22D",
@@ -1924,7 +2468,15 @@
       "aliases": [
         "小麦烈酒",
         "Wheatwine"
-      ]
+      ],
+      "taste_profile": {
+        "sweetness": 1,
+        "sourness": -1,
+        "bitterness": 1,
+        "body": 1,
+        "roast": 1,
+        "fruitiness": 1
+      }
     },
     {
       "id": "23A",
@@ -1950,7 +2502,15 @@
       "aliases": [
         "柏林酸小麦",
         "Berliner Weisse"
-      ]
+      ],
+      "taste_profile": {
+        "sweetness": -1,
+        "sourness": 1,
+        "bitterness": -1,
+        "body": -1,
+        "roast": -1,
+        "fruitiness": 1
+      }
     },
     {
       "id": "23B",
@@ -1976,7 +2536,15 @@
       "aliases": [
         "法兰德斯红",
         "Flanders Red"
-      ]
+      ],
+      "taste_profile": {
+        "sweetness": 1,
+        "sourness": 1,
+        "bitterness": 1,
+        "body": 0,
+        "roast": 1,
+        "fruitiness": 1
+      }
     },
     {
       "id": "23C",
@@ -2002,7 +2570,15 @@
       "aliases": [
         "法兰德斯棕",
         "Oud Bruin"
-      ]
+      ],
+      "taste_profile": {
+        "sweetness": 1,
+        "sourness": 1,
+        "bitterness": 1,
+        "body": 0,
+        "roast": 1,
+        "fruitiness": 1
+      }
     },
     {
       "id": "23D",
@@ -2025,7 +2601,15 @@
         "commercial_examples": "Boon，De Cam，Cantillon，Drie Fonteinen ，Lindemans，Timmermans and Girardin.",
         "tags": "中等度数，淡色，野生发酵，西欧，传统风格，小 麦啤酒家族，酸"
       },
-      "aliases": []
+      "aliases": [],
+      "taste_profile": {
+        "sweetness": 1,
+        "sourness": 1,
+        "bitterness": 1,
+        "body": -1,
+        "roast": -1,
+        "fruitiness": 1
+      }
     },
     {
       "id": "23E",
@@ -2051,7 +2635,15 @@
         "格兹",
         "吉兹",
         "Gueuze"
-      ]
+      ],
+      "taste_profile": {
+        "sweetness": -1,
+        "sourness": 1,
+        "bitterness": -1,
+        "body": -1,
+        "roast": -1,
+        "fruitiness": 1
+      }
     },
     {
       "id": "23F",
@@ -2073,7 +2665,15 @@
         "stats": "OG: 1.040-1.060 | FG: 1.000-1.010 | IBU: 0-10 | SRM: 3-7 | ABV: 5.0-7.0%",
         "tags": "中等度数，淡色，野生发酵，西欧，传统风格， 小麦啤酒家族，酸，水果"
       },
-      "aliases": []
+      "aliases": [],
+      "taste_profile": {
+        "sweetness": 1,
+        "sourness": 1,
+        "bitterness": 1,
+        "body": -1,
+        "roast": -1,
+        "fruitiness": 1
+      }
     },
     {
       "id": "23G",
@@ -2095,7 +2695,15 @@
       "aliases": [
         "古斯酸小麦",
         "Gose"
-      ]
+      ],
+      "taste_profile": {
+        "sweetness": -1,
+        "sourness": 1,
+        "bitterness": -1,
+        "body": -1,
+        "roast": -1,
+        "fruitiness": 0
+      }
     },
     {
       "id": "24A",
@@ -2122,7 +2730,15 @@
         "比利时白啤",
         "白啤",
         "Witbier"
-      ]
+      ],
+      "taste_profile": {
+        "sweetness": 1,
+        "sourness": 1,
+        "bitterness": 1,
+        "body": 0,
+        "roast": -1,
+        "fruitiness": 1
+      }
     },
     {
       "id": "24B",
@@ -2145,7 +2761,15 @@
         "commercial_examples": "De Koninck，De Ryck Special，Palm Dobble ，Palm Speciale",
         "tags": "中等度数，琥珀色，上发酵，西欧，传统风格， 淡艾类，平衡"
       },
-      "aliases": []
+      "aliases": [],
+      "taste_profile": {
+        "sweetness": 1,
+        "sourness": -1,
+        "bitterness": 1,
+        "body": 0,
+        "roast": 1,
+        "fruitiness": 1
+      }
     },
     {
       "id": "24C",
@@ -2172,7 +2796,15 @@
         "法式窖藏",
         "Biere de Garde",
         "Bière de Garde"
-      ]
+      ],
+      "taste_profile": {
+        "sweetness": 1,
+        "sourness": -1,
+        "bitterness": 1,
+        "body": 1,
+        "roast": 1,
+        "fruitiness": 1
+      }
     },
     {
       "id": "25A",
@@ -2198,7 +2830,15 @@
       "aliases": [
         "比利时金艾",
         "Belgian Blond"
-      ]
+      ],
+      "taste_profile": {
+        "sweetness": 1,
+        "sourness": -1,
+        "bitterness": 1,
+        "body": 0,
+        "roast": -1,
+        "fruitiness": 1
+      }
     },
     {
       "id": "25B",
@@ -2223,7 +2863,15 @@
       "aliases": [
         "赛松",
         "Saison"
-      ]
+      ],
+      "taste_profile": {
+        "sweetness": 1,
+        "sourness": 1,
+        "bitterness": 1,
+        "body": 0,
+        "roast": 1,
+        "fruitiness": 1
+      }
     },
     {
       "id": "25C",
@@ -2249,7 +2897,15 @@
       "aliases": [
         "比利时金色烈性",
         "Belgian Golden Strong"
-      ]
+      ],
+      "taste_profile": {
+        "sweetness": 1,
+        "sourness": -1,
+        "bitterness": 1,
+        "body": 1,
+        "roast": -1,
+        "fruitiness": 1
+      }
     },
     {
       "id": "26A",
@@ -2276,7 +2932,15 @@
         "单料",
         "Single",
         "Belgian Single"
-      ]
+      ],
+      "taste_profile": {
+        "sweetness": 1,
+        "sourness": -1,
+        "bitterness": 1,
+        "body": 0,
+        "roast": -1,
+        "fruitiness": 1
+      }
     },
     {
       "id": "26B",
@@ -2303,7 +2967,15 @@
         "双料",
         "Dubbel",
         "Belgian Dubbel"
-      ]
+      ],
+      "taste_profile": {
+        "sweetness": 1,
+        "sourness": -1,
+        "bitterness": 1,
+        "body": 1,
+        "roast": 1,
+        "fruitiness": 1
+      }
     },
     {
       "id": "26C",
@@ -2330,7 +3002,15 @@
         "三料",
         "Tripel",
         "Belgian Tripel"
-      ]
+      ],
+      "taste_profile": {
+        "sweetness": 1,
+        "sourness": -1,
+        "bitterness": 1,
+        "body": 0,
+        "roast": -1,
+        "fruitiness": 1
+      }
     },
     {
       "id": "26D",
@@ -2356,7 +3036,15 @@
       "aliases": [
         "比利时深色烈性艾尔",
         "Belgian Dark Strong"
-      ]
+      ],
+      "taste_profile": {
+        "sweetness": 1,
+        "sourness": -1,
+        "bitterness": 0,
+        "body": 1,
+        "roast": 0,
+        "fruitiness": 1
+      }
     },
     {
       "id": "27A",
@@ -2379,7 +3067,15 @@
         "酒窖啤酒",
         "凯勒啤酒",
         "Kellerbier"
-      ]
+      ],
+      "taste_profile": {
+        "sweetness": -1,
+        "sourness": 1,
+        "bitterness": 1,
+        "body": 0,
+        "roast": 1,
+        "fruitiness": -1
+      }
     },
     {
       "id": "27B",
@@ -2404,7 +3100,15 @@
       },
       "aliases": [
         "Kentucky Common"
-      ]
+      ],
+      "taste_profile": {
+        "sweetness": 1,
+        "sourness": 1,
+        "bitterness": 1,
+        "body": 0,
+        "roast": 1,
+        "fruitiness": 0
+      }
     },
     {
       "id": "27C",
@@ -2428,7 +3132,15 @@
       },
       "aliases": [
         "Lichtenhainer"
-      ]
+      ],
+      "taste_profile": {
+        "sweetness": -1,
+        "sourness": 1,
+        "bitterness": 1,
+        "body": -1,
+        "roast": -1,
+        "fruitiness": -1
+      }
     },
     {
       "id": "27D",
@@ -2452,7 +3164,15 @@
       },
       "aliases": [
         "London Brown"
-      ]
+      ],
+      "taste_profile": {
+        "sweetness": 1,
+        "sourness": -1,
+        "bitterness": 1,
+        "body": 0,
+        "roast": 1,
+        "fruitiness": 1
+      }
     },
     {
       "id": "27E",
@@ -2478,7 +3198,15 @@
         "格罗济斯基",
         "波兰烟熏小麦",
         "Grodziskie"
-      ]
+      ],
+      "taste_profile": {
+        "sweetness": 1,
+        "sourness": 1,
+        "bitterness": 1,
+        "body": -1,
+        "roast": -1,
+        "fruitiness": 1
+      }
     },
     {
       "id": "27F",
@@ -2503,7 +3231,15 @@
       },
       "aliases": [
         "Pre-Prohibition Lager"
-      ]
+      ],
+      "taste_profile": {
+        "sweetness": 1,
+        "sourness": -1,
+        "bitterness": 1,
+        "body": 0,
+        "roast": -1,
+        "fruitiness": 1
+      }
     },
     {
       "id": "27G",
@@ -2528,7 +3264,15 @@
       },
       "aliases": [
         "Pre-Prohibition Porter"
-      ]
+      ],
+      "taste_profile": {
+        "sweetness": 1,
+        "sourness": -1,
+        "bitterness": 1,
+        "body": 1,
+        "roast": 1,
+        "fruitiness": 0
+      }
     },
     {
       "id": "27H",
@@ -2554,7 +3298,15 @@
       "aliases": [
         "德式黑麦",
         "Roggenbier"
-      ]
+      ],
+      "taste_profile": {
+        "sweetness": 1,
+        "sourness": -1,
+        "bitterness": 1,
+        "body": 1,
+        "roast": 1,
+        "fruitiness": 1
+      }
     },
     {
       "id": "27I",
@@ -2580,7 +3332,15 @@
       "aliases": [
         "萨赫蒂",
         "Sahti"
-      ]
+      ],
+      "taste_profile": {
+        "sweetness": 1,
+        "sourness": 1,
+        "bitterness": 1,
+        "body": 0,
+        "roast": 1,
+        "fruitiness": 1
+      }
     },
     {
       "id": "28A",
@@ -2606,7 +3366,15 @@
         "野菌啤酒",
         "Brett Beer",
         "Brett"
-      ]
+      ],
+      "taste_profile": {
+        "sweetness": 1,
+        "sourness": 1,
+        "bitterness": 1,
+        "body": 0,
+        "roast": 0,
+        "fruitiness": 1
+      }
     },
     {
       "id": "28B",
@@ -2633,7 +3401,15 @@
         "混合发酵酸啤",
         "混发酸",
         "Mixed-Fermentation Sour"
-      ]
+      ],
+      "taste_profile": {
+        "sweetness": -1,
+        "sourness": 1,
+        "bitterness": 1,
+        "body": 0,
+        "roast": 1,
+        "fruitiness": -1
+      }
     },
     {
       "id": "28C",
@@ -2657,7 +3433,15 @@
       },
       "aliases": [
         "Wild Specialty"
-      ]
+      ],
+      "taste_profile": {
+        "sweetness": 1,
+        "sourness": 1,
+        "bitterness": 0,
+        "body": 0,
+        "roast": 0,
+        "fruitiness": 1
+      }
     },
     {
       "id": "28D",
@@ -2678,7 +3462,15 @@
       },
       "aliases": [
         "Straight Sour"
-      ]
+      ],
+      "taste_profile": {
+        "sweetness": -1,
+        "sourness": 1,
+        "bitterness": 1,
+        "body": 0,
+        "roast": 0,
+        "fruitiness": 1
+      }
     },
     {
       "id": "29A",
@@ -2700,7 +3492,15 @@
       "aliases": [
         "水果啤酒",
         "Fruit Beer"
-      ]
+      ],
+      "taste_profile": {
+        "sweetness": 1,
+        "sourness": 1,
+        "bitterness": 1,
+        "body": 1,
+        "roast": 1,
+        "fruitiness": 1
+      }
     },
     {
       "id": "29B",
@@ -2722,7 +3522,15 @@
       "aliases": [
         "水果香料啤",
         "Fruit and Spice Beer"
-      ]
+      ],
+      "taste_profile": {
+        "sweetness": 1,
+        "sourness": -1,
+        "bitterness": 1,
+        "body": 0,
+        "roast": 1,
+        "fruitiness": 1
+      }
     },
     {
       "id": "29C",
@@ -2745,7 +3553,15 @@
       "aliases": [
         "特种水果啤",
         "Specialty Fruit Beer"
-      ]
+      ],
+      "taste_profile": {
+        "sweetness": 0,
+        "sourness": -1,
+        "bitterness": 0,
+        "body": 0,
+        "roast": 0,
+        "fruitiness": 1
+      }
     },
     {
       "id": "29D",
@@ -2767,7 +3583,15 @@
       "aliases": [
         "葡萄啤酒",
         "Grape Ale"
-      ]
+      ],
+      "taste_profile": {
+        "sweetness": -1,
+        "sourness": 1,
+        "bitterness": 1,
+        "body": 0,
+        "roast": 1,
+        "fruitiness": 1
+      }
     },
     {
       "id": "30A",
@@ -2789,7 +3613,15 @@
       "aliases": [
         "SHV",
         "香草蔬菜啤"
-      ]
+      ],
+      "taste_profile": {
+        "sweetness": -1,
+        "sourness": -1,
+        "bitterness": 1,
+        "body": 1,
+        "roast": 1,
+        "fruitiness": 1
+      }
     },
     {
       "id": "30B",
@@ -2811,7 +3643,15 @@
       "aliases": [
         "南瓜啤酒",
         "Pumpkin Ale"
-      ]
+      ],
+      "taste_profile": {
+        "sweetness": 1,
+        "sourness": -1,
+        "bitterness": 1,
+        "body": 1,
+        "roast": 0,
+        "fruitiness": 0
+      }
     },
     {
       "id": "30C",
@@ -2836,7 +3676,15 @@
       "aliases": [
         "圣诞啤酒",
         "Winter Warmer"
-      ]
+      ],
+      "taste_profile": {
+        "sweetness": 1,
+        "sourness": -1,
+        "bitterness": -1,
+        "body": 1,
+        "roast": 0,
+        "fruitiness": 1
+      }
     },
     {
       "id": "30D",
@@ -2855,7 +3703,15 @@
         "stats": "随基础风格变化",
         "tags": "特种风格，香料，草本，蔬菜，现代精酿"
       },
-      "aliases": []
+      "aliases": [],
+      "taste_profile": {
+        "sweetness": 1,
+        "sourness": 1,
+        "bitterness": 1,
+        "body": 0,
+        "roast": 0,
+        "fruitiness": 1
+      }
     },
     {
       "id": "31A",
@@ -2876,7 +3732,15 @@
       },
       "aliases": [
         "替代谷物啤酒"
-      ]
+      ],
+      "taste_profile": {
+        "sweetness": -1,
+        "sourness": -1,
+        "bitterness": 1,
+        "body": 0,
+        "roast": -1,
+        "fruitiness": 0
+      }
     },
     {
       "id": "31B",
@@ -2898,7 +3762,15 @@
       "aliases": [
         "替代糖啤酒",
         "蜂蜜啤酒"
-      ]
+      ],
+      "taste_profile": {
+        "sweetness": 0,
+        "sourness": -1,
+        "bitterness": 0,
+        "body": 1,
+        "roast": 1,
+        "fruitiness": 0
+      }
     },
     {
       "id": "32A",
@@ -2918,7 +3790,15 @@
         "stats": "因风格而异。 常 见 酒 款： Alaskan Smoked Porter ， Schlenkerla Weizen Rauchbier and Ur -Bock Rauchbier ， Spezial Lagerbier， Weissbier and Bockbier ， Stone Smoked Porter",
         "tags": "增味啤酒、烟熏"
       },
-      "aliases": []
+      "aliases": [],
+      "taste_profile": {
+        "sweetness": 0,
+        "sourness": -1,
+        "bitterness": 1,
+        "body": 1,
+        "roast": 1,
+        "fruitiness": 1
+      }
     },
     {
       "id": "32B",
@@ -2936,7 +3816,15 @@
         "stats": "因风格而异。",
         "tags": "增味啤酒、烟熏"
       },
-      "aliases": []
+      "aliases": [],
+      "taste_profile": {
+        "sweetness": 0,
+        "sourness": -1,
+        "bitterness": 1,
+        "body": 0,
+        "roast": 0,
+        "fruitiness": 1
+      }
     },
     {
       "id": "33A",
@@ -2959,7 +3847,15 @@
       "aliases": [
         "木桶陈酿",
         "Barrel-Aged Beer"
-      ]
+      ],
+      "taste_profile": {
+        "sweetness": 1,
+        "sourness": 1,
+        "bitterness": 1,
+        "body": 1,
+        "roast": 1,
+        "fruitiness": 0
+      }
     },
     {
       "id": "33B",
@@ -2983,7 +3879,15 @@
       "aliases": [
         "增味木桶陈酿啤酒",
         "桶陈增味啤酒"
-      ]
+      ],
+      "taste_profile": {
+        "sweetness": 1,
+        "sourness": 1,
+        "bitterness": 0,
+        "body": 1,
+        "roast": 1,
+        "fruitiness": 0
+      }
     },
     {
       "id": "34A",
@@ -3006,7 +3910,15 @@
         "商业特色啤酒",
         "克隆啤酒",
         "Clone Beer"
-      ]
+      ],
+      "taste_profile": {
+        "sweetness": 0,
+        "sourness": -1,
+        "bitterness": 0,
+        "body": 0,
+        "roast": 0,
+        "fruitiness": 0
+      }
     },
     {
       "id": "34B",
@@ -3026,7 +3938,15 @@
       },
       "aliases": [
         "混合风格"
-      ]
+      ],
+      "taste_profile": {
+        "sweetness": 0,
+        "sourness": -1,
+        "bitterness": 0,
+        "body": 0,
+        "roast": 0,
+        "fruitiness": 0
+      }
     },
     {
       "id": "34C",
@@ -3048,7 +3968,15 @@
       },
       "aliases": [
         "Experimental Beer"
-      ]
+      ],
+      "taste_profile": {
+        "sweetness": 1,
+        "sourness": 1,
+        "bitterness": 1,
+        "body": 1,
+        "roast": 1,
+        "fruitiness": 1
+      }
     }
   ],
   "relations": [

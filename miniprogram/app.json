@@ -1,6 +1,8 @@
 {
   "pages": [
     "pages/explore/index",
+    "pages/choose/index",
+    "pages/favorites/index",
     "pages/search/index",
     "pages/group/index",
     "pages/style/index",
@@ -25,6 +27,18 @@
         "text": "探寻",
         "iconPath": "assets/tabbar/explore.png",
         "selectedIconPath": "assets/tabbar/explore-active.png"
+      },
+      {
+        "pagePath": "pages/choose/index",
+        "text": "择饮",
+        "iconPath": "assets/tabbar/choose.png",
+        "selectedIconPath": "assets/tabbar/choose-active.png"
+      },
+      {
+        "pagePath": "pages/favorites/index",
+        "text": "收藏",
+        "iconPath": "assets/tabbar/favorites.png",
+        "selectedIconPath": "assets/tabbar/favorites-active.png"
       },
       {
         "pagePath": "pages/search/index",

@@ -38,6 +38,22 @@ test('tab bar entries use local lightweight png icons for default and selected s
   });
 });
 
+test('secondary and tertiary pages do not render a custom bottom tabbar', () => {
+  [
+    'pages/group/index.wxml',
+    'pages/style/index.wxml',
+    'pages/extension-group/index.wxml',
+    'pages/extension-style/index.wxml',
+  ].forEach((relativePath) => {
+    const source = readMiniPage(relativePath);
+    assert.doesNotMatch(source, /bottom-tabbar/, `${relativePath} should not import or render a custom bottom tabbar`);
+    assert.doesNotMatch(source, /page-with-bottom-tab/, `${relativePath} should use its normal page padding`);
+  });
+
+  const appWxss = readMiniPage('app.wxss');
+  assert.doesNotMatch(appWxss, /\.bottom-tabbar/, 'global styles should not include custom tabbar chrome');
+});
+
 test('explore copy uses the renamed find label', () => {
   const groupWxml = readMiniPage('pages/group/index.wxml');
 
@@ -122,6 +138,7 @@ test('mini program pages expose clear exploration and fallback states', () => {
 test('navigation handlers use shared guarded navigation helpers', () => {
   [
     'pages/explore/index.js',
+    'pages/choose/index.js',
     'pages/search/index.js',
     'pages/group/index.js',
     'pages/style/index.js',
@@ -149,6 +166,7 @@ test('heavy destination pages defer below-the-fold hydration', () => {
 test('primary pages provide share message handlers', () => {
   [
     'pages/explore/index.js',
+    'pages/choose/index.js',
     'pages/group/index.js',
     'pages/style/index.js',
     'pages/extension-group/index.js',
@@ -171,6 +189,9 @@ test('core user behaviors are instrumented for release analytics', () => {
     ['pages/explore/index.js', 'explore_search_open'],
     ['pages/explore/index.js', 'explore_section_switch'],
     ['pages/explore/index.js', 'style_open'],
+    ['pages/choose/index.js', 'choose_filter_change'],
+    ['pages/choose/index.js', 'choose_view_switch'],
+    ['pages/choose/index.js', 'choose_style_open'],
     ['pages/search/index.js', 'search_submit'],
     ['pages/search/index.js', 'search_result_open'],
     ['pages/group/index.js', 'style_open'],
@@ -189,6 +210,7 @@ test('core user behaviors are instrumented for release analytics', () => {
 
 test('tap targets expose consistent pressed feedback before release', () => {
   [
+    'pages/choose/index.wxml',
     'pages/search/index.wxml',
     'pages/group/index.wxml',
     'pages/style/index.wxml',
@@ -273,6 +295,62 @@ test('search results and style details expose community aliases', () => {
   assert.match(styleWxml, /class="alias-list"/);
   assert.match(styleWxml, /wx:for="{{detail.style.aliases}}"/);
   assert.match(styleWxss, /\.alias-list/);
+});
+
+test('style favorites are stored locally and surfaced from detail and bottom tab pages', () => {
+  const favoriteUtil = readMiniPage('utils/style-favorites.js');
+  const styleJs = readMiniPage('pages/style/index.js');
+  const styleWxml = readMiniPage('pages/style/index.wxml');
+  const styleWxss = readMiniPage('pages/style/index.wxss');
+  const favoritesJs = readMiniPage('pages/favorites/index.js');
+  const favoritesWxml = readMiniPage('pages/favorites/index.wxml');
+  const favoritesWxss = readMiniPage('pages/favorites/index.wxss');
+  const exploreJs = readMiniPage('pages/explore/index.js');
+  const exploreWxml = readMiniPage('pages/explore/index.wxml');
+
+  assert.match(favoriteUtil, /FAVORITE_STYLE_STORAGE_KEY/);
+  assert.match(favoriteUtil, /getStorageSync/);
+  assert.match(favoriteUtil, /setStorageSync/);
+  assert.match(styleJs, /toggleFavoriteStyle/);
+  assert.match(styleJs, /isStyleFavorite/);
+  assert.match(styleJs, /favorite_toggle/);
+  assert.match(styleWxml, /class="favorite-action/);
+  assert.match(styleWxml, /bindtap="toggleFavorite"/);
+  assert.match(styleWxss, /\.favorite-action/);
+
+  assert.ok(appJson.pages.includes('pages/favorites/index'));
+  assert.ok(appJson.tabBar.list.some((item) => item.pagePath === 'pages/favorites/index' && item.text === '收藏'));
+  assert.match(favoritesJs, /getFavoriteStyleSummaries/);
+  assert.match(favoritesJs, /onShow\(\)/);
+  assert.match(favoritesJs, /switchTabOnce/);
+  assert.match(favoritesWxml, /class="favorite-list"/);
+  assert.match(favoritesWxml, /class="empty-state"/);
+  assert.match(favoritesWxss, /\.favorite-list/);
+
+  assert.doesNotMatch(exploreJs, /getFavoriteStyleSummaries/);
+  assert.doesNotMatch(exploreWxml, /favorite-panel|favorite-strip|favorite-empty|我的收藏/);
+});
+
+test('choose tab provides taste filters, switchable visuals, and fixed results', () => {
+  const chooseJs = readMiniPage('pages/choose/index.js');
+  const chooseWxml = readMiniPage('pages/choose/index.wxml');
+  const chooseWxss = readMiniPage('pages/choose/index.wxss');
+
+  assert.ok(appJson.pages.includes('pages/choose/index'));
+  assert.ok(appJson.tabBar.list.some((item) => item.pagePath === 'pages/choose/index' && item.text === '择饮'));
+  assert.match(chooseJs, /getTasteFilters/);
+  assert.match(chooseJs, /getTasteMatches/);
+  assert.match(chooseWxml, /class="visual-region"/);
+  assert.match(chooseWxml, /class="visual-swiper"/);
+  assert.match(chooseWxml, /style="{{wheelChartStyle}}"/);
+  assert.match(chooseWxml, /class="wheel-legend"/);
+  assert.match(chooseWxml, /颜色=筛选维度/);
+  assert.match(chooseWxml, /class="result-region"/);
+  assert.match(chooseWxml, /bindchange="switchVisualView"/);
+  assert.match(chooseWxml, /bindtap="openStyle"/);
+  assert.doesNotMatch(chooseWxss, /\.wheel-chart\s*\{[^}]*conic-gradient/s);
+  assert.match(chooseWxss, /\.visual-region/);
+  assert.match(chooseWxss, /\.result-region/);
 });
 
 function listFiles(dir, extension) {

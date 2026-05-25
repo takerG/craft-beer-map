@@ -22,6 +22,57 @@ const RELATION_LABELS = {
   compared_to: '对比',
 };
 
+const TASTE_FILTERS = [
+  {
+    id: 'sweetness',
+    label: '甜度',
+    lowLabel: '不甜',
+    neutralLabel: '中立',
+    highLabel: '甜',
+    reasonLabels: { '-1': '不甜', 0: '甜度适中', 1: '有甜感' },
+  },
+  {
+    id: 'sourness',
+    label: '酸感',
+    lowLabel: '不酸',
+    neutralLabel: '中立',
+    highLabel: '喝酸',
+    reasonLabels: { '-1': '不酸', 0: '酸感适中', 1: '有酸感' },
+  },
+  {
+    id: 'bitterness',
+    label: '苦度',
+    lowLabel: '低苦',
+    neutralLabel: '中立',
+    highLabel: '高苦',
+    reasonLabels: { '-1': '低苦', 0: '苦度适中', 1: '苦味明显' },
+  },
+  {
+    id: 'body',
+    label: '酒体',
+    lowLabel: '轻盈',
+    neutralLabel: '中立',
+    highLabel: '厚重',
+    reasonLabels: { '-1': '酒体轻盈', 0: '酒体适中', 1: '酒体饱满' },
+  },
+  {
+    id: 'roast',
+    label: '烘烤',
+    lowLabel: '清淡',
+    neutralLabel: '中立',
+    highLabel: '烘烤',
+    reasonLabels: { '-1': '少烘烤', 0: '烘烤适中', 1: '烘烤深色' },
+  },
+  {
+    id: 'fruitiness',
+    label: '果香',
+    lowLabel: '少果香',
+    neutralLabel: '中立',
+    highLabel: '果香',
+    reasonLabels: { '-1': '果香内敛', 0: '果香适中', 1: '果香明显' },
+  },
+];
+
 const categoryById = new Map();
 const styleById = new Map();
 const stylesByCategory = new Map();
@@ -243,6 +294,35 @@ export function searchStyles(query, limit = 30) {
     .map((style) => (style.kind === 'extension' ? toExtensionSummary(style) : toStyleSummary(style)));
 }
 
+export function getTasteFilters() {
+  return TASTE_FILTERS.map((filter) => ({
+    id: filter.id,
+    label: filter.label,
+    options: [
+      { value: -1, label: filter.lowLabel },
+      { value: 0, label: filter.neutralLabel },
+      { value: 1, label: filter.highLabel },
+    ],
+  }));
+}
+
+export function getTasteMatches(filterState = {}, limit = 18) {
+  const normalizedFilters = normalizeTasteFilterState(filterState);
+  const activeFilters = Object.entries(normalizedFilters).filter(([, value]) => value !== 0);
+
+  return styles
+    .map((style) => scoreTasteMatch(style, normalizedFilters, activeFilters))
+    .filter(Boolean)
+    .sort((a, b) => b.matchScore - a.matchScore || compareStyleCode(a.style, b.style))
+    .slice(0, limit)
+    .map(({ style, matchScore, matchReasons }) => ({
+      ...toStyleSummary(style),
+      taste_profile: normalizeTasteProfile(style.taste_profile),
+      matchScore,
+      matchReasons,
+    }));
+}
+
 export function getCategoryStyles(categoryId) {
   return stylesByCategory.get(categoryId) || [];
 }
@@ -251,6 +331,10 @@ function getGroup(groupId) {
   const group = groupById.get(groupId);
   if (!group) throw new Error(`Unknown beer group: ${groupId}`);
   return group;
+}
+
+function compareStyleCode(a, b) {
+  return String(a.code || a.id || '').localeCompare(String(b.code || b.id || ''), 'en', { numeric: true });
 }
 
 function toCategorySummary(category) {
@@ -293,6 +377,75 @@ function toExtensionSummary(style) {
     color: style.color,
     sourceLabel: style.sourceLabel,
   };
+}
+
+function normalizeTasteFilterState(filterState) {
+  return Object.fromEntries(
+    TASTE_FILTERS.map((filter) => [filter.id, normalizeTasteValue(filterState[filter.id])]),
+  );
+}
+
+function normalizeTasteProfile(profile = {}) {
+  return Object.fromEntries(
+    TASTE_FILTERS.map((filter) => [filter.id, normalizeTasteValue(profile[filter.id])]),
+  );
+}
+
+function normalizeTasteValue(value) {
+  const numeric = Number(value);
+  if (numeric === -1 || numeric === 1) return numeric;
+  return 0;
+}
+
+function scoreTasteMatch(style, normalizedFilters, activeFilters) {
+  const profile = normalizeTasteProfile(style.taste_profile);
+  const exactReasons = [];
+  const partialReasons = [];
+  let score = 54;
+
+  if (!activeFilters.length) {
+    return {
+      style,
+      matchScore: style.key ? 72 : 64,
+      matchReasons: ['可作为入门探索'],
+    };
+  }
+
+  for (const [dimension, requestedValue] of activeFilters) {
+    const profileValue = profile[dimension];
+    const filter = TASTE_FILTERS.find((item) => item.id === dimension);
+    if (profileValue === -requestedValue) return null;
+
+    if (profileValue === requestedValue) {
+      score += 16;
+      exactReasons.push(filter.reasonLabels[requestedValue]);
+    } else {
+      score += 7;
+      partialReasons.push(filter.reasonLabels[0]);
+    }
+  }
+
+  if (style.key) score += 3;
+  score += getTasteNameBoost(style, normalizedFilters);
+
+  return {
+    style,
+    matchScore: Math.min(99, score),
+    matchReasons: [...exactReasons, ...partialReasons].slice(0, 3),
+  };
+}
+
+function getTasteNameBoost(style, normalizedFilters) {
+  const text = `${style.name_zh || ''} ${style.name_en || ''}`.toLowerCase();
+  let boost = 0;
+
+  if (normalizedFilters.sweetness === 1 && /甜|sweet|dessert|pastry/.test(text)) boost += 8;
+  if (normalizedFilters.sourness === 1 && /酸|sour|gose|lambic|gueuze|berliner|flanders/.test(text)) boost += 8;
+  if (normalizedFilters.bitterness === 1 && /苦|bitter|ipa|pils/.test(text)) boost += 6;
+  if (normalizedFilters.roast === 1 && /世涛|波特|stout|porter|dark|black/.test(text)) boost += 5;
+  if (normalizedFilters.fruitiness === 1 && /水果|fruit|hazy|lambic|saison/.test(text)) boost += 5;
+
+  return boost;
 }
 
 function normalizeStats(stats) {

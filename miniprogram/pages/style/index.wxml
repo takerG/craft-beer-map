@@ -23,7 +23,18 @@
 
 <view class="page style-page" wx:elif="{{detail}}">
   <view class="style-hero" style="border-left-color: {{detail.style.color}}">
-    <text class="style-code">{{detail.style.code}}</text>
+    <view class="style-hero-head">
+      <text class="style-code">{{detail.style.code}}</text>
+      <view
+        class="favorite-action {{isFavorite ? 'favorite-action-active' : ''}}"
+        hover-class="tap-hover"
+        hover-stay-time="80"
+        bindtap="toggleFavorite"
+      >
+        <text class="favorite-icon">{{isFavorite ? '★' : '☆'}}</text>
+        <text>{{favoriteActionLabel}}</text>
+      </view>
+    </view>
     <text class="style-name">{{detail.style.displayName}}</text>
     <text class="style-en">{{detail.style.name_en}}</text>
     <view class="style-path" hover-class="tap-hover" hover-stay-time="80" bindtap="openGroup">

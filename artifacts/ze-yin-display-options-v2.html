@@ -1,0 +1,445 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>择饮融合方案 v2</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: #091018;
+      color: #e7edf6;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+    main {
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 30px 18px 48px;
+    }
+    h1 { margin: 0; font-size: 32px; letter-spacing: 0; }
+    .subtitle { margin: 10px 0 22px; color: #9fb0c5; line-height: 1.7; }
+    .phone-shell {
+      max-width: 430px;
+      margin: 0 auto;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,.14);
+      border-radius: 34px;
+      background:
+        radial-gradient(circle at 12% 0%, rgba(255,207,133,.22), transparent 38%),
+        linear-gradient(180deg, #162231, #0d141e);
+      box-shadow: 0 34px 90px rgba(0,0,0,.38);
+    }
+    .app-head {
+      padding: 22px 20px 10px;
+    }
+    .kicker {
+      display: inline-flex;
+      align-items: center;
+      min-height: 24px;
+      padding: 0 10px;
+      border-radius: 999px;
+      background: rgba(255,207,133,.16);
+      color: #ffcf85;
+      font-size: 12px;
+      font-weight: 900;
+    }
+    .title-row {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 14px;
+      margin-top: 12px;
+    }
+    .title-row h2 {
+      margin: 0;
+      color: #fff;
+      font-size: 27px;
+      letter-spacing: 0;
+    }
+    .count-badge {
+      flex: 0 0 auto;
+      padding-bottom: 3px;
+      color: #8ea0b6;
+      font-size: 13px;
+      font-weight: 800;
+    }
+    .filter-panel {
+      margin: 14px 16px 0;
+      padding: 14px;
+      border: 1px solid rgba(255,255,255,.1);
+      border-radius: 20px;
+      background: rgba(255,255,255,.055);
+    }
+    .filter-row {
+      display: grid;
+      grid-template-columns: 58px 1fr;
+      gap: 10px;
+      align-items: center;
+      margin: 10px 0;
+    }
+    .filter-label { color: #dbe6f3; font-size: 13px; font-weight: 900; }
+    .triad {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 6px;
+    }
+    .triad span {
+      min-height: 30px;
+      padding: 7px 6px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.07);
+      color: #aab6c7;
+      font-size: 12px;
+      text-align: center;
+      white-space: nowrap;
+    }
+    .triad .on { background: #ffcf85; color: #111820; font-weight: 950; }
+    .view-tabs {
+      display: flex;
+      gap: 8px;
+      margin: 16px 16px 10px;
+      padding: 6px;
+      border: 1px solid rgba(255,255,255,.09);
+      border-radius: 999px;
+      background: rgba(6,10,16,.32);
+    }
+    .view-tabs button {
+      flex: 1;
+      min-height: 34px;
+      border: 0;
+      border-radius: 999px;
+      background: transparent;
+      color: #8ea0b6;
+      font: inherit;
+      font-size: 12px;
+      font-weight: 900;
+      cursor: pointer;
+    }
+    .view-tabs button.active {
+      background: linear-gradient(135deg, rgba(255,207,133,.95), rgba(83,212,218,.78));
+      color: #101820;
+    }
+    .carousel {
+      display: flex;
+      width: 300%;
+      transition: transform .32s ease;
+    }
+    .view {
+      width: 33.3333%;
+      padding: 0 16px 16px;
+    }
+    .view-card {
+      min-height: 365px;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,.1);
+      border-radius: 24px;
+      background: rgba(255,255,255,.045);
+    }
+    .view-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 14px 16px 0;
+      color: #dfe8f4;
+      font-size: 13px;
+      font-weight: 900;
+    }
+    .view-head span:last-child {
+      color: #8798ad;
+      font-size: 11px;
+      font-weight: 700;
+    }
+    .wheel {
+      position: relative;
+      width: 238px;
+      height: 238px;
+      margin: 20px auto 12px;
+      border-radius: 999px;
+      background: conic-gradient(#ffcf85 0 58deg, #53d4da 58deg 118deg, #a86dff 118deg 172deg, #58c886 172deg 226deg, #ff7a3d 226deg 292deg, #ff5a43 292deg 360deg);
+    }
+    .wheel:after {
+      content: "";
+      position: absolute;
+      inset: 58px;
+      border-radius: 999px;
+      background: #101820;
+      box-shadow: 0 0 0 12px rgba(16,24,32,.42);
+    }
+    .wheel-label {
+      position: absolute;
+      z-index: 2;
+      color: #101820;
+      font-size: 12px;
+      font-weight: 950;
+      padding: 5px 8px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.9);
+    }
+    .wl1 { top: 20px; left: 96px; }
+    .wl2 { top: 94px; right: 8px; }
+    .wl3 { bottom: 34px; left: 76px; }
+    .wl4 { top: 86px; left: 6px; }
+    .radar {
+      position: relative;
+      width: 234px;
+      height: 234px;
+      margin: 20px auto 12px;
+      border-radius: 22px;
+      background:
+        linear-gradient(90deg, transparent 49%, rgba(255,255,255,.11) 49% 51%, transparent 51%),
+        linear-gradient(0deg, transparent 49%, rgba(255,255,255,.11) 49% 51%, transparent 51%),
+        repeating-radial-gradient(circle, rgba(255,255,255,.12) 0 1px, transparent 1px 39px),
+        linear-gradient(135deg, rgba(83,212,218,.08), rgba(255,207,133,.08));
+    }
+    .radar:before {
+      content: "";
+      position: absolute;
+      inset: 42px 32px 36px 40px;
+      clip-path: polygon(50% 0, 88% 25%, 78% 72%, 35% 92%, 8% 56%, 20% 18%);
+      background: linear-gradient(135deg, rgba(255,207,133,.88), rgba(83,212,218,.72));
+    }
+    .radar-axis {
+      position: absolute;
+      color: #cbd5e1;
+      font-size: 11px;
+      font-weight: 900;
+    }
+    .ra1 { top: 6px; left: 100px; }
+    .ra2 { top: 68px; right: 8px; }
+    .ra3 { bottom: 8px; right: 54px; }
+    .ra4 { bottom: 22px; left: 26px; }
+    .ra5 { top: 70px; left: 6px; }
+    .constellation {
+      position: relative;
+      height: 246px;
+      margin: 16px;
+      border-radius: 22px;
+      background: radial-gradient(circle at 50% 50%, rgba(83,212,218,.18), transparent 58%), #0c141e;
+      overflow: hidden;
+    }
+    .node {
+      position: absolute;
+      width: 54px;
+      height: 54px;
+      border-radius: 999px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #101820;
+      font-size: 12px;
+      font-weight: 950;
+      background: #ffcf85;
+      box-shadow: 0 0 24px rgba(255,207,133,.45);
+    }
+    .node.small { width: 40px; height: 40px; font-size: 10px; background: #53d4da; }
+    .node.dim { background: #8d9aad; color: white; opacity: .68; }
+    .line { position: absolute; height: 1px; background: rgba(255,255,255,.2); transform-origin: left center; }
+    .n1 { left: 142px; top: 94px; }
+    .n2 { left: 56px; top: 54px; }
+    .n3 { right: 48px; top: 48px; }
+    .n4 { left: 58px; bottom: 42px; }
+    .n5 { right: 56px; bottom: 54px; }
+    .l1 { left: 88px; top: 84px; width: 118px; transform: rotate(22deg); }
+    .l2 { left: 164px; top: 120px; width: 106px; transform: rotate(-42deg); }
+    .l3 { left: 94px; top: 150px; width: 126px; transform: rotate(-10deg); }
+    .shared-results {
+      padding: 0 16px 18px;
+    }
+    .result-card {
+      display: grid;
+      grid-template-columns: 44px 1fr auto;
+      gap: 10px;
+      align-items: center;
+      margin-top: 10px;
+      padding: 11px 12px;
+      border: 1px solid rgba(255,255,255,.08);
+      border-left: 5px solid #ffcf85;
+      border-radius: 15px;
+      background: rgba(255,255,255,.065);
+    }
+    .code {
+      color: #ffcf85;
+      font-size: 14px;
+      font-weight: 950;
+    }
+    .name {
+      display: block;
+      color: #f8fafc;
+      font-size: 14px;
+      font-weight: 900;
+    }
+    .reason {
+      display: block;
+      margin-top: 3px;
+      color: #8fa1b6;
+      font-size: 11px;
+      line-height: 1.35;
+    }
+    .score {
+      color: #53d4da;
+      font-size: 13px;
+      font-weight: 950;
+    }
+    .hint {
+      padding: 0 20px 22px;
+      color: #8798ad;
+      font-size: 12px;
+      line-height: 1.7;
+      text-align: center;
+    }
+    .notes {
+      max-width: 760px;
+      margin: 24px auto 0;
+      padding: 18px 20px;
+      border-radius: 20px;
+      background: rgba(255,255,255,.055);
+      color: #afbed0;
+      line-height: 1.75;
+    }
+    .notes b { color: #ffcf85; }
+    @media (max-width: 520px) {
+      main { padding: 18px 10px 32px; }
+      h1 { font-size: 26px; }
+      .phone-shell { border-radius: 28px; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>“择饮”融合方案 v2</h1>
+    <p class="subtitle">筛选结果共用同一批风格，结果区可以左右滑动切换：风味轮看方向，雷达图看原因，星图看相邻探索。</p>
+
+    <section class="phone-shell">
+      <div class="app-head">
+        <span class="kicker">择饮</span>
+        <div class="title-row">
+          <h2>今晚想喝什么？</h2>
+          <span class="count-badge">8 个匹配</span>
+        </div>
+      </div>
+
+      <div class="filter-panel">
+        <div class="filter-row">
+          <div class="filter-label">甜度</div>
+          <div class="triad"><span>不甜</span><span>中立</span><span class="on">甜</span></div>
+        </div>
+        <div class="filter-row">
+          <div class="filter-label">酸感</div>
+          <div class="triad"><span class="on">不酸</span><span>中立</span><span>喝酸</span></div>
+        </div>
+        <div class="filter-row">
+          <div class="filter-label">苦度</div>
+          <div class="triad"><span>低苦</span><span class="on">中立</span><span>高苦</span></div>
+        </div>
+        <div class="filter-row">
+          <div class="filter-label">酒体</div>
+          <div class="triad"><span>轻盈</span><span class="on">中立</span><span>厚重</span></div>
+        </div>
+      </div>
+
+      <nav class="view-tabs" aria-label="结果视图">
+        <button class="active" data-index="0">风味轮</button>
+        <button data-index="1">雷达图</button>
+        <button data-index="2">星图</button>
+      </nav>
+
+      <div class="carousel" id="carousel">
+        <section class="view">
+          <div class="view-card">
+            <div class="view-head"><span>命中的风味方向</span><span>横向滑动切换</span></div>
+            <div class="wheel">
+              <span class="wheel-label wl1">麦芽甜</span>
+              <span class="wheel-label wl2">焦糖</span>
+              <span class="wheel-label wl3">深色烘烤</span>
+              <span class="wheel-label wl4">柔和清爽</span>
+            </div>
+            <div class="shared-results">
+              <div class="result-card">
+                <span class="code">16A</span>
+                <span><span class="name">甜世涛</span><span class="reason">甜感明确，不酸，苦度温和</span></span>
+                <span class="score">94%</span>
+              </div>
+              <div class="result-card" style="border-left-color:#ff7a3d">
+                <span class="code">17C</span>
+                <span><span class="name">苏格兰强艾尔</span><span class="reason">麦芽甜、焦糖、酒体偏厚</span></span>
+                <span class="score">89%</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="view">
+          <div class="view-card">
+            <div class="view-head"><span>推荐理由画像</span><span>同一批结果</span></div>
+            <div class="radar">
+              <span class="radar-axis ra1">甜</span>
+              <span class="radar-axis ra2">香</span>
+              <span class="radar-axis ra3">酒体</span>
+              <span class="radar-axis ra4">酸</span>
+              <span class="radar-axis ra5">苦</span>
+            </div>
+            <div class="shared-results">
+              <div class="result-card">
+                <span class="code">16A</span>
+                <span><span class="name">甜世涛</span><span class="reason">最贴近当前味觉轮廓</span></span>
+                <span class="score">94%</span>
+              </div>
+              <div class="result-card" style="border-left-color:#ff5a43">
+                <span class="code">26D</span>
+                <span><span class="name">比利时深色烈性爱尔</span><span class="reason">甜润、香气复杂、略强劲</span></span>
+                <span class="score">84%</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="view">
+          <div class="view-card">
+            <div class="view-head"><span>风格探索星图</span><span>点风格进详情</span></div>
+            <div class="constellation">
+              <div class="line l1"></div><div class="line l2"></div><div class="line l3"></div>
+              <div class="node n1">16A</div>
+              <div class="node small n2">17C</div>
+              <div class="node small n3">26D</div>
+              <div class="node dim n4">9C</div>
+              <div class="node small n5">30C</div>
+            </div>
+            <div class="shared-results">
+              <div class="result-card">
+                <span class="code">16A</span>
+                <span><span class="name">甜世涛</span><span class="reason">中心结果，最推荐</span></span>
+                <span class="score">94%</span>
+              </div>
+              <div class="result-card" style="border-left-color:#53d4da">
+                <span class="code">30C</span>
+                <span><span class="name">冬季季节啤酒</span><span class="reason">相邻探索，香料甜感</span></span>
+                <span class="score">81%</span>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <p class="hint">正式小程序里这里可以用 swiper：左右滑切换视图，顶部胶囊同步高亮。底部结果卡片始终可点进风格详情。</p>
+    </section>
+
+    <section class="notes">
+      <b>设计重点：</b>三种效果不是三套筛选结果，而是同一结果集的三个解释层。用户先用三段式筛选得到推荐，再用“风味轮 / 雷达 / 星图”从不同角度理解这些风格。
+    </section>
+  </main>
+
+  <script>
+    const tabs = Array.from(document.querySelectorAll('.view-tabs button'));
+    const carousel = document.getElementById('carousel');
+
+    tabs.forEach((tab) => {
+      tab.addEventListener('click', () => {
+        const index = Number(tab.dataset.index);
+        tabs.forEach((item) => item.classList.toggle('active', item === tab));
+        carousel.style.transform = `translateX(-${index * 33.3333}%)`;
+      });
+    });
+  </script>
+</body>
+</html>
