@@ -6,103 +6,158 @@ const sourcePath = path.join(root, 'data', 'beer-data-source.json');
 
 const DIMENSIONS = ['sweetness', 'sourness', 'bitterness', 'body', 'roast', 'fruitiness'];
 
-const OVERRIDES = {
-  '1A': { sweetness: -1, sourness: -1, bitterness: -1, body: -1, roast: -1, fruitiness: -1 },
-  '1B': { sweetness: -1, sourness: -1, bitterness: -1, body: -1, roast: -1, fruitiness: -1 },
-  '16A': { sweetness: 1, sourness: -1, bitterness: 0, body: 1, roast: 1, fruitiness: -1 },
-  '17C': { sweetness: 1, sourness: -1, bitterness: 0, body: 1, roast: 0, fruitiness: -1 },
-  '21A': { sweetness: -1, sourness: -1, bitterness: 1, body: 0, roast: -1, fruitiness: 1 },
-  '21C': { sweetness: 0, sourness: -1, bitterness: 0, body: 0, roast: -1, fruitiness: 1 },
-  '23A': { sweetness: -1, sourness: 1, bitterness: -1, body: -1, roast: -1, fruitiness: 1 },
-  '23E': { sweetness: -1, sourness: 1, bitterness: -1, body: -1, roast: -1, fruitiness: 1 },
-  '23G': { sweetness: -1, sourness: 1, bitterness: -1, body: -1, roast: -1, fruitiness: 0 },
-  '26D': { sweetness: 1, sourness: -1, bitterness: 0, body: 1, roast: 0, fruitiness: 1 },
-  '30C': { sweetness: 1, sourness: -1, bitterness: -1, body: 1, roast: 0, fruitiness: 1 },
+// Three-state taste hints for the choose tab:
+// -1 = low / avoids this lane, 0 = moderate or style-dependent, 1 = prominent.
+// Calibrated from BJCP 2021 style descriptions and cross-checked against
+// community style usage where BJCP and modern craft naming diverge.
+const TASTE_PROFILES = {
+  '1A': [-1, -1, -1, -1, -1, -1],
+  '1B': [-1, -1, -1, -1, -1, -1],
+  '1C': [0, -1, -1, -1, -1, 0],
+  '1D': [0, -1, 0, 0, -1, 1],
+  '2A': [-1, -1, 0, -1, -1, -1],
+  '2B': [0, -1, 0, 0, 0, -1],
+  '2C': [0, -1, -1, 0, 1, -1],
+  '3A': [-1, -1, 1, -1, -1, 0],
+  '3B': [-1, -1, 1, 0, -1, 0],
+  '3C': [0, -1, 0, 0, 1, 0],
+  '3D': [0, -1, 0, 0, 1, 0],
+  '4A': [-1, -1, 0, 0, -1, -1],
+  '4B': [0, -1, 0, 0, -1, -1],
+  '4C': [0, -1, 0, 1, -1, -1],
+  '5A': [-1, -1, 1, -1, -1, -1],
+  '5B': [-1, -1, 0, -1, -1, 0],
+  '5C': [-1, -1, 1, 0, -1, -1],
+  '5D': [-1, -1, 1, -1, -1, -1],
+  '6A': [0, -1, 0, 0, 1, -1],
+  '6B': [0, -1, 0, 0, 1, -1],
+  '6C': [0, -1, 0, 1, 1, -1],
+  '7A': [0, -1, 0, 0, 1, -1],
+  '7B': [-1, -1, 1, 0, 0, 0],
+  '8A': [0, -1, -1, 0, 1, -1],
+  '8B': [-1, -1, 0, -1, 1, -1],
+  '9A': [1, -1, -1, 1, 0, 0],
+  '9B': [1, -1, 0, 1, 0, 0],
+  '9C': [1, -1, 0, 1, 1, 0],
+  '10A': [0, -1, -1, 0, -1, 1],
+  '10B': [0, -1, -1, 0, 1, 1],
+  '10C': [1, -1, -1, 1, 0, 1],
+  '11A': [-1, -1, 1, -1, 0, 1],
+  '11B': [0, -1, 1, 0, 0, 1],
+  '11C': [0, -1, 1, 0, 0, 1],
+  '12A': [-1, -1, 1, -1, -1, 1],
+  '12B': [-1, -1, 1, 0, -1, 1],
+  '12C': [-1, -1, 1, 0, -1, 1],
+  '13A': [0, -1, -1, -1, 1, 0],
+  '13B': [0, -1, 0, 0, 1, 0],
+  '13C': [0, -1, 0, 0, 1, 0],
+  '14A': [0, -1, -1, -1, 0, 0],
+  '14B': [0, -1, -1, 0, 0, 0],
+  '14C': [0, -1, 0, 0, 0, 0],
+  '15A': [0, -1, 0, 0, 0, 0],
+  '15B': [-1, -1, 1, -1, 1, -1],
+  '15C': [-1, -1, 1, 0, 1, -1],
+  '16A': [1, -1, -1, 1, 1, -1],
+  '16B': [0, -1, 0, 1, 1, -1],
+  '16C': [1, -1, 0, 1, 1, 1],
+  '16D': [0, -1, 1, 1, 1, 1],
+  '17A': [0, -1, 0, 1, 0, 1],
+  '17B': [1, 0, 0, 1, 0, 1],
+  '17C': [1, -1, -1, 1, 0, -1],
+  '17D': [1, -1, 0, 1, 0, 1],
+  '18A': [0, -1, 0, 0, -1, 1],
+  '18B': [-1, -1, 1, 0, -1, 1],
+  '19A': [0, -1, 1, 0, 0, 1],
+  '19B': [0, -1, 1, 0, 0, 1],
+  '19C': [0, -1, 1, 0, 1, 1],
+  '20A': [0, -1, 1, 1, 1, 0],
+  '20B': [-1, -1, 1, 1, 1, 0],
+  '20C': [0, -1, 1, 1, 1, 1],
+  '21A': [-1, -1, 1, 0, -1, 1],
+  '21B': [-1, 0, 1, 0, 0, 1],
+  '21C': [0, -1, 0, 0, -1, 1],
+  '22A': [-1, -1, 1, 0, -1, 1],
+  '22B': [0, -1, 1, 1, 0, 1],
+  '22C': [0, -1, 1, 1, 0, 1],
+  '22D': [1, -1, 0, 1, -1, 1],
+  '23A': [-1, 1, -1, -1, -1, 1],
+  '23B': [0, 1, -1, 0, 0, 1],
+  '23C': [0, 1, -1, 0, 0, 1],
+  '23D': [-1, 1, -1, -1, -1, 1],
+  '23E': [-1, 1, -1, -1, -1, 1],
+  '23F': [0, 1, -1, -1, -1, 1],
+  '23G': [-1, 1, -1, -1, -1, 1],
+  '24A': [-1, -1, -1, 0, -1, 1],
+  '24B': [0, -1, 0, 0, 0, 1],
+  '24C': [0, -1, 0, 0, 0, 0],
+  '25A': [-1, -1, 0, 0, -1, 1],
+  '25B': [-1, 0, 1, 0, -1, 1],
+  '25C': [-1, -1, 1, 0, -1, 1],
+  '26A': [-1, -1, 1, -1, -1, 1],
+  '26B': [0, -1, -1, 0, 0, 1],
+  '26C': [-1, -1, 0, 0, -1, 1],
+  '26D': [1, -1, 0, 1, 0, 1],
+  '27A': [-1, -1, 0, 0, -1, -1],
+  '27B': [0, 0, 0, 0, 1, 0],
+  '27C': [-1, 1, -1, -1, -1, -1],
+  '27D': [1, -1, -1, 0, 1, 1],
+  '27E': [-1, -1, 0, -1, 0, -1],
+  '27F': [-1, -1, 1, 0, -1, 0],
+  '27G': [0, -1, 0, 0, 1, 0],
+  '27H': [0, -1, -1, 0, 0, 1],
+  '27I': [1, -1, -1, 1, 0, 1],
+  '28A': [-1, 0, 0, 0, 0, 1],
+  '28B': [-1, 1, -1, 0, 0, 1],
+  '28C': [0, 1, -1, 0, 0, 1],
+  '28D': [-1, 1, -1, 0, 0, 1],
+  '29A': [0, 0, 0, 0, 0, 1],
+  '29B': [0, 0, 0, 0, 0, 1],
+  '29C': [0, 0, 0, 0, 0, 1],
+  '29D': [-1, 1, 0, 0, -1, 1],
+  '30A': [0, 0, 0, 0, 0, 0],
+  '30B': [1, -1, -1, 1, 0, 0],
+  '30C': [1, -1, -1, 1, 0, 1],
+  '30D': [0, 0, 0, 0, 0, 1],
+  '31A': [0, -1, 0, 0, 0, 0],
+  '31B': [1, -1, 0, 0, 0, 0],
+  '32A': [0, -1, 0, 0, 0, -1],
+  '32B': [0, -1, 0, 0, 0, 0],
+  '33A': [0, 0, 0, 0, 0, 0],
+  '33B': [0, 0, 0, 0, 0, 0],
+  '34A': [0, 0, 0, 0, 0, 0],
+  '34B': [0, 0, 0, 0, 0, 0],
+  '34C': [0, 0, 0, 0, 0, 0],
 };
 
 const data = JSON.parse(fs.readFileSync(sourcePath, 'utf8'));
+const missing = [];
 
 data.styles = data.styles.map((style) => {
-  const profile = {
-    ...inferTasteProfile(style),
-    ...(OVERRIDES[style.code || style.id] || {}),
-  };
+  const code = style.code || style.id;
+  const values = TASTE_PROFILES[code];
 
-  DIMENSIONS.forEach((dimension) => {
-    if (![-1, 0, 1].includes(profile[dimension])) {
-      profile[dimension] = 0;
-    }
-  });
+  if (!values) {
+    missing.push(code);
+  }
 
   return {
     ...style,
-    taste_profile: profile,
+    taste_profile: profileFromValues(values || [0, 0, 0, 0, 0, 0]),
   };
 });
+
+if (missing.length > 0) {
+  throw new Error(`Missing taste profiles for styles: ${missing.join(', ')}`);
+}
 
 fs.writeFileSync(sourcePath, `${JSON.stringify(data, null, 2)}\n`, 'utf8');
 console.log(`Updated taste profiles for ${data.styles.length} styles`);
 
-function inferTasteProfile(style) {
-  const code = style.code || style.id || '';
-  const text = [
-    code,
-    style.name_zh,
-    style.name_en,
-    style.category,
-    style.details && Object.values(style.details).join(' '),
-  ]
-    .filter(Boolean)
-    .join(' ')
-    .toLowerCase();
-
-  return {
-    sweetness: inferSweetness(code, text),
-    sourness: inferSourness(code, text),
-    bitterness: inferBitterness(code, text),
-    body: inferBody(code, text),
-    roast: inferRoast(code, text),
-    fruitiness: inferFruitiness(code, text),
-  };
-}
-
-function inferSweetness(code, text) {
-  if (hasAny(text, ['sweet stout', 'tropical stout', 'wee heavy', 'barley wine', 'barleywine', 'old ale', 'doppelbock', 'eisbock', 'weizenbock', 'dark strong', 'winter seasonal', 'caramel', 'toffee', 'molasses', '甜', '焦糖', '太妃糖'])) return 1;
-  if (hasAny(text, ['dry', 'pils', 'ipa', 'bitter', 'gose', 'gueuze', 'berliner', 'light lager', 'leichtbier', '干爽', '酸'])) return -1;
-  if (['9', '16', '17', '26', '30'].some((category) => code.startsWith(category))) return 1;
-  return 0;
-}
-
-function inferSourness(code, text) {
-  if (hasAny(text, ['sour', 'lambic', 'gueuze', 'gose', 'berliner', 'flanders', 'oud bruin', 'brett', 'mixed-fermentation', 'wild', '酸', '野菌', '酒香酵母'])) return 1;
-  if (code.startsWith('23') || code.startsWith('28')) return 1;
-  return -1;
-}
-
-function inferBitterness(code, text) {
-  if (hasAny(text, ['ipa', 'bitter', 'pils', 'pale ale', 'american stout', 'imperial stout', 'black ipa', '苦味', '酒花'])) return 1;
-  if (hasAny(text, ['weissbier', 'witbier', 'lambic', 'gose', 'berliner', 'sweet stout', 'bock', 'mild', 'light lager', '低苦'])) return -1;
-  return 0;
-}
-
-function inferBody(code, text) {
-  if (hasAny(text, ['bock', 'stout', 'porter', 'strong', 'barley wine', 'barleywine', 'old ale', 'wheatwine', 'eisbock', 'doppelbock', 'imperial', 'heavy', 'full-bodied', '酒体厚', '饱满'])) return 1;
-  if (hasAny(text, ['light lager', 'leichtbier', 'berliner', 'gose', 'lambic', 'gueuze', 'session', '淡爽', '轻盈', '酒体淡'])) return -1;
-  return 0;
-}
-
-function inferRoast(code, text) {
-  if (hasAny(text, ['stout', 'porter', 'dunkel', 'schwarz', 'dark', 'brown', 'roast', 'coffee', 'chocolate', 'black', '烘烤', '咖啡', '巧克力', '深色', '棕色'])) return 1;
-  if (hasAny(text, ['pale', 'golden', 'blond', 'wheat', 'pils', 'light lager', '淡色', '金色', '小麦'])) return -1;
-  return 0;
-}
-
-function inferFruitiness(code, text) {
-  if (hasAny(text, ['fruit', 'fruity', 'citrus', 'tropical', 'belgian', 'saison', 'witbier', 'weissbier', 'hazy ipa', 'lambic', 'gueuze', 'esters', '水果', '果香', '柑橘', '热带', '酯香'])) return 1;
-  if (hasAny(text, ['lager', 'pils', 'rauchbier', 'smoked', 'clean', '下发酵', '烟熏', '干净'])) return -1;
-  return 0;
-}
-
-function hasAny(text, needles) {
-  return needles.some((needle) => text.includes(needle));
+function profileFromValues(values) {
+  return Object.fromEntries(
+    DIMENSIONS.map((dimension, index) => {
+      const value = values[index];
+      return [dimension, [-1, 0, 1].includes(value) ? value : 0];
+    }),
+  );
 }

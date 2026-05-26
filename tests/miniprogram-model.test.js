@@ -56,6 +56,21 @@ test('extension groups expose the full market style learning layer', () => {
   assert.equal(groups.reduce((total, group) => total + group.styleCount, 0), extensionStyles.length);
 });
 
+test('extension styles assign three-state taste profiles for choose filters', () => {
+  const dimensions = ['sweetness', 'sourness', 'bitterness', 'body', 'roast', 'fruitiness'];
+
+  extensionStyles.forEach((style) => {
+    assert.equal(typeof style.taste_profile, 'object', `${style.id} should define taste_profile`);
+    dimensions.forEach((dimension) => {
+      assert.ok(Object.hasOwn(style.taste_profile, dimension), `${style.id} should define ${dimension}`);
+      assert.ok(
+        [-1, 0, 1].includes(style.taste_profile[dimension]),
+        `${style.id} ${dimension} should be -1, 0, or 1`,
+      );
+    });
+  });
+});
+
 test('extension group detail returns lightweight style summaries', () => {
   const detail = getExtensionGroupDetail('modern-ipa-hops');
 
@@ -190,11 +205,48 @@ test('taste matching returns lightweight scored style summaries', () => {
   assert.ok(matches.some((match) => match.code === '16A'));
   assert.equal(matches.some((match) => match.details), false);
   matches.forEach((match) => {
-    assert.equal(match.kind, 'bjcp');
+    assert.ok(['bjcp', 'extension'].includes(match.kind));
     assert.equal(typeof match.matchScore, 'number');
     assert.ok(match.matchScore >= 0 && match.matchScore <= 100);
     assert.ok(Array.isArray(match.matchReasons));
     assert.equal(typeof match.taste_profile, 'object');
+  });
+});
+
+test('taste matching includes calibrated extension styles', () => {
+  const matches = getTasteMatches(
+    { sweetness: -1, sourness: -1, bitterness: 1, body: 0, roast: -1, fruitiness: 1 },
+    20,
+  );
+
+  const westCoastIpa = matches.find((match) => match.id === 'ext-west-coast-ipa');
+
+  assert.ok(westCoastIpa);
+  assert.equal(westCoastIpa.kind, 'extension');
+  assert.deepEqual(westCoastIpa.taste_profile, {
+    sweetness: -1,
+    sourness: -1,
+    bitterness: 1,
+    body: 0,
+    roast: -1,
+    fruitiness: 1,
+  });
+});
+
+test('taste matching ranks exact taste-profile matches before partial matches', () => {
+  const matches = getTasteMatches(
+    { sweetness: 1, sourness: -1, bitterness: -1, body: 1, roast: 1, fruitiness: -1 },
+    5,
+  );
+
+  assert.equal(matches[0].code, '16A');
+  assert.deepEqual(matches[0].taste_profile, {
+    sweetness: 1,
+    sourness: -1,
+    bitterness: -1,
+    body: 1,
+    roast: 1,
+    fruitiness: -1,
   });
 });
 

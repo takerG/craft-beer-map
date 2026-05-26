@@ -38,6 +38,80 @@ export const extensionGroups = [
   },
 ];
 
+const TASTE_PROFILE_DIMENSIONS = ['sweetness', 'sourness', 'bitterness', 'body', 'roast', 'fruitiness'];
+
+// Three-state taste hints for the choose tab:
+// -1 = low / avoids this lane, 0 = moderate or style-dependent, 1 = prominent.
+// Calibrated from BA/WBC/GABF-style descriptions, local descriptions above,
+// and the closest BJCP crosswalks for styles without standalone BJCP codes.
+const EXTENSION_TASTE_PROFILE_VALUES = {
+  'ext-session-ipa': [-1, -1, 1, -1, -1, 1],
+  'ext-hazy-pale-ale': [0, -1, 0, 0, -1, 1],
+  'ext-american-strong-pale-ale': [-1, -1, 1, 0, -1, 1],
+  'ext-hazy-strong-pale-ale': [0, -1, 0, 0, -1, 1],
+  'ext-american-belgo-ale': [-1, -1, 1, 0, -1, 1],
+  'ext-american-black-ale': [-1, -1, 1, 0, 1, 1],
+  'ext-double-hoppy-red-ale': [0, -1, 1, 1, 0, 1],
+  'ext-imperial-red-ale': [0, -1, 1, 1, 0, 1],
+  'ext-hazy-double-ipa': [0, -1, 0, 1, -1, 1],
+  'ext-west-coast-ipa': [-1, -1, 1, 0, -1, 1],
+  'ext-experimental-ipa': [-1, 0, 1, 0, 0, 1],
+  'ext-india-pale-lager': [-1, -1, 1, 0, -1, 1],
+  'ext-west-coast-pilsener': [-1, -1, 1, -1, -1, 1],
+  'ext-italian-pilsener': [-1, -1, 1, -1, -1, 0],
+  'ext-fresh-hop-beer': [-1, -1, 1, 0, -1, 1],
+  'ext-international-pale-ale': [-1, -1, 1, 0, -1, 1],
+  'ext-new-zealand-pale-ale': [-1, -1, 1, 0, -1, 1],
+  'ext-new-zealand-ipa': [-1, -1, 1, 0, -1, 1],
+  'ext-classic-australian-pale-ale': [-1, -1, 0, 0, -1, 1],
+  'ext-australian-pale-ale': [-1, -1, 1, 0, -1, 1],
+  'ext-american-sour-ale': [-1, 1, -1, 0, 0, 1],
+  'ext-fruited-sour-ale': [0, 1, -1, 0, -1, 1],
+  'ext-contemporary-gose': [-1, 1, -1, -1, -1, 1],
+  'ext-contemporary-belgian-spontaneous': [-1, 1, -1, 0, -1, 1],
+  'ext-barrel-aged-sour-beer': [0, 1, -1, 0, 0, 1],
+  'ext-wild-beer': [-1, 1, -1, 0, 0, 1],
+  'ext-mixed-culture-brett-beer': [-1, 1, -1, 0, 0, 1],
+  'ext-belgian-table-beer': [-1, -1, 0, -1, -1, 1],
+  'ext-belgian-session-ale': [-1, -1, 0, -1, -1, 1],
+  'ext-speciale-belge': [0, -1, 0, 0, 0, 1],
+  'ext-belgian-quadrupel': [1, -1, 0, 1, 0, 1],
+  'ext-other-belgian-ale': [0, -1, 0, 0, 0, 1],
+  'ext-belgian-fruit-beer': [0, 0, -1, 0, -1, 1],
+  'ext-adambier': [0, 0, 1, 1, 1, 0],
+  'ext-dutch-kuit': [0, -1, 0, 0, -1, 0],
+  'ext-gotlandsdricke': [0, -1, -1, 1, 0, 1],
+  'ext-breslau-schoeps': [1, -1, -1, 1, 0, 0],
+  'ext-franconian-rotbier': [0, -1, 0, 0, 1, -1],
+  'ext-contemporary-american-lager': [-1, -1, 0, -1, -1, 0],
+  'ext-contemporary-american-light-lager': [-1, -1, -1, -1, -1, 0],
+  'ext-american-pilsener': [-1, -1, 1, 0, -1, -1],
+  'ext-contemporary-american-pilsener': [-1, -1, 1, 0, -1, 0],
+  'ext-american-malt-liquor': [0, -1, -1, -1, -1, -1],
+  'ext-american-maerzen-oktoberfest': [0, -1, 0, 0, 1, -1],
+  'ext-mexican-light-lager': [-1, -1, -1, -1, -1, -1],
+  'ext-mexican-pale-lager': [-1, -1, -1, -1, -1, -1],
+  'ext-mexican-amber-lager': [0, -1, -1, 0, 0, -1],
+  'ext-mexican-dark-lager': [0, -1, -1, 1, 1, -1],
+  'ext-international-pilsener': [-1, -1, 0, -1, -1, -1],
+  'ext-rice-lager': [0, -1, 0, -1, -1, 0],
+  'ext-fruit-wheat-beer': [0, -1, -1, 0, -1, 1],
+  'ext-field-beer': [0, 0, 0, 0, 0, 0],
+  'ext-pumpkin-spice-beer': [1, -1, -1, 1, 0, 0],
+  'ext-pumpkin-squash-beer': [1, -1, -1, 1, 0, 0],
+  'ext-chocolate-cocoa-beer': [0, -1, 0, 0, 1, -1],
+  'ext-coffee-beer': [0, -1, 0, 0, 1, -1],
+  'ext-chili-pepper-beer': [0, -1, 0, 0, 0, 0],
+  'ext-specialty-honey-beer': [0, -1, 0, 0, -1, 0],
+  'ext-rye-beer': [0, -1, 0, 0, 0, 0],
+  'ext-ginjo-sake-yeast-beer': [-1, -1, -1, 0, -1, 1],
+  'ext-aged-beer': [0, 0, 0, 0, 0, 1],
+  'ext-other-strong-ale-lager': [0, -1, 0, 1, 0, 0],
+  'ext-gluten-free-beer': [0, -1, 0, 0, 0, 0],
+  'ext-non-alcohol-malt-beverage': [0, -1, 0, -1, 0, 0],
+  'ext-dessert-pastry-beer': [1, -1, -1, 1, 1, 1],
+};
+
 export const extensionStyles = [
   {
     id: 'ext-session-ipa',
@@ -820,3 +894,17 @@ export const extensionStyles = [
     sourceLabel: EXTENSION_SOURCE_LABEL,
   },
 ];
+
+extensionStyles.forEach((style) => {
+  const values = EXTENSION_TASTE_PROFILE_VALUES[style.id];
+  if (!values) {
+    throw new Error(`Missing extension taste profile for ${style.id}`);
+  }
+
+  style.taste_profile = Object.fromEntries(
+    TASTE_PROFILE_DIMENSIONS.map((dimension, index) => {
+      const value = values[index];
+      return [dimension, [-1, 0, 1].includes(value) ? value : 0];
+    }),
+  );
+});

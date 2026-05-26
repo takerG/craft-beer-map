@@ -309,14 +309,21 @@ export function getTasteFilters() {
 export function getTasteMatches(filterState = {}, limit = 18) {
   const normalizedFilters = normalizeTasteFilterState(filterState);
   const activeFilters = Object.entries(normalizedFilters).filter(([, value]) => value !== 0);
+  const candidateStyles = [...styles, ...enrichedExtensionStyles];
 
-  return styles
+  return candidateStyles
     .map((style) => scoreTasteMatch(style, normalizedFilters, activeFilters))
     .filter(Boolean)
-    .sort((a, b) => b.matchScore - a.matchScore || compareStyleCode(a.style, b.style))
+    .sort(
+      (a, b) =>
+        b.exactCount - a.exactCount ||
+        b.matchScore - a.matchScore ||
+        b.partialCount - a.partialCount ||
+        compareStyleCode(a.style, b.style),
+    )
     .slice(0, limit)
     .map(({ style, matchScore, matchReasons }) => ({
-      ...toStyleSummary(style),
+      ...(style.kind === 'extension' ? toExtensionSummary(style) : toStyleSummary(style)),
       taste_profile: normalizeTasteProfile(style.taste_profile),
       matchScore,
       matchReasons,
@@ -401,6 +408,8 @@ function scoreTasteMatch(style, normalizedFilters, activeFilters) {
   const profile = normalizeTasteProfile(style.taste_profile);
   const exactReasons = [];
   const partialReasons = [];
+  let exactCount = 0;
+  let partialCount = 0;
   let score = 54;
 
   if (!activeFilters.length) {
@@ -418,9 +427,11 @@ function scoreTasteMatch(style, normalizedFilters, activeFilters) {
 
     if (profileValue === requestedValue) {
       score += 16;
+      exactCount += 1;
       exactReasons.push(filter.reasonLabels[requestedValue]);
     } else {
       score += 7;
+      partialCount += 1;
       partialReasons.push(filter.reasonLabels[0]);
     }
   }
@@ -430,6 +441,8 @@ function scoreTasteMatch(style, normalizedFilters, activeFilters) {
 
   return {
     style,
+    exactCount,
+    partialCount,
     matchScore: Math.min(99, score),
     matchReasons: [...exactReasons, ...partialReasons].slice(0, 3),
   };

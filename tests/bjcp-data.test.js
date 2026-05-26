@@ -171,3 +171,48 @@ test('beer data assigns three-state taste profiles for choose filters', () => {
     });
   });
 });
+
+test('choose taste profiles keep representative styles in expected taste lanes', () => {
+  const byCode = new Map(data.styles.map((style) => [style.code || style.id, style]));
+
+  assert.deepEqual(byCode.get('1C').taste_profile, {
+    sweetness: 0,
+    sourness: -1,
+    bitterness: -1,
+    body: -1,
+    roast: -1,
+    fruitiness: 0,
+  });
+  assert.deepEqual(byCode.get('5D').taste_profile, {
+    sweetness: -1,
+    sourness: -1,
+    bitterness: 1,
+    body: -1,
+    roast: -1,
+    fruitiness: -1,
+  });
+  assert.deepEqual(byCode.get('21C').taste_profile, {
+    sweetness: 0,
+    sourness: -1,
+    bitterness: 0,
+    body: 0,
+    roast: -1,
+    fruitiness: 1,
+  });
+  assert.deepEqual(byCode.get('23A').taste_profile, {
+    sweetness: -1,
+    sourness: 1,
+    bitterness: -1,
+    body: -1,
+    roast: -1,
+    fruitiness: 1,
+  });
+  assert.deepEqual(byCode.get('16A').taste_profile, {
+    sweetness: 1,
+    sourness: -1,
+    bitterness: -1,
+    body: 1,
+    roast: 1,
+    fruitiness: -1,
+  });
+});

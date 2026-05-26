@@ -255,12 +255,12 @@ export const beerData = {
         "tags": "中等度数，淡色，下发酵，储藏啤酒，北美，传 统风格，淡色拉格，平衡"
       },
       "taste_profile": {
-        "sweetness": 1,
+        "sweetness": 0,
         "sourness": -1,
-        "bitterness": 1,
+        "bitterness": -1,
         "body": -1,
         "roast": -1,
-        "fruitiness": 1
+        "fruitiness": 0
       }
     },
     {
@@ -285,9 +285,9 @@ export const beerData = {
         "tags": "中等度数，淡色，任意形式发酵，北美，精酿风 格，小麦啤酒，平衡"
       },
       "taste_profile": {
-        "sweetness": 1,
+        "sweetness": 0,
         "sourness": -1,
-        "bitterness": 1,
+        "bitterness": 0,
         "body": 0,
         "roast": -1,
         "fruitiness": 1
@@ -315,10 +315,10 @@ export const beerData = {
         "tags": "中等度数，淡色，下发酵，储藏啤酒，传统风格， 淡色拉格，平衡"
       },
       "taste_profile": {
-        "sweetness": 1,
+        "sweetness": -1,
         "sourness": -1,
-        "bitterness": 1,
-        "body": 1,
+        "bitterness": 0,
+        "body": -1,
         "roast": -1,
         "fruitiness": -1
       }
@@ -344,9 +344,9 @@ export const beerData = {
         "tags": "中等度数，琥珀色，下发酵，储藏啤酒，传统风 格，琥珀啤酒类，麦芽味"
       },
       "taste_profile": {
-        "sweetness": 1,
+        "sweetness": 0,
         "sourness": -1,
-        "bitterness": 1,
+        "bitterness": 0,
         "body": 0,
         "roast": 0,
         "fruitiness": -1
@@ -373,10 +373,10 @@ export const beerData = {
         "tags": "中等度数，深色，下发酵，储藏啤酒，传统风格， 深色啤酒类，麦芽风格"
       },
       "taste_profile": {
-        "sweetness": 1,
+        "sweetness": 0,
         "sourness": -1,
-        "bitterness": 1,
-        "body": 1,
+        "bitterness": -1,
+        "body": 0,
         "roast": 1,
         "fruitiness": -1
       }
@@ -403,11 +403,11 @@ export const beerData = {
       },
       "taste_profile": {
         "sweetness": -1,
-        "sourness": 1,
+        "sourness": -1,
         "bitterness": 1,
-        "body": 0,
+        "body": -1,
         "roast": -1,
-        "fruitiness": 1
+        "fruitiness": 0
       }
     },
     {
@@ -433,11 +433,11 @@ export const beerData = {
       },
       "taste_profile": {
         "sweetness": -1,
-        "sourness": 1,
+        "sourness": -1,
         "bitterness": 1,
         "body": 0,
         "roast": -1,
-        "fruitiness": 1
+        "fruitiness": 0
       }
     },
     {
@@ -462,12 +462,12 @@ export const beerData = {
         "tags": "中等度数，琥珀色，下发酵，储藏啤酒，中欧， 传统风格，琥珀拉格家族，协调性（平衡性）"
       },
       "taste_profile": {
-        "sweetness": 1,
+        "sweetness": 0,
         "sourness": -1,
-        "bitterness": 1,
+        "bitterness": 0,
         "body": 0,
         "roast": 1,
-        "fruitiness": 1
+        "fruitiness": 0
       }
     },
     {
@@ -491,12 +491,12 @@ export const beerData = {
         "tags": "中等度数，深色，下发酵，储藏啤酒，中欧，传 统风格，深色拉格家族，平衡性（协调性）。"
       },
       "taste_profile": {
-        "sweetness": 1,
+        "sweetness": 0,
         "sourness": -1,
-        "bitterness": 1,
+        "bitterness": 0,
         "body": 0,
         "roast": 1,
-        "fruitiness": 1
+        "fruitiness": 0
       }
     },
     {
@@ -520,9 +520,9 @@ export const beerData = {
         "tags": "中等度数，淡色，下发酵，储藏啤酒，中欧，传 统风格，淡色拉格家族，麦香"
       },
       "taste_profile": {
-        "sweetness": 1,
+        "sweetness": -1,
         "sourness": -1,
-        "bitterness": 1,
+        "bitterness": 0,
         "body": 0,
         "roast": -1,
         "fruitiness": -1
@@ -549,9 +549,9 @@ export const beerData = {
         "tags": "中等度数，淡色，下发酵，储藏啤酒，中欧，传 统发酵，淡色拉格类，麦芽味"
       },
       "taste_profile": {
-        "sweetness": 1,
+        "sweetness": 0,
         "sourness": -1,
-        "bitterness": 1,
+        "bitterness": 0,
         "body": 0,
         "roast": -1,
         "fruitiness": -1
@@ -579,12 +579,12 @@ export const beerData = {
         "tags": "高度啤酒，淡色下发酵，下发酵，储藏啤酒，中 欧，传统风格，烈性啤酒类，麦芽风格"
       },
       "taste_profile": {
-        "sweetness": 1,
+        "sweetness": 0,
         "sourness": -1,
-        "bitterness": 1,
+        "bitterness": 0,
         "body": 1,
         "roast": -1,
-        "fruitiness": 1
+        "fruitiness": -1
       }
     },
     {
@@ -608,7 +608,7 @@ export const beerData = {
         "tags": "社交啤酒度数、淡色、下发酵、储藏啤酒，欧洲 中部、传统风格、淡色拉格类、苦、酒花味道"
       },
       "taste_profile": {
-        "sweetness": 1,
+        "sweetness": -1,
         "sourness": -1,
         "bitterness": 1,
         "body": -1,
@@ -637,12 +637,12 @@ export const beerData = {
         "tags": "标准度数、淡色、上发酵、贮藏啤酒、中欧地区、 传统风格、淡色艾尔类型、平衡性"
       },
       "taste_profile": {
-        "sweetness": 1,
+        "sweetness": -1,
         "sourness": -1,
-        "bitterness": 1,
-        "body": 1,
+        "bitterness": 0,
+        "body": -1,
         "roast": -1,
-        "fruitiness": 1
+        "fruitiness": 0
       }
     },
     {
@@ -667,8 +667,8 @@ export const beerData = {
         "tags": "中等度数、淡色、下发酵、储藏啤酒、中欧地区、 传统风格、淡色拉格系列、协调性（平衡性）"
       },
       "taste_profile": {
-        "sweetness": 1,
-        "sourness": 1,
+        "sweetness": -1,
+        "sourness": -1,
         "bitterness": 1,
         "body": 0,
         "roast": -1,
@@ -697,10 +697,10 @@ export const beerData = {
         "tags": "中等度数、淡色、下 发酵、储藏啤酒、中欧地区、 传统风格、皮尔森系列、苦味、酒花香"
       },
       "taste_profile": {
-        "sweetness": 1,
-        "sourness": 1,
+        "sweetness": -1,
+        "sourness": -1,
         "bitterness": 1,
-        "body": 1,
+        "body": -1,
         "roast": -1,
         "fruitiness": -1
       }
@@ -725,9 +725,9 @@ export const beerData = {
         "tags": "中等度数；琥珀色；下发酵；窖藏；中欧；传统 风格；琥珀拉格类；麦香味"
       },
       "taste_profile": {
-        "sweetness": 1,
+        "sweetness": 0,
         "sourness": -1,
-        "bitterness": 1,
+        "bitterness": 0,
         "body": 0,
         "roast": 1,
         "fruitiness": -1
@@ -755,9 +755,9 @@ export const beerData = {
         "tags": "中等度数；琥珀色；下发酵；贮藏型；中欧；传 统风格；琥珀拉格类；麦芽香味；烟熏"
       },
       "taste_profile": {
-        "sweetness": 1,
+        "sweetness": 0,
         "sourness": -1,
-        "bitterness": 1,
+        "bitterness": 0,
         "body": 0,
         "roast": 1,
         "fruitiness": -1
@@ -785,12 +785,12 @@ export const beerData = {
         "tags": "高度；琥珀色；下发酵；贮藏型；中欧；传统风 格；博克类；麦香味。"
       },
       "taste_profile": {
-        "sweetness": 1,
+        "sweetness": 0,
         "sourness": -1,
-        "bitterness": 1,
+        "bitterness": 0,
         "body": 1,
         "roast": 1,
-        "fruitiness": 1
+        "fruitiness": -1
       }
     },
     {
@@ -814,9 +814,9 @@ export const beerData = {
         "tags": "中等度数，琥珀色，下发酵，窖藏，中欧，传统 风格，琥珀拉格家族，平衡"
       },
       "taste_profile": {
-        "sweetness": 1,
+        "sweetness": 0,
         "sourness": -1,
-        "bitterness": 1,
+        "bitterness": 0,
         "body": 0,
         "roast": 1,
         "fruitiness": -1
@@ -844,12 +844,12 @@ export const beerData = {
         "tags": "中等度数，琥珀色，上发酵，窖藏，中欧，传统 风格，琥珀艾尔家族，苦啤"
       },
       "taste_profile": {
-        "sweetness": 1,
+        "sweetness": -1,
         "sourness": -1,
         "bitterness": 1,
-        "body": -1,
-        "roast": 1,
-        "fruitiness": 1
+        "body": 0,
+        "roast": 0,
+        "fruitiness": 0
       }
     },
     {
@@ -873,10 +873,10 @@ export const beerData = {
         "tags": "高度，深色，下发酵，贮藏啤酒，中欧，传统风 格，麦芽，深色贮藏啤酒"
       },
       "taste_profile": {
-        "sweetness": 1,
+        "sweetness": 0,
         "sourness": -1,
-        "bitterness": 1,
-        "body": 1,
+        "bitterness": -1,
+        "body": 0,
         "roast": 1,
         "fruitiness": -1
       }
@@ -902,9 +902,9 @@ export const beerData = {
         "tags": "高度，深色，下发酵，贮藏啤酒，欧洲中部，传 统风格，平衡型，深色系"
       },
       "taste_profile": {
-        "sweetness": 1,
+        "sweetness": -1,
         "sourness": -1,
-        "bitterness": 1,
+        "bitterness": 0,
         "body": -1,
         "roast": 1,
         "fruitiness": -1
@@ -934,10 +934,10 @@ export const beerData = {
       "taste_profile": {
         "sweetness": 1,
         "sourness": -1,
-        "bitterness": 1,
+        "bitterness": -1,
         "body": 1,
-        "roast": 1,
-        "fruitiness": 1
+        "roast": 0,
+        "fruitiness": 0
       }
     },
     {
@@ -964,10 +964,10 @@ export const beerData = {
       "taste_profile": {
         "sweetness": 1,
         "sourness": -1,
-        "bitterness": 1,
+        "bitterness": 0,
         "body": 1,
-        "roast": 1,
-        "fruitiness": 1
+        "roast": 0,
+        "fruitiness": 0
       }
     },
     {
@@ -993,11 +993,11 @@ export const beerData = {
       },
       "taste_profile": {
         "sweetness": 1,
-        "sourness": 1,
-        "bitterness": 1,
+        "sourness": -1,
+        "bitterness": 0,
         "body": 1,
         "roast": 1,
-        "fruitiness": 1
+        "fruitiness": 0
       }
     },
     {
@@ -1021,9 +1021,9 @@ export const beerData = {
         "tags": "中等度数，淡色，上发酵，中欧，传统类型，小麦 啤酒，麦香型"
       },
       "taste_profile": {
-        "sweetness": 1,
+        "sweetness": 0,
         "sourness": -1,
-        "bitterness": 1,
+        "bitterness": -1,
         "body": 0,
         "roast": -1,
         "fruitiness": 1
@@ -1051,9 +1051,9 @@ export const beerData = {
         "tags": "中等度数，琥珀色，上发酵，中欧，传统风格， 小麦啤酒，麦香型"
       },
       "taste_profile": {
-        "sweetness": 1,
+        "sweetness": 0,
         "sourness": -1,
-        "bitterness": 1,
+        "bitterness": -1,
         "body": 0,
         "roast": 1,
         "fruitiness": 1
@@ -1081,9 +1081,9 @@ export const beerData = {
       "taste_profile": {
         "sweetness": 1,
         "sourness": -1,
-        "bitterness": 1,
+        "bitterness": -1,
         "body": 1,
-        "roast": 1,
+        "roast": 0,
         "fruitiness": 1
       }
     },
@@ -1112,8 +1112,8 @@ export const beerData = {
         "sweetness": -1,
         "sourness": -1,
         "bitterness": 1,
-        "body": 0,
-        "roast": 1,
+        "body": -1,
+        "roast": 0,
         "fruitiness": 1
       }
     },
@@ -1139,11 +1139,11 @@ export const beerData = {
         "tags": "中等度数，琥珀色，上发酵，英式风格，传统风格， 琥珀淡色艾尔家族，苦啤。"
       },
       "taste_profile": {
-        "sweetness": 1,
+        "sweetness": 0,
         "sourness": -1,
         "bitterness": 1,
         "body": 0,
-        "roast": 1,
+        "roast": 0,
         "fruitiness": 1
       }
     },
@@ -1169,11 +1169,11 @@ export const beerData = {
         "tags": "社交型啤酒，琥珀色，上发酵，英伦三岛，传统 风格，琥珀艾尔家族，苦啤"
       },
       "taste_profile": {
-        "sweetness": 1,
-        "sourness": 1,
+        "sweetness": 0,
+        "sourness": -1,
         "bitterness": 1,
-        "body": 1,
-        "roast": 1,
+        "body": 0,
+        "roast": 0,
         "fruitiness": 1
       }
     },
@@ -1199,10 +1199,10 @@ export const beerData = {
         "tags": "中等度数，淡色，上发酵，英伦三岛，精酿，淡 色艾尔家族，苦啤，酒花香"
       },
       "taste_profile": {
-        "sweetness": 1,
+        "sweetness": -1,
         "sourness": -1,
         "bitterness": 1,
-        "body": 0,
+        "body": -1,
         "roast": -1,
         "fruitiness": 1
       }
@@ -1229,8 +1229,8 @@ export const beerData = {
         "tags": "中等度数，淡色，上发酵，太平洋地区，传统风 格，淡色艾尔家族，苦啤"
       },
       "taste_profile": {
-        "sweetness": 1,
-        "sourness": 1,
+        "sweetness": -1,
+        "sourness": -1,
         "bitterness": 1,
         "body": 0,
         "roast": -1,
@@ -1258,10 +1258,10 @@ export const beerData = {
         "tags": "高度，淡色，上发酵，英伦三岛，传统风格，IPA 家族，苦啤，酒花味"
       },
       "taste_profile": {
-        "sweetness": 1,
-        "sourness": 1,
+        "sweetness": -1,
+        "sourness": -1,
         "bitterness": 1,
-        "body": 1,
+        "body": 0,
         "roast": -1,
         "fruitiness": 1
       }
@@ -1286,12 +1286,12 @@ export const beerData = {
         "tags": "社交型酒劲，深色，上发酵，英国群岛，传统风 格，棕色艾尔家族，麦香"
       },
       "taste_profile": {
-        "sweetness": 1,
+        "sweetness": 0,
         "sourness": -1,
-        "bitterness": 1,
-        "body": 1,
+        "bitterness": -1,
+        "body": -1,
         "roast": 1,
-        "fruitiness": 1
+        "fruitiness": 0
       }
     },
     {
@@ -1316,12 +1316,12 @@ export const beerData = {
         "tags": "中等度数，琥珀色，上发酵，英国群岛，传统类型， 棕色艾尔家族，突出麦香"
       },
       "taste_profile": {
-        "sweetness": 1,
+        "sweetness": 0,
         "sourness": -1,
-        "bitterness": 1,
+        "bitterness": 0,
         "body": 0,
         "roast": 1,
-        "fruitiness": 1
+        "fruitiness": 0
       }
     },
     {
@@ -1345,12 +1345,12 @@ export const beerData = {
         "tags": "中等度数，深色，上发酵，英国群岛，传统类型， 波特家族，突出麦芽味道，烘烤味道"
       },
       "taste_profile": {
-        "sweetness": 1,
+        "sweetness": 0,
         "sourness": -1,
-        "bitterness": 1,
-        "body": 1,
+        "bitterness": 0,
+        "body": 0,
         "roast": 1,
-        "fruitiness": 1
+        "fruitiness": 0
       }
     },
     {
@@ -1373,12 +1373,12 @@ export const beerData = {
         "tags": "社交啤酒度数，琥珀色，上发酵，英伦三岛，传 统风格，琥珀艾尔家族，麦香。"
       },
       "taste_profile": {
-        "sweetness": 1,
+        "sweetness": 0,
         "sourness": -1,
-        "bitterness": 1,
-        "body": 0,
-        "roast": 1,
-        "fruitiness": 1
+        "bitterness": -1,
+        "body": -1,
+        "roast": 0,
+        "fruitiness": 0
       }
     },
     {
@@ -1402,12 +1402,12 @@ export const beerData = {
         "tags": "社交啤酒，琥珀色，上发酵，英伦三岛，传统类 型，琥珀艾尔家族，麦香。"
       },
       "taste_profile": {
-        "sweetness": 1,
+        "sweetness": 0,
         "sourness": -1,
-        "bitterness": 1,
-        "body": 1,
-        "roast": 1,
-        "fruitiness": 1
+        "bitterness": -1,
+        "body": 0,
+        "roast": 0,
+        "fruitiness": 0
       }
     },
     {
@@ -1430,12 +1430,12 @@ export const beerData = {
         "tags": "中等度数，琥珀色，上发酵，英国群岛，传统风 格，琥珀艾尔家族，突出麦香"
       },
       "taste_profile": {
-        "sweetness": 1,
+        "sweetness": 0,
         "sourness": -1,
-        "bitterness": 1,
-        "body": 1,
-        "roast": 1,
-        "fruitiness": 1
+        "bitterness": 0,
+        "body": 0,
+        "roast": 0,
+        "fruitiness": 0
       }
     },
     {
@@ -1459,12 +1459,12 @@ export const beerData = {
         "tags": "中等度数，琥珀颜色，上发酵，英国群岛，传统 风格，琥珀艾尔家族，平衡度好。"
       },
       "taste_profile": {
-        "sweetness": 1,
+        "sweetness": 0,
         "sourness": -1,
-        "bitterness": 1,
+        "bitterness": 0,
         "body": 0,
-        "roast": 1,
-        "fruitiness": 1
+        "roast": 0,
+        "fruitiness": 0
       }
     },
     {
@@ -1489,12 +1489,12 @@ export const beerData = {
         "tags": "中等度数，深色，上发酵，英国群岛，传统风格， 世涛家族，苦啤，烘烤风格"
       },
       "taste_profile": {
-        "sweetness": 1,
+        "sweetness": -1,
         "sourness": -1,
         "bitterness": 1,
-        "body": 1,
+        "body": -1,
         "roast": 1,
-        "fruitiness": 1
+        "fruitiness": -1
       }
     },
     {
@@ -1518,12 +1518,12 @@ export const beerData = {
         "tags": "高度，深色，上发酵，英国群岛，传统风格，世 涛家族，苦啤，烘烤味道"
       },
       "taste_profile": {
-        "sweetness": 1,
+        "sweetness": -1,
         "sourness": -1,
         "bitterness": 1,
-        "body": 1,
+        "body": 0,
         "roast": 1,
-        "fruitiness": 1
+        "fruitiness": -1
       }
     },
     {
@@ -1548,7 +1548,7 @@ export const beerData = {
       "taste_profile": {
         "sweetness": 1,
         "sourness": -1,
-        "bitterness": 0,
+        "bitterness": -1,
         "body": 1,
         "roast": 1,
         "fruitiness": -1
@@ -1576,12 +1576,12 @@ export const beerData = {
         "tags": "中等度数，深色，上层发酵，不列颠群岛，传统 风格，世涛家族，平衡，烘焙味。"
       },
       "taste_profile": {
-        "sweetness": 1,
+        "sweetness": 0,
         "sourness": -1,
-        "bitterness": 1,
+        "bitterness": 0,
         "body": 1,
         "roast": 1,
-        "fruitiness": 1
+        "fruitiness": -1
       }
     },
     {
@@ -1608,7 +1608,7 @@ export const beerData = {
       "taste_profile": {
         "sweetness": 1,
         "sourness": -1,
-        "bitterness": 1,
+        "bitterness": 0,
         "body": 1,
         "roast": 1,
         "fruitiness": 1
@@ -1636,8 +1636,8 @@ export const beerData = {
         "tags": "高度数，深色，上层发酵，不列颠群岛，传统风 格，世涛家族，平衡感，烘焙味。"
       },
       "taste_profile": {
-        "sweetness": 1,
-        "sourness": 1,
+        "sweetness": 0,
+        "sourness": -1,
         "bitterness": 1,
         "body": 1,
         "roast": 1,
@@ -1666,11 +1666,11 @@ export const beerData = {
         "tags": "高烈度，琥珀色，上层发酵，不列颠群岛，传统 风格，烈性艾尔家族，麦芽味。"
       },
       "taste_profile": {
-        "sweetness": 1,
+        "sweetness": 0,
         "sourness": -1,
-        "bitterness": 1,
+        "bitterness": 0,
         "body": 1,
-        "roast": 1,
+        "roast": 0,
         "fruitiness": 1
       }
     },
@@ -1697,10 +1697,10 @@ export const beerData = {
       },
       "taste_profile": {
         "sweetness": 1,
-        "sourness": 1,
-        "bitterness": 1,
+        "sourness": 0,
+        "bitterness": 0,
         "body": 1,
-        "roast": 1,
+        "roast": 0,
         "fruitiness": 1
       }
     },
@@ -1728,7 +1728,7 @@ export const beerData = {
       "taste_profile": {
         "sweetness": 1,
         "sourness": -1,
-        "bitterness": 0,
+        "bitterness": -1,
         "body": 1,
         "roast": 0,
         "fruitiness": -1
@@ -1758,9 +1758,9 @@ export const beerData = {
       "taste_profile": {
         "sweetness": 1,
         "sourness": -1,
-        "bitterness": 1,
+        "bitterness": 0,
         "body": 1,
-        "roast": 1,
+        "roast": 0,
         "fruitiness": 1
       }
     },
@@ -1786,9 +1786,9 @@ export const beerData = {
         "tags": "中等度数，淡色，任意发酵方式，北美，精酿风 格，淡色艾尔家族，平衡。"
       },
       "taste_profile": {
-        "sweetness": 1,
+        "sweetness": 0,
         "sourness": -1,
-        "bitterness": 1,
+        "bitterness": 0,
         "body": 0,
         "roast": -1,
         "fruitiness": 1
@@ -1815,10 +1815,10 @@ export const beerData = {
         "tags": "中等度数，淡色，上层发酵，北美，精酿风格，淡 色艾尔家族，苦，富含酒花。"
       },
       "taste_profile": {
-        "sweetness": 1,
+        "sweetness": -1,
         "sourness": -1,
         "bitterness": 1,
-        "body": 1,
+        "body": 0,
         "roast": -1,
         "fruitiness": 1
       }
@@ -1844,11 +1844,11 @@ export const beerData = {
         "tags": "中等度数，琥珀色，上层发酵，北美，精酿风格， 淡色艾尔家族，平衡，富含酒花。"
       },
       "taste_profile": {
-        "sweetness": 1,
+        "sweetness": 0,
         "sourness": -1,
         "bitterness": 1,
-        "body": 1,
-        "roast": 1,
+        "body": 0,
+        "roast": 0,
         "fruitiness": 1
       }
     },
@@ -1873,11 +1873,11 @@ export const beerData = {
         "tags": "中等度数，琥珀色，底层发酵，北美，传统风格， 琥珀拉格家族，苦，富含酒花。"
       },
       "taste_profile": {
-        "sweetness": 1,
+        "sweetness": 0,
         "sourness": -1,
         "bitterness": 1,
         "body": 0,
-        "roast": -1,
+        "roast": 0,
         "fruitiness": 1
       }
     },
@@ -1903,10 +1903,10 @@ export const beerData = {
         "tags": "中等度数，深色，上层发酵，北美，精酿风格， 棕艾家族，平衡，富含酒花。"
       },
       "taste_profile": {
-        "sweetness": 1,
+        "sweetness": 0,
         "sourness": -1,
         "bitterness": 1,
-        "body": 1,
+        "body": 0,
         "roast": 1,
         "fruitiness": 1
       }
@@ -1933,12 +1933,12 @@ export const beerData = {
         "tags": "中等度数，深色，上层发酵，北美，精酿风格， 波特家族，苦，烘焙味，富含酒花。"
       },
       "taste_profile": {
-        "sweetness": 1,
+        "sweetness": 0,
         "sourness": -1,
         "bitterness": 1,
         "body": 1,
         "roast": 1,
-        "fruitiness": 1
+        "fruitiness": 0
       }
     },
     {
@@ -1962,12 +1962,12 @@ export const beerData = {
         "tags": "烈性，深色，上层发酵，北美，精酿风格，世涛 家族，苦，烘焙味，富含酒花。"
       },
       "taste_profile": {
-        "sweetness": 1,
+        "sweetness": -1,
         "sourness": -1,
         "bitterness": 1,
         "body": 1,
         "roast": 1,
-        "fruitiness": 1
+        "fruitiness": 0
       }
     },
     {
@@ -1992,8 +1992,8 @@ export const beerData = {
         "tags": "非常烈，深色，上层发酵，不列颠群岛，北美， 传统风格，精酿风格，世涛家族，麦芽味，苦，烘焙味。"
       },
       "taste_profile": {
-        "sweetness": 1,
-        "sourness": 1,
+        "sweetness": 0,
+        "sourness": -1,
         "bitterness": 1,
         "body": 1,
         "roast": 1,
@@ -2049,10 +2049,10 @@ export const beerData = {
       },
       "taste_profile": {
         "sweetness": -1,
-        "sourness": 1,
+        "sourness": 0,
         "bitterness": 1,
-        "body": -1,
-        "roast": 1,
+        "body": 0,
+        "roast": 0,
         "fruitiness": 1
       }
     },
@@ -2103,11 +2103,11 @@ export const beerData = {
         "tags": "超高度数，淡色， 上层发酵， 北美， 精酿风格， IPA家族， 苦， 酒花味"
       },
       "taste_profile": {
-        "sweetness": 1,
+        "sweetness": -1,
         "sourness": -1,
         "bitterness": 1,
         "body": 0,
-        "roast": 1,
+        "roast": -1,
         "fruitiness": 1
       }
     },
@@ -2133,11 +2133,11 @@ export const beerData = {
         "tags": "高度数，琥珀色，上层发酵，北美，精酿风格， 烈性艾尔家族， 苦， 酒花味"
       },
       "taste_profile": {
-        "sweetness": 1,
+        "sweetness": 0,
         "sourness": -1,
         "bitterness": 1,
         "body": 1,
-        "roast": 1,
+        "roast": 0,
         "fruitiness": 1
       }
     },
@@ -2163,11 +2163,11 @@ export const beerData = {
         "tags": "超高度数，琥珀色，上层发酵，北美，精酿风格， 烈性艾尔家族，苦，酒花味"
       },
       "taste_profile": {
-        "sweetness": 1,
+        "sweetness": 0,
         "sourness": -1,
         "bitterness": 1,
         "body": 1,
-        "roast": 1,
+        "roast": 0,
         "fruitiness": 1
       }
     },
@@ -2195,9 +2195,9 @@ export const beerData = {
       "taste_profile": {
         "sweetness": 1,
         "sourness": -1,
-        "bitterness": 1,
+        "bitterness": 0,
         "body": 1,
-        "roast": 1,
+        "roast": -1,
         "fruitiness": 1
       }
     },
@@ -2253,11 +2253,11 @@ export const beerData = {
         "tags": "中等度数，琥珀色，上层发酵，西欧，传统风格， 酸啤家族，酸，木桶"
       },
       "taste_profile": {
-        "sweetness": 1,
+        "sweetness": 0,
         "sourness": 1,
-        "bitterness": 1,
+        "bitterness": -1,
         "body": 0,
-        "roast": 1,
+        "roast": 0,
         "fruitiness": 1
       }
     },
@@ -2283,11 +2283,11 @@ export const beerData = {
         "tags": "中等度数，深色，上层发酵，西欧，传统风格， 酸啤家族，麦香，酸"
       },
       "taste_profile": {
-        "sweetness": 1,
+        "sweetness": 0,
         "sourness": 1,
-        "bitterness": 1,
+        "bitterness": -1,
         "body": 0,
-        "roast": 1,
+        "roast": 0,
         "fruitiness": 1
       }
     },
@@ -2313,9 +2313,9 @@ export const beerData = {
         "tags": "中等度数，淡色，野生发酵，西欧，传统风格，小 麦啤酒家族，酸"
       },
       "taste_profile": {
-        "sweetness": 1,
+        "sweetness": -1,
         "sourness": 1,
-        "bitterness": 1,
+        "bitterness": -1,
         "body": -1,
         "roast": -1,
         "fruitiness": 1
@@ -2371,9 +2371,9 @@ export const beerData = {
         "tags": "中等度数，淡色，野生发酵，西欧，传统风格， 小麦啤酒家族，酸，水果"
       },
       "taste_profile": {
-        "sweetness": 1,
+        "sweetness": 0,
         "sourness": 1,
-        "bitterness": 1,
+        "bitterness": -1,
         "body": -1,
         "roast": -1,
         "fruitiness": 1
@@ -2402,7 +2402,7 @@ export const beerData = {
         "bitterness": -1,
         "body": -1,
         "roast": -1,
-        "fruitiness": 0
+        "fruitiness": 1
       }
     },
     {
@@ -2427,9 +2427,9 @@ export const beerData = {
         "tags": "普通烈度，淡色，上发酵，西欧，传统味道，小 麦啤酒类，香料"
       },
       "taste_profile": {
-        "sweetness": 1,
-        "sourness": 1,
-        "bitterness": 1,
+        "sweetness": -1,
+        "sourness": -1,
+        "bitterness": -1,
         "body": 0,
         "roast": -1,
         "fruitiness": 1
@@ -2457,11 +2457,11 @@ export const beerData = {
         "tags": "中等度数，琥珀色，上发酵，西欧，传统风格， 淡艾类，平衡"
       },
       "taste_profile": {
-        "sweetness": 1,
+        "sweetness": 0,
         "sourness": -1,
-        "bitterness": 1,
+        "bitterness": 0,
         "body": 0,
-        "roast": 1,
+        "roast": 0,
         "fruitiness": 1
       }
     },
@@ -2487,12 +2487,12 @@ export const beerData = {
         "tags": "高酒精烈度，淡色，琥珀色，任意发酵类型，窖 藏，西欧，传统风格，琥珀色艾尔类，突出麦芽味道"
       },
       "taste_profile": {
-        "sweetness": 1,
+        "sweetness": 0,
         "sourness": -1,
-        "bitterness": 1,
-        "body": 1,
-        "roast": 1,
-        "fruitiness": 1
+        "bitterness": 0,
+        "body": 0,
+        "roast": 0,
+        "fruitiness": 0
       }
     },
     {
@@ -2517,9 +2517,9 @@ export const beerData = {
         "tags": "高烈度，淡色，上发酵，西欧，传统风格，平衡"
       },
       "taste_profile": {
-        "sweetness": 1,
+        "sweetness": -1,
         "sourness": -1,
-        "bitterness": 1,
+        "bitterness": 0,
         "body": 0,
         "roast": -1,
         "fruitiness": 1
@@ -2546,11 +2546,11 @@ export const beerData = {
         "tags": "中等度数，淡色，上发酵，西欧，传统类型，苦 的"
       },
       "taste_profile": {
-        "sweetness": 1,
-        "sourness": 1,
+        "sweetness": -1,
+        "sourness": 0,
         "bitterness": 1,
         "body": 0,
-        "roast": 1,
+        "roast": -1,
         "fruitiness": 1
       }
     },
@@ -2576,10 +2576,10 @@ export const beerData = {
         "tags": "烈度很高，淡色，上发酵，西欧，传统风格，苦"
       },
       "taste_profile": {
-        "sweetness": 1,
+        "sweetness": -1,
         "sourness": -1,
         "bitterness": 1,
-        "body": 1,
+        "body": 0,
         "roast": -1,
         "fruitiness": 1
       }
@@ -2606,10 +2606,10 @@ export const beerData = {
         "tags": "普通烈度，淡色，上发酵，西欧，精酿风格，苦， 啤酒花味道"
       },
       "taste_profile": {
-        "sweetness": 1,
+        "sweetness": -1,
         "sourness": -1,
         "bitterness": 1,
-        "body": 0,
+        "body": -1,
         "roast": -1,
         "fruitiness": 1
       }
@@ -2636,11 +2636,11 @@ export const beerData = {
         "tags": "高烈度，琥珀色，上发酵，西欧，传统风格，麦 芽味道"
       },
       "taste_profile": {
-        "sweetness": 1,
+        "sweetness": 0,
         "sourness": -1,
-        "bitterness": 1,
-        "body": 1,
-        "roast": 1,
+        "bitterness": -1,
+        "body": 0,
+        "roast": 0,
         "fruitiness": 1
       }
     },
@@ -2666,9 +2666,9 @@ export const beerData = {
         "tags": "高烈度，淡色，上发酵，西欧，传统风格，苦"
       },
       "taste_profile": {
-        "sweetness": 1,
+        "sweetness": -1,
         "sourness": -1,
-        "bitterness": 1,
+        "bitterness": 0,
         "body": 0,
         "roast": -1,
         "fruitiness": 1
@@ -2723,10 +2723,10 @@ export const beerData = {
       },
       "taste_profile": {
         "sweetness": -1,
-        "sourness": 1,
-        "bitterness": 1,
+        "sourness": -1,
+        "bitterness": 0,
         "body": 0,
-        "roast": 1,
+        "roast": -1,
         "fruitiness": -1
       }
     },
@@ -2752,9 +2752,9 @@ export const beerData = {
         "tags": "普通烈度，琥珀色，上发酵，北美，历史， 平衡"
       },
       "taste_profile": {
-        "sweetness": 1,
-        "sourness": 1,
-        "bitterness": 1,
+        "sweetness": 0,
+        "sourness": 0,
+        "bitterness": 0,
         "body": 0,
         "roast": 1,
         "fruitiness": 0
@@ -2783,7 +2783,7 @@ export const beerData = {
       "taste_profile": {
         "sweetness": -1,
         "sourness": 1,
-        "bitterness": 1,
+        "bitterness": -1,
         "body": -1,
         "roast": -1,
         "fruitiness": -1
@@ -2812,7 +2812,7 @@ export const beerData = {
       "taste_profile": {
         "sweetness": 1,
         "sourness": -1,
-        "bitterness": 1,
+        "bitterness": -1,
         "body": 0,
         "roast": 1,
         "fruitiness": 1
@@ -2839,12 +2839,12 @@ export const beerData = {
         "tags": "淡色，上发酵，欧洲中部，历史，小麦啤酒类， 苦，烟熏"
       },
       "taste_profile": {
-        "sweetness": 1,
-        "sourness": 1,
-        "bitterness": 1,
+        "sweetness": -1,
+        "sourness": -1,
+        "bitterness": 0,
         "body": -1,
-        "roast": -1,
-        "fruitiness": 1
+        "roast": 0,
+        "fruitiness": -1
       }
     },
     {
@@ -2869,12 +2869,12 @@ export const beerData = {
         "tags": "中等度数，淡色，下发酵，拉格，北美，历史， 皮尔森啤酒类，苦，啤酒花香"
       },
       "taste_profile": {
-        "sweetness": 1,
+        "sweetness": -1,
         "sourness": -1,
         "bitterness": 1,
         "body": 0,
         "roast": -1,
-        "fruitiness": 1
+        "fruitiness": 0
       }
     },
     {
@@ -2899,10 +2899,10 @@ export const beerData = {
         "tags": "中等度数， 深色，任意(上下)发酵，北美，历史， 波特类啤酒，麦芽"
       },
       "taste_profile": {
-        "sweetness": 1,
+        "sweetness": 0,
         "sourness": -1,
-        "bitterness": 1,
-        "body": 1,
+        "bitterness": 0,
+        "body": 0,
         "roast": 1,
         "fruitiness": 0
       }
@@ -2929,11 +2929,11 @@ export const beerData = {
         "tags": "中等度数，琥珀色，上发酵，欧洲中部，历史， 小麦啤酒类"
       },
       "taste_profile": {
-        "sweetness": 1,
+        "sweetness": 0,
         "sourness": -1,
-        "bitterness": 1,
-        "body": 1,
-        "roast": 1,
+        "bitterness": -1,
+        "body": 0,
+        "roast": 0,
         "fruitiness": 1
       }
     },
@@ -2960,10 +2960,10 @@ export const beerData = {
       },
       "taste_profile": {
         "sweetness": 1,
-        "sourness": 1,
-        "bitterness": 1,
-        "body": 0,
-        "roast": 1,
+        "sourness": -1,
+        "bitterness": -1,
+        "body": 1,
+        "roast": 0,
         "fruitiness": 1
       }
     },
@@ -2988,9 +2988,9 @@ export const beerData = {
         "tags": "野菌发酵，北美，精酿风格，增味啤酒"
       },
       "taste_profile": {
-        "sweetness": 1,
-        "sourness": 1,
-        "bitterness": 1,
+        "sweetness": -1,
+        "sourness": 0,
+        "bitterness": 0,
         "body": 0,
         "roast": 0,
         "fruitiness": 1
@@ -3020,10 +3020,10 @@ export const beerData = {
       "taste_profile": {
         "sweetness": -1,
         "sourness": 1,
-        "bitterness": 1,
+        "bitterness": -1,
         "body": 0,
-        "roast": 1,
-        "fruitiness": -1
+        "roast": 0,
+        "fruitiness": 1
       }
     },
     {
@@ -3047,9 +3047,9 @@ export const beerData = {
         "tags": "野菌发酵、北美、精酿、增味啤酒、酸、水果"
       },
       "taste_profile": {
-        "sweetness": 1,
+        "sweetness": 0,
         "sourness": 1,
-        "bitterness": 0,
+        "bitterness": -1,
         "body": 0,
         "roast": 0,
         "fruitiness": 1
@@ -3075,7 +3075,7 @@ export const beerData = {
       "taste_profile": {
         "sweetness": -1,
         "sourness": 1,
-        "bitterness": 1,
+        "bitterness": -1,
         "body": 0,
         "roast": 0,
         "fruitiness": 1
@@ -3099,11 +3099,11 @@ export const beerData = {
         "tags": "增味啤酒、水果"
       },
       "taste_profile": {
-        "sweetness": 1,
-        "sourness": 1,
-        "bitterness": 1,
-        "body": 1,
-        "roast": 1,
+        "sweetness": 0,
+        "sourness": 0,
+        "bitterness": 0,
+        "body": 0,
+        "roast": 0,
         "fruitiness": 1
       }
     },
@@ -3125,11 +3125,11 @@ export const beerData = {
         "tags": "增味啤酒、水果、香料"
       },
       "taste_profile": {
-        "sweetness": 1,
-        "sourness": -1,
-        "bitterness": 1,
+        "sweetness": 0,
+        "sourness": 0,
+        "bitterness": 0,
         "body": 0,
-        "roast": 1,
+        "roast": 0,
         "fruitiness": 1
       }
     },
@@ -3153,7 +3153,7 @@ export const beerData = {
       },
       "taste_profile": {
         "sweetness": 0,
-        "sourness": -1,
+        "sourness": 0,
         "bitterness": 0,
         "body": 0,
         "roast": 0,
@@ -3180,9 +3180,9 @@ export const beerData = {
       "taste_profile": {
         "sweetness": -1,
         "sourness": 1,
-        "bitterness": 1,
+        "bitterness": 0,
         "body": 0,
-        "roast": 1,
+        "roast": -1,
         "fruitiness": 1
       }
     },
@@ -3204,12 +3204,12 @@ export const beerData = {
         "tags": "增味啤酒、香料"
       },
       "taste_profile": {
-        "sweetness": -1,
-        "sourness": -1,
-        "bitterness": 1,
-        "body": 1,
-        "roast": 1,
-        "fruitiness": 1
+        "sweetness": 0,
+        "sourness": 0,
+        "bitterness": 0,
+        "body": 0,
+        "roast": 0,
+        "fruitiness": 0
       }
     },
     {
@@ -3232,7 +3232,7 @@ export const beerData = {
       "taste_profile": {
         "sweetness": 1,
         "sourness": -1,
-        "bitterness": 1,
+        "bitterness": -1,
         "body": 1,
         "roast": 0,
         "fruitiness": 0
@@ -3285,9 +3285,9 @@ export const beerData = {
         "tags": "特种风格，香料，草本，蔬菜，现代精酿"
       },
       "taste_profile": {
-        "sweetness": 1,
-        "sourness": 1,
-        "bitterness": 1,
+        "sweetness": 0,
+        "sourness": 0,
+        "bitterness": 0,
         "body": 0,
         "roast": 0,
         "fruitiness": 1
@@ -3311,11 +3311,11 @@ export const beerData = {
         "tags": "增味啤酒"
       },
       "taste_profile": {
-        "sweetness": -1,
+        "sweetness": 0,
         "sourness": -1,
-        "bitterness": 1,
+        "bitterness": 0,
         "body": 0,
-        "roast": -1,
+        "roast": 0,
         "fruitiness": 0
       }
     },
@@ -3337,11 +3337,11 @@ export const beerData = {
         "tags": "增味啤酒"
       },
       "taste_profile": {
-        "sweetness": 0,
+        "sweetness": 1,
         "sourness": -1,
         "bitterness": 0,
-        "body": 1,
-        "roast": 1,
+        "body": 0,
+        "roast": 0,
         "fruitiness": 0
       }
     },
@@ -3366,10 +3366,10 @@ export const beerData = {
       "taste_profile": {
         "sweetness": 0,
         "sourness": -1,
-        "bitterness": 1,
-        "body": 1,
-        "roast": 1,
-        "fruitiness": 1
+        "bitterness": 0,
+        "body": 0,
+        "roast": 0,
+        "fruitiness": -1
       }
     },
     {
@@ -3391,10 +3391,10 @@ export const beerData = {
       "taste_profile": {
         "sweetness": 0,
         "sourness": -1,
-        "bitterness": 1,
+        "bitterness": 0,
         "body": 0,
         "roast": 0,
-        "fruitiness": 1
+        "fruitiness": 0
       }
     },
     {
@@ -3416,11 +3416,11 @@ export const beerData = {
         "tags": "增味啤酒、木桶"
       },
       "taste_profile": {
-        "sweetness": 1,
-        "sourness": 1,
-        "bitterness": 1,
-        "body": 1,
-        "roast": 1,
+        "sweetness": 0,
+        "sourness": 0,
+        "bitterness": 0,
+        "body": 0,
+        "roast": 0,
         "fruitiness": 0
       }
     },
@@ -3444,11 +3444,11 @@ export const beerData = {
         "tags": "增味啤酒，木桶"
       },
       "taste_profile": {
-        "sweetness": 1,
-        "sourness": 1,
+        "sweetness": 0,
+        "sourness": 0,
         "bitterness": 0,
-        "body": 1,
-        "roast": 1,
+        "body": 0,
+        "roast": 0,
         "fruitiness": 0
       }
     },
@@ -3471,7 +3471,7 @@ export const beerData = {
       },
       "taste_profile": {
         "sweetness": 0,
-        "sourness": -1,
+        "sourness": 0,
         "bitterness": 0,
         "body": 0,
         "roast": 0,
@@ -3496,7 +3496,7 @@ export const beerData = {
       },
       "taste_profile": {
         "sweetness": 0,
-        "sourness": -1,
+        "sourness": 0,
         "bitterness": 0,
         "body": 0,
         "roast": 0,
@@ -3522,12 +3522,12 @@ export const beerData = {
         "tags": "特色啤酒 附录 A： 其他分类方法 除了用于家酿竞赛指导（比如教育，学习，研究），许多啤酒爱好者要求BJCP风格有备用的归类。为了更好的满足其他需求， 附加的系统分类也被发展出来。备用分类在2015年风格指南中列出。 1. 根据2008年版风格的分类（严格） 2008年版分类和2015年版分类是完全一致的。其中任何未出现在 2008年版指南的啤酒都被纳入了2015年版指南的第23项特色啤酒 中。 (1)1. Light Lager 淡拉格 A. 1A. American Light Lager 美式淡拉格 B. 1B. American Lager 美式拉格 C. 2A. International Pale Lager 国际淡拉格 D. 4A. Munich Helles 慕尼黑清亮啤酒 E. 5C. Helles Exportbier 出口型清亮啤酒 (1)2. Pilsner 皮尔森 A. 5D. German Pils 德式皮尔森 B. 3B. Czech Premium Pale Lager 捷克优质淡拉格 C. 27. Historical Beer (Pre-Prohibition Lager) ( 禁 酒令时代之前拉格) (1)3. European Amber Lager 欧洲琥珀拉格 A. 7A. Vienna Lager 维也纳拉格 B. 6A. Märzen 德国三月啤酒 (1)4. Dark Lager 深色拉格 A. 2C. International Dark Lager 国际深色拉格 B. 8A. Munich Dunkel 慕尼黑深色啤酒 C. 8B. Schwarzbier 德国黑啤 (1)5. Bock 博克 A. 4C. Helles Bock 清亮博克 B. 6C. Dunkles Bock 深色博克 C. 9A. Doppelbock 双料博克 D. 9B. Eisbock 冰馏博克 (1)6. Light Hybrid Beer 淡混合啤酒 A. 1C. Cream Ale 奶油艾尔 B. 18A. Blonde Ale 金色艾尔 C. 5B. Kölsch 科隆啤酒 D. 1D. American Wheat Beer 美式小麦啤酒 (1)7. Amber Hybrid Beer 琥珀色混合啤酒 A. 2B. International Amber Lager 国际琥珀拉格 B. 19B. California Common 加州啤酒 C. 7B. Altbier (德国) 老式啤酒 (1)8. English Pale Ale 英式淡艾尔 A. 11A. Ordinary Bitter 普通苦啤 B. 11B. Best Bitter 最佳苦啤 C. 11C. Strong Bitter 高度苦啤 (1)9. Scottish and Irish Ale 苏格兰式和爱尔兰式艾尔 A. 14A. Scottish Light 苏格兰式淡啤 B. 14B. Scottish Heavy 苏格兰式浓啤 C. 14C. Scottish Export 苏格兰出口啤酒 D. 15A. Irish Red Ale 爱尔兰式红色艾尔 E. 17C. Wee Heavy 浓啤酒 (1)10. American Ale 美式艾尔 A. 18B. American Pale Ale 美式淡艾尔 B. 19A. American Amber Ale 美式琥珀艾尔 C. 19C. American Brown Ale 美式棕色艾尔 (1)11. English Brown Ale 英式棕色艾尔 A. 13A. Dark Mild 深色啤酒 B. 27. Historical Beer (London Brown Ale) 伦敦棕色 艾尔 C. 13B. British Brown Ale 不列颠棕色艾尔 (1)12. Porter 波特 A. 13C. English Porter 英式波特 B. 20A. American Porter 美式波特 C. 9C. Baltic Porter 波罗的海波特 (1)13. Stout 世涛 A. 15B. Irish Stout 爱尔兰式世涛 B. 16A. Sweet Stout 甜世涛 C. 16B. Oatmeal Stout 燕麦世涛 A. 16D. Foreign Export Stout出口型世涛 D. 20B. American Stout 美式世涛 E. 20C. Imperial Stout 帝国世涛 (1)14. India Pale Ale (IPA) 印度淡艾尔 （IPA） A. 12C. English IPA 英式IPA B. 21A. American IPA 美式IPA C. 22A. Double IPA 双料IPA (1)15. German Wheat and Rye Beer 德式小麦和黑麦啤酒 A. 10A. Weissbier 德式白啤 B. 10B. Dunkles Weissbier 德式深色白啤 C. 10C. Weizenbock 小麦博克 D. 27. Historical Beer (Roggenbier) 德式黑麦啤酒 (1)16. Belgian and French Ale比利时和法式艾尔 A. 24A. Witbier 比利时白啤 B. 24B. Belgian Pale Ale 比利时淡艾尔 C. 25B. Saison 赛松啤酒(季节啤酒) D. 24C. Bière de Garde 法式贮藏啤酒 E. 34A. Clone Beer (Belgian styles only) 克隆啤酒 (仅限比利时风格) (1)17. Sour Ale 酸艾尔 A. 23A. Berliner Weisse 柏林白啤 B. 23B. Flanders Red Ale 弗兰德斯红色艾尔 C. 23C. Oud Bruin 老式棕色啤酒 D. 23D. Lambic 兰比克 E. 23E. Gueuze 贵兹 F. 23F. Fruit Lambic 果味兰比克 (1)18. Belgian Strong Ale 比利时烈性艾尔 A. 25A. Belgian Blond Ale 比利时金色艾尔 B. 26B. Belgian Dubbel 比利时双料 C. 26C. Belgian Tripel 比利时三料 D. 25C. Belgian Golden Strong Ale 比利时黄金烈性 艾 尔 E. 26D. Belgian Dark Strong Ale 比利时深色烈性艾尔 (1)19. Strong Ale 烈性艾尔 A. 17B. Old Ale 老式艾尔 B. 17D. English Barleywine 英式大麦酒 C. 22C. American Barleywine 美式大麦酒 (1)20. Fruit Beer 水果啤酒 A. 29A. Fruit Beer 水果啤酒 (1)21. Spice/Herb/Vegetable Beer 香料/香草/蔬菜 啤酒"
       },
       "taste_profile": {
-        "sweetness": 1,
-        "sourness": 1,
-        "bitterness": 1,
-        "body": 1,
-        "roast": 1,
-        "fruitiness": 1
+        "sweetness": 0,
+        "sourness": 0,
+        "bitterness": 0,
+        "body": 0,
+        "roast": 0,
+        "fruitiness": 0
       }
     }
   ],
