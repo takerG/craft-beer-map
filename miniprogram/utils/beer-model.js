@@ -71,6 +71,30 @@ const TASTE_FILTERS = [
     highLabel: '果香',
     reasonLabels: { '-1': '果香内敛', 0: '果香适中', 1: '果香明显' },
   },
+  {
+    id: 'hopAroma',
+    label: '酒花香',
+    lowLabel: '少酒花',
+    neutralLabel: '中立',
+    highLabel: '酒花香',
+    reasonLabels: { '-1': '酒花内敛', 0: '酒花适中', 1: '酒花香明显' },
+  },
+  {
+    id: 'fermentation',
+    label: '发酵',
+    lowLabel: '干净',
+    neutralLabel: '中立',
+    highLabel: '个性',
+    reasonLabels: { '-1': '发酵干净', 0: '发酵适中', 1: '发酵个性明显' },
+  },
+  {
+    id: 'strength',
+    label: '强度',
+    lowLabel: '轻盈',
+    neutralLabel: '中立',
+    highLabel: '强劲',
+    reasonLabels: { '-1': '强度轻盈', 0: '强度适中', 1: '酒精强度高' },
+  },
 ];
 
 const categoryById = new Map();
@@ -439,11 +463,13 @@ function scoreTasteMatch(style, normalizedFilters, activeFilters) {
   if (style.key) score += 3;
   score += getTasteNameBoost(style, normalizedFilters);
 
+  const scoreCap = partialCount > 0 ? 88 : 99;
+
   return {
     style,
     exactCount,
     partialCount,
-    matchScore: Math.min(99, score),
+    matchScore: Math.min(scoreCap, score),
     matchReasons: [...exactReasons, ...partialReasons].slice(0, 3),
   };
 }
@@ -457,6 +483,9 @@ function getTasteNameBoost(style, normalizedFilters) {
   if (normalizedFilters.bitterness === 1 && /苦|bitter|ipa|pils/.test(text)) boost += 6;
   if (normalizedFilters.roast === 1 && /世涛|波特|stout|porter|dark|black/.test(text)) boost += 5;
   if (normalizedFilters.fruitiness === 1 && /水果|fruit|hazy|lambic|saison/.test(text)) boost += 5;
+  if (normalizedFilters.hopAroma === 1 && /hop|hoppy|ipa|pils|pale ale/.test(text)) boost += 6;
+  if (normalizedFilters.fermentation === 1 && /belgian|saison|lambic|gueuze|brett|wild|weiss|weizen/.test(text)) boost += 6;
+  if (normalizedFilters.strength === 1 && /strong|double|imperial|barley|bock|wine|quadrupel/.test(text)) boost += 5;
 
   return boost;
 }

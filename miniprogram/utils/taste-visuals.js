@@ -47,6 +47,30 @@ const WHEEL_SEGMENTS = [
     color: '#fb7185',
     mutedColor: '#322f3b',
   },
+  {
+    id: 'hopAroma',
+    dimension: '酒花香',
+    highLabel: '酒花香',
+    lowLabel: '内敛',
+    color: '#7dd3fc',
+    mutedColor: '#233747',
+  },
+  {
+    id: 'fermentation',
+    dimension: '发酵',
+    highLabel: '个性',
+    lowLabel: '干净',
+    color: '#c084fc',
+    mutedColor: '#332d45',
+  },
+  {
+    id: 'strength',
+    dimension: '强度',
+    highLabel: '强劲',
+    lowLabel: '轻盈',
+    color: '#f97316',
+    mutedColor: '#352f27',
+  },
 ];
 
 export function buildFlavorWheelVisual(filters, filterState = {}, results = []) {

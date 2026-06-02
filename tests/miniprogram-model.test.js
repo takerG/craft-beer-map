@@ -57,7 +57,7 @@ test('extension groups expose the full market style learning layer', () => {
 });
 
 test('extension styles assign three-state taste profiles for choose filters', () => {
-  const dimensions = ['sweetness', 'sourness', 'bitterness', 'body', 'roast', 'fruitiness'];
+  const dimensions = ['sweetness', 'sourness', 'bitterness', 'body', 'roast', 'fruitiness', 'hopAroma', 'fermentation', 'strength'];
 
   extensionStyles.forEach((style) => {
     assert.equal(typeof style.taste_profile, 'object', `${style.id} should define taste_profile`);
@@ -187,7 +187,7 @@ test('taste filters expose three-state dimensions for the choose tab', () => {
 
   assert.deepEqual(
     filters.map((filter) => filter.id),
-    ['sweetness', 'sourness', 'bitterness', 'body', 'roast', 'fruitiness'],
+    ['sweetness', 'sourness', 'bitterness', 'body', 'roast', 'fruitiness', 'hopAroma', 'fermentation', 'strength'],
   );
   filters.forEach((filter) => {
     assert.equal(filter.options.length, 3);
@@ -215,7 +215,7 @@ test('taste matching returns lightweight scored style summaries', () => {
 
 test('taste matching includes calibrated extension styles', () => {
   const matches = getTasteMatches(
-    { sweetness: -1, sourness: -1, bitterness: 1, body: 0, roast: -1, fruitiness: 1 },
+    { sweetness: -1, sourness: -1, bitterness: 1, body: 0, roast: -1, fruitiness: 1, hopAroma: 1 },
     20,
   );
 
@@ -230,6 +230,9 @@ test('taste matching includes calibrated extension styles', () => {
     body: 0,
     roast: -1,
     fruitiness: 1,
+    hopAroma: 1,
+    fermentation: 0,
+    strength: 0,
   });
 });
 
@@ -247,6 +250,35 @@ test('taste matching ranks exact taste-profile matches before partial matches', 
     body: 1,
     roast: 1,
     fruitiness: -1,
+    hopAroma: -1,
+    fermentation: -1,
+    strength: 0,
+  });
+});
+
+test('taste matching can distinguish hoppy aroma from bitterness', () => {
+  const matches = getTasteMatches(
+    { sweetness: 0, sourness: -1, bitterness: 0, body: 0, roast: -1, fruitiness: 1, hopAroma: 1 },
+    12,
+  );
+
+  const hazyIpa = matches.find((match) => match.code === '21C');
+
+  assert.ok(hazyIpa);
+  assert.equal(hazyIpa.taste_profile.hopAroma, 1);
+  assert.equal(hazyIpa.taste_profile.bitterness, 0);
+});
+
+test('taste matching does not score neutral sweetness as a near-perfect sweet match', () => {
+  const matches = getTasteMatches(
+    { sweetness: 1, sourness: 1, bitterness: -1, body: 0, roast: 0, fruitiness: 0 },
+    12,
+  );
+  const neutralSweetSours = matches.filter((match) => match.taste_profile.sweetness === 0);
+
+  assert.ok(neutralSweetSours.some((match) => ['23B', '23F'].includes(match.code)));
+  neutralSweetSours.forEach((match) => {
+    assert.ok(match.matchScore < 90, `${match.code || match.id} should be a partial match, not ${match.matchScore}%`);
   });
 });
 

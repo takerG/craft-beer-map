@@ -125,9 +125,10 @@
               hover-class="tap-hover"
               hover-stay-time="80"
               data-style-id="{{item.id}}"
+              data-item-kind="{{item.kind}}"
               bindtap="openStyle"
             >
-              <text>{{item.code}}</text>
+              <text>{{item.codeLabel}}</text>
             </view>
           </view>
         </view>
@@ -150,9 +151,10 @@
         hover-class="tap-hover"
         hover-stay-time="80"
         data-style-id="{{item.id}}"
+        data-item-kind="{{item.kind}}"
         bindtap="openStyle"
       >
-        <text class="result-code">{{item.code}}</text>
+        <text class="result-code">{{item.codeLabel}}</text>
         <view class="result-main">
           <text class="result-name">{{item.displayName}}</text>
           <text class="result-reason">{{item.reasonText}}</text>

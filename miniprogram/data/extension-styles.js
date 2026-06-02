@@ -38,7 +38,17 @@ export const extensionGroups = [
   },
 ];
 
-const TASTE_PROFILE_DIMENSIONS = ['sweetness', 'sourness', 'bitterness', 'body', 'roast', 'fruitiness'];
+const TASTE_PROFILE_DIMENSIONS = [
+  'sweetness',
+  'sourness',
+  'bitterness',
+  'body',
+  'roast',
+  'fruitiness',
+  'hopAroma',
+  'fermentation',
+  'strength',
+];
 
 // Three-state taste hints for the choose tab:
 // -1 = low / avoids this lane, 0 = moderate or style-dependent, 1 = prominent.
@@ -110,6 +120,75 @@ const EXTENSION_TASTE_PROFILE_VALUES = {
   'ext-gluten-free-beer': [0, -1, 0, 0, 0, 0],
   'ext-non-alcohol-malt-beverage': [0, -1, 0, -1, 0, 0],
   'ext-dessert-pastry-beer': [1, -1, -1, 1, 1, 1],
+};
+
+// Ordered as [hopAroma, fermentation, strength].
+const EXTENSION_EXTRA_TASTE_PROFILE_VALUES = {
+  'ext-session-ipa': [1, 0, -1],
+  'ext-hazy-pale-ale': [1, 0, 0],
+  'ext-american-strong-pale-ale': [1, 0, 1],
+  'ext-hazy-strong-pale-ale': [1, 0, 1],
+  'ext-american-belgo-ale': [1, 1, 0],
+  'ext-american-black-ale': [1, 0, 0],
+  'ext-double-hoppy-red-ale': [1, 0, 1],
+  'ext-imperial-red-ale': [1, 0, 1],
+  'ext-hazy-double-ipa': [1, 0, 1],
+  'ext-west-coast-ipa': [1, 0, 0],
+  'ext-experimental-ipa': [1, 0, 0],
+  'ext-india-pale-lager': [1, -1, 0],
+  'ext-west-coast-pilsener': [1, -1, 0],
+  'ext-italian-pilsener': [1, -1, 0],
+  'ext-fresh-hop-beer': [1, 0, 0],
+  'ext-international-pale-ale': [1, 0, 0],
+  'ext-new-zealand-pale-ale': [1, 0, 0],
+  'ext-new-zealand-ipa': [1, 0, 0],
+  'ext-classic-australian-pale-ale': [0, 1, 0],
+  'ext-australian-pale-ale': [1, 0, 0],
+  'ext-american-sour-ale': [-1, 1, 0],
+  'ext-fruited-sour-ale': [-1, 1, 0],
+  'ext-contemporary-gose': [-1, 1, -1],
+  'ext-contemporary-belgian-spontaneous': [-1, 1, 0],
+  'ext-barrel-aged-sour-beer': [-1, 1, 0],
+  'ext-wild-beer': [-1, 1, 0],
+  'ext-mixed-culture-brett-beer': [-1, 1, 0],
+  'ext-belgian-table-beer': [0, 1, -1],
+  'ext-belgian-session-ale': [0, 1, -1],
+  'ext-speciale-belge': [0, 1, 0],
+  'ext-belgian-quadrupel': [-1, 1, 1],
+  'ext-other-belgian-ale': [0, 1, 0],
+  'ext-belgian-fruit-beer': [-1, 1, 0],
+  'ext-adambier': [0, 0, 1],
+  'ext-dutch-kuit': [-1, 0, 0],
+  'ext-gotlandsdricke': [-1, 1, 0],
+  'ext-breslau-schoeps': [-1, 0, 0],
+  'ext-franconian-rotbier': [-1, -1, 0],
+  'ext-contemporary-american-lager': [0, -1, -1],
+  'ext-contemporary-american-light-lager': [-1, -1, -1],
+  'ext-american-pilsener': [1, -1, 0],
+  'ext-contemporary-american-pilsener': [1, -1, 0],
+  'ext-american-malt-liquor': [-1, -1, 1],
+  'ext-american-maerzen-oktoberfest': [-1, -1, 0],
+  'ext-mexican-light-lager': [-1, -1, -1],
+  'ext-mexican-pale-lager': [-1, -1, -1],
+  'ext-mexican-amber-lager': [-1, -1, 0],
+  'ext-mexican-dark-lager': [-1, -1, 0],
+  'ext-international-pilsener': [0, -1, 0],
+  'ext-rice-lager': [0, -1, 0],
+  'ext-fruit-wheat-beer': [-1, 0, 0],
+  'ext-field-beer': [0, 0, 0],
+  'ext-pumpkin-spice-beer': [-1, 0, 0],
+  'ext-pumpkin-squash-beer': [-1, 0, 0],
+  'ext-chocolate-cocoa-beer': [-1, 0, 0],
+  'ext-coffee-beer': [-1, 0, 0],
+  'ext-chili-pepper-beer': [0, 0, 0],
+  'ext-specialty-honey-beer': [0, 0, 0],
+  'ext-rye-beer': [0, 0, 0],
+  'ext-ginjo-sake-yeast-beer': [-1, 1, 0],
+  'ext-aged-beer': [0, 0, 0],
+  'ext-other-strong-ale-lager': [0, 0, 1],
+  'ext-gluten-free-beer': [0, 0, 0],
+  'ext-non-alcohol-malt-beverage': [0, -1, -1],
+  'ext-dessert-pastry-beer': [-1, 0, 1],
 };
 
 export const extensionStyles = [
@@ -897,13 +976,15 @@ export const extensionStyles = [
 
 extensionStyles.forEach((style) => {
   const values = EXTENSION_TASTE_PROFILE_VALUES[style.id];
-  if (!values) {
+  const extraValues = EXTENSION_EXTRA_TASTE_PROFILE_VALUES[style.id];
+  if (!values || !extraValues) {
     throw new Error(`Missing extension taste profile for ${style.id}`);
   }
 
+  const profileValues = [...values, ...extraValues];
   style.taste_profile = Object.fromEntries(
     TASTE_PROFILE_DIMENSIONS.map((dimension, index) => {
-      const value = values[index];
+      const value = profileValues[index];
       return [dimension, [-1, 0, 1].includes(value) ? value : 0];
     }),
   );

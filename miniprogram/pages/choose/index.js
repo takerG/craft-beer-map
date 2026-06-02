@@ -10,6 +10,9 @@ const DEFAULT_FILTER_STATE = {
   body: 0,
   roast: 0,
   fruitiness: 0,
+  hopAroma: 0,
+  fermentation: 0,
+  strength: 0,
 };
 
 const VISUAL_TABS = [
@@ -94,10 +97,14 @@ Page({
   },
 
   openStyle(event) {
-    const { styleId } = event.currentTarget.dataset;
+    const { styleId, itemKind } = event.currentTarget.dataset;
     if (!styleId) return;
 
-    trackEvent('choose_style_open', { styleId });
+    trackEvent('choose_style_open', { styleId, itemKind });
+    if (itemKind === 'extension') {
+      navigateOnce(this, `/pages/extension-style/index?styleId=${styleId}`);
+      return;
+    }
     navigateOnce(this, `/pages/style/index?styleId=${styleId}`);
   },
 
@@ -105,6 +112,7 @@ Page({
     const filters = getTasteFilters();
     const results = getTasteMatches(filterState, 12).map((result) => ({
       ...result,
+      codeLabel: result.kind === 'extension' ? 'EX' : result.code,
       reasonText: result.matchReasons.join('、') || '风味轮廓接近',
     }));
     const visualData = buildVisualData(filters, filterState, results);

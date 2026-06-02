@@ -257,6 +257,24 @@ test('extension learning pages are declared and linked from explore and search',
   assert.match(searchWxml, /扩展风格/);
 });
 
+test('choose taste matches route extension styles to extension details', () => {
+  const chooseJs = readMiniPage('pages/choose/index.js');
+  const chooseWxml = readMiniPage('pages/choose/index.wxml');
+
+  assert.match(chooseJs, /itemKind/);
+  assert.match(chooseJs, /extension-style/);
+  assert.match(chooseWxml, /data-item-kind="{{item.kind}}"/);
+});
+
+test('choose taste matches reserve a code label for extension styles', () => {
+  const chooseJs = readMiniPage('pages/choose/index.js');
+  const chooseWxml = readMiniPage('pages/choose/index.wxml');
+
+  assert.match(chooseJs, /codeLabel/);
+  assert.match(chooseJs, /EX/);
+  assert.match(chooseWxml, /{{item\.codeLabel}}/);
+});
+
 test('search clear button keeps its label centered', () => {
   const searchWxss = readMiniPage('pages/search/index.wxss');
 
@@ -351,6 +369,14 @@ test('choose tab provides taste filters, switchable visuals, and fixed results',
   assert.doesNotMatch(chooseWxss, /\.wheel-chart\s*\{[^}]*conic-gradient/s);
   assert.match(chooseWxss, /\.visual-region/);
   assert.match(chooseWxss, /\.result-region/);
+});
+
+test('choose tab default state knows the expanded taste dimensions', () => {
+  const chooseJs = readMiniPage('pages/choose/index.js');
+
+  ['hopAroma', 'fermentation', 'strength'].forEach((dimension) => {
+    assert.match(chooseJs, new RegExp(`${dimension}:\\s*0`));
+  });
 });
 
 function listFiles(dir, extension) {

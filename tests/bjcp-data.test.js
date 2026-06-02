@@ -129,6 +129,9 @@ const tasteProfileDimensions = [
   'body',
   'roast',
   'fruitiness',
+  'hopAroma',
+  'fermentation',
+  'strength',
 ];
 
 function normalizeName(value) {
@@ -182,6 +185,9 @@ test('choose taste profiles keep representative styles in expected taste lanes',
     body: -1,
     roast: -1,
     fruitiness: 0,
+    hopAroma: -1,
+    fermentation: 0,
+    strength: -1,
   });
   assert.deepEqual(byCode.get('5D').taste_profile, {
     sweetness: -1,
@@ -190,6 +196,9 @@ test('choose taste profiles keep representative styles in expected taste lanes',
     body: -1,
     roast: -1,
     fruitiness: -1,
+    hopAroma: 1,
+    fermentation: -1,
+    strength: 0,
   });
   assert.deepEqual(byCode.get('21C').taste_profile, {
     sweetness: 0,
@@ -198,6 +207,9 @@ test('choose taste profiles keep representative styles in expected taste lanes',
     body: 0,
     roast: -1,
     fruitiness: 1,
+    hopAroma: 1,
+    fermentation: 0,
+    strength: 0,
   });
   assert.deepEqual(byCode.get('23A').taste_profile, {
     sweetness: -1,
@@ -206,6 +218,9 @@ test('choose taste profiles keep representative styles in expected taste lanes',
     body: -1,
     roast: -1,
     fruitiness: 1,
+    hopAroma: -1,
+    fermentation: 1,
+    strength: -1,
   });
   assert.deepEqual(byCode.get('16A').taste_profile, {
     sweetness: 1,
@@ -214,5 +229,19 @@ test('choose taste profiles keep representative styles in expected taste lanes',
     body: 1,
     roast: 1,
     fruitiness: -1,
+    hopAroma: -1,
+    fermentation: -1,
+    strength: 0,
+  });
+  assert.deepEqual(byCode.get('31B').taste_profile, {
+    sweetness: 0,
+    sourness: -1,
+    bitterness: 0,
+    body: 0,
+    roast: 0,
+    fruitiness: 0,
+    hopAroma: 0,
+    fermentation: 0,
+    strength: 0,
   });
 });

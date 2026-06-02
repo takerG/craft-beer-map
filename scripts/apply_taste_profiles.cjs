@@ -4,7 +4,17 @@ const path = require('path');
 const root = path.resolve(__dirname, '..');
 const sourcePath = path.join(root, 'data', 'beer-data-source.json');
 
-const DIMENSIONS = ['sweetness', 'sourness', 'bitterness', 'body', 'roast', 'fruitiness'];
+const DIMENSIONS = [
+  'sweetness',
+  'sourness',
+  'bitterness',
+  'body',
+  'roast',
+  'fruitiness',
+  'hopAroma',
+  'fermentation',
+  'strength',
+];
 
 // Three-state taste hints for the choose tab:
 // -1 = low / avoids this lane, 0 = moderate or style-dependent, 1 = prominent.
@@ -119,7 +129,7 @@ const TASTE_PROFILES = {
   '30C': [1, -1, -1, 1, 0, 1],
   '30D': [0, 0, 0, 0, 0, 1],
   '31A': [0, -1, 0, 0, 0, 0],
-  '31B': [1, -1, 0, 0, 0, 0],
+  '31B': [0, -1, 0, 0, 0, 0],
   '32A': [0, -1, 0, 0, 0, -1],
   '32B': [0, -1, 0, 0, 0, 0],
   '33A': [0, 0, 0, 0, 0, 0],
@@ -129,20 +139,143 @@ const TASTE_PROFILES = {
   '34C': [0, 0, 0, 0, 0, 0],
 };
 
+// Extra dimensions calibrated from recurring official sensory fields:
+// hop aroma/flavor, fermentation character, and alcoholic strength/warmth.
+// Values are ordered as [hopAroma, fermentation, strength].
+const EXTRA_TASTE_PROFILES = {
+  '1A': [-1, -1, -1],
+  '1B': [-1, -1, -1],
+  '1C': [-1, 0, -1],
+  '1D':  [0, 0, 0],
+  '2A': [-1, -1, -1],
+  '2B': [-1, -1, 0],
+  '2C': [-1, -1, 0],
+  '3A': [0, -1, -1],
+  '3B': [0, -1, 0],
+  '3C': [0, -1, 0],
+  '3D': [-1, -1, 0],
+  '4A': [-1, -1, 0],
+  '4B': [-1, -1, 0],
+  '4C': [-1, -1, 1],
+  '5A': [0, -1, -1],
+  '5B': [0, 0, -1],
+  '5C': [0, -1, 0],
+  '5D': [1, -1, 0],
+  '6A': [-1, -1, 0],
+  '6B': [-1, -1, 0],
+  '6C': [-1, -1, 1],
+  '7A': [-1, -1, 0],
+  '7B': [0, -1, 0],
+  '8A': [-1, -1, 0],
+  '8B': [-1, -1, 0],
+  '9A': [-1, -1, 1],
+  '9B': [-1, -1, 1],
+  '9C': [-1, -1, 1],
+  '10A': [-1, 1, 0],
+  '10B': [-1, 1, 0],
+  '10C': [-1, 1, 1],
+  '11A': [0, 1, -1],
+  '11B': [0, 1, 0],
+  '11C': [0, 1, 0],
+  '12A': [1, 1, -1],
+  '12B': [0, 1, 0],
+  '12C': [1, 1, 0],
+  '13A': [-1, 1, -1],
+  '13B': [-1, 1, 0],
+  '13C': [-1, 1, 0],
+  '14A': [-1, 0, -1],
+  '14B': [-1, 0, -1],
+  '14C': [-1, 0, 0],
+  '15A': [-1, 0, 0],
+  '15B': [-1, -1, 0],
+  '15C': [-1, -1, 0],
+  '16A': [-1, -1, 0],
+  '16B': [-1, -1, 0],
+  '16C': [-1, 1, 1],
+  '16D': [-1, 1, 1],
+  '17A': [0, 1, 1],
+  '17B': [0, 1, 1],
+  '17C': [-1, 0, 1],
+  '17D': [0, 1, 1],
+  '18A': [0, 0, 0],
+  '18B': [1, 0, 0],
+  '19A': [1, 0, 0],
+  '19B': [0, -1, 0],
+  '19C': [1, 0, 0],
+  '20A': [1, 0, 0],
+  '20B': [1, 0, 0],
+  '20C': [0, 1, 1],
+  '21A': [1, 0, 0],
+  '21B': [1, 0, 0],
+  '21C': [1, 0, 0],
+  '22A': [1, 0, 1],
+  '22B': [1, 0, 1],
+  '22C': [1, 1, 1],
+  '22D': [0, 1, 1],
+  '23A': [-1, 1, -1],
+  '23B': [-1, 1, 0],
+  '23C': [-1, 1, 0],
+  '23D': [-1, 1, 0],
+  '23E': [-1, 1, 0],
+  '23F': [-1, 1, 0],
+  '23G': [-1, 1, -1],
+  '24A': [-1, 1, 0],
+  '24B': [0, 1, 0],
+  '24C': [-1, 0, 0],
+  '25A': [0, 1, 1],
+  '25B': [0, 1, 0],
+  '25C': [0, 1, 1],
+  '26A': [0, 1, 0],
+  '26B': [-1, 1, 1],
+  '26C': [0, 1, 1],
+  '26D': [-1, 1, 1],
+  '27A': [0, -1, 0],
+  '27B': [0, -1, 0],
+  '27C': [-1, 1, -1],
+  '27D': [-1, 1, -1],
+  '27E': [0, -1, -1],
+  '27F': [1, -1, 0],
+  '27G': [0, 0, 0],
+  '27H': [-1, 1, 0],
+  '27I': [-1, 1, 1],
+  '28A': [-1, 1, 0],
+  '28B': [-1, 1, 0],
+  '28C': [-1, 1, 0],
+  '28D': [-1, 0, 0],
+  '29A': [0, 0, 0],
+  '29B': [0, 0, 0],
+  '29C': [0, 0, 0],
+  '29D': [-1, 0, 0],
+  '30A': [0, 0, 0],
+  '30B': [-1, 0, 0],
+  '30C': [-1, 0, 1],
+  '30D': [0, 0, 0],
+  '31A': [0, 0, 0],
+  '31B': [0, 0, 0],
+  '32A': [0, 0, 0],
+  '32B': [0, 0, 0],
+  '33A': [0, 0, 0],
+  '33B': [0, 0, 0],
+  '34A': [0, 0, 0],
+  '34B': [0, 0, 0],
+  '34C': [0, 0, 0],
+};
+
 const data = JSON.parse(fs.readFileSync(sourcePath, 'utf8'));
 const missing = [];
 
 data.styles = data.styles.map((style) => {
   const code = style.code || style.id;
   const values = TASTE_PROFILES[code];
+  const extraValues = EXTRA_TASTE_PROFILES[code];
 
-  if (!values) {
+  if (!values || !extraValues) {
     missing.push(code);
   }
 
   return {
     ...style,
-    taste_profile: profileFromValues(values || [0, 0, 0, 0, 0, 0]),
+    taste_profile: profileFromValues([...(values || [0, 0, 0, 0, 0, 0]), ...(extraValues || [0, 0, 0])]),
   };
 });
 

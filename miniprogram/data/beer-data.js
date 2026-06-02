@@ -200,7 +200,10 @@ export const beerData = {
         "bitterness": -1,
         "body": -1,
         "roast": -1,
-        "fruitiness": -1
+        "fruitiness": -1,
+        "hopAroma": -1,
+        "fermentation": -1,
+        "strength": -1
       }
     },
     {
@@ -230,7 +233,10 @@ export const beerData = {
         "bitterness": -1,
         "body": -1,
         "roast": -1,
-        "fruitiness": -1
+        "fruitiness": -1,
+        "hopAroma": -1,
+        "fermentation": -1,
+        "strength": -1
       }
     },
     {
@@ -260,7 +266,10 @@ export const beerData = {
         "bitterness": -1,
         "body": -1,
         "roast": -1,
-        "fruitiness": 0
+        "fruitiness": 0,
+        "hopAroma": -1,
+        "fermentation": 0,
+        "strength": -1
       }
     },
     {
@@ -290,7 +299,10 @@ export const beerData = {
         "bitterness": 0,
         "body": 0,
         "roast": -1,
-        "fruitiness": 1
+        "fruitiness": 1,
+        "hopAroma": 0,
+        "fermentation": 0,
+        "strength": 0
       }
     },
     {
@@ -320,7 +332,10 @@ export const beerData = {
         "bitterness": 0,
         "body": -1,
         "roast": -1,
-        "fruitiness": -1
+        "fruitiness": -1,
+        "hopAroma": -1,
+        "fermentation": -1,
+        "strength": -1
       }
     },
     {
@@ -349,7 +364,10 @@ export const beerData = {
         "bitterness": 0,
         "body": 0,
         "roast": 0,
-        "fruitiness": -1
+        "fruitiness": -1,
+        "hopAroma": -1,
+        "fermentation": -1,
+        "strength": 0
       }
     },
     {
@@ -378,7 +396,10 @@ export const beerData = {
         "bitterness": -1,
         "body": 0,
         "roast": 1,
-        "fruitiness": -1
+        "fruitiness": -1,
+        "hopAroma": -1,
+        "fermentation": -1,
+        "strength": 0
       }
     },
     {
@@ -407,7 +428,10 @@ export const beerData = {
         "bitterness": 1,
         "body": -1,
         "roast": -1,
-        "fruitiness": 0
+        "fruitiness": 0,
+        "hopAroma": 0,
+        "fermentation": -1,
+        "strength": -1
       }
     },
     {
@@ -437,7 +461,10 @@ export const beerData = {
         "bitterness": 1,
         "body": 0,
         "roast": -1,
-        "fruitiness": 0
+        "fruitiness": 0,
+        "hopAroma": 0,
+        "fermentation": -1,
+        "strength": 0
       }
     },
     {
@@ -467,7 +494,10 @@ export const beerData = {
         "bitterness": 0,
         "body": 0,
         "roast": 1,
-        "fruitiness": 0
+        "fruitiness": 0,
+        "hopAroma": 0,
+        "fermentation": -1,
+        "strength": 0
       }
     },
     {
@@ -496,7 +526,10 @@ export const beerData = {
         "bitterness": 0,
         "body": 0,
         "roast": 1,
-        "fruitiness": 0
+        "fruitiness": 0,
+        "hopAroma": -1,
+        "fermentation": -1,
+        "strength": 0
       }
     },
     {
@@ -525,7 +558,10 @@ export const beerData = {
         "bitterness": 0,
         "body": 0,
         "roast": -1,
-        "fruitiness": -1
+        "fruitiness": -1,
+        "hopAroma": -1,
+        "fermentation": -1,
+        "strength": 0
       }
     },
     {
@@ -554,7 +590,10 @@ export const beerData = {
         "bitterness": 0,
         "body": 0,
         "roast": -1,
-        "fruitiness": -1
+        "fruitiness": -1,
+        "hopAroma": -1,
+        "fermentation": -1,
+        "strength": 0
       }
     },
     {
@@ -584,7 +623,10 @@ export const beerData = {
         "bitterness": 0,
         "body": 1,
         "roast": -1,
-        "fruitiness": -1
+        "fruitiness": -1,
+        "hopAroma": -1,
+        "fermentation": -1,
+        "strength": 1
       }
     },
     {
@@ -613,7 +655,10 @@ export const beerData = {
         "bitterness": 1,
         "body": -1,
         "roast": -1,
-        "fruitiness": -1
+        "fruitiness": -1,
+        "hopAroma": 0,
+        "fermentation": -1,
+        "strength": -1
       }
     },
     {
@@ -642,7 +687,10 @@ export const beerData = {
         "bitterness": 0,
         "body": -1,
         "roast": -1,
-        "fruitiness": 0
+        "fruitiness": 0,
+        "hopAroma": 0,
+        "fermentation": 0,
+        "strength": -1
       }
     },
     {
@@ -672,7 +720,10 @@ export const beerData = {
         "bitterness": 1,
         "body": 0,
         "roast": -1,
-        "fruitiness": -1
+        "fruitiness": -1,
+        "hopAroma": 0,
+        "fermentation": -1,
+        "strength": 0
       }
     },
     {
@@ -702,7 +753,10 @@ export const beerData = {
         "bitterness": 1,
         "body": -1,
         "roast": -1,
-        "fruitiness": -1
+        "fruitiness": -1,
+        "hopAroma": 1,
+        "fermentation": -1,
+        "strength": 0
       }
     },
     {
@@ -730,7 +784,10 @@ export const beerData = {
         "bitterness": 0,
         "body": 0,
         "roast": 1,
-        "fruitiness": -1
+        "fruitiness": -1,
+        "hopAroma": -1,
+        "fermentation": -1,
+        "strength": 0
       }
     },
     {
@@ -760,7 +817,10 @@ export const beerData = {
         "bitterness": 0,
         "body": 0,
         "roast": 1,
-        "fruitiness": -1
+        "fruitiness": -1,
+        "hopAroma": -1,
+        "fermentation": -1,
+        "strength": 0
       }
     },
     {
@@ -790,7 +850,10 @@ export const beerData = {
         "bitterness": 0,
         "body": 1,
         "roast": 1,
-        "fruitiness": -1
+        "fruitiness": -1,
+        "hopAroma": -1,
+        "fermentation": -1,
+        "strength": 1
       }
     },
     {
@@ -819,7 +882,10 @@ export const beerData = {
         "bitterness": 0,
         "body": 0,
         "roast": 1,
-        "fruitiness": -1
+        "fruitiness": -1,
+        "hopAroma": -1,
+        "fermentation": -1,
+        "strength": 0
       }
     },
     {
@@ -849,7 +915,10 @@ export const beerData = {
         "bitterness": 1,
         "body": 0,
         "roast": 0,
-        "fruitiness": 0
+        "fruitiness": 0,
+        "hopAroma": 0,
+        "fermentation": -1,
+        "strength": 0
       }
     },
     {
@@ -878,7 +947,10 @@ export const beerData = {
         "bitterness": -1,
         "body": 0,
         "roast": 1,
-        "fruitiness": -1
+        "fruitiness": -1,
+        "hopAroma": -1,
+        "fermentation": -1,
+        "strength": 0
       }
     },
     {
@@ -907,7 +979,10 @@ export const beerData = {
         "bitterness": 0,
         "body": -1,
         "roast": 1,
-        "fruitiness": -1
+        "fruitiness": -1,
+        "hopAroma": -1,
+        "fermentation": -1,
+        "strength": 0
       }
     },
     {
@@ -937,7 +1012,10 @@ export const beerData = {
         "bitterness": -1,
         "body": 1,
         "roast": 0,
-        "fruitiness": 0
+        "fruitiness": 0,
+        "hopAroma": -1,
+        "fermentation": -1,
+        "strength": 1
       }
     },
     {
@@ -967,7 +1045,10 @@ export const beerData = {
         "bitterness": 0,
         "body": 1,
         "roast": 0,
-        "fruitiness": 0
+        "fruitiness": 0,
+        "hopAroma": -1,
+        "fermentation": -1,
+        "strength": 1
       }
     },
     {
@@ -997,7 +1078,10 @@ export const beerData = {
         "bitterness": 0,
         "body": 1,
         "roast": 1,
-        "fruitiness": 0
+        "fruitiness": 0,
+        "hopAroma": -1,
+        "fermentation": -1,
+        "strength": 1
       }
     },
     {
@@ -1026,7 +1110,10 @@ export const beerData = {
         "bitterness": -1,
         "body": 0,
         "roast": -1,
-        "fruitiness": 1
+        "fruitiness": 1,
+        "hopAroma": -1,
+        "fermentation": 1,
+        "strength": 0
       }
     },
     {
@@ -1056,7 +1143,10 @@ export const beerData = {
         "bitterness": -1,
         "body": 0,
         "roast": 1,
-        "fruitiness": 1
+        "fruitiness": 1,
+        "hopAroma": -1,
+        "fermentation": 1,
+        "strength": 0
       }
     },
     {
@@ -1084,7 +1174,10 @@ export const beerData = {
         "bitterness": -1,
         "body": 1,
         "roast": 0,
-        "fruitiness": 1
+        "fruitiness": 1,
+        "hopAroma": -1,
+        "fermentation": 1,
+        "strength": 1
       }
     },
     {
@@ -1114,7 +1207,10 @@ export const beerData = {
         "bitterness": 1,
         "body": -1,
         "roast": 0,
-        "fruitiness": 1
+        "fruitiness": 1,
+        "hopAroma": 0,
+        "fermentation": 1,
+        "strength": -1
       }
     },
     {
@@ -1144,7 +1240,10 @@ export const beerData = {
         "bitterness": 1,
         "body": 0,
         "roast": 0,
-        "fruitiness": 1
+        "fruitiness": 1,
+        "hopAroma": 0,
+        "fermentation": 1,
+        "strength": 0
       }
     },
     {
@@ -1174,7 +1273,10 @@ export const beerData = {
         "bitterness": 1,
         "body": 0,
         "roast": 0,
-        "fruitiness": 1
+        "fruitiness": 1,
+        "hopAroma": 0,
+        "fermentation": 1,
+        "strength": 0
       }
     },
     {
@@ -1204,7 +1306,10 @@ export const beerData = {
         "bitterness": 1,
         "body": -1,
         "roast": -1,
-        "fruitiness": 1
+        "fruitiness": 1,
+        "hopAroma": 1,
+        "fermentation": 1,
+        "strength": -1
       }
     },
     {
@@ -1234,7 +1339,10 @@ export const beerData = {
         "bitterness": 1,
         "body": 0,
         "roast": -1,
-        "fruitiness": 1
+        "fruitiness": 1,
+        "hopAroma": 0,
+        "fermentation": 1,
+        "strength": 0
       }
     },
     {
@@ -1263,7 +1371,10 @@ export const beerData = {
         "bitterness": 1,
         "body": 0,
         "roast": -1,
-        "fruitiness": 1
+        "fruitiness": 1,
+        "hopAroma": 1,
+        "fermentation": 1,
+        "strength": 0
       }
     },
     {
@@ -1291,7 +1402,10 @@ export const beerData = {
         "bitterness": -1,
         "body": -1,
         "roast": 1,
-        "fruitiness": 0
+        "fruitiness": 0,
+        "hopAroma": -1,
+        "fermentation": 1,
+        "strength": -1
       }
     },
     {
@@ -1321,7 +1435,10 @@ export const beerData = {
         "bitterness": 0,
         "body": 0,
         "roast": 1,
-        "fruitiness": 0
+        "fruitiness": 0,
+        "hopAroma": -1,
+        "fermentation": 1,
+        "strength": 0
       }
     },
     {
@@ -1350,7 +1467,10 @@ export const beerData = {
         "bitterness": 0,
         "body": 0,
         "roast": 1,
-        "fruitiness": 0
+        "fruitiness": 0,
+        "hopAroma": -1,
+        "fermentation": 1,
+        "strength": 0
       }
     },
     {
@@ -1378,7 +1498,10 @@ export const beerData = {
         "bitterness": -1,
         "body": -1,
         "roast": 0,
-        "fruitiness": 0
+        "fruitiness": 0,
+        "hopAroma": -1,
+        "fermentation": 0,
+        "strength": -1
       }
     },
     {
@@ -1407,7 +1530,10 @@ export const beerData = {
         "bitterness": -1,
         "body": 0,
         "roast": 0,
-        "fruitiness": 0
+        "fruitiness": 0,
+        "hopAroma": -1,
+        "fermentation": 0,
+        "strength": -1
       }
     },
     {
@@ -1435,7 +1561,10 @@ export const beerData = {
         "bitterness": 0,
         "body": 0,
         "roast": 0,
-        "fruitiness": 0
+        "fruitiness": 0,
+        "hopAroma": -1,
+        "fermentation": 0,
+        "strength": 0
       }
     },
     {
@@ -1464,7 +1593,10 @@ export const beerData = {
         "bitterness": 0,
         "body": 0,
         "roast": 0,
-        "fruitiness": 0
+        "fruitiness": 0,
+        "hopAroma": -1,
+        "fermentation": 0,
+        "strength": 0
       }
     },
     {
@@ -1494,7 +1626,10 @@ export const beerData = {
         "bitterness": 1,
         "body": -1,
         "roast": 1,
-        "fruitiness": -1
+        "fruitiness": -1,
+        "hopAroma": -1,
+        "fermentation": -1,
+        "strength": 0
       }
     },
     {
@@ -1523,7 +1658,10 @@ export const beerData = {
         "bitterness": 1,
         "body": 0,
         "roast": 1,
-        "fruitiness": -1
+        "fruitiness": -1,
+        "hopAroma": -1,
+        "fermentation": -1,
+        "strength": 0
       }
     },
     {
@@ -1551,7 +1689,10 @@ export const beerData = {
         "bitterness": -1,
         "body": 1,
         "roast": 1,
-        "fruitiness": -1
+        "fruitiness": -1,
+        "hopAroma": -1,
+        "fermentation": -1,
+        "strength": 0
       }
     },
     {
@@ -1581,7 +1722,10 @@ export const beerData = {
         "bitterness": 0,
         "body": 1,
         "roast": 1,
-        "fruitiness": -1
+        "fruitiness": -1,
+        "hopAroma": -1,
+        "fermentation": -1,
+        "strength": 0
       }
     },
     {
@@ -1611,7 +1755,10 @@ export const beerData = {
         "bitterness": 0,
         "body": 1,
         "roast": 1,
-        "fruitiness": 1
+        "fruitiness": 1,
+        "hopAroma": -1,
+        "fermentation": 1,
+        "strength": 1
       }
     },
     {
@@ -1641,7 +1788,10 @@ export const beerData = {
         "bitterness": 1,
         "body": 1,
         "roast": 1,
-        "fruitiness": 1
+        "fruitiness": 1,
+        "hopAroma": -1,
+        "fermentation": 1,
+        "strength": 1
       }
     },
     {
@@ -1671,7 +1821,10 @@ export const beerData = {
         "bitterness": 0,
         "body": 1,
         "roast": 0,
-        "fruitiness": 1
+        "fruitiness": 1,
+        "hopAroma": 0,
+        "fermentation": 1,
+        "strength": 1
       }
     },
     {
@@ -1701,7 +1854,10 @@ export const beerData = {
         "bitterness": 0,
         "body": 1,
         "roast": 0,
-        "fruitiness": 1
+        "fruitiness": 1,
+        "hopAroma": 0,
+        "fermentation": 1,
+        "strength": 1
       }
     },
     {
@@ -1731,7 +1887,10 @@ export const beerData = {
         "bitterness": -1,
         "body": 1,
         "roast": 0,
-        "fruitiness": -1
+        "fruitiness": -1,
+        "hopAroma": -1,
+        "fermentation": 0,
+        "strength": 1
       }
     },
     {
@@ -1761,7 +1920,10 @@ export const beerData = {
         "bitterness": 0,
         "body": 1,
         "roast": 0,
-        "fruitiness": 1
+        "fruitiness": 1,
+        "hopAroma": 0,
+        "fermentation": 1,
+        "strength": 1
       }
     },
     {
@@ -1791,7 +1953,10 @@ export const beerData = {
         "bitterness": 0,
         "body": 0,
         "roast": -1,
-        "fruitiness": 1
+        "fruitiness": 1,
+        "hopAroma": 0,
+        "fermentation": 0,
+        "strength": 0
       }
     },
     {
@@ -1820,7 +1985,10 @@ export const beerData = {
         "bitterness": 1,
         "body": 0,
         "roast": -1,
-        "fruitiness": 1
+        "fruitiness": 1,
+        "hopAroma": 1,
+        "fermentation": 0,
+        "strength": 0
       }
     },
     {
@@ -1849,7 +2017,10 @@ export const beerData = {
         "bitterness": 1,
         "body": 0,
         "roast": 0,
-        "fruitiness": 1
+        "fruitiness": 1,
+        "hopAroma": 1,
+        "fermentation": 0,
+        "strength": 0
       }
     },
     {
@@ -1878,7 +2049,10 @@ export const beerData = {
         "bitterness": 1,
         "body": 0,
         "roast": 0,
-        "fruitiness": 1
+        "fruitiness": 1,
+        "hopAroma": 0,
+        "fermentation": -1,
+        "strength": 0
       }
     },
     {
@@ -1908,7 +2082,10 @@ export const beerData = {
         "bitterness": 1,
         "body": 0,
         "roast": 1,
-        "fruitiness": 1
+        "fruitiness": 1,
+        "hopAroma": 1,
+        "fermentation": 0,
+        "strength": 0
       }
     },
     {
@@ -1938,7 +2115,10 @@ export const beerData = {
         "bitterness": 1,
         "body": 1,
         "roast": 1,
-        "fruitiness": 0
+        "fruitiness": 0,
+        "hopAroma": 1,
+        "fermentation": 0,
+        "strength": 0
       }
     },
     {
@@ -1967,7 +2147,10 @@ export const beerData = {
         "bitterness": 1,
         "body": 1,
         "roast": 1,
-        "fruitiness": 0
+        "fruitiness": 0,
+        "hopAroma": 1,
+        "fermentation": 0,
+        "strength": 0
       }
     },
     {
@@ -1997,7 +2180,10 @@ export const beerData = {
         "bitterness": 1,
         "body": 1,
         "roast": 1,
-        "fruitiness": 1
+        "fruitiness": 1,
+        "hopAroma": 0,
+        "fermentation": 1,
+        "strength": 1
       }
     },
     {
@@ -2027,7 +2213,10 @@ export const beerData = {
         "bitterness": 1,
         "body": 0,
         "roast": -1,
-        "fruitiness": 1
+        "fruitiness": 1,
+        "hopAroma": 1,
+        "fermentation": 0,
+        "strength": 0
       }
     },
     {
@@ -2053,7 +2242,10 @@ export const beerData = {
         "bitterness": 1,
         "body": 0,
         "roast": 0,
-        "fruitiness": 1
+        "fruitiness": 1,
+        "hopAroma": 1,
+        "fermentation": 0,
+        "strength": 0
       }
     },
     {
@@ -2079,7 +2271,10 @@ export const beerData = {
         "bitterness": 0,
         "body": 0,
         "roast": -1,
-        "fruitiness": 1
+        "fruitiness": 1,
+        "hopAroma": 1,
+        "fermentation": 0,
+        "strength": 0
       }
     },
     {
@@ -2108,7 +2303,10 @@ export const beerData = {
         "bitterness": 1,
         "body": 0,
         "roast": -1,
-        "fruitiness": 1
+        "fruitiness": 1,
+        "hopAroma": 1,
+        "fermentation": 0,
+        "strength": 1
       }
     },
     {
@@ -2138,7 +2336,10 @@ export const beerData = {
         "bitterness": 1,
         "body": 1,
         "roast": 0,
-        "fruitiness": 1
+        "fruitiness": 1,
+        "hopAroma": 1,
+        "fermentation": 0,
+        "strength": 1
       }
     },
     {
@@ -2168,7 +2369,10 @@ export const beerData = {
         "bitterness": 1,
         "body": 1,
         "roast": 0,
-        "fruitiness": 1
+        "fruitiness": 1,
+        "hopAroma": 1,
+        "fermentation": 1,
+        "strength": 1
       }
     },
     {
@@ -2198,7 +2402,10 @@ export const beerData = {
         "bitterness": 0,
         "body": 1,
         "roast": -1,
-        "fruitiness": 1
+        "fruitiness": 1,
+        "hopAroma": 0,
+        "fermentation": 1,
+        "strength": 1
       }
     },
     {
@@ -2228,7 +2435,10 @@ export const beerData = {
         "bitterness": -1,
         "body": -1,
         "roast": -1,
-        "fruitiness": 1
+        "fruitiness": 1,
+        "hopAroma": -1,
+        "fermentation": 1,
+        "strength": -1
       }
     },
     {
@@ -2258,7 +2468,10 @@ export const beerData = {
         "bitterness": -1,
         "body": 0,
         "roast": 0,
-        "fruitiness": 1
+        "fruitiness": 1,
+        "hopAroma": -1,
+        "fermentation": 1,
+        "strength": 0
       }
     },
     {
@@ -2288,7 +2501,10 @@ export const beerData = {
         "bitterness": -1,
         "body": 0,
         "roast": 0,
-        "fruitiness": 1
+        "fruitiness": 1,
+        "hopAroma": -1,
+        "fermentation": 1,
+        "strength": 0
       }
     },
     {
@@ -2318,7 +2534,10 @@ export const beerData = {
         "bitterness": -1,
         "body": -1,
         "roast": -1,
-        "fruitiness": 1
+        "fruitiness": 1,
+        "hopAroma": -1,
+        "fermentation": 1,
+        "strength": 0
       }
     },
     {
@@ -2347,7 +2566,10 @@ export const beerData = {
         "bitterness": -1,
         "body": -1,
         "roast": -1,
-        "fruitiness": 1
+        "fruitiness": 1,
+        "hopAroma": -1,
+        "fermentation": 1,
+        "strength": 0
       }
     },
     {
@@ -2376,7 +2598,10 @@ export const beerData = {
         "bitterness": -1,
         "body": -1,
         "roast": -1,
-        "fruitiness": 1
+        "fruitiness": 1,
+        "hopAroma": -1,
+        "fermentation": 1,
+        "strength": 0
       }
     },
     {
@@ -2402,7 +2627,10 @@ export const beerData = {
         "bitterness": -1,
         "body": -1,
         "roast": -1,
-        "fruitiness": 1
+        "fruitiness": 1,
+        "hopAroma": -1,
+        "fermentation": 1,
+        "strength": -1
       }
     },
     {
@@ -2432,7 +2660,10 @@ export const beerData = {
         "bitterness": -1,
         "body": 0,
         "roast": -1,
-        "fruitiness": 1
+        "fruitiness": 1,
+        "hopAroma": -1,
+        "fermentation": 1,
+        "strength": 0
       }
     },
     {
@@ -2462,7 +2693,10 @@ export const beerData = {
         "bitterness": 0,
         "body": 0,
         "roast": 0,
-        "fruitiness": 1
+        "fruitiness": 1,
+        "hopAroma": 0,
+        "fermentation": 1,
+        "strength": 0
       }
     },
     {
@@ -2492,7 +2726,10 @@ export const beerData = {
         "bitterness": 0,
         "body": 0,
         "roast": 0,
-        "fruitiness": 0
+        "fruitiness": 0,
+        "hopAroma": -1,
+        "fermentation": 0,
+        "strength": 0
       }
     },
     {
@@ -2522,7 +2759,10 @@ export const beerData = {
         "bitterness": 0,
         "body": 0,
         "roast": -1,
-        "fruitiness": 1
+        "fruitiness": 1,
+        "hopAroma": 0,
+        "fermentation": 1,
+        "strength": 1
       }
     },
     {
@@ -2551,7 +2791,10 @@ export const beerData = {
         "bitterness": 1,
         "body": 0,
         "roast": -1,
-        "fruitiness": 1
+        "fruitiness": 1,
+        "hopAroma": 0,
+        "fermentation": 1,
+        "strength": 0
       }
     },
     {
@@ -2581,7 +2824,10 @@ export const beerData = {
         "bitterness": 1,
         "body": 0,
         "roast": -1,
-        "fruitiness": 1
+        "fruitiness": 1,
+        "hopAroma": 0,
+        "fermentation": 1,
+        "strength": 1
       }
     },
     {
@@ -2611,7 +2857,10 @@ export const beerData = {
         "bitterness": 1,
         "body": -1,
         "roast": -1,
-        "fruitiness": 1
+        "fruitiness": 1,
+        "hopAroma": 0,
+        "fermentation": 1,
+        "strength": 0
       }
     },
     {
@@ -2641,7 +2890,10 @@ export const beerData = {
         "bitterness": -1,
         "body": 0,
         "roast": 0,
-        "fruitiness": 1
+        "fruitiness": 1,
+        "hopAroma": -1,
+        "fermentation": 1,
+        "strength": 1
       }
     },
     {
@@ -2671,7 +2923,10 @@ export const beerData = {
         "bitterness": 0,
         "body": 0,
         "roast": -1,
-        "fruitiness": 1
+        "fruitiness": 1,
+        "hopAroma": 0,
+        "fermentation": 1,
+        "strength": 1
       }
     },
     {
@@ -2701,7 +2956,10 @@ export const beerData = {
         "bitterness": 0,
         "body": 1,
         "roast": 0,
-        "fruitiness": 1
+        "fruitiness": 1,
+        "hopAroma": -1,
+        "fermentation": 1,
+        "strength": 1
       }
     },
     {
@@ -2727,7 +2985,10 @@ export const beerData = {
         "bitterness": 0,
         "body": 0,
         "roast": -1,
-        "fruitiness": -1
+        "fruitiness": -1,
+        "hopAroma": 0,
+        "fermentation": -1,
+        "strength": 0
       }
     },
     {
@@ -2757,7 +3018,10 @@ export const beerData = {
         "bitterness": 0,
         "body": 0,
         "roast": 1,
-        "fruitiness": 0
+        "fruitiness": 0,
+        "hopAroma": 0,
+        "fermentation": -1,
+        "strength": 0
       }
     },
     {
@@ -2786,7 +3050,10 @@ export const beerData = {
         "bitterness": -1,
         "body": -1,
         "roast": -1,
-        "fruitiness": -1
+        "fruitiness": -1,
+        "hopAroma": -1,
+        "fermentation": 1,
+        "strength": -1
       }
     },
     {
@@ -2815,7 +3082,10 @@ export const beerData = {
         "bitterness": -1,
         "body": 0,
         "roast": 1,
-        "fruitiness": 1
+        "fruitiness": 1,
+        "hopAroma": -1,
+        "fermentation": 1,
+        "strength": -1
       }
     },
     {
@@ -2844,7 +3114,10 @@ export const beerData = {
         "bitterness": 0,
         "body": -1,
         "roast": 0,
-        "fruitiness": -1
+        "fruitiness": -1,
+        "hopAroma": 0,
+        "fermentation": -1,
+        "strength": -1
       }
     },
     {
@@ -2874,7 +3147,10 @@ export const beerData = {
         "bitterness": 1,
         "body": 0,
         "roast": -1,
-        "fruitiness": 0
+        "fruitiness": 0,
+        "hopAroma": 1,
+        "fermentation": -1,
+        "strength": 0
       }
     },
     {
@@ -2904,7 +3180,10 @@ export const beerData = {
         "bitterness": 0,
         "body": 0,
         "roast": 1,
-        "fruitiness": 0
+        "fruitiness": 0,
+        "hopAroma": 0,
+        "fermentation": 0,
+        "strength": 0
       }
     },
     {
@@ -2934,7 +3213,10 @@ export const beerData = {
         "bitterness": -1,
         "body": 0,
         "roast": 0,
-        "fruitiness": 1
+        "fruitiness": 1,
+        "hopAroma": -1,
+        "fermentation": 1,
+        "strength": 0
       }
     },
     {
@@ -2964,7 +3246,10 @@ export const beerData = {
         "bitterness": -1,
         "body": 1,
         "roast": 0,
-        "fruitiness": 1
+        "fruitiness": 1,
+        "hopAroma": -1,
+        "fermentation": 1,
+        "strength": 1
       }
     },
     {
@@ -2993,7 +3278,10 @@ export const beerData = {
         "bitterness": 0,
         "body": 0,
         "roast": 0,
-        "fruitiness": 1
+        "fruitiness": 1,
+        "hopAroma": -1,
+        "fermentation": 1,
+        "strength": 0
       }
     },
     {
@@ -3023,7 +3311,10 @@ export const beerData = {
         "bitterness": -1,
         "body": 0,
         "roast": 0,
-        "fruitiness": 1
+        "fruitiness": 1,
+        "hopAroma": -1,
+        "fermentation": 1,
+        "strength": 0
       }
     },
     {
@@ -3052,7 +3343,10 @@ export const beerData = {
         "bitterness": -1,
         "body": 0,
         "roast": 0,
-        "fruitiness": 1
+        "fruitiness": 1,
+        "hopAroma": -1,
+        "fermentation": 1,
+        "strength": 0
       }
     },
     {
@@ -3078,7 +3372,10 @@ export const beerData = {
         "bitterness": -1,
         "body": 0,
         "roast": 0,
-        "fruitiness": 1
+        "fruitiness": 1,
+        "hopAroma": -1,
+        "fermentation": 0,
+        "strength": 0
       }
     },
     {
@@ -3104,7 +3401,10 @@ export const beerData = {
         "bitterness": 0,
         "body": 0,
         "roast": 0,
-        "fruitiness": 1
+        "fruitiness": 1,
+        "hopAroma": 0,
+        "fermentation": 0,
+        "strength": 0
       }
     },
     {
@@ -3130,7 +3430,10 @@ export const beerData = {
         "bitterness": 0,
         "body": 0,
         "roast": 0,
-        "fruitiness": 1
+        "fruitiness": 1,
+        "hopAroma": 0,
+        "fermentation": 0,
+        "strength": 0
       }
     },
     {
@@ -3157,7 +3460,10 @@ export const beerData = {
         "bitterness": 0,
         "body": 0,
         "roast": 0,
-        "fruitiness": 1
+        "fruitiness": 1,
+        "hopAroma": 0,
+        "fermentation": 0,
+        "strength": 0
       }
     },
     {
@@ -3183,7 +3489,10 @@ export const beerData = {
         "bitterness": 0,
         "body": 0,
         "roast": -1,
-        "fruitiness": 1
+        "fruitiness": 1,
+        "hopAroma": -1,
+        "fermentation": 0,
+        "strength": 0
       }
     },
     {
@@ -3209,7 +3518,10 @@ export const beerData = {
         "bitterness": 0,
         "body": 0,
         "roast": 0,
-        "fruitiness": 0
+        "fruitiness": 0,
+        "hopAroma": 0,
+        "fermentation": 0,
+        "strength": 0
       }
     },
     {
@@ -3235,7 +3547,10 @@ export const beerData = {
         "bitterness": -1,
         "body": 1,
         "roast": 0,
-        "fruitiness": 0
+        "fruitiness": 0,
+        "hopAroma": -1,
+        "fermentation": 0,
+        "strength": 0
       }
     },
     {
@@ -3264,7 +3579,10 @@ export const beerData = {
         "bitterness": -1,
         "body": 1,
         "roast": 0,
-        "fruitiness": 1
+        "fruitiness": 1,
+        "hopAroma": -1,
+        "fermentation": 0,
+        "strength": 1
       }
     },
     {
@@ -3290,7 +3608,10 @@ export const beerData = {
         "bitterness": 0,
         "body": 0,
         "roast": 0,
-        "fruitiness": 1
+        "fruitiness": 1,
+        "hopAroma": 0,
+        "fermentation": 0,
+        "strength": 0
       }
     },
     {
@@ -3316,7 +3637,10 @@ export const beerData = {
         "bitterness": 0,
         "body": 0,
         "roast": 0,
-        "fruitiness": 0
+        "fruitiness": 0,
+        "hopAroma": 0,
+        "fermentation": 0,
+        "strength": 0
       }
     },
     {
@@ -3337,12 +3661,15 @@ export const beerData = {
         "tags": "增味啤酒"
       },
       "taste_profile": {
-        "sweetness": 1,
+        "sweetness": 0,
         "sourness": -1,
         "bitterness": 0,
         "body": 0,
         "roast": 0,
-        "fruitiness": 0
+        "fruitiness": 0,
+        "hopAroma": 0,
+        "fermentation": 0,
+        "strength": 0
       }
     },
     {
@@ -3369,7 +3696,10 @@ export const beerData = {
         "bitterness": 0,
         "body": 0,
         "roast": 0,
-        "fruitiness": -1
+        "fruitiness": -1,
+        "hopAroma": 0,
+        "fermentation": 0,
+        "strength": 0
       }
     },
     {
@@ -3394,7 +3724,10 @@ export const beerData = {
         "bitterness": 0,
         "body": 0,
         "roast": 0,
-        "fruitiness": 0
+        "fruitiness": 0,
+        "hopAroma": 0,
+        "fermentation": 0,
+        "strength": 0
       }
     },
     {
@@ -3421,7 +3754,10 @@ export const beerData = {
         "bitterness": 0,
         "body": 0,
         "roast": 0,
-        "fruitiness": 0
+        "fruitiness": 0,
+        "hopAroma": 0,
+        "fermentation": 0,
+        "strength": 0
       }
     },
     {
@@ -3449,7 +3785,10 @@ export const beerData = {
         "bitterness": 0,
         "body": 0,
         "roast": 0,
-        "fruitiness": 0
+        "fruitiness": 0,
+        "hopAroma": 0,
+        "fermentation": 0,
+        "strength": 0
       }
     },
     {
@@ -3475,7 +3814,10 @@ export const beerData = {
         "bitterness": 0,
         "body": 0,
         "roast": 0,
-        "fruitiness": 0
+        "fruitiness": 0,
+        "hopAroma": 0,
+        "fermentation": 0,
+        "strength": 0
       }
     },
     {
@@ -3500,7 +3842,10 @@ export const beerData = {
         "bitterness": 0,
         "body": 0,
         "roast": 0,
-        "fruitiness": 0
+        "fruitiness": 0,
+        "hopAroma": 0,
+        "fermentation": 0,
+        "strength": 0
       }
     },
     {
@@ -3527,7 +3872,10 @@ export const beerData = {
         "bitterness": 0,
         "body": 0,
         "roast": 0,
-        "fruitiness": 0
+        "fruitiness": 0,
+        "hopAroma": 0,
+        "fermentation": 0,
+        "strength": 0
       }
     }
   ],
