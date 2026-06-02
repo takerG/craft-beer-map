@@ -255,6 +255,43 @@ test('academy templates avoid complex expressions that can blank mini program co
   });
 });
 
+test('academy articles render slug-specific experiences instead of generic modules', () => {
+  const articleWxml = readMiniPage('pages/academy-article/index.wxml');
+  const articleJs = readMiniPage('pages/academy-article/index.js');
+  const articleWxss = readMiniPage('pages/academy-article/index.wxss');
+
+  assert.match(articleWxml, /class="article-body"/);
+  assert.match(articleWxml, /wx:for="{{articleSections}}"/);
+  assert.match(articleWxml, /wx:for-item="section"/);
+  assert.match(articleWxml, /class="article-section"/);
+  assert.match(articleWxml, /wx:for="{{section\.paragraphs}}"/);
+  assert.match(articleWxml, /class="article-paragraph"/);
+  assert.match(articleWxml, /class="article-callout"/);
+  assert.match(articleWxml, /class="ipa-map-experience experience-section"/);
+  assert.match(articleWxml, /class="ale-lager-experience experience-section"/);
+  assert.match(articleWxml, /class="flavor-radar-experience experience-section"/);
+  assert.match(articleWxml, /wx:if="{{section\.showIpaMapExperience}}"/);
+  assert.match(articleWxml, /wx:if="{{section\.showAleLagerExperience}}"/);
+  assert.match(articleWxml, /wx:if="{{section\.showFlavorRadarExperience}}"/);
+
+  assert.doesNotMatch(articleWxml, /wx:for="{{article\.modules}}"/);
+  assert.doesNotMatch(articleWxml, /module-tabs|module-list|module-card|scale-list|quiz-panel/);
+  assert.doesNotMatch(articleWxml, /item\.isScale|item\.isCards|item\.isComparison|item\.isQuiz/);
+
+  assert.match(articleJs, /selectIpaBranch\(event\)/);
+  assert.match(articleJs, /selectFermentationPath\(event\)/);
+  assert.match(articleJs, /selectFlavorSource\(event\)/);
+  assert.match(articleJs, /articleSections/);
+  assert.match(articleJs, /getFallbackSections/);
+  assert.match(articleJs, /academy_ipa_branch_select/);
+  assert.match(articleJs, /academy_fermentation_path_select/);
+  assert.match(articleJs, /academy_flavor_source_select/);
+
+  assert.match(articleWxss, /\.ipa-map-experience/);
+  assert.match(articleWxss, /\.ale-lager-experience/);
+  assert.match(articleWxss, /\.flavor-radar-experience/);
+});
+
 test('core beer model avoids the stale style-language-map runtime module id', () => {
   const beerModelSource = readMiniPage('utils/beer-model.js');
 
@@ -267,7 +304,7 @@ test('academy page renders a simple publish-sorted feed', () => {
   const academyWxss = readMiniPage('pages/academy/index.wxss');
   const academyJs = readMiniPage('pages/academy/index.js');
 
-  assert.match(academyWxml, /class="filter-strip"/);
+  assert.match(academyWxml, /<scroll-view[^>]*class="filter-strip"[^>]*enable-flex="true"/s);
   assert.match(academyWxml, /wx:for="{{typeFilters}}"/);
   assert.match(academyWxml, /bindtap="filterArticles"/);
   assert.match(academyWxml, /data-type="{{item\.type}}"/);
@@ -283,6 +320,24 @@ test('academy page renders a simple publish-sorted feed', () => {
   assert.match(academyWxss, /\.feed-cover\s*\{[^}]*width:\s*100%;[^}]*height:\s*252rpx;[^}]*border-radius:\s*14rpx;/s);
   assert.match(academyWxss, /\.feed-card\s*\{[^}]*width:\s*100%;[^}]*min-height:\s*484rpx;/s);
   assert.doesNotMatch(academyWxml, /featured-strip|track-tabs|track-panel|tool-list/);
+});
+
+test('academy article long-form text is selectable in devtools and devices', () => {
+  const articleWxml = readMiniPage('pages/academy-article/index.wxml');
+
+  [
+    'empty-copy',
+    'page-subtitle',
+    'article-paragraph',
+    'focus-copy',
+    'related-en',
+  ].forEach((className) => {
+    assert.match(
+      articleWxml,
+      new RegExp(`<text[^>]*class="${className}"[^>]*user-select="true"`),
+      `${className} should allow copying long article text`,
+    );
+  });
 });
 
 test('release checklist covers the first shipping gate', () => {

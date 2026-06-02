@@ -11,6 +11,11 @@ const TYPE_LABELS = {
   quiz: '问答',
 };
 const TYPE_ORDER = ['map', 'comparison', 'simulator', 'tool', 'visual-story', 'quiz'];
+const EXPERIENCE_KEYS = {
+  'ipa-family-map': 'ipa-map',
+  'ale-vs-lager': 'ale-lager',
+  'flavor-radar-basics': 'flavor-radar',
+};
 
 export function getAcademySites() {
   return academySites.map(toSiteSummary);
@@ -38,9 +43,15 @@ export function buildAcademyTypeFilters(feedSites, activeType = 'all') {
 export function getAcademyArticle(slug) {
   const site = siteBySlug.get(slug);
   if (!site) return null;
+  const experienceKey = EXPERIENCE_KEYS[slug] || 'custom';
 
   return {
     ...site,
+    experienceKey,
+    isIpaMapExperience: experienceKey === 'ipa-map',
+    isAleLagerExperience: experienceKey === 'ale-lager',
+    isFlavorRadarExperience: experienceKey === 'flavor-radar',
+    sections: normalizeSections(site.sections, site.experienceAfterSectionId, experienceKey),
     modules: normalizeModules(site.modules),
     relatedStyles: resolveRelatedStyles(site.relatedStyles),
   };
@@ -57,11 +68,16 @@ function toSiteSummary(site) {
     tags: [...site.tags],
     publishedAt: site.publishedAt || site.date || '',
     updatedAt: site.updatedAt || site.publishedAt || site.date || '',
-    coverImage: site.coverImage || '',
+    coverImage: toMiniProgramRootPath(site.coverImage),
     heroMetric: site.heroMetric || '',
     accent: site.accent || '#f6ad55',
     hero: site.hero ? { ...site.hero } : null,
   };
+}
+
+function toMiniProgramRootPath(assetPath = '') {
+  if (!assetPath) return '';
+  return assetPath.startsWith('/') ? assetPath : `/${assetPath}`;
 }
 
 function buildFilterOptions(feedSites, activeType) {
@@ -120,6 +136,21 @@ function normalizeModules(modules = []) {
       className: 'quiz-option',
     })),
   }));
+}
+
+function normalizeSections(sections = [], experienceAfterSectionId = '', experienceKey = '') {
+  return sections.map((section) => {
+    const showExperience = section.id === experienceAfterSectionId;
+    return {
+      ...section,
+      paragraphs: [...(section.paragraphs || [])],
+      callout: section.callout || '',
+      hasCallout: Boolean(section.callout),
+      showIpaMapExperience: showExperience && experienceKey === 'ipa-map',
+      showAleLagerExperience: showExperience && experienceKey === 'ale-lager',
+      showFlavorRadarExperience: showExperience && experienceKey === 'flavor-radar',
+    };
+  });
 }
 
 function resolveRelatedStyles(styleRefs = []) {

@@ -5,11 +5,12 @@ export function trackEvent(eventName, params = {}) {
 
   const payload = normalizeParams(params);
   const wxApi = typeof wx !== 'undefined' ? wx : null;
+  const canReportToWechat = shouldReportToWechat(wxApi);
 
   try {
-    if (wxApi && typeof wxApi.reportEvent === 'function') {
+    if (canReportToWechat && typeof wxApi.reportEvent === 'function') {
       wxApi.reportEvent(eventName, payload);
-    } else if (wxApi && typeof wxApi.reportAnalytics === 'function') {
+    } else if (canReportToWechat && typeof wxApi.reportAnalytics === 'function') {
       wxApi.reportAnalytics(eventName, payload);
     }
   } catch (error) {
@@ -26,6 +27,17 @@ function normalizeParams(params) {
     payload[key] = typeof value === 'object' ? JSON.stringify(value) : value;
     return payload;
   }, {});
+}
+
+function shouldReportToWechat(wxApi) {
+  if (!wxApi || typeof wxApi.getAccountInfoSync !== 'function') return false;
+
+  try {
+    const accountInfo = wxApi.getAccountInfoSync();
+    return accountInfo && accountInfo.miniProgram && accountInfo.miniProgram.envVersion === 'release';
+  } catch (error) {
+    return false;
+  }
 }
 
 function cacheEvent(eventName, payload) {

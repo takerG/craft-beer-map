@@ -1,6 +1,6 @@
 # 学院内容系统
 
-「学院」是精酿科普 tab。它以 feed 流展示精酿互动文章，每篇内容仍按前端模块组织，可以包含对比、刻度、卡片、问答和关联风格跳转。feed 支持按内容类型快速筛选，并展示由构建脚本自动生成的文章封面图。
+「学院」是精酿科普 tab。它以 feed 流展示精酿互动文章，但每篇内容首先必须是一篇可独立阅读的文章。前端互动能力用于辅助解释关键段落，而不是取代正文。feed 支持按内容类型快速筛选，并展示由构建脚本自动生成的文章封面图。
 
 ## 目录结构
 
@@ -17,7 +17,15 @@ academy-sites/
     └── content.json
 ```
 
-每个内容目录的 `meta.json` 提供 feed 摘要、类型和发现信息，`publish.json` 记录发布时间，`content.json` 提供文章页模块。学院首页按 `publish.json` 的 `publishedAt` 倒序展示，并根据 `meta.json` 的 `type` 生成筛选项。
+每个内容目录的 `meta.json` 提供 feed 摘要、类型和发现信息，`publish.json` 记录发布时间，`content.json` 提供文章正文、互动插入点和兼容模块数据。学院首页按 `publish.json` 的 `publishedAt` 倒序展示，并根据 `meta.json` 的 `type` 生成筛选项。
+
+`content.json` 必须包含：
+
+- `sections`：文章正文段落。每个 section 至少包含 `id`、`title` 和 `paragraphs`。
+- `experienceAfterSectionId`：互动体验插入到哪一个 section 后面。
+- `modules`：历史兼容数据，不作为学院文章正文的主要渲染结构。
+
+写新内容时，先补齐文章的概念、背景、形成原因和读者可带走的判断方法，再决定是否需要地图、路径、雷达等前端互动来辅助讲解。
 
 ## 构建
 

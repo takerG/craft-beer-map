@@ -5,7 +5,7 @@
 
   <view wx:if="{{isNotFound}}" class="empty-state">
     <text class="empty-title">没有找到这篇学院内容</text>
-    <text class="empty-copy">可能是内容目录还没有生成，回到学院看看其他内容。</text>
+    <text class="empty-copy" user-select="true">可能是内容目录还没有生成，回到学院看看其他内容。</text>
     <view class="empty-action" hover-class="tap-hover" hover-stay-time="80" bindtap="backToAcademy">回到学院</view>
   </view>
 
@@ -13,7 +13,7 @@
     <view class="article-hero" style="border-top-color: {{article.accent}}">
       <text class="article-kicker">{{article.hero.kicker}}</text>
       <text class="page-title">{{article.title}}</text>
-      <text class="page-subtitle">{{article.hero.summary}}</text>
+      <text class="page-subtitle" user-select="true">{{article.hero.summary}}</text>
       <view class="article-meta">
         <text>{{article.difficulty}}</text>
         <text>{{article.readingTime}} min</text>
@@ -21,74 +21,88 @@
       </view>
     </view>
 
-    <scroll-view scroll-x class="module-tabs">
-      <view
-        wx:for="{{article.modules}}"
-        wx:key="id"
-        class="module-tab"
-        data-module-id="{{item.id}}"
-        hover-class="tap-hover"
-        hover-stay-time="80"
-        bindtap="selectModule"
-      >
-        <text>{{item.navLabel}}</text>
-      </view>
-    </scroll-view>
-
-    <view class="module-list">
-      <view
-        wx:for="{{article.modules}}"
-        wx:key="id"
-        class="module-card"
-      >
-        <view class="module-head">
-          <text class="module-type">{{item.type}}</text>
-          <text class="module-title">{{item.title}}</text>
+    <view class="article-body">
+      <view wx:for="{{articleSections}}" wx:for-item="section" wx:key="id" class="article-section">
+        <text class="article-section-title">{{section.title}}</text>
+        <text wx:for="{{section.paragraphs}}" wx:for-item="paragraph" wx:key="*this" class="article-paragraph" user-select="true">{{paragraph}}</text>
+        <view wx:if="{{section.hasCallout}}" class="article-callout">
+          <text>{{section.callout}}</text>
         </view>
-        <text class="module-summary">{{item.summary}}</text>
 
-        <view wx:if="{{item.isScale}}" class="scale-list">
-          <view wx:for="{{item.points}}" wx:for-item="point" wx:key="label" class="scale-row">
-            <view class="scale-labels">
-              <text>{{point.label}}</text>
-              <text>{{point.low}} / {{point.high}}</text>
-            </view>
-            <view class="scale-track">
-              <view class="scale-fill" style="{{point.levelStyle}}"></view>
+        <view wx:if="{{section.showIpaMapExperience}}" class="ipa-map-experience experience-section">
+          <view class="ipa-map-canvas">
+            <view class="map-axis map-axis-x"></view>
+            <view class="map-axis map-axis-y"></view>
+            <text class="map-label map-label-left">清爽</text>
+            <text class="map-label map-label-right">饱满</text>
+            <text class="map-label map-label-top">香气强</text>
+            <text class="map-label map-label-bottom">苦味利落</text>
+            <view
+              wx:for="{{article.experience.items}}"
+              wx:key="id"
+              class="ipa-node {{item.className}}"
+              style="{{item.positionStyle}}"
+              data-branch-id="{{item.id}}"
+              hover-class="tap-hover"
+              hover-stay-time="80"
+              bindtap="selectIpaBranch"
+            >
+              <text>{{item.title}}</text>
             </view>
           </view>
-        </view>
-
-        <view wx:if="{{item.isCards}}" class="mini-card-list">
-          <view wx:for="{{item.items}}" wx:for-item="card" wx:key="title" class="mini-card">
-            <text class="mini-index">0{{card.itemIndex}}</text>
-            <text class="mini-title">{{card.title}}</text>
-            <text class="mini-body">{{card.body}}</text>
+          <view class="experience-focus">
+            <text class="focus-title">{{article.experience.activeItem.title}}</text>
+            <text class="focus-kicker">{{article.experience.activeItem.axis}}</text>
+            <text class="focus-copy" user-select="true">{{article.experience.activeItem.body}}</text>
           </view>
         </view>
 
-        <view wx:if="{{item.isComparison}}" class="compare-list">
-          <view wx:for="{{item.columns}}" wx:for-item="column" wx:key="title" class="compare-column">
-            <text class="compare-title">{{column.title}}</text>
-            <text wx:for="{{column.items}}" wx:for-item="line" wx:key="*this" class="compare-line">{{line}}</text>
+        <view wx:if="{{section.showAleLagerExperience}}" class="ale-lager-experience experience-section">
+          <view class="path-switch">
+            <view
+              wx:for="{{article.experience.items}}"
+              wx:key="id"
+              class="path-option {{item.className}}"
+              data-path-id="{{item.id}}"
+              hover-class="tap-hover"
+              hover-stay-time="80"
+              bindtap="selectFermentationPath"
+            >
+              <text>{{item.title}}</text>
+              <text user-select="true">{{item.lead}}</text>
+            </view>
+          </view>
+          <view class="path-timeline">
+            <view wx:for="{{article.experience.activeItem.steps}}" wx:for-item="step" wx:key="*this" class="path-step">
+              <text class="step-dot"></text>
+              <text user-select="true">{{step}}</text>
+            </view>
           </view>
         </view>
 
-        <view wx:if="{{item.isQuiz}}" class="quiz-panel">
-          <text class="quiz-question">{{item.question}}</text>
-          <view
-            wx:for="{{item.options}}"
-            wx:for-item="option"
-            wx:key="label"
-            class="quiz-option"
-            data-module-id="{{item.id}}"
-            data-option-index="{{option.optionIndex}}"
-            hover-class="tap-hover"
-            hover-stay-time="80"
-            bindtap="selectQuizOption"
-          >
-            <text class="quiz-label">{{option.label}}</text>
-            <text wx:if="{{option.selected}}" class="quiz-feedback">{{option.feedback}}</text>
+        <view wx:if="{{section.showFlavorRadarExperience}}" class="flavor-radar-experience experience-section">
+          <view class="radar-field">
+            <view class="radar-ring radar-ring-outer"></view>
+            <view class="radar-ring radar-ring-inner"></view>
+            <view
+              wx:for="{{article.experience.items}}"
+              wx:key="id"
+              class="source-orbit {{item.className}}"
+              style="{{item.angleStyle}}"
+              data-source-id="{{item.id}}"
+              hover-class="tap-hover"
+              hover-stay-time="80"
+              bindtap="selectFlavorSource"
+            >
+              <text>{{item.title}}</text>
+            </view>
+          </view>
+          <view class="term-board">
+            <text class="focus-title">{{article.experience.activeItem.title}}</text>
+            <text class="focus-copy" user-select="true">{{article.experience.activeItem.clue}}</text>
+            <view class="term-list">
+              <text wx:for="{{article.experience.activeItem.terms}}" wx:key="*this">{{item}}</text>
+            </view>
           </view>
         </view>
       </view>
@@ -114,7 +128,7 @@
         <text class="related-code">{{item.codeLabel}}</text>
         <view class="related-main">
           <text class="related-name">{{item.displayName}}</text>
-          <text class="related-en">{{item.name_en}}</text>
+          <text class="related-en" user-select="true">{{item.name_en}}</text>
         </view>
         <text class="related-action">查看</text>
       </view>

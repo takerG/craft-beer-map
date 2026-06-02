@@ -49,6 +49,21 @@ function readSite(slug) {
   if (!content.hero || !Array.isArray(content.modules)) {
     throw new Error(`${slug}/content.json must include hero and modules`);
   }
+  if (!Array.isArray(content.sections) || content.sections.length < 4) {
+    throw new Error(`${slug}/content.json must include at least four article sections`);
+  }
+  if (!content.experienceAfterSectionId) {
+    throw new Error(`${slug}/content.json must include experienceAfterSectionId`);
+  }
+  const sectionIds = new Set(content.sections.map((section) => section.id));
+  if (!sectionIds.has(content.experienceAfterSectionId)) {
+    throw new Error(`${slug}/content.json experienceAfterSectionId must match a section id`);
+  }
+  content.sections.forEach((section, index) => {
+    if (!section.id || !section.title || !Array.isArray(section.paragraphs) || section.paragraphs.length < 1) {
+      throw new Error(`${slug}/content.json sections[${index}] must include id, title, and paragraphs`);
+    }
+  });
 
   return {
     ...meta,
@@ -56,6 +71,8 @@ function readSite(slug) {
     updatedAt: publish.updatedAt || publish.publishedAt,
     coverImage: writeCoverImage(slug, meta),
     hero: content.hero,
+    sections: content.sections,
+    experienceAfterSectionId: content.experienceAfterSectionId,
     modules: content.modules,
   };
 }
@@ -95,7 +112,7 @@ function writeCoverImage(slug, meta) {
 
   const outputPathForSlug = path.join(coverOutputRoot, `${slug}.png`);
   fs.writeFileSync(outputPathForSlug, encodePng(width, height, image.pixels));
-  return `assets/academy-covers/${slug}.png`;
+  return `/assets/academy-covers/${slug}.png`;
 }
 
 function createRgbaCanvas(width, height) {
