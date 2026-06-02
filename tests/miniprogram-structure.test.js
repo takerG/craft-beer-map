@@ -257,6 +257,29 @@ test('extension learning pages are declared and linked from explore and search',
   assert.match(searchWxml, /扩展风格/);
 });
 
+test('style language page is declared and linked from explore and search', () => {
+  const exploreJs = readMiniPage('pages/explore/index.js');
+  const exploreWxml = readMiniPage('pages/explore/index.wxml');
+  const searchJs = readMiniPage('pages/search/index.js');
+  const styleLanguageJs = readMiniPage('pages/style-language/index.js');
+  const styleLanguageWxml = readMiniPage('pages/style-language/index.wxml');
+  const styleLanguageWxss = readMiniPage('pages/style-language/index.wxss');
+
+  assert.ok(appJson.pages.includes('pages/style-language/index'));
+  assert.match(exploreJs, /openStyleLanguage/);
+  assert.match(exploreWxml, /按常见叫法找风格/);
+  assert.match(searchJs, /果汁感/);
+  assert.match(searchJs, /小甜水/);
+  assert.match(styleLanguageJs, /getStyleLanguageGroups/);
+  assert.match(styleLanguageJs, /getStyleLanguageDetail/);
+  assert.match(styleLanguageJs, /style_language_group_select/);
+  assert.match(styleLanguageJs, /style_language_style_open/);
+  assert.match(styleLanguageWxml, /不知道 IPA、古斯、世涛是什么意思/);
+  assert.match(styleLanguageWxml, /class="language-card/);
+  assert.match(styleLanguageWxml, /class="language-style-row"/);
+  assert.match(styleLanguageWxss, /\.language-card/);
+});
+
 test('choose taste matches route extension styles to extension details', () => {
   const chooseJs = readMiniPage('pages/choose/index.js');
   const chooseWxml = readMiniPage('pages/choose/index.wxml');

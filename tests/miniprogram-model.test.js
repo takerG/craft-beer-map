@@ -10,6 +10,8 @@ import {
   getGuideOverview,
   getGroupDetail,
   getStyleDetail,
+  getStyleLanguageDetail,
+  getStyleLanguageGroups,
   getSuperGroups,
   getTasteFilters,
   getTasteMatches,
@@ -17,6 +19,7 @@ import {
 } from '../miniprogram/utils/beer-model.js';
 import { beerData } from '../miniprogram/data/beer-data.js';
 import { extensionGroups, extensionStyles } from '../miniprogram/data/extension-styles.js';
+import { styleLanguageMap } from '../miniprogram/data/style-language-map.js';
 import { SUPER_GROUPS } from '../miniprogram/utils/super-groups.js';
 
 const root = process.cwd();
@@ -106,6 +109,73 @@ test('searchStyles returns BJCP and extension style results with routing kind', 
   assert.equal(pastry.id, 'ext-dessert-pastry-beer');
   assert.equal(bjcpIpa.kind, 'bjcp');
   assert.equal(bjcpIpa.code, '21A');
+});
+
+test('style language groups expose stable community wording entries', () => {
+  const groups = getStyleLanguageGroups();
+
+  assert.deepEqual(
+    groups.map((group) => group.id),
+    [
+      'crisp-daily',
+      'juicy-ipa',
+      'sweet-sour-fruit',
+      'sweet-entry',
+      'coffee-chocolate',
+      'tea-new-chinese',
+      'heavy-geek',
+      'low-abv-tipsy',
+    ],
+  );
+  assert.equal(groups[0].title, '清爽口粮');
+  assert.equal(groups[1].title, '果汁感 IPA');
+  assert.ok(groups.every((group) => group.keywordCount >= 3));
+  assert.ok(groups.every((group) => group.styleCount >= 4));
+  assert.equal(groups.some((group) => Object.hasOwn(group, 'styles')), false);
+});
+
+test('style language details resolve BJCP and extension styles for routing', () => {
+  const detail = getStyleLanguageDetail('coffee-chocolate');
+
+  assert.equal(detail.group.id, 'coffee-chocolate');
+  assert.match(detail.group.explanation, /咖啡/);
+  assert.ok(detail.styles.some((style) => style.kind === 'bjcp' && style.code === '16A'));
+  assert.ok(detail.styles.some((style) => style.kind === 'extension' && style.id === 'ext-coffee-beer'));
+  detail.styles.forEach((style) => {
+    assert.equal(typeof style.reason, 'string');
+    assert.ok(style.reason.length > 0);
+    assert.equal(typeof style.caution, 'string');
+    assert.ok(['bjcp', 'extension'].includes(style.kind));
+  });
+});
+
+test('style language map references existing BJCP and extension styles', () => {
+  const bjcpCodes = new Set(beerData.styles.map((style) => style.code || style.id));
+  const extensionIds = new Set(extensionStyles.map((style) => style.id));
+
+  styleLanguageMap.forEach((group) => {
+    assert.equal(typeof group.id, 'string');
+    assert.ok(group.title);
+    assert.ok(group.explanation);
+    assert.ok(Array.isArray(group.keywords) && group.keywords.length >= 3);
+    assert.ok(Array.isArray(group.styles) && group.styles.length >= 4);
+    group.styles.forEach((styleRef) => {
+      if (styleRef.kind === 'bjcp') {
+        assert.ok(bjcpCodes.has(styleRef.id), `${group.id} references missing BJCP style ${styleRef.id}`);
+      } else {
+        assert.equal(styleRef.kind, 'extension');
+        assert.ok(extensionIds.has(styleRef.id), `${group.id} references missing extension style ${styleRef.id}`);
+      }
+    });
+  });
+});
+
+test('searchStyles matches social wording from the style language map', () => {
+  assert.ok(searchStyles('果汁感').some((style) => style.id === '21C' || style.id === 'ext-hazy-pale-ale'));
+  assert.ok(searchStyles('小甜水').some((style) => style.id === '29A' || style.id === 'ext-dessert-pastry-beer'));
+  assert.ok(searchStyles('咖啡世涛').some((style) => style.id === 'ext-coffee-beer' || style.code === '16A'));
+  assert.ok(searchStyles('茶感').some((style) => style.id === '30A' || style.id === 'ext-field-beer'));
+  assert.ok(searchStyles('不苦').some((style) => style.code === '5B' || style.id === 'ext-rice-lager'));
 });
 
 test('mini program browse group labels stay stable', () => {
