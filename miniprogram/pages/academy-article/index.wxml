@@ -1,0 +1,123 @@
+<view class="page academy-article-page">
+  <view wx:if="{{isLoading}}" class="empty-state">
+    <text>正在打开学院内容</text>
+  </view>
+
+  <view wx:if="{{isNotFound}}" class="empty-state">
+    <text class="empty-title">没有找到这篇学院内容</text>
+    <text class="empty-copy">可能是内容目录还没有生成，回到学院看看其他内容。</text>
+    <view class="empty-action" hover-class="tap-hover" hover-stay-time="80" bindtap="backToAcademy">回到学院</view>
+  </view>
+
+  <view wx:if="{{isReady}}">
+    <view class="article-hero" style="border-top-color: {{article.accent}}">
+      <text class="article-kicker">{{article.hero.kicker}}</text>
+      <text class="page-title">{{article.title}}</text>
+      <text class="page-subtitle">{{article.hero.summary}}</text>
+      <view class="article-meta">
+        <text>{{article.difficulty}}</text>
+        <text>{{article.readingTime}} min</text>
+        <text>{{article.heroMetric}}</text>
+      </view>
+    </view>
+
+    <scroll-view scroll-x class="module-tabs">
+      <view
+        wx:for="{{article.modules}}"
+        wx:key="id"
+        class="module-tab"
+        data-module-id="{{item.id}}"
+        hover-class="tap-hover"
+        hover-stay-time="80"
+        bindtap="selectModule"
+      >
+        <text>{{item.navLabel}}</text>
+      </view>
+    </scroll-view>
+
+    <view class="module-list">
+      <view
+        wx:for="{{article.modules}}"
+        wx:key="id"
+        class="module-card"
+      >
+        <view class="module-head">
+          <text class="module-type">{{item.type}}</text>
+          <text class="module-title">{{item.title}}</text>
+        </view>
+        <text class="module-summary">{{item.summary}}</text>
+
+        <view wx:if="{{item.isScale}}" class="scale-list">
+          <view wx:for="{{item.points}}" wx:for-item="point" wx:key="label" class="scale-row">
+            <view class="scale-labels">
+              <text>{{point.label}}</text>
+              <text>{{point.low}} / {{point.high}}</text>
+            </view>
+            <view class="scale-track">
+              <view class="scale-fill" style="{{point.levelStyle}}"></view>
+            </view>
+          </view>
+        </view>
+
+        <view wx:if="{{item.isCards}}" class="mini-card-list">
+          <view wx:for="{{item.items}}" wx:for-item="card" wx:key="title" class="mini-card">
+            <text class="mini-index">0{{card.itemIndex}}</text>
+            <text class="mini-title">{{card.title}}</text>
+            <text class="mini-body">{{card.body}}</text>
+          </view>
+        </view>
+
+        <view wx:if="{{item.isComparison}}" class="compare-list">
+          <view wx:for="{{item.columns}}" wx:for-item="column" wx:key="title" class="compare-column">
+            <text class="compare-title">{{column.title}}</text>
+            <text wx:for="{{column.items}}" wx:for-item="line" wx:key="*this" class="compare-line">{{line}}</text>
+          </view>
+        </view>
+
+        <view wx:if="{{item.isQuiz}}" class="quiz-panel">
+          <text class="quiz-question">{{item.question}}</text>
+          <view
+            wx:for="{{item.options}}"
+            wx:for-item="option"
+            wx:key="label"
+            class="quiz-option"
+            data-module-id="{{item.id}}"
+            data-option-index="{{option.optionIndex}}"
+            hover-class="tap-hover"
+            hover-stay-time="80"
+            bindtap="selectQuizOption"
+          >
+            <text class="quiz-label">{{option.label}}</text>
+            <text wx:if="{{option.selected}}" class="quiz-feedback">{{option.feedback}}</text>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <view class="section-head">
+      <text>关联风格</text>
+      <text>继续阅读</text>
+    </view>
+
+    <view class="related-list">
+      <view
+        wx:for="{{article.relatedStyles}}"
+        wx:key="id"
+        class="related-row"
+        style="border-left-color: {{item.color}}"
+        data-style-id="{{item.id}}"
+        data-item-kind="{{item.kind}}"
+        hover-class="tap-hover"
+        hover-stay-time="80"
+        bindtap="openRelatedStyle"
+      >
+        <text class="related-code">{{item.codeLabel}}</text>
+        <view class="related-main">
+          <text class="related-name">{{item.displayName}}</text>
+          <text class="related-en">{{item.name_en}}</text>
+        </view>
+        <text class="related-action">查看</text>
+      </view>
+    </view>
+  </view>
+</view>

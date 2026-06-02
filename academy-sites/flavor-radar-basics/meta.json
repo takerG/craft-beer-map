@@ -1,0 +1,14 @@
+{
+  "slug": "flavor-radar-basics",
+  "title": "风味雷达入门",
+  "description": "把麦芽、酒花、酵母、发酵副产物拆成可点击的风味坐标。",
+  "type": "simulator",
+  "difficulty": "入门",
+  "readingTime": 6,
+  "tags": ["风味", "选酒", "感官训练"],
+  "date": "2026-06-02",
+  "featured": false,
+  "heroMetric": "4 个来源",
+  "accent": "#fb7185",
+  "relatedStyles": ["16A", "21C", "23E", "ext-dessert-pastry-beer"]
+}

@@ -1,0 +1,42 @@
+{
+  "hero": {
+    "kicker": "风格识别",
+    "summary": "不要先背定义，先看三个轴：苦度、酒花香气、酒体。多数 IPA 分支都能在这张地图上找到位置。"
+  },
+  "modules": [
+    {
+      "id": "axis",
+      "type": "scale",
+      "title": "先看三条轴",
+      "summary": "IPA 的第一判断不是产地，而是喝起来落在哪些感官区间。",
+      "points": [
+        { "label": "苦度", "low": "柔和", "high": "锋利", "level": 84 },
+        { "label": "香气", "low": "草本", "high": "热带水果", "level": 92 },
+        { "label": "酒体", "low": "清爽", "high": "饱满", "level": 62 }
+      ]
+    },
+    {
+      "id": "branches",
+      "type": "cards",
+      "title": "四个常见入口",
+      "summary": "先用市场高频叫法建立直觉，再回到 BJCP 或扩展风格详情。",
+      "items": [
+        { "title": "West Coast IPA", "body": "更干、更清晰，苦度线条明显，松针、葡萄柚和树脂感常见。", "tone": "bitter" },
+        { "title": "Hazy / NEIPA", "body": "香气更像果汁，苦度被柔化，酒体更饱满，外观常浑浊。", "tone": "juicy" },
+        { "title": "Session IPA", "body": "保留酒花存在感，但酒精度更轻，适合长时间轻松饮用。", "tone": "light" },
+        { "title": "Double IPA", "body": "酒花、酒精和麦芽支撑都被放大，强度明显上升。", "tone": "strong" }
+      ]
+    },
+    {
+      "id": "quiz",
+      "type": "quiz",
+      "title": "30 秒判断",
+      "question": "如果一杯 IPA 闻起来像芒果和菠萝，苦度不尖，口感圆润，你会先想到哪一支？",
+      "options": [
+        { "label": "Hazy / NEIPA", "correct": true, "feedback": "对。果汁感、柔化苦度和饱满酒体是重要信号。" },
+        { "label": "West Coast IPA", "correct": false, "feedback": "West Coast 通常更干、更清晰，苦度边缘更锋利。" },
+        { "label": "Session IPA", "correct": false, "feedback": "Session 重点是低酒精和轻盈，不一定有强烈果汁感。" }
+      ]
+    }
+  ]
+}

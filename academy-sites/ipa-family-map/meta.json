@@ -1,0 +1,14 @@
+{
+  "slug": "ipa-family-map",
+  "title": "IPA 家族地图",
+  "description": "用一张可交互地图理解 West Coast、Hazy、Session、Double IPA 的苦度、香气与酒体差异。",
+  "type": "map",
+  "difficulty": "入门",
+  "readingTime": 5,
+  "tags": ["IPA", "酒花", "风格识别"],
+  "date": "2026-06-02",
+  "featured": true,
+  "heroMetric": "4 条分支",
+  "accent": "#f6ad55",
+  "relatedStyles": ["21A", "21C", "22A", "ext-west-coast-ipa"]
+}

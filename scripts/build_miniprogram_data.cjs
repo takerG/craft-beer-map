@@ -7,7 +7,7 @@ const outputDir = path.join(root, 'miniprogram', 'data');
 const outputPath = path.join(outputDir, 'beer-data.js');
 const aliasesOutputPath = path.join(outputDir, 'style-aliases.js');
 const styleLanguageInputPath = path.join(root, 'data', 'style-language-map.json');
-const styleLanguageOutputPath = path.join(outputDir, 'style-language-map.js');
+const styleLanguageOutputPath = path.join(outputDir, 'styleLanguageMap.js');
 
 const data = JSON.parse(fs.readFileSync(inputPath, 'utf8'));
 const styleLanguageMap = JSON.parse(fs.readFileSync(styleLanguageInputPath, 'utf8'));

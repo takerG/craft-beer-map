@@ -1,6 +1,6 @@
 import { beerData } from '../data/beer-data.js';
 import { extensionGroups, extensionStyles } from '../data/extension-styles.js';
-import { styleLanguageMap } from '../data/style-language-map.js';
+import { styleLanguageMap } from '../data/styleLanguageMap.js';
 import { styleAliases } from '../data/style-aliases.js';
 import { SUPER_GROUPS } from './super-groups.js';
 

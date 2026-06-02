@@ -1,0 +1,45 @@
+{
+  "hero": {
+    "kicker": "基础概念",
+    "summary": "艾尔和拉格不是高低贵贱，而是两种发酵管理路线。温度、时间和酵母表达共同决定了杯中的气质。"
+  },
+  "modules": [
+    {
+      "id": "comparison",
+      "type": "comparison",
+      "title": "三件事先分清",
+      "summary": "把抽象术语换成可以观察的酿造变量。",
+      "columns": [
+        {
+          "title": "艾尔 Ale",
+          "items": ["发酵温度通常更高", "发酵周期更短", "酯香、酚香等个性更容易出现"]
+        },
+        {
+          "title": "拉格 Lager",
+          "items": ["发酵温度通常更低", "需要更长冷储与成熟", "干净、清爽、麦芽和酒花更直接"]
+        }
+      ]
+    },
+    {
+      "id": "timeline",
+      "type": "scale",
+      "title": "不是上下，而是管理方式",
+      "summary": "很多入门资料会说上发酵/下发酵，但真正帮助判断的是发酵温度和成熟时间。",
+      "points": [
+        { "label": "温度", "low": "低温", "high": "高温", "level": 45 },
+        { "label": "周期", "low": "短", "high": "长", "level": 70 },
+        { "label": "风味个性", "low": "干净", "high": "表达强", "level": 58 }
+      ]
+    },
+    {
+      "id": "quiz",
+      "type": "quiz",
+      "title": "快速辨认",
+      "question": "一杯酒干净、清脆、麦芽像面包皮，发酵香气很少，通常更接近哪条路径？",
+      "options": [
+        { "label": "拉格", "correct": true, "feedback": "对。干净清脆通常指向拉格路线，尤其是皮尔森、淡色拉格。" },
+        { "label": "艾尔", "correct": false, "feedback": "艾尔也可以干净，但更常见到酯香或酵母个性。" }
+      ]
+    }
+  ]
+}

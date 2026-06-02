@@ -19,7 +19,7 @@ import {
 } from '../miniprogram/utils/beer-model.js';
 import { beerData } from '../miniprogram/data/beer-data.js';
 import { extensionGroups, extensionStyles } from '../miniprogram/data/extension-styles.js';
-import { styleLanguageMap } from '../miniprogram/data/style-language-map.js';
+import { styleLanguageMap } from '../miniprogram/data/styleLanguageMap.js';
 import { SUPER_GROUPS } from '../miniprogram/utils/super-groups.js';
 
 const root = process.cwd();

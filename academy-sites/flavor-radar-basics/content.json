@@ -1,0 +1,43 @@
+{
+  "hero": {
+    "kicker": "感官训练",
+    "summary": "风味词不用一次背完。先知道它们大多来自麦芽、酒花、酵母和发酵管理，再把词汇放回具体风格。"
+  },
+  "modules": [
+    {
+      "id": "sources",
+      "type": "cards",
+      "title": "四个风味来源",
+      "summary": "点击式学习的核心是把词汇归类，而不是把词汇堆满页面。",
+      "items": [
+        { "title": "麦芽", "body": "面包、焦糖、坚果、咖啡、巧克力，常决定甜感、颜色和酒体支撑。", "tone": "malt" },
+        { "title": "酒花", "body": "草本、松针、柑橘、热带水果，也带来苦度和清爽收口。", "tone": "hop" },
+        { "title": "酵母", "body": "香蕉、丁香、胡椒、蜂蜜、泥土感，很多比利时和小麦风格都靠它建立个性。", "tone": "yeast" },
+        { "title": "发酵管理", "body": "酸感、酒精热感、干净度和复杂度，常来自温度、时间与微生物控制。", "tone": "process" }
+      ]
+    },
+    {
+      "id": "radar",
+      "type": "scale",
+      "title": "把词放回坐标",
+      "summary": "同一个词在不同风格里的强度不一样。先判断来源，再判断强度。",
+      "points": [
+        { "label": "麦芽感", "low": "轻", "high": "重", "level": 72 },
+        { "label": "酒花香", "low": "弱", "high": "强", "level": 88 },
+        { "label": "发酵个性", "low": "干净", "high": "复杂", "level": 64 },
+        { "label": "酸甜平衡", "low": "干爽", "high": "甜酸", "level": 52 }
+      ]
+    },
+    {
+      "id": "quiz",
+      "type": "quiz",
+      "title": "词汇归类",
+      "question": "香蕉和丁香这样的典型词，优先应该归到哪个来源？",
+      "options": [
+        { "label": "酵母", "correct": true, "feedback": "对。很多德式小麦和比利时风格会出现明显酵母表达。" },
+        { "label": "酒花", "correct": false, "feedback": "酒花更常见柑橘、草本、松针、热带水果等方向。" },
+        { "label": "麦芽", "correct": false, "feedback": "麦芽更常见面包、焦糖、坚果、咖啡、巧克力等方向。" }
+      ]
+    }
+  ]
+}

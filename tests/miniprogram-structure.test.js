@@ -24,6 +24,15 @@ test('tab bar entries point to declared pages', () => {
   });
 });
 
+test('academy is exposed as a primary bottom tab', () => {
+  assert.ok(appJson.pages.includes('pages/academy/index'));
+  assert.ok(appJson.pages.includes('pages/academy-article/index'));
+  assert.ok(
+    appJson.tabBar.list.some((item) => item.pagePath === 'pages/academy/index' && item.text === '学院'),
+    'academy tab should be visible as 学院',
+  );
+});
+
 test('tab bar entries use local lightweight png icons for default and selected states', () => {
   appJson.tabBar.list.forEach((item) => {
     ['iconPath', 'selectedIconPath'].forEach((property) => {
@@ -139,6 +148,8 @@ test('navigation handlers use shared guarded navigation helpers', () => {
   [
     'pages/explore/index.js',
     'pages/choose/index.js',
+    'pages/academy/index.js',
+    'pages/academy-article/index.js',
     'pages/search/index.js',
     'pages/group/index.js',
     'pages/style/index.js',
@@ -167,6 +178,8 @@ test('primary pages provide share message handlers', () => {
   [
     'pages/explore/index.js',
     'pages/choose/index.js',
+    'pages/academy/index.js',
+    'pages/academy-article/index.js',
     'pages/group/index.js',
     'pages/style/index.js',
     'pages/extension-group/index.js',
@@ -192,6 +205,9 @@ test('core user behaviors are instrumented for release analytics', () => {
     ['pages/choose/index.js', 'choose_filter_change'],
     ['pages/choose/index.js', 'choose_view_switch'],
     ['pages/choose/index.js', 'choose_style_open'],
+    ['pages/academy/index.js', 'academy_article_open'],
+    ['pages/academy-article/index.js', 'academy_article_share'],
+    ['pages/academy-article/index.js', 'academy_related_style_open'],
     ['pages/search/index.js', 'search_submit'],
     ['pages/search/index.js', 'search_result_open'],
     ['pages/group/index.js', 'style_open'],
@@ -211,6 +227,8 @@ test('core user behaviors are instrumented for release analytics', () => {
 test('tap targets expose consistent pressed feedback before release', () => {
   [
     'pages/choose/index.wxml',
+    'pages/academy/index.wxml',
+    'pages/academy-article/index.wxml',
     'pages/search/index.wxml',
     'pages/group/index.wxml',
     'pages/style/index.wxml',
@@ -221,6 +239,50 @@ test('tap targets expose consistent pressed feedback before release', () => {
     assert.match(source, /hover-class="tap-hover"/, `${relativePath} should use shared tap hover feedback`);
     assert.match(source, /hover-stay-time="80"/, `${relativePath} should keep tap feedback snappy`);
   });
+});
+
+test('academy templates avoid complex expressions that can blank mini program compilation', () => {
+  [
+    'pages/academy/index.wxml',
+    'pages/academy-article/index.wxml',
+  ].forEach((relativePath) => {
+    const source = readMiniPage(relativePath);
+    assert.doesNotMatch(source, /&&/, `${relativePath} should precompute compound booleans in JS`);
+    assert.doesNotMatch(source, /\?\s*'[^']*'\s*:/, `${relativePath} should precompute class names in JS`);
+    assert.doesNotMatch(source, /class="{{/, `${relativePath} should avoid dynamic class bindings`);
+    assert.doesNotMatch(source, /wx:elif/, `${relativePath} should avoid wx:elif chains`);
+    assert.doesNotMatch(source, /wx:elif="{{item\.type ===/, `${relativePath} should use precomputed module booleans`);
+  });
+});
+
+test('core beer model avoids the stale style-language-map runtime module id', () => {
+  const beerModelSource = readMiniPage('utils/beer-model.js');
+
+  assert.match(beerModelSource, /data\/styleLanguageMap\.js/);
+  assert.doesNotMatch(beerModelSource, /data\/style-language-map\.js/);
+});
+
+test('academy page renders a simple publish-sorted feed', () => {
+  const academyWxml = readMiniPage('pages/academy/index.wxml');
+  const academyWxss = readMiniPage('pages/academy/index.wxss');
+  const academyJs = readMiniPage('pages/academy/index.js');
+
+  assert.match(academyWxml, /class="filter-strip"/);
+  assert.match(academyWxml, /wx:for="{{typeFilters}}"/);
+  assert.match(academyWxml, /bindtap="filterArticles"/);
+  assert.match(academyWxml, /data-type="{{item\.type}}"/);
+  assert.match(academyWxml, /class="feed-list"/);
+  assert.match(academyWxml, /wx:for="{{feedSites}}"/);
+  assert.match(academyWxml, /class="feed-cover"/);
+  assert.match(academyWxml, /src="{{item\.coverImage}}"/);
+  assert.match(academyWxml, /{{item\.publishedAt}}/);
+  assert.match(academyJs, /allFeedSites/);
+  assert.match(academyJs, /filterArticles\(event\)/);
+  assert.match(academyJs, /academy_filter_change/);
+  assert.match(academyWxss, /\.filter-strip\s*\{[^}]*display:\s*flex;[^}]*overflow-x:\s*auto;/s);
+  assert.match(academyWxss, /\.feed-cover\s*\{[^}]*width:\s*100%;[^}]*height:\s*252rpx;[^}]*border-radius:\s*14rpx;/s);
+  assert.match(academyWxss, /\.feed-card\s*\{[^}]*width:\s*100%;[^}]*min-height:\s*484rpx;/s);
+  assert.doesNotMatch(academyWxml, /featured-strip|track-tabs|track-panel|tool-list/);
 });
 
 test('release checklist covers the first shipping gate', () => {
@@ -240,6 +302,13 @@ test('release checklist covers the first shipping gate', () => {
   ].forEach((keyword) => {
     assert.match(checklist, new RegExp(keyword), `release checklist should cover ${keyword}`);
   });
+});
+
+test('private devtools config keeps API hook disabled to avoid service timeout noise', () => {
+  const privateConfigPath = path.join(root, 'project.private.config.json');
+  const privateConfig = JSON.parse(fs.readFileSync(privateConfigPath, 'utf8'));
+
+  assert.equal(privateConfig.setting.useApiHook, false);
 });
 
 test('extension learning pages are declared and linked from explore and search', () => {

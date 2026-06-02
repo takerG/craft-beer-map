@@ -1,0 +1,14 @@
+{
+  "slug": "ale-vs-lager",
+  "title": "艾尔 vs 拉格",
+  "description": "用温度、时间和风味结果理解两大酿造路径，不再死记上发酵和下发酵。",
+  "type": "comparison",
+  "difficulty": "入门",
+  "readingTime": 4,
+  "tags": ["发酵", "入门", "拉格"],
+  "date": "2026-06-02",
+  "featured": true,
+  "heroMetric": "2 条路径",
+  "accent": "#53d4da",
+  "relatedStyles": ["1A", "5D", "12C", "25B"]
+}
