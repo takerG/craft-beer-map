@@ -1,0 +1,70 @@
+<view class="page style-language-page">
+  <view class="language-hero">
+    <text class="page-title">按常见叫法找风格</text>
+    <text class="page-subtitle">不知道 IPA、古斯、世涛是什么意思？先从你听过的叫法开始。</text>
+  </view>
+
+  <view class="language-card-list">
+    <view
+      wx:for="{{groups}}"
+      wx:key="id"
+      class="language-card {{activeLanguageId === item.id ? 'language-card-active' : ''}}"
+      style="border-left-color: {{item.color}}"
+      hover-class="tap-hover"
+      hover-stay-time="80"
+      data-language-id="{{item.id}}"
+      bindtap="selectLanguage"
+    >
+      <view class="language-card-main">
+        <text class="language-title">{{item.title}}</text>
+        <text class="language-subtitle">{{item.subtitle}}</text>
+        <view class="keyword-list">
+          <text
+            wx:for="{{item.keywords}}"
+            wx:for-item="keyword"
+            wx:key="*this"
+            class="keyword-chip"
+          >{{keyword}}</text>
+        </view>
+      </view>
+      <view class="language-card-meta">
+        <text>{{item.styleCount}}</text>
+        <text>风格</text>
+      </view>
+    </view>
+  </view>
+
+  <view wx:if="{{activeDetail}}" class="language-detail">
+    <view class="detail-head">
+      <view>
+        <text class="detail-kicker">用户语言</text>
+        <text class="detail-title">{{activeDetail.group.title}}</text>
+      </view>
+      <text class="detail-count">{{activeDetail.styles.length}} 个入口</text>
+    </view>
+
+    <text class="detail-copy">{{activeDetail.group.explanation}}</text>
+
+    <view class="language-style-list">
+      <view
+        wx:for="{{activeDetail.styles}}"
+        wx:key="id"
+        class="language-style-row"
+        hover-class="tap-hover"
+        hover-stay-time="80"
+        data-style-id="{{item.id}}"
+        data-item-kind="{{item.kind}}"
+        bindtap="openStyle"
+      >
+        <text class="style-code">{{item.codeLabel}}</text>
+        <view class="style-main">
+          <text class="style-name">{{item.displayName}}</text>
+          <text class="style-alias">{{item.socialAlias}}</text>
+          <text class="style-reason">{{item.reason}}</text>
+          <text class="style-caution">{{item.caution}}</text>
+        </view>
+        <text class="style-action">查看</text>
+      </view>
+    </view>
+  </view>
+</view>

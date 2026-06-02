@@ -54,6 +54,11 @@ Page({
     switchTabOnce(this, '/pages/search/index');
   },
 
+  openStyleLanguage() {
+    trackEvent('explore_style_language_open');
+    navigateOnce(this, '/pages/style-language/index');
+  },
+
   openGroup(event) {
     const { groupId } = event.currentTarget.dataset;
     trackEvent('group_open', { groupId, source: 'explore' });

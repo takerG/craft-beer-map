@@ -8,7 +8,7 @@ Page({
     results: [],
     hasQuery: false,
     hasResults: false,
-    suggestions: ['IPA', '拉格', '世涛', '贵兹'],
+    suggestions: ['IPA', '果汁感', '小甜水', '咖啡世涛', '茶感', '不苦'],
   },
 
   onInput(event) {

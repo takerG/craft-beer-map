@@ -1,5 +1,6 @@
 import { beerData } from '../data/beer-data.js';
 import { extensionGroups, extensionStyles } from '../data/extension-styles.js';
+import { styleLanguageMap } from '../data/style-language-map.js';
 import { styleAliases } from '../data/style-aliases.js';
 import { SUPER_GROUPS } from './super-groups.js';
 
@@ -107,6 +108,7 @@ const groupByCategory = new Map();
 const extensionGroupById = new Map(extensionGroups.map((group) => [group.id, group]));
 const extensionStyleById = new Map();
 const extensionStylesByGroup = new Map();
+const styleLanguageSearchTermsByRef = buildStyleLanguageSearchTerms();
 
 SUPER_GROUPS.forEach((group) => {
   group.categories.forEach((categoryId) => groupByCategory.set(categoryId, group));
@@ -128,6 +130,7 @@ const styles = beerData.styles.map((style) => {
   const category = categoryById.get(style.category);
   const group = category ? groupById.get(category.groupId) : SUPER_GROUPS[0];
   const aliases = styleAliases[style.code || style.id] || [];
+  const languageTerms = styleLanguageSearchTermsByRef.get(`bjcp:${style.code || style.id}`) || [];
   const enriched = {
     ...style,
     id: style.id || style.code,
@@ -138,7 +141,7 @@ const styles = beerData.styles.map((style) => {
     superGenreId: group.id,
     groupId: group.id,
     color: group.color,
-    searchText: `${style.id || ''} ${style.code || ''} ${style.name_zh || ''} ${style.name_en || ''} ${aliases.join(' ')}`.toLowerCase(),
+    searchText: `${style.id || ''} ${style.code || ''} ${style.name_zh || ''} ${style.name_en || ''} ${aliases.join(' ')} ${languageTerms.join(' ')}`.toLowerCase(),
   };
   styleById.set(enriched.id, enriched);
   styleById.set(enriched.code, enriched);
@@ -152,6 +155,7 @@ const styles = beerData.styles.map((style) => {
 
 const enrichedExtensionStyles = extensionStyles.map((style) => {
   const group = extensionGroupById.get(style.groupId);
+  const languageTerms = styleLanguageSearchTermsByRef.get(`extension:${style.id}`) || [];
   const enriched = {
     ...style,
     kind: 'extension',
@@ -159,7 +163,7 @@ const enrichedExtensionStyles = extensionStyles.map((style) => {
     displayName: style.name_zh || style.name_en || style.id,
     color: group ? group.color : '#f6ad55',
     sourceLabel: style.sourceLabel || 'BA/WBC/GABF 扩展风格',
-    searchText: `${style.id || ''} ${style.name_zh || ''} ${style.name_en || ''} ${(style.aliases || []).join(' ')}`.toLowerCase(),
+    searchText: `${style.id || ''} ${style.name_zh || ''} ${style.name_en || ''} ${(style.aliases || []).join(' ')} ${languageTerms.join(' ')}`.toLowerCase(),
   };
   extensionStyleById.set(enriched.id, enriched);
   if (!extensionStylesByGroup.has(enriched.groupId)) extensionStylesByGroup.set(enriched.groupId, []);
@@ -250,6 +254,22 @@ export function getExtensionStyleDetail(styleId) {
       .map((id) => styleById.get(id))
       .filter(Boolean)
       .map(toStyleSummary),
+  };
+}
+
+export function getStyleLanguageGroups() {
+  return styleLanguageMap.map(toStyleLanguageGroupSummary);
+}
+
+export function getStyleLanguageDetail(languageId) {
+  const group = styleLanguageMap.find((item) => item.id === languageId);
+  if (!group) return null;
+
+  return {
+    group: toStyleLanguageGroupSummary(group),
+    styles: group.styles
+      .map(resolveStyleLanguageRef)
+      .filter(Boolean),
   };
 }
 
@@ -408,6 +428,53 @@ function toExtensionSummary(style) {
     color: style.color,
     sourceLabel: style.sourceLabel,
   };
+}
+
+function toStyleLanguageGroupSummary(group) {
+  return {
+    id: group.id,
+    title: group.title,
+    subtitle: group.subtitle,
+    keywords: Array.isArray(group.keywords) ? [...group.keywords] : [],
+    explanation: group.explanation || '',
+    keywordCount: Array.isArray(group.keywords) ? group.keywords.length : 0,
+    styleCount: Array.isArray(group.styles) ? group.styles.length : 0,
+  };
+}
+
+function resolveStyleLanguageRef(styleRef) {
+  if (!styleRef || !styleRef.id) return null;
+  const style = styleRef.kind === 'extension' ? extensionStyleById.get(styleRef.id) : styleById.get(styleRef.id);
+  if (!style) return null;
+
+  return {
+    ...(style.kind === 'extension' ? toExtensionSummary(style) : toStyleSummary(style)),
+    socialAlias: styleRef.alias || '',
+    reason: styleRef.reason || '',
+    caution: styleRef.caution || '',
+  };
+}
+
+function buildStyleLanguageSearchTerms() {
+  const termsByRef = new Map();
+
+  styleLanguageMap.forEach((group) => {
+    const groupTerms = [
+      group.title,
+      group.subtitle,
+      group.explanation,
+      ...(Array.isArray(group.keywords) ? group.keywords : []),
+    ].filter(Boolean);
+
+    (group.styles || []).forEach((styleRef) => {
+      const key = `${styleRef.kind}:${styleRef.id}`;
+      const terms = termsByRef.get(key) || [];
+      terms.push(...groupTerms, styleRef.alias, styleRef.reason, styleRef.caution);
+      termsByRef.set(key, terms.filter(Boolean));
+    });
+  });
+
+  return termsByRef;
 }
 
 function normalizeTasteFilterState(filterState) {

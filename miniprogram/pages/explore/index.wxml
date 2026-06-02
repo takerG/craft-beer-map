@@ -28,6 +28,14 @@
       </view>
       <text class="search-entry-icon">›</text>
     </view>
+
+    <view class="language-entry" hover-class="entry-hover" hover-stay-time="80" bindtap="openStyleLanguage">
+      <view class="search-copy">
+        <text class="search-label">按常见叫法找风格</text>
+        <text class="search-hint">果汁感、小甜水、咖啡世涛、新中式茶感</text>
+      </view>
+      <text class="search-entry-icon">›</text>
+    </view>
   </view>
 
   <view class="section-switch">
