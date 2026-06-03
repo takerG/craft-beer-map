@@ -1,5 +1,6 @@
 import { getExtensionGroupDetail } from '../../utils/beer-model.js';
 import { deferSetData, navigateOnce, switchTabOnce } from '../../utils/page-performance.js';
+import { buildShareMessage } from '../../utils/share.js';
 import { trackEvent } from '../../utils/telemetry.js';
 
 Page({
@@ -41,10 +42,10 @@ Page({
   onShareAppMessage() {
     const group = this.data.group;
     trackEvent('extension_group_share', { groupId: this.data.groupId });
-    return {
-      title: group ? `市场扩展风格：${group.name}` : '精酿风格指南',
+    return buildShareMessage({
+      title: group ? `${group.name}：市场叫法速查` : undefined,
       path: `/pages/extension-group/index?groupId=${this.data.groupId || 'modern-ipa-hops'}`,
-    };
+    });
   },
 
   openExtensionStyle(event) {

@@ -103,6 +103,7 @@ test('academy feed sites expose generated png cover images', () => {
 test('academy home exposes feed type filters with counts', () => {
   const home = getAcademyHome();
 
+  assert.equal(home.subtitle, '按发布时间更新的精酿互动文章。');
   assert.deepEqual(
     home.filterOptions.map((option) => [option.type, option.label, option.count]),
     [
@@ -114,6 +115,16 @@ test('academy home exposes feed type filters with counts', () => {
   );
   assert.equal(home.filterOptions[0].className, 'filter-chip is-active');
   assert.equal(home.filterOptions.slice(1).every((option) => option.className === 'filter-chip'), true);
+});
+
+test('academy feed filter strip keeps a fixed horizontal scroll height', () => {
+  const wxss = fs.readFileSync(path.join(root, 'miniprogram/pages/academy/index.wxss'), 'utf8');
+  const filterStripRule = wxss.match(/\.filter-strip\s*\{(?<body>[\s\S]*?)\}/);
+
+  assert.ok(filterStripRule, 'academy filter strip styles should exist');
+  assert.match(filterStripRule.groups.body, /height:\s*58rpx;/);
+  assert.match(filterStripRule.groups.body, /white-space:\s*nowrap;/);
+  assert.doesNotMatch(filterStripRule.groups.body, /display:\s*flex;/);
 });
 
 test('academy article resolves interactive modules and BJCP related styles', () => {

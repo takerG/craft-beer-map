@@ -1,38 +1,33 @@
 import { buildAcademyTypeFilters, getAcademyHome } from '../../utils/academy-model.js';
 import { navigateOnce } from '../../utils/page-performance.js';
+import { buildShareMessage } from '../../utils/share.js';
 import { trackEvent } from '../../utils/telemetry.js';
 
 Page({
   data: {
-    title: '',
-    subtitle: '',
     allFeedSites: [],
     feedSites: [],
     typeFilters: [],
     activeType: 'all',
-    articleCountLabel: '',
   },
 
   onLoad() {
     const home = getAcademyHome();
 
     this.setData({
-      title: home.title,
-      subtitle: home.subtitle,
       allFeedSites: home.feedSites,
       feedSites: home.feedSites,
       typeFilters: home.filterOptions,
       activeType: 'all',
-      articleCountLabel: `${home.stats.siteCount} 篇`,
     });
   },
 
   onShareAppMessage() {
     trackEvent('academy_share');
-    return {
-      title: '学院：精酿互动文章',
+    return buildShareMessage({
+      title: '精酿知识库：3 分钟看懂一类风格',
       path: '/pages/academy/index',
-    };
+    });
   },
 
   openArticle(event) {
@@ -54,7 +49,6 @@ Page({
       activeType: type,
       feedSites,
       typeFilters: buildAcademyTypeFilters(allFeedSites, type),
-      articleCountLabel: `${feedSites.length} 篇`,
     });
     trackEvent('academy_filter_change', { type, count: feedSites.length });
   },

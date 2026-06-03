@@ -1,13 +1,5 @@
 <view class="page academy-page">
-  <view class="feed-head">
-    <view>
-      <text class="page-title">{{title}}</text>
-      <text class="page-subtitle">{{subtitle}}</text>
-    </view>
-    <text class="feed-count">{{articleCountLabel}}</text>
-  </view>
-
-  <scroll-view class="filter-strip" enable-flex="true" scroll-x="true" show-scrollbar="false">
+  <scroll-view class="filter-strip" scroll-x="true" show-scrollbar="false">
     <view
       wx:for="{{typeFilters}}"
       wx:key="type"

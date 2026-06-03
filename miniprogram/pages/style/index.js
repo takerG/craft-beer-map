@@ -1,5 +1,6 @@
 import { getStyleDetail } from '../../utils/beer-model.js';
 import { deferSetData, navigateOnce, redirectOnce, switchTabOnce } from '../../utils/page-performance.js';
+import { buildShareMessage } from '../../utils/share.js';
 import { isStyleFavorite, toggleFavoriteStyle } from '../../utils/style-favorites.js';
 import { trackEvent } from '../../utils/telemetry.js';
 
@@ -65,10 +66,10 @@ Page({
     const detail = this.data.detail;
     const style = detail && detail.style;
     trackEvent('style_share', { styleId: style ? style.id : '' });
-    return {
-      title: style ? `精酿风格名片：${style.code} ${style.displayName}` : '精酿风格指南',
+    return buildShareMessage({
+      title: style ? `${style.code} ${style.displayName}：风味参数速查` : undefined,
       path: `/pages/style/index?styleId=${style ? style.id : ''}`,
-    };
+    });
   },
 
   openRelated(event) {

@@ -1,5 +1,6 @@
 import { getTasteFilters, getTasteMatches } from '../../utils/beer-model.js';
 import { navigateOnce } from '../../utils/page-performance.js';
+import { buildShareMessage } from '../../utils/share.js';
 import { buildFlavorWheelVisual } from '../../utils/taste-visuals.js';
 import { trackEvent } from '../../utils/telemetry.js';
 
@@ -52,10 +53,10 @@ Page({
 
   onShareAppMessage() {
     trackEvent('choose_share');
-    return {
-      title: '择饮：按口味找到适合你的精酿风格',
+    return buildShareMessage({
+      title: '按口味找精酿：甜、酸、苦、酒体都能筛',
       path: '/pages/choose/index',
-    };
+    });
   },
 
   changeFilter(event) {

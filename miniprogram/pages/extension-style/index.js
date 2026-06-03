@@ -1,5 +1,6 @@
 import { getExtensionStyleDetail } from '../../utils/beer-model.js';
 import { deferSetData, navigateOnce, redirectOnce, switchTabOnce } from '../../utils/page-performance.js';
+import { buildShareMessage } from '../../utils/share.js';
 import { trackEvent } from '../../utils/telemetry.js';
 
 Page({
@@ -58,10 +59,10 @@ Page({
     const detail = this.data.detail;
     const style = detail && detail.style;
     trackEvent('extension_style_share', { styleId: style ? style.id : '' });
-    return {
-      title: style ? `市场风格名片：${style.displayName}` : '精酿风格指南',
+    return buildShareMessage({
+      title: style ? `${style.displayName}：市场叫法与 BJCP 对照` : undefined,
       path: `/pages/extension-style/index?styleId=${style ? style.id : ''}`,
-    };
+    });
   },
 
   openBjcpStyle(event) {

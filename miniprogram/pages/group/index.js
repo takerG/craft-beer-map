@@ -1,5 +1,6 @@
 import { getGroupDetail } from '../../utils/beer-model.js';
 import { deferSetData, navigateOnce, switchTabOnce } from '../../utils/page-performance.js';
+import { buildShareMessage } from '../../utils/share.js';
 import { trackEvent } from '../../utils/telemetry.js';
 
 Page({
@@ -41,10 +42,10 @@ Page({
   onShareAppMessage() {
     const group = this.data.group;
     trackEvent('group_share', { groupId: this.data.groupId });
-    return {
-      title: group ? `精酿风格指南：${group.name}的 ${group.styleCount} 个风格入口` : '精酿风格指南',
+    return buildShareMessage({
+      title: group ? `${group.name}速查：${group.styleCount} 个风格入口` : undefined,
       path: `/pages/group/index?groupId=${this.data.groupId || 'american'}`,
-    };
+    });
   },
 
   openStyle(event) {

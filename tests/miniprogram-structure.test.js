@@ -190,6 +190,37 @@ test('primary pages provide share message handlers', () => {
   });
 });
 
+test('share messages use the generated handbook card and concise copy', () => {
+  const shareImagePath = path.join(miniprogramRoot, 'assets', 'share', 'craft-beer-handbook.jpg');
+  const shareImage = fs.readFileSync(shareImagePath);
+  assert.equal(shareImage.subarray(0, 3).toString('hex'), 'ffd8ff', 'share card should be a jpg');
+  assert.ok(shareImage.length < 240 * 1024, 'share card should stay lightweight for mini program sharing');
+
+  const shareUtil = readMiniPage('utils/share.js');
+  assert.match(shareUtil, /DEFAULT_SHARE_TITLE\s*=\s*'你的精酿顾问'/);
+  assert.match(shareUtil, /SHARE_IMAGE_URL\s*=\s*'\/assets\/share\/craft-beer-handbook\.jpg'/);
+
+  [
+    'pages/explore/index.js',
+    'pages/choose/index.js',
+    'pages/academy/index.js',
+    'pages/academy-article/index.js',
+    'pages/favorites/index.js',
+    'pages/group/index.js',
+    'pages/style/index.js',
+    'pages/extension-group/index.js',
+    'pages/extension-style/index.js',
+    'pages/style-language/index.js',
+  ].forEach((relativePath) => {
+    const source = readMiniPage(relativePath);
+    assert.match(source, /buildShareMessage/, `${relativePath} should use shared share message helper`);
+    assert.doesNotMatch(source, /把 BJCP 和市场叫法放进一套风味坐标/);
+  });
+
+  const exploreJs = readMiniPage('pages/explore/index.js');
+  assert.match(exploreJs, /精酿速查手册：风格、口味、叫法一查就懂/);
+});
+
 test('core user behaviors are instrumented for release analytics', () => {
   const telemetryPath = path.join(miniprogramRoot, 'utils', 'telemetry.js');
   assert.equal(fs.existsSync(telemetryPath), true, 'utils/telemetry.js should exist');
@@ -304,7 +335,13 @@ test('academy page renders a simple publish-sorted feed', () => {
   const academyWxss = readMiniPage('pages/academy/index.wxss');
   const academyJs = readMiniPage('pages/academy/index.js');
 
-  assert.match(academyWxml, /<scroll-view[^>]*class="filter-strip"[^>]*enable-flex="true"/s);
+  assert.doesNotMatch(academyWxml, /class="feed-head"/);
+  assert.doesNotMatch(academyWxml, /class="page-title">\{\{title\}\}/);
+  assert.doesNotMatch(academyWxml, /class="page-subtitle">\{\{subtitle\}\}/);
+  assert.doesNotMatch(academyWxml, /class="feed-count"/);
+  assert.doesNotMatch(academyJs, /articleCountLabel/);
+  assert.match(academyWxml, /<scroll-view[^>]*class="filter-strip"[^>]*scroll-x="true"/s);
+  assert.doesNotMatch(academyWxml, /<scroll-view[^>]*class="filter-strip"[^>]*enable-flex/s);
   assert.match(academyWxml, /wx:for="{{typeFilters}}"/);
   assert.match(academyWxml, /bindtap="filterArticles"/);
   assert.match(academyWxml, /data-type="{{item\.type}}"/);
@@ -316,7 +353,8 @@ test('academy page renders a simple publish-sorted feed', () => {
   assert.match(academyJs, /allFeedSites/);
   assert.match(academyJs, /filterArticles\(event\)/);
   assert.match(academyJs, /academy_filter_change/);
-  assert.match(academyWxss, /\.filter-strip\s*\{[^}]*display:\s*flex;[^}]*overflow-x:\s*auto;/s);
+  assert.match(academyWxss, /\.filter-strip\s*\{[^}]*height:\s*58rpx;[^}]*overflow:\s*hidden;[^}]*white-space:\s*nowrap;/s);
+  assert.doesNotMatch(academyWxss, /\.filter-strip\s*\{[^}]*display:\s*flex;/s);
   assert.match(academyWxss, /\.feed-cover\s*\{[^}]*width:\s*100%;[^}]*height:\s*252rpx;[^}]*border-radius:\s*14rpx;/s);
   assert.match(academyWxss, /\.feed-card\s*\{[^}]*width:\s*100%;[^}]*min-height:\s*484rpx;/s);
   assert.doesNotMatch(academyWxml, /featured-strip|track-tabs|track-panel|tool-list/);

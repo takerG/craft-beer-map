@@ -1,5 +1,6 @@
 import { getAcademyArticle } from '../../utils/academy-model.js';
 import { navigateOnce, switchTabOnce } from '../../utils/page-performance.js';
+import { buildShareMessage } from '../../utils/share.js';
 import { trackEvent } from '../../utils/telemetry.js';
 
 Page({
@@ -23,10 +24,10 @@ Page({
   onShareAppMessage() {
     const article = this.data.article;
     trackEvent('academy_article_share', { slug: article ? article.slug : this.data.slug });
-    return {
-      title: article ? article.title : '学院',
+    return buildShareMessage({
+      title: article ? `${article.title}：精酿知识速查` : '精酿知识速查',
       path: `/pages/academy-article/index?slug=${this.data.slug}`,
-    };
+    });
   },
 
   loadArticle(slug) {

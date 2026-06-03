@@ -1,5 +1,6 @@
 import { getStyleLanguageDetail, getStyleLanguageGroups } from '../../utils/beer-model.js';
 import { navigateOnce } from '../../utils/page-performance.js';
+import { buildShareMessage } from '../../utils/share.js';
 import { trackEvent } from '../../utils/telemetry.js';
 
 const GROUP_ACCENTS = ['#60a5fa', '#f6ad55', '#fb7185', '#f472b6', '#a78bfa', '#34d399', '#f97316', '#53d4da'];
@@ -28,10 +29,10 @@ Page({
   onShareAppMessage() {
     const detail = this.data.activeDetail;
     trackEvent('style_language_share', { languageId: detail && detail.group ? detail.group.id : '' });
-    return {
-      title: '按常见叫法找精酿风格',
+    return buildShareMessage({
+      title: '听过叫法不懂风格？这里能对上',
       path: '/pages/style-language/index',
-    };
+    });
   },
 
   selectLanguage(event) {

@@ -1,4 +1,5 @@
 import { navigateOnce, switchTabOnce } from '../../utils/page-performance.js';
+import { buildShareMessage } from '../../utils/share.js';
 import { getFavoriteStyleSummaries } from '../../utils/style-favorites.js';
 import { trackEvent } from '../../utils/telemetry.js';
 
@@ -15,10 +16,10 @@ Page({
 
   onShareAppMessage() {
     trackEvent('favorites_share');
-    return {
-      title: '精酿风格收藏夹',
+    return buildShareMessage({
+      title: '我的精酿收藏夹：常看风格随手查',
       path: '/pages/favorites/index',
-    };
+    });
   },
 
   refreshFavoriteStyles() {

@@ -1,5 +1,6 @@
 import { getExtensionGroups, getGuideOverview, getSuperGroups, searchStyles } from '../../utils/beer-model.js';
 import { navigateOnce, switchTabOnce } from '../../utils/page-performance.js';
+import { buildShareMessage } from '../../utils/share.js';
 import { trackEvent } from '../../utils/telemetry.js';
 
 Page({
@@ -36,10 +37,10 @@ Page({
 
   onShareAppMessage() {
     trackEvent('explore_share');
-    return {
-      title: '精酿风格指南：把 BJCP 和市场叫法放进一套风味坐标',
+    return buildShareMessage({
+      title: '精酿速查手册：风格、口味、叫法一查就懂',
       path: '/pages/explore/index',
-    };
+    });
   },
 
   switchSection(event) {
