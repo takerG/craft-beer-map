@@ -1,6 +1,6 @@
 import { getExtensionGroups, getGuideOverview, getSuperGroups, searchStyles } from '../../utils/beer-model.js';
 import { navigateOnce, switchTabOnce } from '../../utils/page-performance.js';
-import { buildShareMessage } from '../../utils/share.js';
+import { buildShareMessage, buildTimelineShareMessage, enableShareMenu } from '../../utils/share.js';
 import { trackEvent } from '../../utils/telemetry.js';
 
 Page({
@@ -14,6 +14,8 @@ Page({
   },
 
   onLoad() {
+    enableShareMenu();
+
     const groups = getSuperGroups();
     const extensionGroups = getExtensionGroups();
     const overview = getGuideOverview();
@@ -38,8 +40,15 @@ Page({
   onShareAppMessage() {
     trackEvent('explore_share');
     return buildShareMessage({
-      title: '精酿速查手册：风格、口味、叫法一查就懂',
+      title: '酒蒙子的第一课',
       path: '/pages/explore/index',
+    });
+  },
+
+  onShareTimeline() {
+    trackEvent('explore_timeline_share');
+    return buildTimelineShareMessage({
+      title: '酒蒙子的第一课',
     });
   },
 

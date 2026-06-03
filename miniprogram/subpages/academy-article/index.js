@@ -1,6 +1,6 @@
 import { getAcademyArticle } from '../../utils/academy-model.js';
 import { navigateOnce, switchTabOnce } from '../../utils/page-performance.js';
-import { buildShareMessage } from '../../utils/share.js';
+import { buildShareMessage, buildTimelineShareMessage, enableShareMenu } from '../../utils/share.js';
 import { trackEvent } from '../../utils/telemetry.js';
 
 Page({
@@ -18,6 +18,7 @@ Page({
   },
 
   onLoad(options = {}) {
+    enableShareMenu();
     this.loadArticle(options.slug || '');
   },
 
@@ -25,8 +26,18 @@ Page({
     const article = this.data.article;
     trackEvent('academy_article_share', { slug: article ? article.slug : this.data.slug });
     return buildShareMessage({
-      title: article ? `${article.title}：精酿知识速查` : '精酿知识速查',
+      title: article ? `精酿知识：${article.title}` : '精酿知识速查',
       path: `/subpages/academy-article/index?slug=${this.data.slug}`,
+    });
+  },
+
+  onShareTimeline() {
+    const article = this.data.article;
+    const slug = article ? article.slug : this.data.slug;
+    trackEvent('academy_article_timeline_share', { slug });
+    return buildTimelineShareMessage({
+      title: article ? `精酿知识：${article.title}` : '精酿知识速查',
+      query: `slug=${slug}`,
     });
   },
 

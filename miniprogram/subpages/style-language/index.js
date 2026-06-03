@@ -1,6 +1,6 @@
 ﻿import { getStyleLanguageDetail, getStyleLanguageGroups } from '../../utils/beer-model.js';
 import { navigateOnce } from '../../utils/page-performance.js';
-import { buildShareMessage } from '../../utils/share.js';
+import { buildShareMessage, buildTimelineShareMessage, enableShareMenu } from '../../utils/share.js';
 import { trackEvent } from '../../utils/telemetry.js';
 
 const GROUP_ACCENTS = ['#60a5fa', '#f6ad55', '#fb7185', '#f472b6', '#a78bfa', '#34d399', '#f97316', '#53d4da'];
@@ -13,6 +13,8 @@ Page({
   },
 
   onLoad() {
+    enableShareMenu();
+
     const groups = getStyleLanguageGroups().map((group, index) => ({
       ...group,
       color: GROUP_ACCENTS[index % GROUP_ACCENTS.length],
@@ -30,8 +32,16 @@ Page({
     const detail = this.data.activeDetail;
     trackEvent('style_language_share', { languageId: detail && detail.group ? detail.group.id : '' });
     return buildShareMessage({
-      title: '鍚繃鍙硶涓嶆噦椋庢牸锛熻繖閲岃兘瀵逛笂',
+      title: '听过叫法不懂风格？这里能对上',
       path: '/subpages/style-language/index',
+    });
+  },
+
+  onShareTimeline() {
+    const detail = this.data.activeDetail;
+    trackEvent('style_language_timeline_share', { languageId: detail && detail.group ? detail.group.id : '' });
+    return buildTimelineShareMessage({
+      title: '听过叫法不懂风格？这里能对上',
     });
   },
 
@@ -70,7 +80,7 @@ Page({
       ...detail,
       styles: detail.styles.map((style) => ({
         ...style,
-        codeLabel: style.kind === 'extension' ? '鎵╁睍' : style.code,
+        codeLabel: style.kind === 'extension' ? '扩展' : style.code,
       })),
     };
   },

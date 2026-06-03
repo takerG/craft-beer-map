@@ -11,6 +11,27 @@ const subpackagePagePaths = (appJson.subpackages || []).flatMap((subpackage) =>
   subpackage.pages.map((pagePath) => `${subpackage.root}/${pagePath}`),
 );
 const allDeclaredPagePaths = [...appJson.pages, ...subpackagePagePaths];
+const shareablePagePaths = [
+  'pages/explore/index',
+  'pages/search/index',
+  'pages/choose/index',
+  'pages/academy/index',
+  'pages/favorites/index',
+  'subpages/academy-article/index',
+  'subpages/style-language/index',
+  'subpages/group/index',
+  'subpages/style/index',
+  'subpages/extension-group/index',
+  'subpages/extension-style/index',
+];
+const contextualSharePagePaths = [
+  'subpages/academy-article/index',
+  'subpages/group/index',
+  'subpages/style/index',
+  'subpages/extension-group/index',
+  'subpages/extension-style/index',
+];
+const genericSharePagePaths = shareablePagePaths.filter((pagePath) => !contextualSharePagePaths.includes(pagePath));
 
 test('every app.json page has the required mini program files', () => {
   allDeclaredPagePaths.forEach((pagePath) => {
@@ -219,18 +240,27 @@ test('heavy destination pages defer below-the-fold hydration', () => {
 });
 
 test('primary pages provide share message handlers', () => {
-  [
-    'pages/explore/index.js',
-    'pages/choose/index.js',
-    'pages/academy/index.js',
-    'subpages/academy-article/index.js',
-    'subpages/group/index.js',
-    'subpages/style/index.js',
-    'subpages/extension-group/index.js',
-    'subpages/extension-style/index.js',
-  ].forEach((relativePath) => {
+  shareablePagePaths.forEach((pagePath) => {
+    const relativePath = `${pagePath}.js`;
     const source = readMiniPage(relativePath);
     assert.match(source, /onShareAppMessage\(\)/, `${relativePath} should define onShareAppMessage`);
+  });
+});
+
+test('shareable pages enable and customize timeline sharing', () => {
+  const shareUtil = readMiniPage('utils/share.js');
+  assert.match(shareUtil, /export function enableShareMenu/);
+  assert.match(shareUtil, /shareAppMessage/);
+  assert.match(shareUtil, /shareTimeline/);
+  assert.match(shareUtil, /export function buildTimelineShareMessage/);
+  assert.match(shareUtil, /query/);
+
+  shareablePagePaths.forEach((pagePath) => {
+    const relativePath = `${pagePath}.js`;
+    const source = readMiniPage(relativePath);
+    assert.match(source, /enableShareMenu/, `${relativePath} should enable the timeline share menu`);
+    assert.match(source, /onShareTimeline\(\)/, `${relativePath} should define onShareTimeline`);
+    assert.match(source, /buildTimelineShareMessage/, `${relativePath} should use the shared timeline helper`);
   });
 });
 
@@ -241,28 +271,49 @@ test('share messages use the generated handbook card and concise copy', () => {
   assert.ok(shareImage.length < 240 * 1024, 'share card should stay lightweight for mini program sharing');
 
   const shareUtil = readMiniPage('utils/share.js');
-  assert.match(shareUtil, /DEFAULT_SHARE_TITLE\s*=\s*'你的精酿顾问'/);
+  assert.match(shareUtil, /DEFAULT_SHARE_TITLE\s*=\s*'酒蒙子的第一课'/);
   assert.match(shareUtil, /SHARE_IMAGE_URL\s*=\s*'\/assets\/share\/craft-beer-handbook\.jpg'/);
 
-  [
-    'pages/explore/index.js',
-    'pages/choose/index.js',
-    'pages/academy/index.js',
-    'subpages/academy-article/index.js',
-    'pages/favorites/index.js',
-    'subpages/group/index.js',
-    'subpages/style/index.js',
-    'subpages/extension-group/index.js',
-    'subpages/extension-style/index.js',
-    'subpages/style-language/index.js',
-  ].forEach((relativePath) => {
+  genericSharePagePaths.forEach((pagePath) => {
+    const relativePath = `${pagePath}.js`;
     const source = readMiniPage(relativePath);
     assert.match(source, /buildShareMessage/, `${relativePath} should use shared share message helper`);
+    assert.doesNotMatch(source, /title:\s*[^\n]*：/, `${relativePath} share titles should not use prefix-colon copy`);
+    assert.doesNotMatch(source, /鍚繃|绮鹃吙|椋庢牸|鎵嬪唽/, `${relativePath} should not contain mojibake in share copy`);
     assert.equal(source.includes('把 BJCP 和市场叫法放进一套风味坐标'), false);
   });
 
   const exploreJs = readMiniPage('pages/explore/index.js');
-  assert.equal(exploreJs.includes('精酿速查手册：风格、口味、叫法一查就懂'), true);
+  assert.equal(exploreJs.includes('酒蒙子的第一课'), true);
+  assert.equal(exploreJs.includes('点酒前查一下：'), false);
+
+  const chooseJs = readMiniPage('pages/choose/index.js');
+  assert.equal(chooseJs.includes('今晚喝点啥'), true);
+
+  const styleLanguageJs = readMiniPage('subpages/style-language/index.js');
+  assert.equal(styleLanguageJs.includes('听过叫法不懂风格？这里能对上'), true);
+});
+
+test('detail share messages name the current content directly', () => {
+  const groupJs = readMiniPage('subpages/group/index.js');
+  assert.match(groupJs, /title:\s*group \? `风格指南：\$\{group\.name\}` : undefined/);
+  assert.match(groupJs, /query:\s*`groupId=\$\{groupId\}`/);
+
+  const styleJs = readMiniPage('subpages/style/index.js');
+  assert.match(styleJs, /title:\s*style \? `风格指南：\$\{style\.displayName\}` : undefined/);
+  assert.match(styleJs, /query:\s*`styleId=\$\{style \? style\.id : ''\}`/);
+
+  const extensionGroupJs = readMiniPage('subpages/extension-group/index.js');
+  assert.match(extensionGroupJs, /title:\s*group \? `风格指南：\$\{group\.name\}` : undefined/);
+  assert.match(extensionGroupJs, /query:\s*`groupId=\$\{groupId\}`/);
+
+  const extensionStyleJs = readMiniPage('subpages/extension-style/index.js');
+  assert.match(extensionStyleJs, /title:\s*style \? `风格指南：\$\{style\.displayName\}` : undefined/);
+  assert.match(extensionStyleJs, /query:\s*`styleId=\$\{style \? style\.id : ''\}`/);
+
+  const academyArticleJs = readMiniPage('subpages/academy-article/index.js');
+  assert.match(academyArticleJs, /title:\s*article \? `精酿知识：\$\{article\.title\}` : '精酿知识速查'/);
+  assert.match(academyArticleJs, /query:\s*`slug=\$\{slug\}`/);
 });
 
 test('core user behaviors are instrumented for release analytics', () => {

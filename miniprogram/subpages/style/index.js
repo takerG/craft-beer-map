@@ -1,6 +1,6 @@
 import { getStyleDetail } from '../../utils/beer-model.js';
 import { deferSetData, navigateOnce, redirectOnce, switchTabOnce } from '../../utils/page-performance.js';
-import { buildShareMessage } from '../../utils/share.js';
+import { buildShareMessage, buildTimelineShareMessage, enableShareMenu } from '../../utils/share.js';
 import { isStyleFavorite, toggleFavoriteStyle } from '../../utils/style-favorites.js';
 import { trackEvent } from '../../utils/telemetry.js';
 
@@ -15,6 +15,8 @@ Page({
   },
 
   onLoad(options) {
+    enableShareMenu();
+
     const styleId = options.styleId || '';
     try {
       const detail = getStyleDetail(styleId);
@@ -67,8 +69,18 @@ Page({
     const style = detail && detail.style;
     trackEvent('style_share', { styleId: style ? style.id : '' });
     return buildShareMessage({
-      title: style ? `${style.code} ${style.displayName}：风味参数速查` : undefined,
+      title: style ? `风格指南：${style.displayName}` : undefined,
       path: `/subpages/style/index?styleId=${style ? style.id : ''}`,
+    });
+  },
+
+  onShareTimeline() {
+    const detail = this.data.detail;
+    const style = detail && detail.style;
+    trackEvent('style_timeline_share', { styleId: style ? style.id : '' });
+    return buildTimelineShareMessage({
+      title: style ? `风格指南：${style.displayName}` : undefined,
+      query: `styleId=${style ? style.id : ''}`,
     });
   },
 

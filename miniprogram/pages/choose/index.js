@@ -1,6 +1,6 @@
 import { getTasteFilters, getTasteMatches } from '../../utils/beer-model.js';
 import { navigateOnce } from '../../utils/page-performance.js';
-import { buildShareMessage } from '../../utils/share.js';
+import { buildShareMessage, buildTimelineShareMessage, enableShareMenu } from '../../utils/share.js';
 import { buildFlavorWheelVisual } from '../../utils/taste-visuals.js';
 import { trackEvent } from '../../utils/telemetry.js';
 
@@ -48,14 +48,22 @@ Page({
   },
 
   onLoad() {
+    enableShareMenu();
     this.refreshTasteMatches(DEFAULT_FILTER_STATE);
   },
 
   onShareAppMessage() {
     trackEvent('choose_share');
     return buildShareMessage({
-      title: '按口味找精酿：甜、酸、苦、酒体都能筛',
+      title: '今晚喝点啥',
       path: '/pages/choose/index',
+    });
+  },
+
+  onShareTimeline() {
+    trackEvent('choose_timeline_share');
+    return buildTimelineShareMessage({
+      title: '今晚喝点啥',
     });
   },
 

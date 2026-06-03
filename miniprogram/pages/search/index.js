@@ -1,5 +1,6 @@
 import { searchStyles } from '../../utils/beer-model.js';
 import { navigateOnce } from '../../utils/page-performance.js';
+import { buildShareMessage, buildTimelineShareMessage, enableShareMenu } from '../../utils/share.js';
 import { trackEvent } from '../../utils/telemetry.js';
 
 Page({
@@ -9,6 +10,27 @@ Page({
     hasQuery: false,
     hasResults: false,
     suggestions: ['IPA', '果汁感', '小甜水', '咖啡世涛', '茶感', '不苦'],
+  },
+
+  onLoad() {
+    enableShareMenu();
+  },
+
+  onShareAppMessage() {
+    const query = (this.data.query || '').trim();
+    trackEvent('search_share', { hasQuery: Boolean(query) });
+    return buildShareMessage({
+      title: query ? `我在查「${query}」对应的精酿风格` : '听过一种酒名？来查它对应的精酿风格',
+      path: '/pages/search/index',
+    });
+  },
+
+  onShareTimeline() {
+    const query = (this.data.query || '').trim();
+    trackEvent('search_timeline_share', { hasQuery: Boolean(query) });
+    return buildTimelineShareMessage({
+      title: query ? `我在查「${query}」对应的精酿风格` : '听过一种酒名？来查它对应的精酿风格',
+    });
   },
 
   onInput(event) {

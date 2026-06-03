@@ -1,6 +1,6 @@
 import { getGroupDetail } from '../../utils/beer-model.js';
 import { deferSetData, navigateOnce, switchTabOnce } from '../../utils/page-performance.js';
-import { buildShareMessage } from '../../utils/share.js';
+import { buildShareMessage, buildTimelineShareMessage, enableShareMenu } from '../../utils/share.js';
 import { trackEvent } from '../../utils/telemetry.js';
 
 Page({
@@ -14,6 +14,8 @@ Page({
   },
 
   onLoad(options) {
+    enableShareMenu();
+
     const groupId = options.groupId || 'american';
     try {
       const detail = getGroupDetail(groupId);
@@ -43,8 +45,18 @@ Page({
     const group = this.data.group;
     trackEvent('group_share', { groupId: this.data.groupId });
     return buildShareMessage({
-      title: group ? `${group.name}速查：${group.styleCount} 个风格入口` : undefined,
+      title: group ? `风格指南：${group.name}` : undefined,
       path: `/subpages/group/index?groupId=${this.data.groupId || 'american'}`,
+    });
+  },
+
+  onShareTimeline() {
+    const group = this.data.group;
+    const groupId = this.data.groupId || 'american';
+    trackEvent('group_timeline_share', { groupId });
+    return buildTimelineShareMessage({
+      title: group ? `风格指南：${group.name}` : undefined,
+      query: `groupId=${groupId}`,
     });
   },
 

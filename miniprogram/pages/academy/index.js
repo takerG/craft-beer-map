@@ -1,6 +1,6 @@
 import { buildAcademyTypeFilters, getAcademyHome } from '../../utils/academy-model.js';
 import { navigateOnce } from '../../utils/page-performance.js';
-import { buildShareMessage } from '../../utils/share.js';
+import { buildShareMessage, buildTimelineShareMessage, enableShareMenu } from '../../utils/share.js';
 import { trackEvent } from '../../utils/telemetry.js';
 
 Page({
@@ -12,6 +12,8 @@ Page({
   },
 
   onLoad() {
+    enableShareMenu();
+
     const home = getAcademyHome();
 
     this.setData({
@@ -25,8 +27,15 @@ Page({
   onShareAppMessage() {
     trackEvent('academy_share');
     return buildShareMessage({
-      title: '精酿知识库：3 分钟看懂一类风格',
+      title: '3 分钟看懂一种精酿风格',
       path: '/pages/academy/index',
+    });
+  },
+
+  onShareTimeline() {
+    trackEvent('academy_timeline_share');
+    return buildTimelineShareMessage({
+      title: '3 分钟看懂一种精酿风格',
     });
   },
 

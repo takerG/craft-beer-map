@@ -1,5 +1,5 @@
 import { navigateOnce, switchTabOnce } from '../../utils/page-performance.js';
-import { buildShareMessage } from '../../utils/share.js';
+import { buildShareMessage, buildTimelineShareMessage, enableShareMenu } from '../../utils/share.js';
 import { getFavoriteStyleSummaries } from '../../utils/style-favorites.js';
 import { trackEvent } from '../../utils/telemetry.js';
 
@@ -10,6 +10,10 @@ Page({
     favoriteCountLabel: '0 个收藏',
   },
 
+  onLoad() {
+    enableShareMenu();
+  },
+
   onShow() {
     this.refreshFavoriteStyles();
   },
@@ -17,8 +21,15 @@ Page({
   onShareAppMessage() {
     trackEvent('favorites_share');
     return buildShareMessage({
-      title: '我的精酿收藏夹：常看风格随手查',
+      title: '常看的精酿风格随手查',
       path: '/pages/favorites/index',
+    });
+  },
+
+  onShareTimeline() {
+    trackEvent('favorites_timeline_share');
+    return buildTimelineShareMessage({
+      title: '常看的精酿风格随手查',
     });
   },
 

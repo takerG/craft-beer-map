@@ -1,6 +1,6 @@
 import { getExtensionStyleDetail } from '../../utils/beer-model.js';
 import { deferSetData, navigateOnce, redirectOnce, switchTabOnce } from '../../utils/page-performance.js';
-import { buildShareMessage } from '../../utils/share.js';
+import { buildShareMessage, buildTimelineShareMessage, enableShareMenu } from '../../utils/share.js';
 import { trackEvent } from '../../utils/telemetry.js';
 
 Page({
@@ -12,6 +12,8 @@ Page({
   },
 
   onLoad(options) {
+    enableShareMenu();
+
     const styleId = options.styleId || '';
     try {
       const detail = getExtensionStyleDetail(styleId);
@@ -60,8 +62,18 @@ Page({
     const style = detail && detail.style;
     trackEvent('extension_style_share', { styleId: style ? style.id : '' });
     return buildShareMessage({
-      title: style ? `${style.displayName}：市场叫法与 BJCP 对照` : undefined,
+      title: style ? `风格指南：${style.displayName}` : undefined,
       path: `/subpages/extension-style/index?styleId=${style ? style.id : ''}`,
+    });
+  },
+
+  onShareTimeline() {
+    const detail = this.data.detail;
+    const style = detail && detail.style;
+    trackEvent('extension_style_timeline_share', { styleId: style ? style.id : '' });
+    return buildTimelineShareMessage({
+      title: style ? `风格指南：${style.displayName}` : undefined,
+      query: `styleId=${style ? style.id : ''}`,
     });
   },
 
