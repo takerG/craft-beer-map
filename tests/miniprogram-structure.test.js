@@ -52,10 +52,6 @@ test('secondary content pages are isolated in a subpackage', () => {
 test('runtime config follows mini program package loading recommendations', () => {
   assert.equal(appJson.lazyCodeLoading, 'requiredComponents');
   assert.deepEqual(appJson.preloadRule, {
-    'pages/explore/index': {
-      network: 'all',
-      packages: ['subpages'],
-    },
     'pages/academy/index': {
       network: 'all',
       packages: ['subpages'],
@@ -65,6 +61,11 @@ test('runtime config follows mini program package loading recommendations', () =
       packages: ['subpages'],
     },
   });
+  assert.equal(
+    Object.hasOwn(appJson.preloadRule, 'pages/explore/index'),
+    false,
+    'launch page should not eagerly preload subpages during startup',
+  );
 });
 
 test('academy is exposed as a primary bottom tab', () => {

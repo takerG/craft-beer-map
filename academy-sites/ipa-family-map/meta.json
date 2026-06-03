@@ -1,10 +1,10 @@
 {
   "slug": "ipa-family-map",
   "title": "IPA 家族地图",
-  "description": "用一张可交互地图理解 West Coast、Hazy、Session、Double IPA 的苦度、香气与酒体差异。",
+  "description": "把 IPA 从“很苦”或“果汁香”拆成酒花表达框架，理解历史、误解和常见分支。",
   "type": "map",
   "difficulty": "入门",
-  "readingTime": 5,
+  "readingTime": 8,
   "tags": ["IPA", "酒花", "风格识别"],
   "date": "2026-06-02",
   "featured": true,

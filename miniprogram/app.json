@@ -20,10 +20,6 @@
     }
   ],
   "preloadRule": {
-    "pages/explore/index": {
-      "network": "all",
-      "packages": ["subpages"]
-    },
     "pages/academy/index": {
       "network": "all",
       "packages": ["subpages"]

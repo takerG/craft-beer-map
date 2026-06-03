@@ -218,28 +218,28 @@ function buildIpaMapExperience(selectedBranchId) {
       title: 'West Coast IPA',
       positionStyle: 'left: 8%; top: 48%;',
       axis: '高苦度 / 高香气 / 清爽酒体',
-      body: '把啤酒想象成一条清晰的海岸线：收口干，苦味边缘利落，柑橘、松针和树脂感会更突出。',
+      body: '苦度线条更清楚，收口更干，葡萄柚、松针、树脂和草本感常站到前面。它像一条清晰的线。',
     },
     {
       id: 'hazy',
       title: 'Hazy / NEIPA',
       positionStyle: 'left: 54%; top: 24%;',
       axis: '柔和苦度 / 果汁香气 / 饱满酒体',
-      body: '它不是“更甜的 IPA”，而是把苦味磨圆，让芒果、菠萝、柑橘和柔软口感站到前面。',
+      body: '它不是简单的“甜 IPA”，而是把苦味磨圆，让芒果、菠萝、柑橘和柔软口感更早被感受到。',
     },
     {
       id: 'session',
       title: 'Session IPA',
       positionStyle: 'left: 23%; top: 72%;',
       axis: '低强度 / 有酒花存在 / 轻盈酒体',
-      body: '适合用来理解“风味强”和“酒精强”不是一件事：酒花还在，但身体更轻。',
+      body: '适合用来理解“风味强”和“酒精强”不是一件事：酒花还在，酒精和身体重量更轻。',
     },
     {
       id: 'double',
       title: 'Double IPA',
       positionStyle: 'left: 72%; top: 66%;',
       axis: '高强度 / 高酒花 / 更厚支撑',
-      body: '酒花、酒精和麦芽支撑同时放大，喝起来更有压迫感，也更需要平衡。',
+      body: '酒花、酒精和麦芽支撑同时放大，压迫感更强，也更考验整体平衡。',
     },
   ];
   return decorateSelectable(branches, selectedBranchId, 'branch');
@@ -250,14 +250,14 @@ function buildAleLagerExperience(selectedPathId) {
     {
       id: 'ale',
       title: 'Ale 路线',
-      lead: '温度更高，表达更快，酵母个性更容易被看见。',
-      steps: ['较高发酵温度', '较短成熟周期', '酯香与酵母表达更明显', '风格跨度从小麦到世涛'],
+      lead: '温度更高，表达更快，酵母和风格个性更容易被看见。',
+      steps: ['较高发酵温度', '较短成熟周期', '酯香、酚香和酵母表达更明显', '风格跨度从德式小麦到世涛'],
     },
     {
       id: 'lager',
       title: 'Lager 路线',
-      lead: '温度更低，管理更慢，干净度和细节会被放大。',
-      steps: ['较低发酵温度', '更长冷储和成熟', '干净、清爽、麦芽轮廓清楚', '皮尔森、博克、淡色拉格常见'],
+      lead: '温度更低，管理更慢，干净度、稳定性和细节会被放大。',
+      steps: ['较低发酵温度', '更长冷储和成熟', '干净、清爽、麦芽轮廓清楚', '皮尔森、博克、黑拉格常见'],
     },
   ];
   return decorateSelectable(paths, selectedPathId, 'path');
@@ -269,29 +269,29 @@ function buildFlavorRadarExperience(selectedSourceId) {
       id: 'malt',
       title: '麦芽',
       angleStyle: 'left: 48%; top: 4%;',
-      terms: ['面包', '焦糖', '坚果', '咖啡', '巧克力'],
-      clue: '先看甜感、颜色和酒体支撑，深色风格里尤其明显。',
+      terms: ['谷物', '面包', '焦糖', '咖啡', '巧克力'],
+      clue: '先看甜感、颜色和酒体支撑，深色或高强度风格里尤其明显。',
     },
     {
       id: 'hop',
       title: '酒花',
       angleStyle: 'left: 78%; top: 43%;',
-      terms: ['柑橘', '松针', '草本', '热带水果'],
+      terms: ['花香', '柑橘', '松针', '热带水果'],
       clue: '常和香气、苦度、收口清爽度一起出现。',
     },
     {
       id: 'yeast',
       title: '酵母',
       angleStyle: 'left: 48%; top: 78%;',
-      terms: ['香蕉', '丁香', '胡椒', '蜂蜜', '泥土'],
-      clue: '小麦、比利时和部分英式风格里，酵母会直接塑造性格。',
+      terms: ['香蕉', '丁香', '胡椒', '果酯', '蜂蜜感'],
+      clue: '小麦、比利时和部分英式风格里，酵母会直接塑造风格性格。',
     },
     {
       id: 'process',
       title: '发酵管理',
       angleStyle: 'left: 14%; top: 43%;',
-      terms: ['酸感', '酒精热感', '干净度', '复杂度'],
-      clue: '它更像幕后导演，温度、时间和微生物控制都会留下痕迹。',
+      terms: ['酸感', '酒精热感', '黄油', '干净度'],
+      clue: '它更像后台控制台，温度、时间、卫生和储存状态都会留下痕迹。',
     },
   ];
   return decorateSelectable(sources, selectedSourceId, 'source');
