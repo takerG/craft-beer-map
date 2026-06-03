@@ -57,28 +57,28 @@ Page({
 
   openStyleLanguage() {
     trackEvent('explore_style_language_open');
-    navigateOnce(this, '/pages/style-language/index');
+    navigateOnce(this, '/subpages/style-language/index');
   },
 
   openGroup(event) {
     const { groupId } = event.currentTarget.dataset;
     trackEvent('group_open', { groupId, source: 'explore' });
-    navigateOnce(this, `/pages/group/index?groupId=${groupId}`);
+    navigateOnce(this, `/subpages/group/index?groupId=${groupId}`);
   },
 
   openExtensionGroup(event) {
     const { groupId } = event.currentTarget.dataset;
     trackEvent('extension_group_open', { groupId, source: 'explore' });
-    navigateOnce(this, `/pages/extension-group/index?groupId=${groupId}`);
+    navigateOnce(this, `/subpages/extension-group/index?groupId=${groupId}`);
   },
 
   openStyle(event) {
     const { styleId, itemKind } = event.currentTarget.dataset;
     trackEvent('style_open', { styleId, itemKind, source: 'explore_featured' });
     if (itemKind === 'extension') {
-      navigateOnce(this, `/pages/extension-style/index?styleId=${styleId}`);
+      navigateOnce(this, `/subpages/extension-style/index?styleId=${styleId}`);
       return;
     }
-    navigateOnce(this, `/pages/style/index?styleId=${styleId}`);
+    navigateOnce(this, `/subpages/style/index?styleId=${styleId}`);
   },
 });

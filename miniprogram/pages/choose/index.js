@@ -103,10 +103,10 @@ Page({
 
     trackEvent('choose_style_open', { styleId, itemKind });
     if (itemKind === 'extension') {
-      navigateOnce(this, `/pages/extension-style/index?styleId=${styleId}`);
+      navigateOnce(this, `/subpages/extension-style/index?styleId=${styleId}`);
       return;
     }
-    navigateOnce(this, `/pages/style/index?styleId=${styleId}`);
+    navigateOnce(this, `/subpages/style/index?styleId=${styleId}`);
   },
 
   refreshTasteMatches(filterState) {

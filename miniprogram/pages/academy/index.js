@@ -35,7 +35,7 @@ Page({
     if (!slug) return;
 
     trackEvent('academy_article_open', { slug, source: 'feed' });
-    navigateOnce(this, `/pages/academy-article/index?slug=${slug}`);
+    navigateOnce(this, `/subpages/academy-article/index?slug=${slug}`);
   },
 
   filterArticles(event) {

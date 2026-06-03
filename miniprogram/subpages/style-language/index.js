@@ -1,4 +1,4 @@
-import { getStyleLanguageDetail, getStyleLanguageGroups } from '../../utils/beer-model.js';
+﻿import { getStyleLanguageDetail, getStyleLanguageGroups } from '../../utils/beer-model.js';
 import { navigateOnce } from '../../utils/page-performance.js';
 import { buildShareMessage } from '../../utils/share.js';
 import { trackEvent } from '../../utils/telemetry.js';
@@ -30,8 +30,8 @@ Page({
     const detail = this.data.activeDetail;
     trackEvent('style_language_share', { languageId: detail && detail.group ? detail.group.id : '' });
     return buildShareMessage({
-      title: '听过叫法不懂风格？这里能对上',
-      path: '/pages/style-language/index',
+      title: '鍚繃鍙硶涓嶆噦椋庢牸锛熻繖閲岃兘瀵逛笂',
+      path: '/subpages/style-language/index',
     });
   },
 
@@ -56,10 +56,10 @@ Page({
       languageId: this.data.activeLanguageId,
     });
     if (itemKind === 'extension') {
-      navigateOnce(this, `/pages/extension-style/index?styleId=${styleId}`);
+      navigateOnce(this, `/subpages/extension-style/index?styleId=${styleId}`);
       return;
     }
-    navigateOnce(this, `/pages/style/index?styleId=${styleId}`);
+    navigateOnce(this, `/subpages/style/index?styleId=${styleId}`);
   },
 
   buildDetail(languageId) {
@@ -70,7 +70,7 @@ Page({
       ...detail,
       styles: detail.styles.map((style) => ({
         ...style,
-        codeLabel: style.kind === 'extension' ? '扩展' : style.code,
+        codeLabel: style.kind === 'extension' ? '鎵╁睍' : style.code,
       })),
     };
   },

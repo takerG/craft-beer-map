@@ -4,14 +4,36 @@
     "pages/choose/index",
     "pages/academy/index",
     "pages/favorites/index",
-    "pages/search/index",
-    "pages/academy-article/index",
-    "pages/style-language/index",
-    "pages/group/index",
-    "pages/style/index",
-    "pages/extension-group/index",
-    "pages/extension-style/index"
+    "pages/search/index"
   ],
+  "subpackages": [
+    {
+      "root": "subpages",
+      "pages": [
+        "academy-article/index",
+        "style-language/index",
+        "group/index",
+        "style/index",
+        "extension-group/index",
+        "extension-style/index"
+      ]
+    }
+  ],
+  "preloadRule": {
+    "pages/explore/index": {
+      "network": "all",
+      "packages": ["subpages"]
+    },
+    "pages/academy/index": {
+      "network": "all",
+      "packages": ["subpages"]
+    },
+    "pages/search/index": {
+      "network": "wifi",
+      "packages": ["subpages"]
+    }
+  },
+  "lazyCodeLoading": "requiredComponents",
   "window": {
     "navigationBarTitleText": "精酿风格指南",
     "navigationBarBackgroundColor": "#111820",

@@ -68,14 +68,14 @@ Page({
     trackEvent('style_share', { styleId: style ? style.id : '' });
     return buildShareMessage({
       title: style ? `${style.code} ${style.displayName}：风味参数速查` : undefined,
-      path: `/pages/style/index?styleId=${style ? style.id : ''}`,
+      path: `/subpages/style/index?styleId=${style ? style.id : ''}`,
     });
   },
 
   openRelated(event) {
     const { styleId } = event.currentTarget.dataset;
     trackEvent('style_open', { styleId, source: 'related_style' });
-    redirectOnce(this, `/pages/style/index?styleId=${styleId}`);
+    redirectOnce(this, `/subpages/style/index?styleId=${styleId}`);
   },
 
   toggleFavorite() {
@@ -99,7 +99,7 @@ Page({
     const groupId = this.data.detail && this.data.detail.group && this.data.detail.group.id;
     if (!groupId) return;
     trackEvent('back_to_group', { groupId, source: 'style_detail' });
-    navigateOnce(this, `/pages/group/index?groupId=${groupId}`);
+    navigateOnce(this, `/subpages/group/index?groupId=${groupId}`);
   },
 
   goSearch() {

@@ -34,7 +34,7 @@ Page({
   openStyle(event) {
     const { styleId } = event.currentTarget.dataset;
     trackEvent('style_open', { styleId, source: 'favorites' });
-    navigateOnce(this, `/pages/style/index?styleId=${styleId}`);
+    navigateOnce(this, `/subpages/style/index?styleId=${styleId}`);
   },
 
   goSearch() {

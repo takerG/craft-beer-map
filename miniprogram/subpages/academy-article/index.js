@@ -26,7 +26,7 @@ Page({
     trackEvent('academy_article_share', { slug: article ? article.slug : this.data.slug });
     return buildShareMessage({
       title: article ? `${article.title}：精酿知识速查` : '精酿知识速查',
-      path: `/pages/academy-article/index?slug=${this.data.slug}`,
+      path: `/subpages/academy-article/index?slug=${this.data.slug}`,
     });
   },
 
@@ -120,10 +120,10 @@ Page({
       itemKind,
     });
     if (itemKind === 'extension') {
-      navigateOnce(this, `/pages/extension-style/index?styleId=${styleId}`);
+      navigateOnce(this, `/subpages/extension-style/index?styleId=${styleId}`);
       return;
     }
-    navigateOnce(this, `/pages/style/index?styleId=${styleId}`);
+    navigateOnce(this, `/subpages/style/index?styleId=${styleId}`);
   },
 
   backToAcademy() {

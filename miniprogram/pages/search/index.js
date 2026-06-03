@@ -61,9 +61,9 @@ Page({
     const { styleId, itemKind } = event.currentTarget.dataset;
     trackEvent('search_result_open', { styleId, itemKind, query: this.data.query });
     if (itemKind === 'extension') {
-      navigateOnce(this, `/pages/extension-style/index?styleId=${styleId}`);
+      navigateOnce(this, `/subpages/extension-style/index?styleId=${styleId}`);
       return;
     }
-    navigateOnce(this, `/pages/style/index?styleId=${styleId}`);
+    navigateOnce(this, `/subpages/style/index?styleId=${styleId}`);
   },
 });

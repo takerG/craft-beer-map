@@ -38,7 +38,7 @@ export const academyOrder = {
       "id": "style-language",
       "title": "风格语言速查",
       "description": "从 IPA、古斯、世涛等常见叫法反查风格入口。",
-      "route": "/pages/style-language/index"
+      "route": "/subpages/style-language/index"
     }
   ]
 };

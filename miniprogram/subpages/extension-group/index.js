@@ -1,4 +1,4 @@
-import { getGroupDetail } from '../../utils/beer-model.js';
+import { getExtensionGroupDetail } from '../../utils/beer-model.js';
 import { deferSetData, navigateOnce, switchTabOnce } from '../../utils/page-performance.js';
 import { buildShareMessage } from '../../utils/share.js';
 import { trackEvent } from '../../utils/telemetry.js';
@@ -10,13 +10,13 @@ Page({
     groupId: '',
     group: null,
     contentReady: false,
-    categories: [],
+    styles: [],
   },
 
   onLoad(options) {
-    const groupId = options.groupId || 'american';
+    const groupId = options.groupId || 'modern-ipa-hops';
     try {
-      const detail = getGroupDetail(groupId);
+      const detail = getExtensionGroupDetail(groupId);
       wx.setNavigationBarTitle({ title: detail.group.name });
       this.setData({
         loadStatus: 'ready',
@@ -24,38 +24,38 @@ Page({
         groupId,
         group: detail.group,
         contentReady: false,
-        categories: [],
+        styles: [],
       });
       deferSetData(this, {
         contentReady: true,
-        categories: detail.categories,
+        styles: detail.styles,
       });
     } catch (error) {
-      wx.setNavigationBarTitle({ title: '未找到大类' });
+      wx.setNavigationBarTitle({ title: '未找到扩展组' });
       this.setData({
         loadStatus: 'error',
-        errorMessage: '没有找到这个风格大类。',
+        errorMessage: '没有找到这个扩展风格分组。',
       });
     }
   },
 
   onShareAppMessage() {
     const group = this.data.group;
-    trackEvent('group_share', { groupId: this.data.groupId });
+    trackEvent('extension_group_share', { groupId: this.data.groupId });
     return buildShareMessage({
-      title: group ? `${group.name}速查：${group.styleCount} 个风格入口` : undefined,
-      path: `/pages/group/index?groupId=${this.data.groupId || 'american'}`,
+      title: group ? `${group.name}：市场叫法速查` : undefined,
+      path: `/subpages/extension-group/index?groupId=${this.data.groupId || 'modern-ipa-hops'}`,
     });
   },
 
-  openStyle(event) {
+  openExtensionStyle(event) {
     const { styleId } = event.currentTarget.dataset;
-    trackEvent('style_open', { styleId, groupId: this.data.groupId, source: 'group' });
-    navigateOnce(this, `/pages/style/index?styleId=${styleId}`);
+    trackEvent('extension_style_open', { styleId, groupId: this.data.groupId });
+    navigateOnce(this, `/subpages/extension-style/index?styleId=${styleId}`);
   },
 
   goExplore() {
-    trackEvent('back_to_explore', { source: 'group_error' });
+    trackEvent('back_to_explore', { source: 'extension_group_error' });
     switchTabOnce(this, '/pages/explore/index');
   },
 });

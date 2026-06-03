@@ -61,21 +61,21 @@ Page({
     trackEvent('extension_style_share', { styleId: style ? style.id : '' });
     return buildShareMessage({
       title: style ? `${style.displayName}：市场叫法与 BJCP 对照` : undefined,
-      path: `/pages/extension-style/index?styleId=${style ? style.id : ''}`,
+      path: `/subpages/extension-style/index?styleId=${style ? style.id : ''}`,
     });
   },
 
   openBjcpStyle(event) {
     const { styleId } = event.currentTarget.dataset;
     trackEvent('style_open', { styleId, source: 'extension_crosswalk' });
-    navigateOnce(this, `/pages/style/index?styleId=${styleId}`);
+    navigateOnce(this, `/subpages/style/index?styleId=${styleId}`);
   },
 
   openGroup() {
     const groupId = this.data.detail && this.data.detail.group && this.data.detail.group.id;
     if (!groupId) return;
     trackEvent('back_to_extension_group', { groupId, source: 'extension_style_detail' });
-    redirectOnce(this, `/pages/extension-group/index?groupId=${groupId}`);
+    redirectOnce(this, `/subpages/extension-group/index?groupId=${groupId}`);
   },
 
   goSearch() {
