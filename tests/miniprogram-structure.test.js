@@ -429,6 +429,16 @@ test('academy articles render slug-specific experiences instead of generic modul
   assert.match(articleWxss, /\.cold-ipa-page/);
 });
 
+test('cold IPA article styling stays within the dark academy theme', () => {
+  const articleWxss = readMiniPage('subpages/academy-article/index.wxss');
+
+  assert.doesNotMatch(articleWxss, /background:\s*#f9fbfa/);
+  assert.doesNotMatch(articleWxss, /background:\s*#eaf5f6/);
+  assert.doesNotMatch(articleWxss, /font-family:\s*Georgia/);
+  assert.match(articleWxss, /\.cold-ipa-hero[\s\S]*?#172231/);
+  assert.match(articleWxss, /\.cold-ipa-page \.article-section[\s\S]*?rgba\(255,\s*255,\s*255,\s*0\.0/);
+});
+
 test('core beer model avoids the stale style-language-map runtime module id', () => {
   const beerModelSource = readMiniPage('utils/beer-model.js');
 

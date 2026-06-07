@@ -66,94 +66,99 @@
 
 .cold-ipa-hero {
   position: relative;
-  min-height: 560rpx;
-  margin: 0 -28rpx 28rpx;
-  padding: 54rpx 34rpx 44rpx;
+  min-height: 430rpx;
+  margin-bottom: 28rpx;
+  padding: 34rpx 32rpx;
+  border: 1rpx solid rgba(255, 255, 255, 0.12);
+  border-top: 8rpx solid rgba(246, 173, 85, 0.86);
+  border-radius: 24rpx;
   overflow: hidden;
-  background: #f9fbfa;
+  background:
+    linear-gradient(135deg, rgba(83, 212, 218, 0.11), rgba(255, 255, 255, 0.025)),
+    #172231;
+  box-shadow: 0 22rpx 58rpx rgba(0, 0, 0, 0.24);
 }
 
 .cold-ipa-hero::before {
   content: "";
   position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  height: 180rpx;
-  background: #eaf5f6;
+  right: -70rpx;
+  bottom: -100rpx;
+  width: 330rpx;
+  height: 330rpx;
+  border-radius: 50%;
+  background: rgba(246, 173, 85, 0.08);
 }
 
 .cold-ipa-hero-copy {
   position: relative;
   z-index: 2;
-  width: 438rpx;
+  width: 420rpx;
 }
 
 .cold-ipa-title {
   display: block;
-  color: #10212a;
-  font-family: Georgia, "Times New Roman", serif;
-  font-size: 70rpx;
+  color: #f8fafc;
+  font-size: 50rpx;
   font-weight: 950;
-  line-height: 1.03;
+  line-height: 1.16;
 }
 
 .cold-ipa-summary {
   display: block;
-  margin-top: 24rpx;
-  color: #40545d;
-  font-size: 26rpx;
-  line-height: 1.72;
+  margin-top: 16rpx;
+  color: #d6dfeb;
+  font-size: 25rpx;
+  line-height: 1.65;
 }
 
 .cold-ipa-meta {
   display: flex;
   flex-wrap: wrap;
-  margin-top: 28rpx;
+  margin-top: 22rpx;
 }
 
 .cold-ipa-meta text {
   min-height: 38rpx;
-  margin: 0 12rpx 12rpx 0;
+  margin: 0 10rpx 10rpx 0;
   padding: 0 14rpx;
-  border: 1rpx solid rgba(16, 33, 42, 0.22);
-  border-radius: 8rpx;
-  color: #526870;
+  border-radius: 999rpx;
+  background: rgba(255, 255, 255, 0.07);
+  color: #cbd5e1;
   font-size: 20rpx;
-  font-weight: 850;
   line-height: 38rpx;
 }
 
 .cold-ipa-glass {
   position: absolute;
-  right: 10rpx;
-  bottom: 16rpx;
+  right: 24rpx;
+  bottom: 28rpx;
   z-index: 1;
-  width: 218rpx;
-  height: 366rpx;
-  border: 4rpx solid rgba(16, 33, 42, 0.22);
-  border-radius: 56rpx 56rpx 28rpx 28rpx;
-  background: rgba(255, 255, 255, 0.36);
+  width: 176rpx;
+  height: 286rpx;
+  border: 3rpx solid rgba(255, 255, 255, 0.22);
+  border-radius: 42rpx 42rpx 24rpx 24rpx;
+  background: rgba(255, 255, 255, 0.06);
   transform: rotate(7deg);
 }
 
 .glass-foam {
   position: absolute;
-  left: 22rpx;
-  right: 22rpx;
-  top: 22rpx;
-  height: 42rpx;
+  left: 18rpx;
+  right: 18rpx;
+  top: 18rpx;
+  height: 34rpx;
   border-radius: 999rpx;
-  background: rgba(255, 255, 255, 0.9);
+  background: rgba(255, 255, 255, 0.82);
 }
 
 .glass-beer {
   position: absolute;
-  left: 20rpx;
-  right: 20rpx;
-  bottom: 22rpx;
-  height: 274rpx;
-  border-radius: 24rpx 24rpx 18rpx 18rpx;
+  left: 18rpx;
+  right: 18rpx;
+  bottom: 18rpx;
+  height: 218rpx;
+  border-radius: 20rpx 20rpx 16rpx 16rpx;
   background: linear-gradient(180deg, #f9d36a 0%, #f4bd38 72%, #d88c1c 100%);
 }
 
@@ -166,64 +171,53 @@
 }
 
 .glass-bubbles text:nth-child(1) {
-  left: 68rpx;
-  top: 134rpx;
+  left: 54rpx;
+  top: 106rpx;
 }
 
 .glass-bubbles text:nth-child(2) {
-  left: 126rpx;
-  top: 194rpx;
+  left: 104rpx;
+  top: 154rpx;
 }
 
 .glass-bubbles text:nth-child(3) {
-  left: 92rpx;
-  top: 258rpx;
+  left: 74rpx;
+  top: 204rpx;
 }
 
 .article-body {
   margin-top: 28rpx;
 }
 
-.article-body.cold-ipa-page {
-  margin-top: 0;
-}
-
 .cold-ipa-page .article-section {
-  margin-bottom: 8rpx;
-  padding: 36rpx 28rpx;
-  border: 0;
-  border-radius: 0;
-  background: #f9fbfa;
-}
-
-.cold-ipa-page .article-section + .article-section {
-  border-top: 1rpx solid #cbd8dc;
+  border-color: rgba(255, 255, 255, 0.1);
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.055), rgba(255, 255, 255, 0.022)),
+    rgba(255, 255, 255, 0.03);
 }
 
 .cold-ipa-page .article-section-title {
-  color: #10212a;
-  font-family: Georgia, "Times New Roman", serif;
-  font-size: 42rpx;
-  line-height: 1.18;
+  color: #f8fafc;
+  font-size: 34rpx;
+  line-height: 1.28;
 }
 
 .cold-ipa-page .article-paragraph {
-  color: #344951;
-  font-size: 26rpx;
-  line-height: 1.82;
+  color: #d6dfeb;
+  font-size: 25rpx;
+  line-height: 1.72;
 }
 
 .cold-ipa-page .article-callout {
-  padding: 16rpx 0 16rpx 20rpx;
-  border-left-color: #e56f54;
-  border-radius: 0;
-  background: transparent;
+  border-left-color: #f6ad55;
+  border-radius: 14rpx;
+  background: rgba(246, 173, 85, 0.1);
 }
 
 .cold-ipa-page .article-callout text {
-  color: #10212a;
-  font-size: 27rpx;
-  line-height: 1.58;
+  color: #ffcf85;
+  font-size: 23rpx;
+  line-height: 1.55;
 }
 
 .article-section {
@@ -271,8 +265,13 @@
 }
 
 .cold-ipa-comparison {
+  margin-top: 28rpx;
   padding: 28rpx 24rpx;
-  background: #11252d;
+  border: 1rpx solid rgba(255, 255, 255, 0.1);
+  border-radius: 18rpx;
+  background:
+    linear-gradient(135deg, rgba(83, 212, 218, 0.1), rgba(255, 255, 255, 0.025)),
+    #172231;
   color: #f9fbfa;
 }
 
@@ -283,10 +282,9 @@
 
 .cold-companion-head text:first-child {
   color: #f9fbfa;
-  font-family: Georgia, "Times New Roman", serif;
-  font-size: 36rpx;
+  font-size: 30rpx;
   font-weight: 950;
-  line-height: 1.2;
+  line-height: 1.3;
 }
 
 .cold-companion-head text:last-child {
@@ -299,23 +297,26 @@
 .cold-style-tabs {
   display: flex;
   margin-top: 22rpx;
-  border-bottom: 1rpx solid rgba(255, 255, 255, 0.2);
+  padding: 6rpx;
+  border: 1rpx solid rgba(255, 255, 255, 0.09);
+  border-radius: 16rpx;
+  background: rgba(255, 255, 255, 0.04);
 }
 
 .cold-style-tab {
   flex: 1;
   min-width: 0;
-  min-height: 64rpx;
-  border-bottom: 5rpx solid transparent;
+  min-height: 58rpx;
+  border-radius: 12rpx;
   color: #9fb4b9;
   font-size: 20rpx;
   font-weight: 950;
-  line-height: 64rpx;
+  line-height: 58rpx;
   text-align: center;
 }
 
 .comparison-item-active {
-  border-bottom-color: #f4bd38;
+  background: rgba(246, 173, 85, 0.16);
   color: #ffffff;
 }
 
@@ -366,8 +367,13 @@
 }
 
 .cold-ipa-process {
-  padding: 28rpx 0 4rpx;
-  border-top: 1rpx solid #cbd8dc;
+  margin-top: 28rpx;
+  padding: 28rpx 24rpx 6rpx;
+  border: 1rpx solid rgba(255, 255, 255, 0.1);
+  border-radius: 18rpx;
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.055), rgba(255, 255, 255, 0.02)),
+    #172231;
 }
 
 .cold-ipa-process .cold-companion-head {
@@ -375,11 +381,11 @@
 }
 
 .cold-ipa-process .cold-companion-head text:first-child {
-  color: #10212a;
+  color: #f9fbfa;
 }
 
 .cold-ipa-process .cold-companion-head text:last-child {
-  color: #60717a;
+  color: #a9b5c7;
 }
 
 .cold-process-list {
@@ -390,7 +396,7 @@
   display: flex;
   min-height: 126rpx;
   padding: 22rpx 0;
-  border-top: 1rpx solid #cbd8dc;
+  border-top: 1rpx solid rgba(255, 255, 255, 0.1);
 }
 
 .cold-process-marker {
@@ -398,10 +404,10 @@
   width: 48rpx;
   height: 48rpx;
   margin-right: 18rpx;
-  border: 1rpx solid #7f969c;
+  border: 1rpx solid rgba(246, 173, 85, 0.56);
   border-radius: 50%;
-  color: #10212a;
-  font-family: Georgia, "Times New Roman", serif;
+  background: rgba(246, 173, 85, 0.12);
+  color: #ffcf85;
   font-size: 24rpx;
   font-weight: 900;
   line-height: 48rpx;
@@ -419,7 +425,7 @@
 }
 
 .cold-process-copy text:first-child {
-  color: #10212a;
+  color: #f8fafc;
   font-size: 27rpx;
   font-weight: 950;
   line-height: 1.35;
@@ -427,23 +433,25 @@
 
 .cold-process-copy text:last-child {
   margin-top: 8rpx;
-  color: #60717a;
+  color: #a9b5c7;
   font-size: 23rpx;
   line-height: 1.55;
 }
 
 .cold-ipa-checklist {
+  margin-top: 28rpx;
   padding: 28rpx 24rpx;
-  background: #eaf5f6;
+  border: 1rpx solid rgba(246, 173, 85, 0.2);
+  border-radius: 18rpx;
+  background: rgba(246, 173, 85, 0.08);
 }
 
 .cold-check-title {
   display: block;
-  color: #10212a;
-  font-family: Georgia, "Times New Roman", serif;
-  font-size: 34rpx;
+  color: #f8fafc;
+  font-size: 30rpx;
   font-weight: 950;
-  line-height: 1.24;
+  line-height: 1.3;
 }
 
 .cold-check-list {
@@ -453,12 +461,12 @@
 .cold-check-item {
   display: flex;
   padding: 16rpx 0;
-  border-top: 1rpx solid rgba(16, 33, 42, 0.14);
+  border-top: 1rpx solid rgba(255, 255, 255, 0.1);
 }
 
 .cold-check-item text:first-child {
   flex: 0 0 54rpx;
-  color: #4f7f3d;
+  color: #53d4da;
   font-size: 21rpx;
   font-weight: 950;
   line-height: 1.5;
@@ -466,7 +474,7 @@
 
 .cold-check-item text:last-child {
   flex: 1;
-  color: #334a52;
+  color: #d6dfeb;
   font-size: 24rpx;
   line-height: 1.55;
 }
