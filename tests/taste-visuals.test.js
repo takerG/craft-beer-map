@@ -8,10 +8,6 @@ const filters = [
   { id: 'sourness', label: 'sourness' },
   { id: 'bitterness', label: 'bitterness' },
   { id: 'body', label: 'body' },
-  { id: 'roast', label: 'roast' },
-  { id: 'fruitiness', label: 'fruitiness' },
-  { id: 'hopAroma', label: 'hop aroma' },
-  { id: 'fermentation', label: 'fermentation' },
   { id: 'strength', label: 'strength' },
 ];
 
@@ -21,30 +17,22 @@ test('flavor wheel visual style changes when filter state changes', () => {
     sourness: -1,
     bitterness: 0,
     body: 0,
-    roast: 0,
-    fruitiness: 0,
-    hopAroma: -1,
-    fermentation: -1,
     strength: 0,
   });
-  const hoppyFruity = buildFlavorWheelVisual(filters, {
+  const bitterStrong = buildFlavorWheelVisual(filters, {
     sweetness: -1,
     sourness: -1,
-    bitterness: 0,
+    bitterness: 1,
     body: 0,
-    roast: -1,
-    fruitiness: 1,
-    hopAroma: 1,
-    fermentation: 0,
-    strength: 0,
+    strength: 1,
   });
 
-  assert.notEqual(sweetNotSour.chartStyle, hoppyFruity.chartStyle);
+  assert.notEqual(sweetNotSour.chartStyle, bitterStrong.chartStyle);
   assert.match(sweetNotSour.chartStyle, /conic-gradient/);
-  assert.match(hoppyFruity.chartStyle, /conic-gradient/);
+  assert.match(bitterStrong.chartStyle, /conic-gradient/);
   assert.ok(sweetNotSour.labels.some((label) => label.id.startsWith('sweetness-')));
-  assert.ok(hoppyFruity.legend.some((item) => item.id === 'hopAroma' && item.active));
-  assert.ok(hoppyFruity.labels.some((label) => label.id.startsWith('fruitiness-')));
+  assert.ok(bitterStrong.legend.some((item) => item.id === 'bitterness' && item.active));
+  assert.ok(bitterStrong.labels.some((label) => label.id.startsWith('strength-')));
 });
 
 test('flavor wheel exposes a legend that explains every color segment', () => {
@@ -53,17 +41,13 @@ test('flavor wheel exposes a legend that explains every color segment', () => {
     sourness: -1,
     bitterness: 0,
     body: 1,
-    roast: 0,
-    fruitiness: 0,
-    hopAroma: -1,
-    fermentation: -1,
     strength: 0,
   });
 
   assert.equal(visual.legend.length, filters.length);
   assert.deepEqual(
     visual.legend.map((item) => item.id),
-    ['sweetness', 'sourness', 'bitterness', 'body', 'roast', 'fruitiness', 'hopAroma', 'fermentation', 'strength'],
+    ['sweetness', 'sourness', 'bitterness', 'body', 'strength'],
   );
   assert.ok(visual.legend.every((item) => /^#[0-9a-f]{6}$/i.test(item.color)));
   assert.ok(visual.legend.some((item) => item.id === 'sweetness' && item.active));
@@ -79,10 +63,6 @@ test('flavor wheel uses matched results to resolve neutral dimensions', () => {
       sourness: 0,
       bitterness: 0,
       body: 0,
-      roast: 0,
-      fruitiness: 0,
-      hopAroma: 0,
-      fermentation: 0,
       strength: 0,
     },
     [
@@ -92,10 +72,6 @@ test('flavor wheel uses matched results to resolve neutral dimensions', () => {
           sourness: -1,
           bitterness: -1,
           body: 1,
-          roast: 1,
-          fruitiness: 0,
-          hopAroma: -1,
-          fermentation: -1,
           strength: 0,
         },
       },
@@ -105,10 +81,6 @@ test('flavor wheel uses matched results to resolve neutral dimensions', () => {
           sourness: -1,
           bitterness: 0,
           body: 1,
-          roast: 1,
-          fruitiness: 1,
-          hopAroma: -1,
-          fermentation: -1,
           strength: 1,
         },
       },
@@ -117,5 +89,5 @@ test('flavor wheel uses matched results to resolve neutral dimensions', () => {
 
   assert.match(visual.chartStyle, /#ffcf85/);
   assert.ok(visual.labels.some((label) => label.id.startsWith('sweetness-')));
-  assert.ok(visual.labels.some((label) => label.id.startsWith('roast-')));
+  assert.ok(visual.labels.some((label) => label.id.startsWith('body-')));
 });

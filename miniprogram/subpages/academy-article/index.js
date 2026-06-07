@@ -15,6 +15,7 @@ Page({
     selectedIpaBranchId: 'west-coast',
     selectedFermentationPathId: 'ale',
     selectedFlavorSourceId: 'malt',
+    selectedColdIpaComparisonId: 'cold-ipa',
   },
 
   onLoad(options = {}) {
@@ -55,6 +56,7 @@ Page({
         selectedIpaBranchId: 'west-coast',
         selectedFermentationPathId: 'ale',
         selectedFlavorSourceId: 'malt',
+        selectedColdIpaComparisonId: 'cold-ipa',
       });
       return;
     }
@@ -64,6 +66,7 @@ Page({
       selectedIpaBranchId: this.data.selectedIpaBranchId,
       selectedFermentationPathId: this.data.selectedFermentationPathId,
       selectedFlavorSourceId: this.data.selectedFlavorSourceId,
+      selectedColdIpaComparisonId: this.data.selectedColdIpaComparisonId,
     });
     this.setData({
       slug,
@@ -87,6 +90,7 @@ Page({
         selectedIpaBranchId: branchId,
         selectedFermentationPathId: this.data.selectedFermentationPathId,
         selectedFlavorSourceId: this.data.selectedFlavorSourceId,
+        selectedColdIpaComparisonId: this.data.selectedColdIpaComparisonId,
       }),
     });
   },
@@ -102,6 +106,7 @@ Page({
         selectedIpaBranchId: this.data.selectedIpaBranchId,
         selectedFermentationPathId: pathId,
         selectedFlavorSourceId: this.data.selectedFlavorSourceId,
+        selectedColdIpaComparisonId: this.data.selectedColdIpaComparisonId,
       }),
     });
   },
@@ -117,6 +122,23 @@ Page({
         selectedIpaBranchId: this.data.selectedIpaBranchId,
         selectedFermentationPathId: this.data.selectedFermentationPathId,
         selectedFlavorSourceId: sourceId,
+        selectedColdIpaComparisonId: this.data.selectedColdIpaComparisonId,
+      }),
+    });
+  },
+
+  selectColdIpaComparison(event) {
+    const { comparisonId } = event.currentTarget.dataset;
+    if (!comparisonId || comparisonId === this.data.selectedColdIpaComparisonId) return;
+
+    trackEvent('academy_cold_ipa_comparison_select', { slug: this.data.slug, comparisonId });
+    this.setData({
+      selectedColdIpaComparisonId: comparisonId,
+      article: decorateArticle(this.data.article, {
+        selectedIpaBranchId: this.data.selectedIpaBranchId,
+        selectedFermentationPathId: this.data.selectedFermentationPathId,
+        selectedFlavorSourceId: this.data.selectedFlavorSourceId,
+        selectedColdIpaComparisonId: comparisonId,
       }),
     });
   },
@@ -144,10 +166,12 @@ Page({
 });
 
 function decorateArticle(article, selections) {
+  const experience = buildExperience(article.experienceKey, selections, article);
   return {
     ...article,
     sections: getArticleSections(article),
-    experience: buildExperience(article.experienceKey, selections),
+    experience,
+    selectedComparisonId: experience.activeItem ? experience.activeItem.id : article.selectedComparisonId,
   };
 }
 
@@ -216,10 +240,20 @@ function getFallbackSections(slug, experienceKey) {
   return fallbacks[slug] || [];
 }
 
-function buildExperience(experienceKey, selections) {
+function buildExperience(experienceKey, selections, article = null) {
   if (experienceKey === 'ale-lager') return buildAleLagerExperience(selections.selectedFermentationPathId);
   if (experienceKey === 'flavor-radar') return buildFlavorRadarExperience(selections.selectedFlavorSourceId);
-  return buildIpaMapExperience(selections.selectedIpaBranchId);
+  if (experienceKey === 'ipa-map') return buildIpaMapExperience(selections.selectedIpaBranchId);
+  if (experienceKey === 'cold-ipa') return buildColdIpaExperience(article, selections.selectedColdIpaComparisonId);
+  return { items: [], activeItem: null };
+}
+
+function buildColdIpaExperience(article, selectedComparisonId) {
+  const comparisonSection = getArticleSections(article || {}).find((section) => section.showColdIpaComparison);
+  const items = comparisonSection && comparisonSection.companion
+    ? comparisonSection.companion.comparisonItems
+    : [];
+  return decorateSelectable(items, selectedComparisonId || 'cold-ipa', 'comparison');
 }
 
 function buildIpaMapExperience(selectedBranchId) {

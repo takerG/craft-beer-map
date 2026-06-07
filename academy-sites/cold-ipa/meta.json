@@ -1,0 +1,15 @@
+{
+  "slug": "cold-ipa",
+  "title": "什么是冷 IPA？",
+  "description": "把冷 IPA 从低温饮用、IPL、西海岸 IPA 和浑浊 IPA 的混淆里拆出来，理解它为何干爽、清澈、酒花鲜明。",
+  "type": "comparison",
+  "difficulty": "进阶入门",
+  "readingTime": 9,
+  "tags": ["冷 IPA", "IPA", "酒花", "风格识别"],
+  "date": "2026-06-08",
+  "featured": true,
+  "heroMetric": "4 杯对照",
+  "accent": "#f4bd38",
+  "layoutVariant": "cold-editorial",
+  "relatedStyles": ["21A", "21C", "ext-west-coast-ipa", "ext-india-pale-lager"]
+}

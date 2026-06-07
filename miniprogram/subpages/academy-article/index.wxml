@@ -1,4 +1,4 @@
-<view class="page academy-article-page">
+<view class="page academy-article-page {{article.pageThemeClass}}">
   <view wx:if="{{isLoading}}" class="empty-state">
     <text>正在打开学院内容</text>
   </view>
@@ -10,7 +10,28 @@
   </view>
 
   <view wx:if="{{isReady}}">
-    <view class="article-hero" style="border-top-color: {{article.accent}}">
+    <view wx:if="{{article.isColdIpaExperience}}" class="cold-ipa-hero">
+      <view class="cold-ipa-hero-copy">
+        <text class="cold-ipa-title">{{article.title}}</text>
+        <text class="cold-ipa-summary" user-select="true">{{article.hero.summary}}</text>
+        <view class="cold-ipa-meta">
+          <text>{{article.difficulty}}</text>
+          <text>{{article.readingTime}} min</text>
+          <text>{{article.heroMetric}}</text>
+        </view>
+      </view>
+      <view class="cold-ipa-glass">
+        <view class="glass-foam"></view>
+        <view class="glass-beer"></view>
+        <view class="glass-bubbles">
+          <text></text>
+          <text></text>
+          <text></text>
+        </view>
+      </view>
+    </view>
+
+    <view wx:if="{{article.showDefaultArticleHero}}" class="article-hero" style="border-top-color: {{article.accent}}">
       <text class="article-kicker">{{article.hero.kicker}}</text>
       <text class="page-title">{{article.title}}</text>
       <text class="page-subtitle" user-select="true">{{article.hero.summary}}</text>
@@ -104,6 +125,122 @@
               <text wx:for="{{article.experience.activeItem.terms}}" wx:key="*this">{{item}}</text>
             </view>
           </view>
+        </view>
+
+        <view wx:if="{{section.showColdIpaComparison}}" class="cold-ipa-comparison">
+          <view class="cold-companion-head">
+            <text>{{section.companion.title}}</text>
+            <text user-select="true">{{section.companion.summary}}</text>
+          </view>
+          <view class="cold-style-tabs">
+            <view
+              wx:for="{{article.experience.items}}"
+              wx:key="id"
+              class="cold-style-tab {{item.className}}"
+              data-comparison-id="{{item.id}}"
+              hover-class="tap-hover"
+              hover-stay-time="80"
+              bindtap="selectColdIpaComparison"
+            >
+              <text>{{item.title}}</text>
+            </view>
+          </view>
+          <view class="cold-style-focus">
+            <text class="cold-focus-title">{{article.experience.activeItem.title}}</text>
+            <text class="cold-focus-lead" user-select="true">{{article.experience.activeItem.lead}}</text>
+            <view class="cold-compare-rows">
+              <view wx:for="{{article.experience.activeItem.rows}}" wx:for-item="row" wx:key="label" class="cold-compare-row">
+                <text>{{row.label}}</text>
+                <text user-select="true">{{row.value}}</text>
+              </view>
+            </view>
+          </view>
+        </view>
+
+        <view wx:if="{{section.showColdIpaProcess}}" class="cold-ipa-process">
+          <view class="cold-companion-head">
+            <text>{{section.companion.title}}</text>
+            <text user-select="true">{{section.companion.summary}}</text>
+          </view>
+          <view class="cold-process-list">
+            <view wx:for="{{section.companion.processSteps}}" wx:for-item="step" wx:key="title" class="cold-process-step">
+              <text class="cold-process-marker">{{step.marker}}</text>
+              <view class="cold-process-copy">
+                <text>{{step.title}}</text>
+                <text user-select="true">{{step.body}}</text>
+              </view>
+            </view>
+          </view>
+        </view>
+
+        <view wx:if="{{section.showColdIpaChecklist}}" class="cold-ipa-checklist">
+          <text class="cold-check-title">{{section.companion.title}}</text>
+          <view class="cold-check-list">
+            <view wx:for="{{section.companion.checkItems}}" wx:for-item="check" wx:key="marker" class="cold-check-item">
+              <text>{{check.marker}}</text>
+              <text user-select="true">{{check.label}}</text>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <view wx:if="{{article.hasGenericModules}}" class="generic-sections">
+      <view wx:for="{{article.genericModules}}" wx:for-item="module" wx:key="id" class="generic-module">
+        <text class="generic-module-title">{{module.title}}</text>
+        <text wx:if="{{module.summary}}" class="generic-module-summary" user-select="true">{{module.summary}}</text>
+
+        <view wx:if="{{module.isTermGrid}}" class="term-grid">
+          <view wx:for="{{module.items}}" wx:for-item="term" wx:key="title" class="term-card">
+            <view class="term-card-head">
+              <text>{{term.title}}</text>
+              <text>{{term.label}}</text>
+            </view>
+            <text class="term-card-body" user-select="true">{{term.body}}</text>
+          </view>
+        </view>
+
+        <view wx:if="{{module.isComparison}}" class="generic-comparison">
+          <view wx:for="{{module.columns}}" wx:for-item="column" wx:key="title" class="generic-column">
+            <text class="generic-column-title">{{column.title}}</text>
+            <text wx:for="{{column.items}}" wx:for-item="copy" wx:key="*this" class="generic-column-item" user-select="true">{{copy}}</text>
+          </view>
+        </view>
+
+        <view wx:if="{{module.isScale}}" class="generic-scale">
+          <view wx:for="{{module.points}}" wx:for-item="point" wx:key="label" class="generic-scale-row">
+            <view class="generic-scale-head">
+              <text>{{point.label}}</text>
+              <text>{{point.low}} / {{point.high}}</text>
+            </view>
+            <view class="generic-scale-track">
+              <view class="generic-scale-fill" style="{{point.levelStyle}}"></view>
+            </view>
+          </view>
+        </view>
+
+        <view wx:if="{{module.isChecklist}}" class="generic-checklist">
+          <view wx:for="{{module.items}}" wx:for-item="check" wx:key="title" class="check-row">
+            <text class="check-marker">{{check.marker}}</text>
+            <view class="check-copy">
+              <text>{{check.title}}</text>
+              <text user-select="true">{{check.body}}</text>
+            </view>
+          </view>
+        </view>
+
+        <view wx:if="{{module.isQuiz}}" class="generic-quiz">
+          <text class="generic-quiz-question" user-select="true">{{module.question}}</text>
+          <block wx:for="{{module.options}}" wx:for-item="option" wx:key="label">
+            <view wx:if="{{option.correct}}" class="quiz-option quiz-option-correct">
+              <text>{{option.label}}</text>
+              <text user-select="true">{{option.feedback}}</text>
+            </view>
+            <view wx:if="{{option.isIncorrect}}" class="quiz-option">
+              <text>{{option.label}}</text>
+              <text user-select="true">{{option.feedback}}</text>
+            </view>
+          </block>
         </view>
       </view>
     </view>

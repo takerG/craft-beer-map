@@ -1,0 +1,15 @@
+{
+  "slug": "beer-fresh-draft-raw",
+  "title": "生啤、熟啤、原浆",
+  "description": "把生啤、熟啤、原浆、扎啤、鲜啤、纯生和精酿这些常见说法，拆成能实际选酒的判断线。",
+  "type": "tool",
+  "difficulty": "入门",
+  "readingTime": 8,
+  "tags": ["术语", "生啤", "选酒"],
+  "date": "2026-06-05",
+  "featured": true,
+  "heroMetric": "7 个名词",
+  "accent": "#34d399",
+  "layout": "glossary",
+  "relatedStyles": ["1A", "1B", "5D", "18B"]
+}

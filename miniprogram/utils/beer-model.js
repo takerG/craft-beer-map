@@ -98,6 +98,8 @@ const TASTE_FILTERS = [
   },
 ];
 
+const ACTIVE_TASTE_FILTER_IDS = new Set(['sweetness', 'sourness', 'bitterness', 'body', 'strength']);
+
 const categoryById = new Map();
 const styleById = new Map();
 const stylesByCategory = new Map();
@@ -339,7 +341,7 @@ export function searchStyles(query, limit = 30) {
 }
 
 export function getTasteFilters() {
-  return TASTE_FILTERS.map((filter) => ({
+  return getActiveTasteFilters().map((filter) => ({
     id: filter.id,
     label: filter.label,
     options: [
@@ -479,14 +481,18 @@ function buildStyleLanguageSearchTerms() {
 
 function normalizeTasteFilterState(filterState) {
   return Object.fromEntries(
-    TASTE_FILTERS.map((filter) => [filter.id, normalizeTasteValue(filterState[filter.id])]),
+    getActiveTasteFilters().map((filter) => [filter.id, normalizeTasteValue(filterState[filter.id])]),
   );
 }
 
 function normalizeTasteProfile(profile = {}) {
   return Object.fromEntries(
-    TASTE_FILTERS.map((filter) => [filter.id, normalizeTasteValue(profile[filter.id])]),
+    getActiveTasteFilters().map((filter) => [filter.id, normalizeTasteValue(profile[filter.id])]),
   );
+}
+
+function getActiveTasteFilters() {
+  return TASTE_FILTERS.filter((filter) => ACTIVE_TASTE_FILTER_IDS.has(filter.id));
 }
 
 function normalizeTasteValue(value) {

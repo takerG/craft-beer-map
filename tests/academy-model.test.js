@@ -16,7 +16,7 @@ test('academy content folders use followAI-style metadata and publish files', ()
   const orderPath = path.join(academyRoot, 'order.json');
   assert.equal(fs.existsSync(orderPath), true, 'academy-sites/order.json should exist');
 
-  ['ipa-family-map', 'ale-vs-lager', 'flavor-radar-basics'].forEach((slug) => {
+  ['ipa-family-map', 'ale-vs-lager', 'flavor-radar-basics', 'beer-fresh-draft-raw', 'cold-ipa'].forEach((slug) => {
     const siteDir = path.join(academyRoot, slug);
     const metaPath = path.join(siteDir, 'meta.json');
     const contentPath = path.join(siteDir, 'content.json');
@@ -53,6 +53,8 @@ test('academy article sections are substantial enough to read as articles', () =
     'ipa-family-map': 2400,
     'ale-vs-lager': 1200,
     'flavor-radar-basics': 1200,
+    'beer-fresh-draft-raw': 1800,
+    'cold-ipa': 2200,
   };
 
   Object.entries(minimumArticleLengths).forEach(([slug, minimumLength]) => {
@@ -74,15 +76,15 @@ test('academy home exposes a lightweight publish-time sorted feed', () => {
   assert.equal(home.feedSites.length, getAcademySites().length);
   assert.deepEqual(
     home.feedSites.map((site) => site.slug),
-    ['flavor-radar-basics', 'ipa-family-map', 'ale-vs-lager'],
+    ['cold-ipa', 'beer-fresh-draft-raw', 'flavor-radar-basics', 'ipa-family-map', 'ale-vs-lager'],
   );
   assert.deepEqual(
     home.feedSites.map((site) => site.publishedAt),
-    ['2026-06-04', '2026-06-03', '2026-06-02'],
+    ['2026-06-08', '2026-06-05', '2026-06-04', '2026-06-03', '2026-06-02'],
   );
   assert.equal(home.stats.siteCount, getAcademySites().length);
   assert.equal(home.feedSites.some((site) => Object.hasOwn(site, 'modules')), false);
-  assert.ok(Buffer.byteLength(JSON.stringify(home.feedSites)) < 7000);
+  assert.ok(Buffer.byteLength(JSON.stringify(home.feedSites)) < 11000);
 });
 
 test('academy feed sites expose generated png cover images', () => {
@@ -107,10 +109,11 @@ test('academy home exposes feed type filters with counts', () => {
   assert.deepEqual(
     home.filterOptions.map((option) => [option.type, option.label, option.count]),
     [
-      ['all', '全部', 3],
+      ['all', '全部', 5],
       ['map', '地图', 1],
-      ['comparison', '对比', 1],
+      ['comparison', '对比', 2],
       ['simulator', '工具', 1],
+      ['tool', '工具', 1],
     ],
   );
   assert.equal(home.filterOptions[0].className, 'filter-chip is-active');
@@ -151,6 +154,8 @@ test('academy article resolves interactive modules and BJCP related styles', () 
 test('academy article model routes each article to a distinct experience', () => {
   const aleLager = getAcademyArticle('ale-vs-lager');
   const flavorRadar = getAcademyArticle('flavor-radar-basics');
+  const beerTerms = getAcademyArticle('beer-fresh-draft-raw');
+  const coldIpa = getAcademyArticle('cold-ipa');
 
   assert.equal(aleLager.experienceKey, 'ale-lager');
   assert.equal(aleLager.isAleLagerExperience, true);
@@ -161,6 +166,20 @@ test('academy article model routes each article to a distinct experience', () =>
   assert.equal(flavorRadar.isFlavorRadarExperience, true);
   assert.equal(flavorRadar.isIpaMapExperience, false);
   assert.equal(flavorRadar.isAleLagerExperience, false);
+
+  assert.equal(beerTerms.experienceKey, 'custom');
+  assert.equal(beerTerms.hasGenericModules, true);
+  assert.ok(beerTerms.genericModules.some((module) => module.isTermGrid));
+  assert.ok(beerTerms.genericModules.some((module) => module.isChecklist));
+
+  assert.equal(coldIpa.experienceKey, 'cold-ipa');
+  assert.equal(coldIpa.isColdIpaExperience, true);
+  assert.equal(coldIpa.pageThemeClass, 'cold-ipa-page');
+  assert.equal(coldIpa.selectedComparisonId, 'cold-ipa');
+  assert.ok(coldIpa.sections.some((section) => section.showColdIpaComparison));
+  assert.ok(coldIpa.sections.some((section) => section.showColdIpaProcess));
+  assert.ok(coldIpa.sections.some((section) => section.showColdIpaChecklist));
+  assert.ok(coldIpa.relatedStyles.some((style) => style.kind === 'extension' && style.id === 'ext-india-pale-lager'));
 });
 
 test('academy article returns null for unknown slugs', () => {

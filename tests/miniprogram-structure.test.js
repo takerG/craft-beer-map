@@ -396,9 +396,17 @@ test('academy articles render slug-specific experiences instead of generic modul
   assert.match(articleWxml, /class="ipa-map-experience experience-section"/);
   assert.match(articleWxml, /class="ale-lager-experience experience-section"/);
   assert.match(articleWxml, /class="flavor-radar-experience experience-section"/);
+  assert.match(articleWxml, /class="cold-ipa-hero"/);
+  assert.match(articleWxml, /class="cold-ipa-comparison"/);
+  assert.match(articleWxml, /bindtap="selectColdIpaComparison"/);
+  assert.match(articleWxml, /class="cold-ipa-process"/);
+  assert.match(articleWxml, /class="cold-ipa-checklist"/);
   assert.match(articleWxml, /wx:if="{{section\.showIpaMapExperience}}"/);
   assert.match(articleWxml, /wx:if="{{section\.showAleLagerExperience}}"/);
   assert.match(articleWxml, /wx:if="{{section\.showFlavorRadarExperience}}"/);
+  assert.match(articleWxml, /wx:if="{{section\.showColdIpaComparison}}"/);
+  assert.match(articleWxml, /wx:if="{{section\.showColdIpaProcess}}"/);
+  assert.match(articleWxml, /wx:if="{{section\.showColdIpaChecklist}}"/);
 
   assert.doesNotMatch(articleWxml, /wx:for="{{article\.modules}}"/);
   assert.doesNotMatch(articleWxml, /module-tabs|module-list|module-card|scale-list|quiz-panel/);
@@ -407,15 +415,18 @@ test('academy articles render slug-specific experiences instead of generic modul
   assert.match(articleJs, /selectIpaBranch\(event\)/);
   assert.match(articleJs, /selectFermentationPath\(event\)/);
   assert.match(articleJs, /selectFlavorSource\(event\)/);
+  assert.match(articleJs, /selectColdIpaComparison\(event\)/);
   assert.match(articleJs, /articleSections/);
   assert.match(articleJs, /getFallbackSections/);
   assert.match(articleJs, /academy_ipa_branch_select/);
   assert.match(articleJs, /academy_fermentation_path_select/);
   assert.match(articleJs, /academy_flavor_source_select/);
+  assert.match(articleJs, /academy_cold_ipa_comparison_select/);
 
   assert.match(articleWxss, /\.ipa-map-experience/);
   assert.match(articleWxss, /\.ale-lager-experience/);
   assert.match(articleWxss, /\.flavor-radar-experience/);
+  assert.match(articleWxss, /\.cold-ipa-page/);
 });
 
 test('core beer model avoids the stale style-language-map runtime module id', () => {
@@ -555,6 +566,17 @@ test('choose taste matches reserve a code label for extension styles', () => {
   assert.match(chooseWxml, /{{item\.codeLabel}}/);
 });
 
+test('choose star map uses Chinese flavor labels instead of style codes', () => {
+  const chooseJs = readMiniPage('pages/choose/index.js');
+  const chooseWxml = readMiniPage('pages/choose/index.wxml');
+  const starMapTemplate = chooseWxml.match(/<view class="star-map">[\s\S]*?<\/view>\s*<\/view>\s*<\/swiper-item>/);
+
+  assert.ok(starMapTemplate, 'star map template should exist');
+  assert.match(chooseJs, /starLabel:\s*buildStarLabel\(result\)/);
+  assert.match(starMapTemplate[0], /{{item\.starLabel}}/);
+  assert.doesNotMatch(starMapTemplate[0], /{{item\.codeLabel}}/);
+});
+
 test('search clear button keeps its label centered', () => {
   const searchWxss = readMiniPage('pages/search/index.wxss');
 
@@ -651,11 +673,43 @@ test('choose tab provides taste filters, switchable visuals, and fixed results',
   assert.match(chooseWxss, /\.result-region/);
 });
 
+test('choose tab frames matches as a tonight decision workbench', () => {
+  const chooseJs = readMiniPage('pages/choose/index.js');
+  const chooseWxml = readMiniPage('pages/choose/index.wxml');
+  const chooseWxss = readMiniPage('pages/choose/index.wxss');
+
+  assert.match(chooseJs, /SCENE_PRESETS/);
+  ['easy', 'meal', 'bold', 'new'].forEach((sceneId) => {
+    assert.match(chooseJs, new RegExp(`id:\\s*'${sceneId}'`));
+  });
+  assert.match(chooseJs, /changeScene\(event\)/);
+  assert.match(chooseJs, /choose_scene_select/);
+  assert.match(chooseJs, /primaryPick/);
+  assert.match(chooseJs, /alternativeResults/);
+  assert.match(chooseJs, /toggleExplanation\(event\)/);
+  assert.match(chooseJs, /choose_explanation_toggle/);
+
+  assert.match(chooseWxml, /class="scene-grid"/);
+  assert.match(chooseWxml, /bindtap="changeScene"/);
+  assert.match(chooseWxml, /class="primary-pick-card"/);
+  assert.match(chooseWxml, /{{primaryPick\.displayName}}/);
+  assert.match(chooseWxml, /class="alternative-grid"/);
+  assert.match(chooseWxml, /wx:for="{{alternativeResults}}"/);
+  assert.match(chooseWxml, /class="why-recommendation"/);
+  assert.match(chooseWxml, /bindtap="toggleExplanation"/);
+  assert.match(chooseWxml, /wx:if="{{showExplanation}}"/);
+
+  assert.match(chooseWxss, /\.scene-grid/);
+  assert.match(chooseWxss, /\.primary-pick-card/);
+  assert.match(chooseWxss, /\.alternative-grid/);
+  assert.match(chooseWxss, /\.why-recommendation/);
+});
+
 test('choose tab default state knows the expanded taste dimensions', () => {
   const chooseJs = readMiniPage('pages/choose/index.js');
 
-  ['hopAroma', 'fermentation', 'strength'].forEach((dimension) => {
-    assert.match(chooseJs, new RegExp(`${dimension}:\\s*0`));
+  ['roast', 'fruitiness', 'hopAroma', 'fermentation'].forEach((dimension) => {
+    assert.doesNotMatch(chooseJs, new RegExp(`${dimension}:\\s*0`));
   });
 });
 

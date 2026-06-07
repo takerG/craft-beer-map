@@ -4,17 +4,63 @@ import { buildShareMessage, buildTimelineShareMessage, enableShareMenu } from '.
 import { buildFlavorWheelVisual } from '../../utils/taste-visuals.js';
 import { trackEvent } from '../../utils/telemetry.js';
 
-const DEFAULT_FILTER_STATE = {
-  sweetness: 1,
-  sourness: -1,
-  bitterness: 0,
-  body: 0,
-  roast: 0,
-  fruitiness: 0,
-  hopAroma: 0,
-  fermentation: 0,
-  strength: 0,
-};
+const SCENE_PRESETS = [
+  {
+    id: 'easy',
+    label: '轻松畅饮',
+    summary: '清爽、顺口，不抢注意力',
+    intent: '适合边聊边喝，优先清爽和低负担。',
+    filterState: {
+      sweetness: -1,
+      sourness: -1,
+      bitterness: 0,
+      body: -1,
+      strength: 0,
+    },
+  },
+  {
+    id: 'meal',
+    label: '搭餐',
+    summary: '平衡有层次，适合边吃边喝',
+    intent: '不极端，保留一点麦芽、苦味和酒体支撑。',
+    filterState: {
+      sweetness: 0,
+      sourness: -1,
+      bitterness: 0,
+      body: 0,
+      strength: 0,
+    },
+  },
+  {
+    id: 'bold',
+    label: '重口满足',
+    summary: '浓郁、厚实，更有存在感',
+    intent: '更适合慢饮，允许更高甜感、苦味、酒体和酒精度。',
+    filterState: {
+      sweetness: 1,
+      sourness: -1,
+      bitterness: 1,
+      body: 1,
+      strength: 1,
+    },
+  },
+  {
+    id: 'new',
+    label: '尝点新的',
+    summary: '保留惊喜，但不过度冒险',
+    intent: '口味不预设极端方向，让结果保留探索空间。',
+    filterState: {
+      sweetness: 0,
+      sourness: 0,
+      bitterness: 0,
+      body: 0,
+      strength: 0,
+    },
+  },
+];
+
+const DEFAULT_SCENE_ID = 'easy';
+const DEFAULT_FILTER_STATE = getScenePreset(DEFAULT_SCENE_ID).filterState;
 
 const VISUAL_TABS = [
   { id: 'wheel', label: '风味轮' },
@@ -32,13 +78,24 @@ const STAR_POSITIONS = [
 
 Page({
   data: {
+    scenePresets: buildScenePresets(DEFAULT_SCENE_ID),
+    activeSceneId: DEFAULT_SCENE_ID,
+    activeSceneLabel: getScenePreset(DEFAULT_SCENE_ID).label,
+    activeSceneIntent: getScenePreset(DEFAULT_SCENE_ID).intent,
     filterRows: [],
     filterState: DEFAULT_FILTER_STATE,
+    filterSummary: '',
     visualTabs: VISUAL_TABS,
     activeVisualIndex: 0,
     results: [],
     hasResults: false,
+    primaryPick: null,
+    alternativeResults: [],
+    hasAlternatives: false,
     resultCountLabel: '0 个匹配',
+    showExplanation: false,
+    explanationToggleLabel: '展开推荐依据',
+    explanationSummary: '',
     wheelChartStyle: '',
     wheelLabels: [],
     wheelLegend: [],
@@ -49,7 +106,7 @@ Page({
 
   onLoad() {
     enableShareMenu();
-    this.refreshTasteMatches(DEFAULT_FILTER_STATE);
+    this.refreshTasteMatches(DEFAULT_FILTER_STATE, DEFAULT_SCENE_ID);
   },
 
   onShareAppMessage() {
@@ -67,6 +124,15 @@ Page({
     });
   },
 
+  changeScene(event) {
+    const { sceneId } = event.currentTarget.dataset;
+    const scene = getScenePreset(sceneId);
+    if (!scene) return;
+
+    trackEvent('choose_scene_select', { sceneId });
+    this.refreshTasteMatches({ ...scene.filterState }, scene.id);
+  },
+
   changeFilter(event) {
     const { filterId, filterValue } = event.currentTarget.dataset;
     if (!filterId) return;
@@ -79,8 +145,23 @@ Page({
     trackEvent('choose_filter_change', {
       filterId,
       filterValue: Number(filterValue),
+      sceneId: this.data.activeSceneId,
     });
-    this.refreshTasteMatches(nextFilterState);
+    this.refreshTasteMatches(nextFilterState, this.data.activeSceneId);
+  },
+
+  toggleExplanation(event) {
+    const showExplanation = !this.data.showExplanation;
+
+    trackEvent('choose_explanation_toggle', {
+      expanded: showExplanation,
+      source: event && event.currentTarget ? 'toggle' : 'unknown',
+      sceneId: this.data.activeSceneId,
+    });
+    this.setData({
+      showExplanation,
+      explanationToggleLabel: showExplanation ? '收起推荐依据' : '展开推荐依据',
+    });
   },
 
   tapVisualTab(event) {
@@ -117,25 +198,51 @@ Page({
     navigateOnce(this, `/subpages/style/index?styleId=${styleId}`);
   },
 
-  refreshTasteMatches(filterState) {
+  refreshTasteMatches(filterState, sceneId = DEFAULT_SCENE_ID) {
+    const scene = getScenePreset(sceneId) || getScenePreset(DEFAULT_SCENE_ID);
     const filters = getTasteFilters();
     const results = getTasteMatches(filterState, 12).map((result) => ({
       ...result,
       codeLabel: result.kind === 'extension' ? 'EX' : result.code,
       reasonText: result.matchReasons.join('、') || '风味轮廓接近',
     }));
+    const primaryPick = results[0] || null;
+    const alternativeResults = results.slice(1, 3);
     const visualData = buildVisualData(filters, filterState, results);
 
     this.setData({
+      activeSceneId: scene.id,
+      activeSceneLabel: scene.label,
+      activeSceneIntent: scene.intent,
+      scenePresets: buildScenePresets(scene.id),
       filterState,
       filterRows: buildFilterRows(filters, filterState),
+      filterSummary: buildFilterSummary(filters, filterState),
       results,
       hasResults: results.length > 0,
+      primaryPick,
+      alternativeResults,
+      hasAlternatives: alternativeResults.length > 0,
       resultCountLabel: `${results.length} 个匹配`,
+      showExplanation: false,
+      explanationToggleLabel: '展开推荐依据',
+      explanationSummary: buildExplanationSummary(primaryPick, alternativeResults, scene),
+      activeVisualIndex: 0,
       ...visualData,
     });
   },
 });
+
+function buildScenePresets(activeSceneId) {
+  return SCENE_PRESETS.map((scene) => ({
+    ...scene,
+    selected: scene.id === activeSceneId,
+  }));
+}
+
+function getScenePreset(sceneId) {
+  return SCENE_PRESETS.find((scene) => scene.id === sceneId) || null;
+}
 
 function buildFilterRows(filters, filterState) {
   return filters.map((filter) => ({
@@ -145,6 +252,21 @@ function buildFilterRows(filters, filterState) {
       selected: Number(filterState[filter.id]) === option.value,
     })),
   }));
+}
+
+function buildFilterSummary(filters, filterState) {
+  return filters.map((filter) => {
+    const selected = filter.options.find((option) => option.value === Number(filterState[filter.id]));
+    return selected ? selected.label : '中立';
+  }).join(' · ');
+}
+
+function buildExplanationSummary(primaryPick, alternativeResults, scene) {
+  if (!primaryPick) return `${scene.label} 暂时没有稳定推荐，可以放宽一个口味维度再试。`;
+
+  const alternativeCount = alternativeResults.length;
+  const alternativeLabel = alternativeCount ? `，并保留 ${alternativeCount} 个备选方向` : '';
+  return `${primaryPick.displayName} 最贴近「${scene.label}」的当前口味${alternativeLabel}。`;
 }
 
 function buildVisualData(filters, filterState, results) {
@@ -184,7 +306,16 @@ function buildStarNodes(results) {
       ...result,
       x: position.x,
       y: position.y,
+      starLabel: buildStarLabel(result),
       nodeClass: `star-node-${position.size}`,
     };
   });
+}
+
+function buildStarLabel(result) {
+  const displayName = String(result.displayName || '').replace(/\s|\/|·/g, '');
+  if (displayName) return displayName.slice(0, 4);
+
+  const reason = Array.isArray(result.matchReasons) ? result.matchReasons[0] : '';
+  return String(reason || '风味').slice(0, 4);
 }

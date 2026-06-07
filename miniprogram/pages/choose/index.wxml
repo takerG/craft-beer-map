@@ -2,14 +2,44 @@
   <view class="choose-hero">
     <view class="choose-hero-head">
       <view>
-        <text class="page-title">择饮</text>
-        <text class="page-subtitle">用明确的三段式口味偏好，找到更适合今晚的一批风格。</text>
+        <text class="page-title">今晚喝点什么？</text>
+        <text class="page-subtitle">先选场景，再用口味微调。择饮会给出一个首选和两个备选。</text>
       </view>
       <text class="match-count">{{resultCountLabel}}</text>
+    </view>
+    <view class="scene-intent">
+      <text>{{activeSceneLabel}}</text>
+      <text>{{activeSceneIntent}}</text>
+    </view>
+  </view>
+
+  <view class="scene-section">
+    <view class="section-headline">
+      <text>今晚的场景</text>
+      <text>选一个最接近的</text>
+    </view>
+    <view class="scene-grid">
+      <view
+        wx:for="{{scenePresets}}"
+        wx:key="id"
+        class="scene-card {{item.selected ? 'scene-card-active' : ''}}"
+        hover-class="tap-hover"
+        hover-stay-time="80"
+        data-scene-id="{{item.id}}"
+        bindtap="changeScene"
+      >
+        <view class="scene-card-dot"></view>
+        <text class="scene-title">{{item.label}}</text>
+        <text class="scene-summary">{{item.summary}}</text>
+      </view>
     </view>
   </view>
 
   <view class="filter-panel">
+    <view class="filter-panel-head">
+      <text>口味微调</text>
+      <text>{{filterSummary}}</text>
+    </view>
     <view wx:for="{{filterRows}}" wx:key="id" class="filter-row">
       <text class="filter-label">{{item.label}}</text>
       <view class="filter-options">
@@ -30,141 +60,191 @@
     </view>
   </view>
 
-  <view class="visual-region">
-    <view class="visual-tabs">
-      <view
-        wx:for="{{visualTabs}}"
-        wx:for-index="index"
-        wx:key="id"
-        class="visual-tab {{activeVisualIndex === index ? 'visual-tab-active' : ''}}"
-        hover-class="tap-hover"
-        hover-stay-time="80"
-        data-visual-index="{{index}}"
-        bindtap="tapVisualTab"
-      >
-        <text>{{item.label}}</text>
+  <view wx:if="{{hasResults}}" class="result-region">
+    <view class="result-head">
+      <text>今晚首选</text>
+      <text>{{primaryPick.matchScore}}% 匹配</text>
+    </view>
+
+    <view
+      class="primary-pick-card"
+      style="border-left-color: {{primaryPick.color}}"
+      hover-class="tap-hover"
+      hover-stay-time="80"
+      data-style-id="{{primaryPick.id}}"
+      data-item-kind="{{primaryPick.kind}}"
+      bindtap="openStyle"
+    >
+      <view class="primary-pick-top">
+        <view class="primary-pick-main">
+          <text class="primary-pick-label">最符合「{{activeSceneLabel}}」</text>
+          <text class="primary-pick-name">{{primaryPick.displayName}}</text>
+          <text class="primary-pick-en">{{primaryPick.name_en}}</text>
+        </view>
+        <text class="primary-pick-score">{{primaryPick.matchScore}}%</text>
+      </view>
+      <text class="primary-pick-reason">{{primaryPick.reasonText}}</text>
+      <view class="primary-pick-tags">
+        <text>{{primaryPick.codeLabel}}</text>
+        <text>{{activeSceneLabel}}</text>
+        <text>{{filterSummary}}</text>
+      </view>
+      <view class="primary-pick-action">
+        <text>查看风格详情</text>
+        <text>›</text>
       </view>
     </view>
 
-    <swiper
-      class="visual-swiper"
-      current="{{activeVisualIndex}}"
-      duration="260"
-      bindchange="switchVisualView"
+    <view wx:if="{{hasAlternatives}}" class="alternative-section">
+      <view class="result-head alternative-head">
+        <text>两个备选</text>
+        <text>换一种侧重点</text>
+      </view>
+      <view class="alternative-grid">
+        <view
+          wx:for="{{alternativeResults}}"
+          wx:key="id"
+          class="alternative-card"
+          style="border-top-color: {{item.color}}"
+          hover-class="tap-hover"
+          hover-stay-time="80"
+          data-style-id="{{item.id}}"
+          data-item-kind="{{item.kind}}"
+          bindtap="openStyle"
+        >
+          <view class="alternative-card-head">
+            <text class="alternative-code">{{item.codeLabel}}</text>
+            <text class="alternative-score">{{item.matchScore}}%</text>
+          </view>
+          <text class="alternative-name">{{item.displayName}}</text>
+          <text class="alternative-reason">{{item.reasonText}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <view wx:else class="choose-empty">
+    <text>这组条件太苛刻了，放宽一个维度再试。</text>
+  </view>
+
+  <view class="why-recommendation">
+    <view
+      class="why-toggle"
+      hover-class="tap-hover"
+      hover-stay-time="80"
+      bindtap="toggleExplanation"
     >
-      <swiper-item>
-        <view class="visual-panel">
-          <view class="visual-head">
-            <text>命中的风味方向</text>
-            <text>颜色=筛选维度</text>
-          </view>
-          <text class="wheel-summary">{{wheelSummary}}</text>
-          <view class="wheel-chart" style="{{wheelChartStyle}}">
-            <view class="wheel-core"></view>
-            <text
-              wx:for="{{wheelLabels}}"
-              wx:key="id"
-              class="wheel-label {{item.className}}"
-              style="border-color: {{item.color}}"
-            >{{item.dimension}} · {{item.label}}</text>
-          </view>
-          <view class="wheel-legend">
-            <view
-              wx:for="{{wheelLegend}}"
-              wx:key="id"
-              class="wheel-legend-item {{item.active ? 'wheel-legend-active' : ''}} {{item.muted ? 'wheel-legend-muted' : ''}}"
-            >
-              <view class="wheel-swatch" style="{{item.swatchStyle}}"></view>
-              <view class="wheel-legend-copy">
-                <text class="wheel-legend-main">{{item.dimension}} · {{item.valueLabel}}</text>
-                <text class="wheel-legend-source">{{item.sourceLabel}}</text>
+      <view class="why-toggle-copy">
+        <text>为什么推荐这三款？</text>
+        <text>{{explanationSummary}}</text>
+      </view>
+      <text class="why-toggle-action">{{explanationToggleLabel}}</text>
+    </view>
+
+    <view wx:if="{{showExplanation}}" class="visual-region">
+      <view class="visual-tabs">
+        <view
+          wx:for="{{visualTabs}}"
+          wx:for-index="index"
+          wx:key="id"
+          class="visual-tab {{activeVisualIndex === index ? 'visual-tab-active' : ''}}"
+          hover-class="tap-hover"
+          hover-stay-time="80"
+          data-visual-index="{{index}}"
+          bindtap="tapVisualTab"
+        >
+          <text>{{item.label}}</text>
+        </view>
+      </view>
+
+      <swiper
+        class="visual-swiper"
+        current="{{activeVisualIndex}}"
+        duration="260"
+        bindchange="switchVisualView"
+      >
+        <swiper-item>
+          <view class="visual-panel">
+            <view class="visual-head">
+              <text>命中的风味方向</text>
+              <text>颜色=筛选维度</text>
+            </view>
+            <text class="wheel-summary">{{wheelSummary}}</text>
+            <view class="wheel-chart" style="{{wheelChartStyle}}">
+              <view class="wheel-core"></view>
+              <text
+                wx:for="{{wheelLabels}}"
+                wx:key="id"
+                class="wheel-label {{item.className}}"
+                style="border-color: {{item.color}}"
+              >{{item.dimension}} · {{item.label}}</text>
+            </view>
+            <view class="wheel-legend">
+              <view
+                wx:for="{{wheelLegend}}"
+                wx:key="id"
+                class="wheel-legend-item {{item.active ? 'wheel-legend-active' : ''}} {{item.muted ? 'wheel-legend-muted' : ''}}"
+              >
+                <view class="wheel-swatch" style="{{item.swatchStyle}}"></view>
+                <view class="wheel-legend-copy">
+                  <text class="wheel-legend-main">{{item.dimension}} · {{item.valueLabel}}</text>
+                  <text class="wheel-legend-source">{{item.sourceLabel}}</text>
+                </view>
               </view>
             </view>
           </view>
-        </view>
-      </swiper-item>
+        </swiper-item>
 
-      <swiper-item>
-        <view class="visual-panel">
-          <view class="visual-head">
-            <text>推荐理由画像</text>
-            <text>Taste radar</text>
-          </view>
-          <view class="radar-chart">
-            <view class="radar-ring radar-ring-one"></view>
-            <view class="radar-ring radar-ring-two"></view>
-            <view class="radar-ring radar-ring-three"></view>
-            <view class="radar-fill"></view>
-            <view
-              wx:for="{{radarMetrics}}"
-              wx:key="id"
-              class="radar-metric {{item.className}}"
-            >
-              <view class="radar-bar" style="height: {{item.level}}rpx"></view>
-              <text>{{item.label}}</text>
+        <swiper-item>
+          <view class="visual-panel">
+            <view class="visual-head">
+              <text>推荐理由画像</text>
+              <text>Taste radar</text>
+            </view>
+            <view class="radar-chart">
+              <view class="radar-ring radar-ring-one"></view>
+              <view class="radar-ring radar-ring-two"></view>
+              <view class="radar-ring radar-ring-three"></view>
+              <view class="radar-fill"></view>
+              <view
+                wx:for="{{radarMetrics}}"
+                wx:key="id"
+                class="radar-metric {{item.className}}"
+              >
+                <view class="radar-bar" style="height: {{item.level}}rpx"></view>
+                <text>{{item.label}}</text>
+              </view>
             </view>
           </view>
-        </view>
-      </swiper-item>
+        </swiper-item>
 
-      <swiper-item>
-        <view class="visual-panel">
-          <view class="visual-head">
-            <text>风格探索星图</text>
-            <text>Style stars</text>
-          </view>
-          <view class="star-map">
-            <view class="star-line star-line-one"></view>
-            <view class="star-line star-line-two"></view>
-            <view class="star-line star-line-three"></view>
-            <view
-              wx:for="{{starNodes}}"
-              wx:key="id"
-              class="star-node {{item.nodeClass}}"
-              style="left: {{item.x}}%; top: {{item.y}}%;"
-              hover-class="tap-hover"
-              hover-stay-time="80"
-              data-style-id="{{item.id}}"
-              data-item-kind="{{item.kind}}"
-              bindtap="openStyle"
-            >
-              <text>{{item.codeLabel}}</text>
+        <swiper-item>
+          <view class="visual-panel">
+            <view class="visual-head">
+              <text>风格探索星图</text>
+              <text>Style stars</text>
+            </view>
+            <view class="star-map">
+              <view class="star-line star-line-one"></view>
+              <view class="star-line star-line-two"></view>
+              <view class="star-line star-line-three"></view>
+              <view
+                wx:for="{{starNodes}}"
+                wx:key="id"
+                class="star-node {{item.nodeClass}}"
+                style="left: {{item.x}}%; top: {{item.y}}%;"
+                hover-class="tap-hover"
+                hover-stay-time="80"
+                data-style-id="{{item.id}}"
+                data-item-kind="{{item.kind}}"
+                bindtap="openStyle"
+              >
+                <text class="star-node-label">{{item.starLabel}}</text>
+              </view>
             </view>
           </view>
-        </view>
-      </swiper-item>
-    </swiper>
-  </view>
-
-  <view class="result-region">
-    <view class="result-head">
-      <text>适合你的风格</text>
-      <text>{{resultCountLabel}}</text>
-    </view>
-
-    <view wx:if="{{hasResults}}" class="choose-result-list">
-      <view
-        wx:for="{{results}}"
-        wx:key="id"
-        class="choose-result-card"
-        style="border-left-color: {{item.color}}"
-        hover-class="tap-hover"
-        hover-stay-time="80"
-        data-style-id="{{item.id}}"
-        data-item-kind="{{item.kind}}"
-        bindtap="openStyle"
-      >
-        <text class="result-code">{{item.codeLabel}}</text>
-        <view class="result-main">
-          <text class="result-name">{{item.displayName}}</text>
-          <text class="result-reason">{{item.reasonText}}</text>
-        </view>
-        <text class="result-score">{{item.matchScore}}%</text>
-      </view>
-    </view>
-
-    <view wx:else class="choose-empty">
-      <text>这组条件太苛刻了，放宽一个维度再试。</text>
+        </swiper-item>
+      </swiper>
     </view>
   </view>
 </view>

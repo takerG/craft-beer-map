@@ -60,7 +60,7 @@ test('extension groups expose the full market style learning layer', () => {
 });
 
 test('extension styles assign three-state taste profiles for choose filters', () => {
-  const dimensions = ['sweetness', 'sourness', 'bitterness', 'body', 'roast', 'fruitiness', 'hopAroma', 'fermentation', 'strength'];
+  const dimensions = getTasteFilters().map((filter) => filter.id);
 
   extensionStyles.forEach((style) => {
     assert.equal(typeof style.taste_profile, 'object', `${style.id} should define taste_profile`);
@@ -257,7 +257,7 @@ test('taste filters expose three-state dimensions for the choose tab', () => {
 
   assert.deepEqual(
     filters.map((filter) => filter.id),
-    ['sweetness', 'sourness', 'bitterness', 'body', 'roast', 'fruitiness', 'hopAroma', 'fermentation', 'strength'],
+    ['sweetness', 'sourness', 'bitterness', 'body', 'strength'],
   );
   filters.forEach((filter) => {
     assert.equal(filter.options.length, 3);
@@ -285,58 +285,51 @@ test('taste matching returns lightweight scored style summaries', () => {
 
 test('taste matching includes calibrated extension styles', () => {
   const matches = getTasteMatches(
-    { sweetness: -1, sourness: -1, bitterness: 1, body: 0, roast: -1, fruitiness: 1, hopAroma: 1 },
+    { sweetness: 1, sourness: -1, bitterness: -1, body: 1, strength: 1 },
     20,
   );
 
-  const westCoastIpa = matches.find((match) => match.id === 'ext-west-coast-ipa');
+  const pastryBeer = matches.find((match) => match.id === 'ext-dessert-pastry-beer');
 
-  assert.ok(westCoastIpa);
-  assert.equal(westCoastIpa.kind, 'extension');
-  assert.deepEqual(westCoastIpa.taste_profile, {
-    sweetness: -1,
+  assert.ok(pastryBeer);
+  assert.equal(pastryBeer.kind, 'extension');
+  assert.deepEqual(pastryBeer.taste_profile, {
+    sweetness: 1,
     sourness: -1,
-    bitterness: 1,
-    body: 0,
-    roast: -1,
-    fruitiness: 1,
-    hopAroma: 1,
-    fermentation: 0,
-    strength: 0,
+    bitterness: -1,
+    body: 1,
+    strength: 1,
   });
 });
 
 test('taste matching ranks exact taste-profile matches before partial matches', () => {
   const matches = getTasteMatches(
-    { sweetness: 1, sourness: -1, bitterness: -1, body: 1, roast: 1, fruitiness: -1 },
-    5,
+    { sweetness: -1, sourness: -1, bitterness: 1, body: -1, strength: 0 },
+    20,
   );
 
-  assert.equal(matches[0].code, '16A');
+  assert.equal(matches[0].matchScore, 99);
   assert.deepEqual(matches[0].taste_profile, {
-    sweetness: 1,
+    sweetness: -1,
     sourness: -1,
-    bitterness: -1,
-    body: 1,
-    roast: 1,
-    fruitiness: -1,
-    hopAroma: -1,
-    fermentation: -1,
-    strength: 0,
+    bitterness: 1,
+    body: -1,
+    strength: -1,
   });
+  assert.ok(matches.findIndex((match) => match.matchScore === 88) > matches.findIndex((match) => match.matchScore === 99));
 });
 
-test('taste matching can distinguish hoppy aroma from bitterness', () => {
+test('taste matching keeps returned profiles aligned to visible choose filters', () => {
   const matches = getTasteMatches(
-    { sweetness: 0, sourness: -1, bitterness: 0, body: 0, roast: -1, fruitiness: 1, hopAroma: 1 },
+    { sweetness: 0, sourness: -1, bitterness: 1, body: 0, strength: 0, hopAroma: 1 },
     12,
   );
 
-  const hazyIpa = matches.find((match) => match.code === '21C');
-
-  assert.ok(hazyIpa);
-  assert.equal(hazyIpa.taste_profile.hopAroma, 1);
-  assert.equal(hazyIpa.taste_profile.bitterness, 0);
+  assert.ok(matches.length > 0);
+  matches.forEach((match) => {
+    assert.deepEqual(Object.keys(match.taste_profile), ['sweetness', 'sourness', 'bitterness', 'body', 'strength']);
+    assert.equal(Object.hasOwn(match.taste_profile, 'hopAroma'), false);
+  });
 });
 
 test('taste matching does not score neutral sweetness as a near-perfect sweet match', () => {

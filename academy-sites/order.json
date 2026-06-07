@@ -1,17 +1,17 @@
 {
-  "featured": ["ipa-family-map", "ale-vs-lager"],
+  "featured": ["cold-ipa", "beer-fresh-draft-raw", "ipa-family-map", "ale-vs-lager"],
   "tracks": [
     {
       "id": "starter",
       "title": "刚入门",
       "description": "先把常见名词、发酵方式和风味语言变成直觉。",
-      "items": ["ale-vs-lager", "flavor-radar-basics"]
+      "items": ["beer-fresh-draft-raw", "ale-vs-lager", "flavor-radar-basics"]
     },
     {
       "id": "style-sense",
       "title": "风格识别",
       "description": "从具体风格家族出发，理解市场叫法和 BJCP 入口。",
-      "items": ["ipa-family-map", "ale-vs-lager"]
+      "items": ["cold-ipa", "ipa-family-map", "ale-vs-lager"]
     },
     {
       "id": "flavor-training",
