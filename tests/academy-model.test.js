@@ -16,7 +16,7 @@ test('academy content folders use followAI-style metadata and publish files', ()
   const orderPath = path.join(academyRoot, 'order.json');
   assert.equal(fs.existsSync(orderPath), true, 'academy-sites/order.json should exist');
 
-  ['ipa-family-map', 'ale-vs-lager', 'flavor-radar-basics', 'beer-fresh-draft-raw', 'cold-ipa'].forEach((slug) => {
+  ['ipa-family-map', 'ale-vs-lager', 'flavor-radar-basics', 'beer-fresh-draft-raw', 'cold-ipa', 'fruit-puree'].forEach((slug) => {
     const siteDir = path.join(academyRoot, slug);
     const metaPath = path.join(siteDir, 'meta.json');
     const contentPath = path.join(siteDir, 'content.json');
@@ -55,6 +55,7 @@ test('academy article sections are substantial enough to read as articles', () =
     'flavor-radar-basics': 1200,
     'beer-fresh-draft-raw': 1800,
     'cold-ipa': 2200,
+    'fruit-puree': 1800,
   };
 
   Object.entries(minimumArticleLengths).forEach(([slug, minimumLength]) => {
@@ -76,29 +77,23 @@ test('academy home exposes a lightweight publish-time sorted feed', () => {
   assert.equal(home.feedSites.length, getAcademySites().length);
   assert.deepEqual(
     home.feedSites.map((site) => site.slug),
-    ['cold-ipa', 'beer-fresh-draft-raw', 'flavor-radar-basics', 'ipa-family-map', 'ale-vs-lager'],
+    ['cold-ipa', 'fruit-puree', 'beer-fresh-draft-raw', 'flavor-radar-basics', 'ipa-family-map', 'ale-vs-lager'],
   );
   assert.deepEqual(
     home.feedSites.map((site) => site.publishedAt),
-    ['2026-06-08', '2026-06-05', '2026-06-04', '2026-06-03', '2026-06-02'],
+    ['2026-06-08', '2026-06-08', '2026-06-05', '2026-06-04', '2026-06-03', '2026-06-02'],
   );
   assert.equal(home.stats.siteCount, getAcademySites().length);
   assert.equal(home.feedSites.some((site) => Object.hasOwn(site, 'modules')), false);
-  assert.ok(Buffer.byteLength(JSON.stringify(home.feedSites)) < 11000);
+  assert.equal(home.feedSites.some((site) => Object.hasOwn(site, 'coverImage')), false);
+  assert.ok(Buffer.byteLength(JSON.stringify(home.feedSites)) < 13000);
 });
 
-test('academy feed sites expose generated png cover images', () => {
+test('academy feed sites omit thumbnail image payload', () => {
   const home = getAcademyHome();
 
   home.feedSites.forEach((site) => {
-    assert.match(site.coverImage, /^\/assets\/academy-covers\/[a-z0-9-]+\.png$/);
-
-    const coverPath = path.join(root, 'miniprogram', site.coverImage.slice(1));
-    assert.equal(fs.existsSync(coverPath), true, `${site.slug} cover image should exist`);
-
-    const source = fs.readFileSync(coverPath);
-    assert.equal(source.subarray(0, 8).toString('hex'), '89504e470d0a1a0a');
-    assert.ok(source.length < 90 * 1024, `${site.slug} cover image should stay lightweight`);
+    assert.equal(Object.hasOwn(site, 'coverImage'), false, `${site.slug} feed summary should not include coverImage`);
   });
 });
 
@@ -109,11 +104,11 @@ test('academy home exposes feed type filters with counts', () => {
   assert.deepEqual(
     home.filterOptions.map((option) => [option.type, option.label, option.count]),
     [
-      ['all', '全部', 5],
+      ['all', '全部', 6],
       ['map', '地图', 1],
       ['comparison', '对比', 2],
       ['simulator', '工具', 1],
-      ['tool', '工具', 1],
+      ['tool', '工具', 2],
     ],
   );
   assert.equal(home.filterOptions[0].className, 'filter-chip is-active');
@@ -156,6 +151,7 @@ test('academy article model routes each article to a distinct experience', () =>
   const flavorRadar = getAcademyArticle('flavor-radar-basics');
   const beerTerms = getAcademyArticle('beer-fresh-draft-raw');
   const coldIpa = getAcademyArticle('cold-ipa');
+  const fruitPuree = getAcademyArticle('fruit-puree');
 
   assert.equal(aleLager.experienceKey, 'ale-lager');
   assert.equal(aleLager.isAleLagerExperience, true);
@@ -180,6 +176,14 @@ test('academy article model routes each article to a distinct experience', () =>
   assert.ok(coldIpa.sections.some((section) => section.showColdIpaProcess));
   assert.ok(coldIpa.sections.some((section) => section.showColdIpaChecklist));
   assert.ok(coldIpa.relatedStyles.some((style) => style.kind === 'extension' && style.id === 'ext-india-pale-lager'));
+
+  assert.equal(fruitPuree.experienceKey, 'custom');
+  assert.equal(fruitPuree.hasGenericModules, true);
+  assert.ok(fruitPuree.genericModules.some((module) => module.isTermGrid));
+  assert.ok(fruitPuree.genericModules.some((module) => module.isScale));
+  assert.ok(fruitPuree.genericModules.some((module) => module.isQuiz));
+  assert.ok(fruitPuree.relatedStyles.some((style) => style.kind === 'bjcp' && style.code === '29A'));
+  assert.ok(fruitPuree.relatedStyles.some((style) => style.kind === 'extension' && style.id === 'ext-fruited-sour-ale'));
 });
 
 test('academy article returns null for unknown slugs', () => {

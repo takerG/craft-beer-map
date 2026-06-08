@@ -76,16 +76,10 @@ function toSiteSummary(site) {
     tags: [...site.tags],
     publishedAt: site.publishedAt || site.date || '',
     updatedAt: site.updatedAt || site.publishedAt || site.date || '',
-    coverImage: toMiniProgramRootPath(site.coverImage),
     heroMetric: site.heroMetric || '',
     accent: site.accent || '#f6ad55',
     hero: site.hero ? { ...site.hero } : null,
   };
-}
-
-function toMiniProgramRootPath(assetPath = '') {
-  if (!assetPath) return '';
-  return assetPath.startsWith('/') ? assetPath : `/${assetPath}`;
 }
 
 function buildFilterOptions(feedSites, activeType) {

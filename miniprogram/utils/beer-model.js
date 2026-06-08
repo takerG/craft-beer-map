@@ -360,20 +360,24 @@ export function getTasteMatches(filterState = {}, limit = 18) {
   return candidateStyles
     .map((style) => scoreTasteMatch(style, normalizedFilters, activeFilters))
     .filter(Boolean)
-    .sort(
-      (a, b) =>
-        b.exactCount - a.exactCount ||
-        b.matchScore - a.matchScore ||
-        b.partialCount - a.partialCount ||
-        compareStyleCode(a.style, b.style),
-    )
+    .sort(compareTasteMatchScores)
     .slice(0, limit)
-    .map(({ style, matchScore, matchReasons }) => ({
-      ...(style.kind === 'extension' ? toExtensionSummary(style) : toStyleSummary(style)),
-      taste_profile: normalizeTasteProfile(style.taste_profile),
-      matchScore,
-      matchReasons,
-    }));
+    .map(toTasteMatchSummary);
+}
+
+export function getExactTasteMatches(filterState = {}, limit = Infinity) {
+  const normalizedFilters = normalizeTasteFilterState(filterState);
+  const activeFilters = Object.entries(normalizedFilters).filter(([, value]) => value !== 0);
+  if (!activeFilters.length) return [];
+
+  const candidateStyles = [...styles, ...enrichedExtensionStyles];
+
+  return candidateStyles
+    .map((style) => scoreTasteMatch(style, normalizedFilters, activeFilters))
+    .filter((match) => match && match.exactCount === activeFilters.length && match.partialCount === 0)
+    .sort(compareTasteMatchScores)
+    .slice(0, limit)
+    .map(toTasteMatchSummary);
 }
 
 export function getCategoryStyles(categoryId) {
@@ -388,6 +392,24 @@ function getGroup(groupId) {
 
 function compareStyleCode(a, b) {
   return String(a.code || a.id || '').localeCompare(String(b.code || b.id || ''), 'en', { numeric: true });
+}
+
+function compareTasteMatchScores(a, b) {
+  return (
+    b.exactCount - a.exactCount ||
+    b.matchScore - a.matchScore ||
+    b.partialCount - a.partialCount ||
+    compareStyleCode(a.style, b.style)
+  );
+}
+
+function toTasteMatchSummary({ style, matchScore, matchReasons }) {
+  return {
+    ...(style.kind === 'extension' ? toExtensionSummary(style) : toStyleSummary(style)),
+    taste_profile: normalizeTasteProfile(style.taste_profile),
+    matchScore,
+    matchReasons,
+  };
 }
 
 function toCategorySummary(category) {

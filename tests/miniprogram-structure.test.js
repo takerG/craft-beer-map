@@ -463,16 +463,18 @@ test('academy page renders a simple publish-sorted feed', () => {
   assert.match(academyWxml, /data-type="{{item\.type}}"/);
   assert.match(academyWxml, /class="feed-list"/);
   assert.match(academyWxml, /wx:for="{{feedSites}}"/);
-  assert.match(academyWxml, /class="feed-cover"/);
-  assert.match(academyWxml, /src="{{item\.coverImage}}"/);
+  assert.doesNotMatch(academyWxml, /class="feed-cover"/);
+  assert.doesNotMatch(academyWxml, /src="{{item\.coverImage}}"/);
+  assert.doesNotMatch(academyWxml, /<image\b/);
   assert.match(academyWxml, /{{item\.publishedAt}}/);
   assert.match(academyJs, /allFeedSites/);
   assert.match(academyJs, /filterArticles\(event\)/);
   assert.match(academyJs, /academy_filter_change/);
   assert.match(academyWxss, /\.filter-strip\s*\{[^}]*height:\s*58rpx;[^}]*overflow:\s*hidden;[^}]*white-space:\s*nowrap;/s);
   assert.doesNotMatch(academyWxss, /\.filter-strip\s*\{[^}]*display:\s*flex;/s);
-  assert.match(academyWxss, /\.feed-cover\s*\{[^}]*width:\s*100%;[^}]*height:\s*252rpx;[^}]*border-radius:\s*14rpx;/s);
-  assert.match(academyWxss, /\.feed-card\s*\{[^}]*width:\s*100%;[^}]*min-height:\s*484rpx;/s);
+  assert.doesNotMatch(academyWxss, /\.feed-cover\s*\{/);
+  assert.match(academyWxss, /\.feed-card\s*\{[^}]*width:\s*100%;/s);
+  assert.doesNotMatch(academyWxss, /\.feed-card\s*\{[^}]*min-height:\s*\d+rpx;/s);
   assert.doesNotMatch(academyWxml, /featured-strip|track-tabs|track-panel|tool-list/);
 });
 
@@ -713,6 +715,30 @@ test('choose tab frames matches as a tonight decision workbench', () => {
   assert.match(chooseWxss, /\.primary-pick-card/);
   assert.match(chooseWxss, /\.alternative-grid/);
   assert.match(chooseWxss, /\.why-recommendation/);
+});
+
+test('choose tab expands all exact compound taste matches below related styles', () => {
+  const chooseJs = readMiniPage('pages/choose/index.js');
+  const chooseWxml = readMiniPage('pages/choose/index.wxml');
+  const chooseWxss = readMiniPage('pages/choose/index.wxss');
+
+  assert.match(chooseJs, /getExactTasteMatches/);
+  assert.match(chooseJs, /exactMatchResults/);
+  assert.match(chooseJs, /showExactMatches/);
+  assert.match(chooseJs, /toggleExactMatches\(event\)/);
+  assert.match(chooseJs, /choose_exact_matches_toggle/);
+
+  assert.equal(chooseWxml.includes('其他相关风格'), true);
+  assert.equal(chooseWxml.includes('换一种侧重点'), false);
+  assert.match(chooseWxml, /bindtap="toggleExactMatches"/);
+  assert.match(chooseWxml, /wx:if="{{showExactMatches}}"/);
+  assert.match(chooseWxml, /wx:for="{{exactMatchResults}}"/);
+  assert.match(chooseWxml, /data-style-id="{{item\.id}}"/);
+  assert.match(chooseWxml, /data-item-kind="{{item\.kind}}"/);
+
+  assert.match(chooseWxss, /\.exact-match-toggle/);
+  assert.match(chooseWxss, /\.exact-match-list/);
+  assert.match(chooseWxss, /\.exact-match-card/);
 });
 
 test('choose tab default state knows the expanded taste dimensions', () => {

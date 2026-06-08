@@ -1,4 +1,4 @@
-import { getTasteFilters, getTasteMatches } from '../../utils/beer-model.js';
+import { getExactTasteMatches, getTasteFilters, getTasteMatches } from '../../utils/beer-model.js';
 import { navigateOnce } from '../../utils/page-performance.js';
 import { buildShareMessage, buildTimelineShareMessage, enableShareMenu } from '../../utils/share.js';
 import { buildFlavorWheelVisual } from '../../utils/taste-visuals.js';
@@ -92,6 +92,11 @@ Page({
     primaryPick: null,
     alternativeResults: [],
     hasAlternatives: false,
+    exactMatchResults: [],
+    hasExactMatches: false,
+    showExactMatches: false,
+    exactMatchesToggleLabel: '展开全部复合匹配',
+    exactMatchesCountLabel: '',
     resultCountLabel: '0 个匹配',
     showExplanation: false,
     explanationToggleLabel: '展开推荐依据',
@@ -164,6 +169,23 @@ Page({
     });
   },
 
+  toggleExactMatches(event) {
+    if (!this.data.hasExactMatches) return;
+
+    const showExactMatches = !this.data.showExactMatches;
+
+    trackEvent('choose_exact_matches_toggle', {
+      expanded: showExactMatches,
+      source: event && event.currentTarget ? 'toggle' : 'unknown',
+      sceneId: this.data.activeSceneId,
+      matchCount: this.data.exactMatchResults.length,
+    });
+    this.setData({
+      showExactMatches,
+      exactMatchesToggleLabel: buildExactMatchesToggleLabel(showExactMatches, this.data.exactMatchResults.length),
+    });
+  },
+
   tapVisualTab(event) {
     const visualIndex = Number(event.currentTarget.dataset.visualIndex);
     if (Number.isNaN(visualIndex) || visualIndex === this.data.activeVisualIndex) return;
@@ -201,11 +223,8 @@ Page({
   refreshTasteMatches(filterState, sceneId = DEFAULT_SCENE_ID) {
     const scene = getScenePreset(sceneId) || getScenePreset(DEFAULT_SCENE_ID);
     const filters = getTasteFilters();
-    const results = getTasteMatches(filterState, 12).map((result) => ({
-      ...result,
-      codeLabel: result.kind === 'extension' ? 'EX' : result.code,
-      reasonText: result.matchReasons.join('、') || '风味轮廓接近',
-    }));
+    const results = getTasteMatches(filterState, 12).map(toChooseResult);
+    const exactMatchResults = getExactTasteMatches(filterState).map(toChooseResult);
     const primaryPick = results[0] || null;
     const alternativeResults = results.slice(1, 3);
     const visualData = buildVisualData(filters, filterState, results);
@@ -223,6 +242,11 @@ Page({
       primaryPick,
       alternativeResults,
       hasAlternatives: alternativeResults.length > 0,
+      exactMatchResults,
+      hasExactMatches: exactMatchResults.length > 0,
+      showExactMatches: false,
+      exactMatchesToggleLabel: buildExactMatchesToggleLabel(false, exactMatchResults.length),
+      exactMatchesCountLabel: buildExactMatchesCountLabel(exactMatchResults, filters, filterState),
       resultCountLabel: `${results.length} 个匹配`,
       showExplanation: false,
       explanationToggleLabel: '展开推荐依据',
@@ -238,6 +262,14 @@ function buildScenePresets(activeSceneId) {
     ...scene,
     selected: scene.id === activeSceneId,
   }));
+}
+
+function toChooseResult(result) {
+  return {
+    ...result,
+    codeLabel: result.kind === 'extension' ? 'EX' : result.code,
+    reasonText: result.matchReasons.join('、') || '风味轮廓接近',
+  };
 }
 
 function getScenePreset(sceneId) {
@@ -265,8 +297,29 @@ function buildExplanationSummary(primaryPick, alternativeResults, scene) {
   if (!primaryPick) return `${scene.label} 暂时没有稳定推荐，可以放宽一个口味维度再试。`;
 
   const alternativeCount = alternativeResults.length;
-  const alternativeLabel = alternativeCount ? `，并保留 ${alternativeCount} 个备选方向` : '';
+  const alternativeLabel = alternativeCount ? `，并保留 ${alternativeCount} 个相关风格` : '';
   return `${primaryPick.displayName} 最贴近「${scene.label}」的当前口味${alternativeLabel}。`;
+}
+
+function buildExactMatchesToggleLabel(expanded, matchCount) {
+  if (!matchCount) return '暂无完整复合匹配';
+  return expanded ? '收起全部复合匹配' : `展开全部 ${matchCount} 个复合匹配`;
+}
+
+function buildExactMatchesCountLabel(exactMatchResults, filters, filterState) {
+  if (!exactMatchResults.length) return '当前口味没有完整命中的风格';
+
+  const activeLabels = filters
+    .map((filter) => {
+      const value = Number(filterState[filter.id]);
+      if (value === 0) return '';
+      const selected = filter.options.find((option) => option.value === value);
+      return selected ? `${filter.label}${selected.label}` : '';
+    })
+    .filter(Boolean)
+    .join(' · ');
+
+  return activeLabels ? `完全命中：${activeLabels}` : '先选择至少一个口味维度';
 }
 
 function buildVisualData(filters, filterState, results) {

@@ -7,6 +7,7 @@ import {
   getExtensionGroupDetail,
   getExtensionGroups,
   getExtensionStyleDetail,
+  getExactTasteMatches,
   getGuideOverview,
   getGroupDetail,
   getStyleDetail,
@@ -317,6 +318,30 @@ test('taste matching ranks exact taste-profile matches before partial matches', 
     strength: -1,
   });
   assert.ok(matches.findIndex((match) => match.matchScore === 88) > matches.findIndex((match) => match.matchScore === 99));
+});
+
+test('exact taste matching returns every style that satisfies the active compound filters', () => {
+  const filterState = { sweetness: -1, sourness: -1, bitterness: 0, body: -1, strength: 0 };
+  const matches = getExactTasteMatches(filterState);
+  const limitedMatches = getExactTasteMatches(filterState, 2);
+
+  assert.ok(matches.length > 2);
+  matches.forEach((match) => {
+    assert.equal(match.taste_profile.sweetness, -1);
+    assert.equal(match.taste_profile.sourness, -1);
+    assert.equal(match.taste_profile.body, -1);
+    assert.ok(['bjcp', 'extension'].includes(match.kind));
+    assert.equal(typeof match.matchScore, 'number');
+    assert.ok(Array.isArray(match.matchReasons));
+  });
+  assert.deepEqual(limitedMatches, matches.slice(0, 2));
+});
+
+test('exact taste matching is empty until at least one non-neutral filter is active', () => {
+  assert.deepEqual(
+    getExactTasteMatches({ sweetness: 0, sourness: 0, bitterness: 0, body: 0, strength: 0 }),
+    [],
+  );
 });
 
 test('taste matching keeps returned profiles aligned to visible choose filters', () => {

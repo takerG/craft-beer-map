@@ -25,7 +25,6 @@
       hover-stay-time="80"
       bindtap="openArticle"
     >
-      <image class="feed-cover" src="{{item.coverImage}}" mode="aspectFill"></image>
       <view class="feed-meta">
         <text>{{item.publishedAt}}</text>
         <text>{{item.readingTime}} min</text>

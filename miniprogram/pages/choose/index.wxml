@@ -3,7 +3,7 @@
     <view class="choose-hero-head">
       <view>
         <text class="page-title">今晚喝点什么？</text>
-        <text class="page-subtitle">先选场景，再用口味微调。择饮会给出一个首选和两个备选。</text>
+        <text class="page-subtitle">先选场景，再用口味微调。择饮会给出一个首选和其他相关风格。</text>
       </view>
       <text class="match-count">{{resultCountLabel}}</text>
     </view>
@@ -97,8 +97,7 @@
 
     <view wx:if="{{hasAlternatives}}" class="alternative-section">
       <view class="result-head alternative-head">
-        <text>两个备选</text>
-        <text>换一种侧重点</text>
+        <text>其他相关风格</text>
       </view>
       <view class="alternative-grid">
         <view
@@ -118,6 +117,42 @@
           </view>
           <text class="alternative-name">{{item.displayName}}</text>
           <text class="alternative-reason">{{item.reasonText}}</text>
+        </view>
+      </view>
+    </view>
+
+    <view wx:if="{{hasExactMatches}}" class="exact-match-section">
+      <view
+        class="exact-match-toggle"
+        hover-class="tap-hover"
+        hover-stay-time="80"
+        bindtap="toggleExactMatches"
+      >
+        <view class="exact-match-toggle-copy">
+          <text>{{exactMatchesToggleLabel}}</text>
+          <text>{{exactMatchesCountLabel}}</text>
+        </view>
+        <text class="exact-match-toggle-action">{{showExactMatches ? '收起' : '展开'}}</text>
+      </view>
+
+      <view wx:if="{{showExactMatches}}" class="exact-match-list">
+        <view
+          wx:for="{{exactMatchResults}}"
+          wx:key="id"
+          class="exact-match-card"
+          style="border-left-color: {{item.color}}"
+          hover-class="tap-hover"
+          hover-stay-time="80"
+          data-style-id="{{item.id}}"
+          data-item-kind="{{item.kind}}"
+          bindtap="openStyle"
+        >
+          <text class="exact-match-code">{{item.codeLabel}}</text>
+          <view class="exact-match-main">
+            <text class="exact-match-name">{{item.displayName}}</text>
+            <text class="exact-match-reason">{{item.reasonText}}</text>
+          </view>
+          <text class="exact-match-score">{{item.matchScore}}%</text>
         </view>
       </view>
     </view>

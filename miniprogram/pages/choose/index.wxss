@@ -750,6 +750,13 @@
 
 .alternative-head {
   margin-top: 0;
+  justify-content: flex-start;
+}
+
+.alternative-head text:first-child {
+  color: #dfe8f4;
+  font-size: 27rpx;
+  font-weight: 900;
 }
 
 .alternative-grid {
@@ -809,6 +816,116 @@
   line-height: 1.35;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.exact-match-section {
+  margin-top: 18rpx;
+}
+
+.exact-match-toggle {
+  display: flex;
+  align-items: center;
+  min-height: 96rpx;
+  padding: 16rpx 18rpx;
+  border: 1rpx solid rgba(83, 212, 218, 0.16);
+  border-radius: 18rpx;
+  background:
+    linear-gradient(135deg, rgba(83, 212, 218, 0.09), rgba(255, 207, 133, 0.045)),
+    rgba(6, 10, 16, 0.26);
+}
+
+.exact-match-toggle-copy {
+  flex: 1;
+  min-width: 0;
+  padding-right: 18rpx;
+}
+
+.exact-match-toggle-copy text:first-child {
+  display: block;
+  overflow: hidden;
+  color: #f8fafc;
+  font-size: 24rpx;
+  font-weight: 950;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.exact-match-toggle-copy text:last-child {
+  display: block;
+  margin-top: 8rpx;
+  overflow: hidden;
+  color: #8ea0b6;
+  font-size: 20rpx;
+  line-height: 1.35;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.exact-match-toggle-action {
+  flex: 0 0 auto;
+  color: #53d4da;
+  font-size: 21rpx;
+  font-weight: 950;
+}
+
+.exact-match-list {
+  margin-top: 12rpx;
+}
+
+.exact-match-card {
+  display: flex;
+  align-items: center;
+  min-height: 112rpx;
+  margin-top: 10rpx;
+  padding: 16rpx;
+  border: 1rpx solid rgba(255, 255, 255, 0.08);
+  border-left-width: 8rpx;
+  border-radius: 16rpx;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.exact-match-code {
+  flex: 0 0 68rpx;
+  overflow: hidden;
+  color: #ffcf85;
+  font-size: 22rpx;
+  font-weight: 950;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.exact-match-main {
+  flex: 1;
+  min-width: 0;
+}
+
+.exact-match-name {
+  display: block;
+  overflow: hidden;
+  color: #f8fafc;
+  font-size: 24rpx;
+  font-weight: 900;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.exact-match-reason {
+  display: block;
+  margin-top: 7rpx;
+  overflow: hidden;
+  color: #95a6ba;
+  font-size: 20rpx;
+  line-height: 1.35;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.exact-match-score {
+  flex: 0 0 auto;
+  margin-left: 12rpx;
+  color: #53d4da;
+  font-size: 22rpx;
+  font-weight: 950;
 }
 
 .choose-result-list {
