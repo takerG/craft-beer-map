@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "test": "node --test",
+    "check:generated": "node scripts/check_generated_data.cjs",
     "build:data": "python scripts/extract_bjcp_2015_pdf.py && python scripts/parse_bjcp_2015_pdf.py && node scripts/build_bjcp_2015_data.cjs && node scripts/apply_bjcp_2021_updates.cjs && node scripts/apply_style_aliases.cjs && node scripts/apply_taste_profiles.cjs && npm run build:mini-data",
     "apply:aliases": "node scripts/apply_style_aliases.cjs && npm run build:mini-data",
     "apply:taste-profiles": "node scripts/apply_taste_profiles.cjs && npm run build:mini-data",

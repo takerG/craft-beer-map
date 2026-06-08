@@ -3,6 +3,7 @@ import { extensionGroups, extensionStyles } from '../data/extension-styles.js';
 import { styleLanguageMap } from '../data/styleLanguageMap.js';
 import { styleAliases } from '../data/style-aliases.js';
 import { SUPER_GROUPS } from './super-groups.js';
+import { getActiveTasteFilters, TASTE_FILTERS } from './taste-schema.js';
 
 const DETAIL_SECTIONS = [
   ['overall_impression', '整体印象'],
@@ -22,83 +23,6 @@ const RELATION_LABELS = {
   influenced_by: '受影响',
   compared_to: '对比',
 };
-
-const TASTE_FILTERS = [
-  {
-    id: 'sweetness',
-    label: '甜度',
-    lowLabel: '不甜',
-    neutralLabel: '中立',
-    highLabel: '甜',
-    reasonLabels: { '-1': '不甜', 0: '甜度适中', 1: '有甜感' },
-  },
-  {
-    id: 'sourness',
-    label: '酸感',
-    lowLabel: '不酸',
-    neutralLabel: '中立',
-    highLabel: '喝酸',
-    reasonLabels: { '-1': '不酸', 0: '酸感适中', 1: '有酸感' },
-  },
-  {
-    id: 'bitterness',
-    label: '苦度',
-    lowLabel: '低苦',
-    neutralLabel: '中立',
-    highLabel: '高苦',
-    reasonLabels: { '-1': '低苦', 0: '苦度适中', 1: '苦味明显' },
-  },
-  {
-    id: 'body',
-    label: '酒体',
-    lowLabel: '轻盈',
-    neutralLabel: '中立',
-    highLabel: '厚重',
-    reasonLabels: { '-1': '酒体轻盈', 0: '酒体适中', 1: '酒体饱满' },
-  },
-  {
-    id: 'roast',
-    label: '烘烤',
-    lowLabel: '清淡',
-    neutralLabel: '中立',
-    highLabel: '烘烤',
-    reasonLabels: { '-1': '少烘烤', 0: '烘烤适中', 1: '烘烤深色' },
-  },
-  {
-    id: 'fruitiness',
-    label: '果香',
-    lowLabel: '少果香',
-    neutralLabel: '中立',
-    highLabel: '果香',
-    reasonLabels: { '-1': '果香内敛', 0: '果香适中', 1: '果香明显' },
-  },
-  {
-    id: 'hopAroma',
-    label: '酒花香',
-    lowLabel: '少酒花',
-    neutralLabel: '中立',
-    highLabel: '酒花香',
-    reasonLabels: { '-1': '酒花内敛', 0: '酒花适中', 1: '酒花香明显' },
-  },
-  {
-    id: 'fermentation',
-    label: '发酵',
-    lowLabel: '干净',
-    neutralLabel: '中立',
-    highLabel: '个性',
-    reasonLabels: { '-1': '发酵干净', 0: '发酵适中', 1: '发酵个性明显' },
-  },
-  {
-    id: 'strength',
-    label: '强度',
-    lowLabel: '轻盈',
-    neutralLabel: '中立',
-    highLabel: '强劲',
-    reasonLabels: { '-1': '强度轻盈', 0: '强度适中', 1: '酒精强度高' },
-  },
-];
-
-const ACTIVE_TASTE_FILTER_IDS = new Set(['sweetness', 'sourness', 'bitterness', 'body', 'strength']);
 
 const categoryById = new Map();
 const styleById = new Map();
@@ -513,10 +437,6 @@ function normalizeTasteProfile(profile = {}) {
   );
 }
 
-function getActiveTasteFilters() {
-  return TASTE_FILTERS.filter((filter) => ACTIVE_TASTE_FILTER_IDS.has(filter.id));
-}
-
 function normalizeTasteValue(value) {
   const numeric = Number(value);
   if (numeric === -1 || numeric === 1) return numeric;
@@ -576,10 +496,6 @@ function getTasteNameBoost(style, normalizedFilters) {
   if (normalizedFilters.sweetness === 1 && /甜|sweet|dessert|pastry/.test(text)) boost += 8;
   if (normalizedFilters.sourness === 1 && /酸|sour|gose|lambic|gueuze|berliner|flanders/.test(text)) boost += 8;
   if (normalizedFilters.bitterness === 1 && /苦|bitter|ipa|pils/.test(text)) boost += 6;
-  if (normalizedFilters.roast === 1 && /世涛|波特|stout|porter|dark|black/.test(text)) boost += 5;
-  if (normalizedFilters.fruitiness === 1 && /水果|fruit|hazy|lambic|saison/.test(text)) boost += 5;
-  if (normalizedFilters.hopAroma === 1 && /hop|hoppy|ipa|pils|pale ale/.test(text)) boost += 6;
-  if (normalizedFilters.fermentation === 1 && /belgian|saison|lambic|gueuze|brett|wild|weiss|weizen/.test(text)) boost += 6;
   if (normalizedFilters.strength === 1 && /strong|double|imperial|barley|bock|wine|quadrupel/.test(text)) boost += 5;
 
   return boost;

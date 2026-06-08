@@ -1,0 +1,11 @@
+node_modules/
+artifacts/
+vendor/
+.superpowers/
+.claude/settings.local.json
+__pycache__/
+*.pyc
+*.pyo
+*.log
+*.err.log
+

@@ -1,4 +1,4 @@
-import { buildAcademyTypeFilters, getAcademyHome } from '../../utils/academy-model.js';
+import { buildAcademyTypeFilters, getAcademyHome } from '../../utils/academy-feed-model.js';
 import { navigateOnce } from '../../utils/page-performance.js';
 import { buildShareMessage, buildTimelineShareMessage, enableShareMenu } from '../../utils/share.js';
 import { trackEvent } from '../../utils/telemetry.js';

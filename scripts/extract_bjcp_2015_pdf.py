@@ -6,7 +6,13 @@ VENDOR = ROOT / "vendor"
 if str(VENDOR) not in sys.path:
     sys.path.insert(0, str(VENDOR))
 
-from pypdf import PdfReader
+try:
+    from pypdf import PdfReader
+except ModuleNotFoundError as exc:
+    raise SystemExit(
+        "Missing Python dependency pypdf. Install it with: "
+        "python -m pip install -r requirements.txt"
+    ) from exc
 
 
 def main() -> None:

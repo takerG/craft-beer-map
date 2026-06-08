@@ -33,6 +33,7 @@ tests/                       # 自动化测试
 
 ```bash
 npm test
+npm run check:generated
 npm run build:mini-data
 npm run apply:aliases
 ```
@@ -42,3 +43,4 @@ npm run apply:aliases
 - 不再新增网页站入口、`src/`、`public/`、`docs/`、Vite 配置或网页构建依赖。
 - 小程序页面避免使用在微信开发者工具中不稳定的布局和 Canvas 桥接能力。
 - 更新数据后同步生成 `miniprogram/data/beer-data.js` 和 `miniprogram/data/style-aliases.js`。
+- 提交前运行 `npm run check:generated`，确认小程序生成数据没有漂移。

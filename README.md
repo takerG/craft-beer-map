@@ -35,14 +35,17 @@ craft-beer-map/
 
 ```bash
 npm test
+npm run check:generated
 npm run build:mini-data
 npm run apply:aliases
 ```
 
 `build:mini-data` 会从 `data/beer-data-source.json` 生成 `miniprogram/data/beer-data.js` 和 `miniprogram/data/style-aliases.js`。
+`check:generated` 用来在提交前检查这些生成数据是否和源数据同步。
 
 ## 开发方式
 
 用微信开发者工具打开仓库根目录即可，`project.config.json` 已配置 `miniprogramRoot` 为 `miniprogram/`。
 
 如果更新 BJCP 源数据或别名，先更新 `data/beer-data-source.json` 或 `scripts/style_aliases.cjs`，再运行对应脚本并执行测试。
+如果需要从 PDF 重新提取 BJCP 源数据，先运行 `python -m pip install -r requirements.txt` 安装 Python 依赖。
