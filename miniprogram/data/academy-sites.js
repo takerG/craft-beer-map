@@ -77,7 +77,6 @@ export const academySites = [
     ],
     "publishedAt": "2026-06-08",
     "updatedAt": "2026-06-08",
-    "coverImage": "/assets/academy-covers/cold-ipa.png",
     "hero": {
       "kicker": "风格识别",
       "summary": "它不是冰着喝的 IPA，而是一杯把酒体做轻、做干净，让酒花显得更锋利、更明亮的 IPA。"
@@ -332,7 +331,6 @@ export const academySites = [
     ],
     "publishedAt": "2026-06-08",
     "updatedAt": "2026-06-08",
-    "coverImage": "/assets/academy-covers/fruit-puree.png",
     "hero": {
       "kicker": "术语速查",
       "summary": "果泥不是“把啤酒做甜”的万能按钮。它是一种把水果的香气、酸度、颜色、果肉感和可发酵糖一起带进酒里的原料，也会把稳定性和保存难度一起带进来。"
@@ -585,7 +583,6 @@ export const academySites = [
     ],
     "publishedAt": "2026-06-05",
     "updatedAt": "2026-06-05",
-    "coverImage": "/assets/academy-covers/beer-fresh-draft-raw.png",
     "hero": {
       "kicker": "术语速查",
       "summary": "这些词听起来都在说“新鲜”，其实有的说杀菌，有的说过滤，有的说桶装出酒，有的只是市场叫法。看懂它们，点酒就不会被名字牵着走。"
@@ -824,7 +821,6 @@ export const academySites = [
     ],
     "publishedAt": "2026-06-04",
     "updatedAt": "2026-06-04",
-    "coverImage": "/assets/academy-covers/flavor-radar-basics.png",
     "hero": {
       "kicker": "感官训练",
       "summary": "不会说风味词，不代表你不会喝。先找味道从哪里来，再判断它在这个风格里是否合理，感官训练就会轻很多。"
@@ -997,7 +993,6 @@ export const academySites = [
     ],
     "publishedAt": "2026-06-03",
     "updatedAt": "2026-06-03",
-    "coverImage": "/assets/academy-covers/ipa-family-map.png",
     "hero": {
       "kicker": "风格识别",
       "summary": "IPA 不是一种味道，而是一套让酒花当主角的方法。苦度、香气、酒体和强度一变，整个家族就分叉了。"
@@ -1181,7 +1176,6 @@ export const academySites = [
     ],
     "publishedAt": "2026-06-02",
     "updatedAt": "2026-06-02",
-    "coverImage": "/assets/academy-covers/ale-vs-lager.png",
     "hero": {
       "kicker": "基础概念",
       "summary": "别再把艾尔和拉格背成一句“上发酵/下发酵”。真正有用的是看酵母怎样工作、时间怎样修剪风味，以及杯子里谁站到了前台。"

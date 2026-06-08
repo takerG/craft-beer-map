@@ -762,6 +762,17 @@ test('local image and audio resources stay below the devtools package warning th
   });
 });
 
+test('local image and audio resources stay below the devtools code package total threshold', () => {
+  const mediaExtensions = new Set(['.png', '.jpg', '.jpeg', '.gif', '.webp', '.mp3', '.wav', '.aac', '.m4a']);
+  const mediaFiles = listFiles(miniprogramRoot).filter((filePath) =>
+    mediaExtensions.has(path.extname(filePath).toLowerCase()),
+  );
+  const totalBytes = mediaFiles.reduce((sum, filePath) => sum + fs.statSync(filePath).size, 0);
+
+  assert.ok(mediaFiles.length > 0, 'mini program should have local media assets to audit');
+  assert.ok(totalBytes < 180 * 1024, `local media should total below 180KB; got ${totalBytes} bytes`);
+});
+
 function listFiles(dir, extension = '') {
   return fs.readdirSync(dir, { withFileTypes: true }).flatMap((entry) => {
     const filePath = path.join(dir, entry.name);

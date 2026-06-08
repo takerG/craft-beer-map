@@ -1,8 +1,5 @@
-import { academySites } from '../data/academy-sites.js';
-import { getExtensionStyleDetail, getStyleDetail } from './beer-model.js';
-import { buildAcademyTypeFilters, getAcademyHome, getAcademySites } from './academy-feed-model.js';
-
-export { buildAcademyTypeFilters, getAcademyHome, getAcademySites };
+import { academySites } from '../../data/academy-sites.js';
+import { getExtensionStyleDetail, getStyleDetail } from '../../utils/beer-model.js';
 
 const siteBySlug = new Map(academySites.map((site) => [site.slug, site]));
 const EXPERIENCE_KEYS = {

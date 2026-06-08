@@ -1,6 +1,6 @@
 # 学院内容系统
 
-「学院」是精酿科普 tab。它以 feed 流展示精酿互动文章，但每篇内容首先必须是一篇可独立阅读的文章。前端互动能力用于辅助解释关键段落，而不是取代正文。feed 支持按内容类型快速筛选，并展示由构建脚本自动生成的文章封面图。
+「学院」是精酿科普 tab。它以 feed 流展示精酿互动文章，但每篇内容首先必须是一篇可独立阅读的文章。前端互动能力用于辅助解释关键段落，而不是取代正文。feed 支持按内容类型快速筛选，并保持无本地封面图的轻量列表。
 
 ## 目录结构
 
@@ -33,12 +33,13 @@ academy-sites/
 npm run build:academy
 ```
 
-构建会生成 `miniprogram/data/academy-sites.js`，并为每篇内容生成 `miniprogram/assets/academy-covers/<slug>.png` feed 封面。常规 `npm run build:mini-data` 也会顺带执行学院内容构建。
+构建会生成 `miniprogram/data/academy-sites.js`。为控制小程序代码包大小，feed 不再生成本地封面图。常规 `npm run build:mini-data` 也会顺带执行学院内容构建。
 
 ## 小程序入口
 
 - `miniprogram/pages/academy/`：学院 tab 首页。
 - `miniprogram/pages/academy-article/`：通用互动文章宿主页。
-- `miniprogram/utils/academy-model.js`：学院首页和文章详情数据模型。
+- `miniprogram/utils/academy-feed-model.js`：学院首页 feed 数据模型。
+- `miniprogram/subpages/utils/academy-model.js`：学院文章详情数据模型，随内容分包加载。
 
 新增内容时，优先新增 `academy-sites/<slug>/meta.json`、`publish.json` 和 `content.json`，再运行 `npm run build:academy`。

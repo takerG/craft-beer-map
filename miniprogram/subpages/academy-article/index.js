@@ -1,4 +1,4 @@
-import { getAcademyArticle } from '../../utils/academy-model.js';
+import { getAcademyArticle } from '../utils/academy-model.js';
 import { navigateOnce, switchTabOnce } from '../../utils/page-performance.js';
 import { buildShareMessage, buildTimelineShareMessage, enableShareMenu } from '../../utils/share.js';
 import { trackEvent } from '../../utils/telemetry.js';

@@ -3,11 +3,8 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import path from 'node:path';
 
-import {
-  getAcademyArticle,
-  getAcademyHome,
-  getAcademySites,
-} from '../miniprogram/utils/academy-model.js';
+import { getAcademyHome, getAcademySites } from '../miniprogram/utils/academy-feed-model.js';
+import { getAcademyArticle } from '../miniprogram/subpages/utils/academy-model.js';
 
 const root = process.cwd();
 const academyRoot = path.join(root, 'academy-sites');
@@ -94,6 +91,14 @@ test('academy feed sites omit thumbnail image payload', () => {
 
   home.feedSites.forEach((site) => {
     assert.equal(Object.hasOwn(site, 'coverImage'), false, `${site.slug} feed summary should not include coverImage`);
+  });
+});
+
+test('generated academy data omits local cover image payload', async () => {
+  const { academySites } = await import('../miniprogram/data/academy-sites.js');
+
+  academySites.forEach((site) => {
+    assert.equal(Object.hasOwn(site, 'coverImage'), false, `${site.slug} generated data should not reference local covers`);
   });
 });
 

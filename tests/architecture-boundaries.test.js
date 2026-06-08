@@ -95,3 +95,12 @@ test('academy tab model stays independent from article detail style resolution',
   assert.doesNotMatch(academyPage, /utils\/academy-model\.js/);
   assert.doesNotMatch(feedModel, /beer-model\.js/);
 });
+
+test('academy article detail model stays inside the content subpackage', () => {
+  const articlePage = readFile('miniprogram/subpages/academy-article/index.js');
+
+  assert.equal(fs.existsSync(path.join(root, 'miniprogram/utils/academy-model.js')), false);
+  assert.equal(fs.existsSync(path.join(root, 'miniprogram/subpages/utils/academy-model.js')), true);
+  assert.match(articlePage, /from '\.\.\/utils\/academy-model\.js'/);
+  assert.doesNotMatch(articlePage, /\.\.\/\.\.\/utils\/academy-model\.js/);
+});
