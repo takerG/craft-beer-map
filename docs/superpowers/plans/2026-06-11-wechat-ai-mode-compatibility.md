@@ -18,7 +18,7 @@
 - Modify: `package.json`
 - Modify: `.gitignore`
 
-- [ ] **Step 1: Write the failing build-boundary tests**
+- [x] **Step 1: Write the failing build-boundary tests**
 
 Add tests that assert:
 
@@ -39,13 +39,13 @@ test('AI mode build emits an isolated developer-tools project', () => {
 
 Also assert that `artifacts/` remains ignored and that the generated project config points to `miniprogram/`.
 
-- [ ] **Step 2: Run the new test and confirm RED**
+- [x] **Step 2: Run the new test and confirm RED**
 
 Run: `node --test tests/ai-mode-build.test.js`
 
 Expected: FAIL because the AI build script and artifact do not exist.
 
-- [ ] **Step 3: Implement the minimal deterministic build**
+- [x] **Step 3: Implement the minimal deterministic build**
 
 Create `scripts/build_ai_mode_project.cjs` with:
 
@@ -68,13 +68,13 @@ Then add helpers that copy tracked AI templates, transform only the copied `app.
 "check:ai-mode": "node --test tests/ai-mode-*.test.js"
 ```
 
-- [ ] **Step 4: Run the focused test and confirm GREEN**
+- [x] **Step 4: Run the focused test and confirm GREEN**
 
 Run: `node --test tests/ai-mode-build.test.js`
 
 Expected: PASS.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add tests/ai-mode-build.test.js scripts/build_ai_mode_project.cjs package.json .gitignore

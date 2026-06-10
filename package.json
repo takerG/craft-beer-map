@@ -10,7 +10,9 @@
     "apply:aliases": "node scripts/apply_style_aliases.cjs && npm run build:mini-data",
     "apply:taste-profiles": "node scripts/apply_taste_profiles.cjs && npm run build:mini-data",
     "build:academy": "node scripts/build_academy_sites.cjs",
-    "build:mini-data": "node scripts/build_miniprogram_data.cjs && npm run build:academy"
+    "build:mini-data": "node scripts/build_miniprogram_data.cjs && npm run build:academy",
+    "build:ai-mode": "node scripts/build_ai_mode_project.cjs",
+    "check:ai-mode": "node --test tests/ai-mode-*.test.js"
   },
   "repository": {
     "type": "git",
