@@ -1,0 +1,13 @@
+<view class="card-shell" wx:if="{{style}}">
+  <view class="detail-head">
+    <view class="kind-pill">{{style.kind === 'extension' ? '市场扩展' : style.code}}</view>
+    <text class="source-label">{{detail.sourceLabel}}</text>
+  </view>
+  <text class="style-name">{{style.displayName}}</text>
+  <text class="style-en">{{style.name_en}}</text>
+  <text class="summary">{{summary}}</text>
+  <view class="action-row">
+    <view class="secondary-action" bindtap="onTapQuestion">继续问这个风格</view>
+    <view class="primary-action" bindtap="onTapFavorite">加入收藏</view>
+  </view>
+</view>

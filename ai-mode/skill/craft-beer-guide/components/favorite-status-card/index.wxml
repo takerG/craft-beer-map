@@ -1,0 +1,6 @@
+<view class="card-shell {{expired ? 'card-expired' : ''}}">
+  <text class="status-kicker">收藏状态</text>
+  <text class="status-title">{{statusText}}</text>
+  <text class="style-name">{{style.displayName}}</text>
+  <view class="favorites-action" bindtap="onTapFavorites">查看我的收藏</view>
+</view>

@@ -211,11 +211,13 @@
     },
     {
       "path": "components/favorite-status-card/index",
-      "relatedPage": "/pages/favorites/index"
+      "relatedPage": "/pages/favorites/index",
+      "expirable": true,
+      "expiredText": "收藏状态已更新"
     },
     {
       "path": "components/academy-article-list-card/index",
-      "relatedPage": "/pages/academy/index"
+      "relatedPage": "/subpages/academy-article/index"
     }
   ]
 }

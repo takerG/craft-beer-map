@@ -1,0 +1,19 @@
+<view class="card-shell">
+  <text class="card-title">{{title}}</text>
+  <view class="article-list">
+    <view
+      wx:for="{{items}}"
+      wx:key="slug"
+      class="article-row"
+      data-item="{{item}}"
+      bindtap="onTapArticle"
+    >
+      <view class="article-meta">
+        <text>{{item.publishedAt}}</text>
+        <text>{{item.readingTime}} min</text>
+      </view>
+      <text class="article-title">{{item.title}}</text>
+      <text class="article-description">{{item.description}}</text>
+    </view>
+  </view>
+</view>

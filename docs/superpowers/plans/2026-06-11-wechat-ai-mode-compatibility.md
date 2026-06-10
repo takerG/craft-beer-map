@@ -251,7 +251,7 @@ git commit -m "Add craft beer guide AI Skill APIs"
 - Create: `ai-mode/skill/craft-beer-guide/components/academy-article-list-card/index.{js,json,wxml,wxss}`
 - Modify: `ai-mode/skill/craft-beer-guide/mcp.json`
 
-- [ ] **Step 1: Write failing component constraints**
+- [x] **Step 1: Write failing component constraints**
 
 Assert every component:
 
@@ -263,11 +263,11 @@ Assert every component:
 
 Assert `favorite-status-card` is marked expirable in the manifest.
 
-- [ ] **Step 2: Run and confirm RED**
+- [x] **Step 2: Run and confirm RED**
 
 Run: `node --test tests/ai-mode-components.test.js`
 
-- [ ] **Step 3: Implement components**
+- [x] **Step 3: Implement components**
 
 Use the official demo pattern:
 
@@ -286,11 +286,11 @@ Component({
 
 Keep cards compact and expose existing mini-program routes via manifest metadata rather than direct navigation from component code.
 
-- [ ] **Step 4: Run focused tests**
+- [x] **Step 4: Run focused tests**
 
 Run: `node --test tests/ai-mode-components.test.js`
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add tests/ai-mode-components.test.js ai-mode/skill/craft-beer-guide/components ai-mode/skill/craft-beer-guide/mcp.json
