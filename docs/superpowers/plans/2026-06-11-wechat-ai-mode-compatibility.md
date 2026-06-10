@@ -374,11 +374,12 @@ git commit -m "Add generated AI entry and detail pages"
 - Create: `ai-mode/page-meta/academy-article.json`
 - Modify: `scripts/build_ai_mode_project.cjs`
 
-- [ ] **Step 1: Write failing metadata and knowledge tests**
+- [x] **Step 1: Write failing metadata and knowledge tests**
 
 Assert:
 
-- Each target generated page contains `<page-meta>` with a meaningful `page-style` or text description binding.
+- Generated `page-meta.json` declares all target pages with meaningful names, descriptions, and query schemas where needed.
+- Generated `page-meta.json` stays below the documented 8000-byte limit.
 - Generated knowledge files exist:
   - `bjcp-style-guide.md`
   - `extension-style-guide.md`
@@ -386,19 +387,19 @@ Assert:
 - Files are UTF-8, under 10 MB, and contain only current repository data.
 - `AGENTS.md` forbids external factual supplementation and unsupported medical or drinking-safety claims.
 
-- [ ] **Step 2: Run and confirm RED**
+- [x] **Step 2: Run and confirm RED**
 
 Run: `node --test tests/ai-mode-knowledge.test.js`
 
-- [ ] **Step 3: Implement metadata overlays**
+- [x] **Step 3: Implement metadata overlays**
 
-Prepend page metadata to generated page WXML using tracked templates and page-specific descriptions.
+Combine the tracked page metadata fragments into the generated project's root `page-meta.json`.
 
-- [ ] **Step 4: Generate the three knowledge documents**
+- [x] **Step 4: Generate the three knowledge documents**
 
 Generate concise Markdown from the same normalized catalog used by APIs. Include stable IDs and source labels so answers can distinguish BJCP from extensions.
 
-- [ ] **Step 5: Run focused tests**
+- [x] **Step 5: Run focused tests**
 
 Run:
 
@@ -407,7 +408,7 @@ npm run build:ai-mode
 node --test tests/ai-mode-knowledge.test.js
 ```
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add tests/ai-mode-knowledge.test.js ai-mode/AGENTS.md ai-mode/page-meta scripts/build_ai_mode_project.cjs

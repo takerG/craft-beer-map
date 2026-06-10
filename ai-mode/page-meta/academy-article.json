@@ -1,0 +1,15 @@
+{
+  "path": "subpages/academy-article/index",
+  "name": "精酿学院文章",
+  "description": "阅读一篇仓库内的精酿概念、风格辨析或感官训练文章。",
+  "query": {
+    "type": "object",
+    "properties": {
+      "slug": {
+        "type": "string",
+        "description": "学院文章稳定 slug。"
+      }
+    },
+    "required": ["slug"]
+  }
+}

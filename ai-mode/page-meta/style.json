@@ -1,0 +1,15 @@
+{
+  "path": "subpages/style/index",
+  "name": "BJCP 风格详情",
+  "description": "展示一个 BJCP 官方标准风格的感官描述、参数、标签与相关风格。",
+  "query": {
+    "type": "object",
+    "properties": {
+      "styleId": {
+        "type": "string",
+        "description": "BJCP 风格编号，例如 21A。"
+      }
+    },
+    "required": ["styleId"]
+  }
+}

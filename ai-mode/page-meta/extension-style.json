@@ -1,0 +1,15 @@
+{
+  "path": "subpages/extension-style/index",
+  "name": "市场扩展风格详情",
+  "description": "展示一个 BA/WBC/GABF 市场扩展风格及其接近的 BJCP 对照入口。",
+  "query": {
+    "type": "object",
+    "properties": {
+      "styleId": {
+        "type": "string",
+        "description": "市场扩展风格稳定 ID。"
+      }
+    },
+    "required": ["styleId"]
+  }
+}

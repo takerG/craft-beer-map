@@ -7,6 +7,7 @@ const root = path.resolve(__dirname, '..');
 const sourceMiniProgramRoot = path.join(root, 'miniprogram');
 const outputRoot = path.join(root, 'artifacts', 'ai-mode-project');
 const outputMiniProgramRoot = path.join(outputRoot, 'miniprogram');
+const knowledgeOutputRoot = path.join(root, 'artifacts', 'ai-knowledge-base');
 const buildLockPath = path.join(root, 'artifacts', '.ai-mode-build.lock');
 
 async function main() {
@@ -23,6 +24,8 @@ async function main() {
     writeAiAppConfig();
     writeProjectConfig();
     writeNodeProjectConfig();
+    copyOperatorInstructions();
+    writePageMetadata();
     copyAiSkillTemplates();
     copyAiUiTemplates();
     applyPageOverlays();
@@ -68,7 +71,9 @@ function releaseBuildLock(lockHandle) {
 
 function resetOutput() {
   fs.rmSync(outputRoot, { recursive: true, force: true });
+  fs.rmSync(knowledgeOutputRoot, { recursive: true, force: true });
   fs.mkdirSync(outputRoot, { recursive: true });
+  fs.mkdirSync(knowledgeOutputRoot, { recursive: true });
 }
 
 function buildFingerprint() {
@@ -92,8 +97,13 @@ function buildFingerprint() {
 function isCurrentBuild(fingerprint) {
   const markerPath = path.join(outputRoot, '.build-fingerprint');
   const appPath = path.join(outputMiniProgramRoot, 'app.json');
+  const knowledgePath = path.join(knowledgeOutputRoot, 'bjcp-style-guide.md');
   try {
-    return fs.readFileSync(markerPath, 'utf8') === fingerprint && fs.existsSync(appPath);
+    return (
+      fs.readFileSync(markerPath, 'utf8') === fingerprint &&
+      fs.existsSync(appPath) &&
+      fs.existsSync(knowledgePath)
+    );
   } catch (error) {
     if (error.code === 'ENOENT') return false;
     throw error;
@@ -170,6 +180,29 @@ function writeNodeProjectConfig() {
     private: true,
     type: 'commonjs',
   });
+}
+
+function copyOperatorInstructions() {
+  copyFile(
+    path.join(root, 'ai-mode', 'AGENTS.md'),
+    path.join(outputRoot, 'AGENTS.md'),
+  );
+}
+
+function writePageMetadata() {
+  const pageMetaRoot = path.join(root, 'ai-mode', 'page-meta');
+  const order = [
+    'explore.json',
+    'choose.json',
+    'academy.json',
+    'favorites.json',
+    'search.json',
+    'style.json',
+    'extension-style.json',
+    'academy-article.json',
+  ];
+  const pages = order.map((fileName) => readJson(path.join(pageMetaRoot, fileName)));
+  writeJson(path.join(outputMiniProgramRoot, 'page-meta.json'), { pages });
 }
 
 function copyAiSkillTemplates() {
@@ -278,6 +311,130 @@ async function writeCatalog() {
     path.join(root, 'ai-mode', 'shared', 'catalog-runtime.cjs'),
     path.join(detailRoot, 'utils', 'catalog-runtime.js'),
   );
+  writeKnowledgeBase(catalog);
+}
+
+function writeKnowledgeBase(catalog) {
+  const bjcpSections = catalog.bjcpStyles.map((style) => {
+    const category = catalog.categories.find((item) => item.id === style.category);
+    const details = style.details || {};
+    return [
+      `## ${style.code} ${style.displayName} / ${style.name_en}`,
+      '',
+      `- 类型：BJCP 官方标准风格`,
+      `- 分类：${category ? `${category.id} ${category.name_zh} / ${category.name_en}` : style.category}`,
+      `- 常见叫法：${style.aliases.length ? style.aliases.join('、') : '无'}`,
+      `- 口味坐标：${formatTasteProfile(style.tasteProfile)}`,
+      '',
+      ...knowledgeDetailLines(details),
+    ].join('\n');
+  });
+  const extensionSections = catalog.extensionStyles.map((style) => [
+    `## ${style.displayName} / ${style.name_en}`,
+    '',
+    `- 稳定 ID：${style.id}`,
+    `- 类型：市场扩展风格`,
+    `- 来源标签：${style.sourceLabel}`,
+    `- 常见叫法：${style.aliases.length ? style.aliases.join('、') : '无'}`,
+    `- 口味坐标：${formatTasteProfile(style.tasteProfile)}`,
+    `- BJCP 对照：${style.bjcpRefs.length ? style.bjcpRefs.join('、') : '无独立对照'}`,
+    '',
+    `### 描述`,
+    '',
+    normalizeMarkdownText(style.description),
+    '',
+    `### BJCP 说明`,
+    '',
+    normalizeMarkdownText(style.bjcpNote),
+  ].join('\n'));
+  const academySections = catalog.academyArticles.map((article) => [
+    `## ${article.title}`,
+    '',
+    `- slug：${article.slug}`,
+    `- 类型：${article.type}`,
+    `- 难度：${article.difficulty}`,
+    `- 阅读时间：${article.readingTime} 分钟`,
+    `- 标签：${(article.tags || []).join('、')}`,
+    `- 相关风格：${(article.relatedStyles || []).join('、')}`,
+    `- 发布日期：${article.publishedAt}`,
+    '',
+    normalizeMarkdownText(article.description),
+    '',
+    ...(article.sections || []).flatMap((section) => [
+      `### ${section.title}`,
+      '',
+      ...(section.paragraphs || []).flatMap((paragraph) => [
+        normalizeMarkdownText(paragraph),
+        '',
+      ]),
+    ]),
+  ].join('\n'));
+
+  writeMarkdown(
+    path.join(knowledgeOutputRoot, 'bjcp-style-guide.md'),
+    '# BJCP 2021 风格指南\n\n> 由当前仓库数据生成，仅包含小程序已收录内容。\n\n' +
+      bjcpSections.join('\n\n---\n\n'),
+  );
+  writeMarkdown(
+    path.join(knowledgeOutputRoot, 'extension-style-guide.md'),
+    '# 市场扩展风格指南\n\n> 这些是 BA/WBC/GABF 市场高频叫法，不等同于 BJCP 独立编号。\n\n' +
+      extensionSections.join('\n\n---\n\n'),
+  );
+  writeMarkdown(
+    path.join(knowledgeOutputRoot, 'academy-articles.md'),
+    '# 精酿学院文章\n\n> 由当前仓库 academy-sites 内容生成。\n\n' +
+      academySections.join('\n\n---\n\n'),
+  );
+}
+
+function knowledgeDetailLines(details) {
+  const sections = [
+    ['overall_impression', '总体印象'],
+    ['aroma', '香气'],
+    ['appearance', '外观'],
+    ['flavor', '风味'],
+    ['mouthfeel', '口感'],
+    ['comments', '备注'],
+    ['history', '历史'],
+    ['ingredients', '原料'],
+    ['comparison', '风格比较'],
+    ['stats', '参数'],
+    ['commercial_examples', '商业案例'],
+    ['tags', '标签'],
+  ];
+  return sections.flatMap(([key, label]) => {
+    const content = normalizeMarkdownText(details[key]);
+    return content ? [`### ${label}`, '', content, ''] : [];
+  });
+}
+
+function formatTasteProfile(profile = {}) {
+  const labels = {
+    sweetness: '甜度',
+    sourness: '酸度',
+    bitterness: '苦味',
+    body: '酒体',
+    strength: '强度',
+  };
+  return Object.entries(labels)
+    .map(([key, label]) => `${label}${tasteValueLabel(profile[key])}`)
+    .join('、');
+}
+
+function tasteValueLabel(value) {
+  if (Number(value) === 1) return '高';
+  if (Number(value) === -1) return '低';
+  return '中';
+}
+
+function normalizeMarkdownText(value) {
+  if (Array.isArray(value)) return value.join('、');
+  return String(value || '').replace(/\s+/g, ' ').trim();
+}
+
+function writeMarkdown(filePath, source) {
+  fs.mkdirSync(path.dirname(filePath), { recursive: true });
+  fs.writeFileSync(filePath, `${source.trim()}\n`, 'utf8');
 }
 
 function importSourceModule(relativePath) {
