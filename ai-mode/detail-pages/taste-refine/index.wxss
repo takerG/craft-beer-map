@@ -1,0 +1,75 @@
+page {
+  background: #10151d;
+}
+
+.page {
+  min-height: 100vh;
+  padding-right: 30rpx;
+  padding-bottom: 48rpx;
+  padding-left: 30rpx;
+  color: #f7f2e8;
+}
+
+.page-title,
+.page-subtitle {
+  display: block;
+}
+
+.page-title {
+  padding-top: 22rpx;
+  font-size: 36rpx;
+  font-weight: 700;
+}
+
+.page-subtitle {
+  margin-top: 8rpx;
+  color: #93a1b3;
+  font-size: 24rpx;
+}
+
+.filter-list {
+  margin-top: 30rpx;
+}
+
+.filter-row {
+  padding: 24rpx;
+  margin-bottom: 16rpx;
+  background: #17202a;
+  border-radius: 22rpx;
+}
+
+.filter-label {
+  font-size: 27rpx;
+  font-weight: 600;
+}
+
+.option-row {
+  display: flex;
+  gap: 14rpx;
+  margin-top: 18rpx;
+}
+
+.option {
+  flex: 1;
+  padding: 14rpx 0;
+  color: #aeb9c7;
+  background: #263342;
+  border-radius: 16rpx;
+  text-align: center;
+}
+
+.option-selected {
+  color: #111820;
+  background: #f6ad55;
+  font-weight: 700;
+}
+
+.confirm-action {
+  padding: 20rpx;
+  margin-top: 28rpx;
+  color: #111820;
+  background: #f6ad55;
+  border-radius: 20rpx;
+  text-align: center;
+  font-weight: 700;
+}

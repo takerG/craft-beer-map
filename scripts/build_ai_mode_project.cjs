@@ -24,6 +24,8 @@ async function main() {
     writeProjectConfig();
     writeNodeProjectConfig();
     copyAiSkillTemplates();
+    copyAiUiTemplates();
+    applyPageOverlays();
     await writeCatalog();
     fs.writeFileSync(path.join(outputRoot, '.build-fingerprint'), fingerprint, 'utf8');
   } finally {
@@ -131,7 +133,22 @@ function writeAiAppConfig() {
       pages: [],
       independent: true,
     },
+    {
+      root: 'aiDetail',
+      name: 'ai-detail',
+      pages: [
+        'pages/style-results/index',
+        'pages/taste-refine/index',
+      ],
+      independent: true,
+      componentFramework: 'glass-easel',
+      renderer: 'skyline',
+    },
   ];
+  app.usingComponents = {
+    ...(app.usingComponents || {}),
+    'ai-entry': '/components/ai-entry/index',
+  };
 
   writeJson(appPath, app);
 }
@@ -161,6 +178,37 @@ function copyAiSkillTemplates() {
   fs.cpSync(sourceSkillRoot, targetSkillRoot, { recursive: true });
 }
 
+function copyAiUiTemplates() {
+  fs.cpSync(
+    path.join(root, 'ai-mode', 'entry-component'),
+    path.join(outputMiniProgramRoot, 'components', 'ai-entry'),
+    { recursive: true },
+  );
+  fs.cpSync(
+    path.join(root, 'ai-mode', 'detail-pages'),
+    path.join(outputMiniProgramRoot, 'aiDetail', 'pages'),
+    { recursive: true },
+  );
+}
+
+function applyPageOverlays() {
+  const overlays = readJson(path.join(root, 'ai-mode', 'page-overlays.json'));
+  overlays.forEach((overlay) => {
+    const targetPath = path.join(outputMiniProgramRoot, overlay.path);
+    const source = fs.readFileSync(targetPath, 'utf8');
+    const markup = [
+      '',
+      '<ai-entry',
+      `  prompt="${escapeXmlAttribute(overlay.prompt)}"`,
+      `  context-type="${escapeXmlAttribute(overlay.contextType)}"`,
+      `  context-data="${overlay.contextBinding}"`,
+      '/>',
+      '',
+    ].join('\n');
+    fs.writeFileSync(targetPath, `${source.trimEnd()}\n${markup}`, 'utf8');
+  });
+}
+
 async function writeCatalog() {
   const [
     { beerData },
@@ -174,6 +222,7 @@ async function writeCatalog() {
     importSourceModule('miniprogram/data/academy-sites.js'),
   ]);
   const skillRoot = path.join(outputMiniProgramRoot, 'skills', 'craft-beer-guide');
+  const detailRoot = path.join(outputMiniProgramRoot, 'aiDetail');
   const catalog = {
     schemaVersion: 1,
     categories: beerData.categories || [],
@@ -220,9 +269,14 @@ async function writeCatalog() {
   };
 
   writeCommonJsModule(path.join(skillRoot, 'data', 'catalog.js'), catalog);
+  writeCommonJsModule(path.join(detailRoot, 'data', 'catalog.js'), catalog);
   copyFile(
     path.join(root, 'ai-mode', 'shared', 'catalog-runtime.cjs'),
     path.join(skillRoot, 'utils', 'catalog-runtime.js'),
+  );
+  copyFile(
+    path.join(root, 'ai-mode', 'shared', 'catalog-runtime.cjs'),
+    path.join(detailRoot, 'utils', 'catalog-runtime.js'),
   );
 }
 
@@ -242,6 +296,14 @@ function writeCommonJsModule(filePath, value) {
 function copyFile(sourcePath, targetPath) {
   fs.mkdirSync(path.dirname(targetPath), { recursive: true });
   fs.copyFileSync(sourcePath, targetPath);
+}
+
+function escapeXmlAttribute(value) {
+  return String(value || '')
+    .replaceAll('&', '&amp;')
+    .replaceAll('"', '&quot;')
+    .replaceAll('<', '&lt;')
+    .replaceAll('>', '&gt;');
 }
 
 function readJson(filePath) {

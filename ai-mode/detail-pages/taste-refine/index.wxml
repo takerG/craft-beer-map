@@ -1,0 +1,21 @@
+<view class="page" style="padding-top: {{headerPaddingTop}}px">
+  <text class="page-title">微调今晚的口味</text>
+  <text class="page-subtitle">只改你在意的维度，其余保持中立。</text>
+  <view class="filter-list">
+    <view wx:for="{{filters}}" wx:key="id" class="filter-row">
+      <text class="filter-label">{{item.label}}</text>
+      <view class="option-row">
+        <view
+          wx:for="{{item.options}}"
+          wx:for-item="option"
+          wx:key="value"
+          class="option {{option.selected ? 'option-selected' : ''}}"
+          data-filter-id="{{item.id}}"
+          data-value="{{option.value}}"
+          bindtap="onTapOption"
+        >{{option.label}}</view>
+      </view>
+    </view>
+  </view>
+  <view class="confirm-action" bindtap="onTapConfirm">按这个口味重新推荐</view>
+</view>

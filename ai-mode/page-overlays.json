@@ -1,0 +1,50 @@
+[
+  {
+    "path": "pages/explore/index.wxml",
+    "prompt": "帮我从精酿啤酒风格开始探索",
+    "contextType": "explore",
+    "contextBinding": "{{overviewStats}}"
+  },
+  {
+    "path": "pages/choose/index.wxml",
+    "prompt": "根据我今晚的场景和口味推荐啤酒风格",
+    "contextType": "choose",
+    "contextBinding": "{{filterState}}"
+  },
+  {
+    "path": "pages/academy/index.wxml",
+    "prompt": "帮我找一篇适合现在阅读的精酿学院文章",
+    "contextType": "academy",
+    "contextBinding": "{{feedSites}}"
+  },
+  {
+    "path": "pages/favorites/index.wxml",
+    "prompt": "看看我的收藏，并帮我决定下一杯",
+    "contextType": "favorites",
+    "contextBinding": "{{favoriteStyles}}"
+  },
+  {
+    "path": "pages/search/index.wxml",
+    "prompt": "帮我搜索这个啤酒风格或常见叫法",
+    "contextType": "search",
+    "contextBinding": "{{query}}"
+  },
+  {
+    "path": "subpages/style/index.wxml",
+    "prompt": "解释当前 BJCP 风格，并告诉我适合什么场景",
+    "contextType": "bjcp-style",
+    "contextBinding": "{{detail.style}}"
+  },
+  {
+    "path": "subpages/extension-style/index.wxml",
+    "prompt": "解释当前市场扩展风格，并对照接近的 BJCP 风格",
+    "contextType": "extension-style",
+    "contextBinding": "{{detail.style}}"
+  },
+  {
+    "path": "subpages/academy-article/index.wxml",
+    "prompt": "围绕当前文章继续解释，并推荐相关风格",
+    "contextType": "academy-article",
+    "contextBinding": "{{article.slug}}"
+  }
+]

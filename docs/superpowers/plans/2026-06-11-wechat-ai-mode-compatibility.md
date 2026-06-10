@@ -307,7 +307,7 @@ git commit -m "Add AI mode atomic result cards"
 - Create: `ai-mode/page-overlays.json`
 - Modify: `scripts/build_ai_mode_project.cjs`
 
-- [ ] **Step 1: Write failing generated-UI tests**
+- [x] **Step 1: Write failing generated-UI tests**
 
 After a build, assert:
 
@@ -317,11 +317,11 @@ After a build, assert:
 - Half-screen pages use `wx.navigateBackAgent` for follow-up messages.
 - Half-screen pages contain no normal mini-program route API.
 
-- [ ] **Step 2: Run and confirm RED**
+- [x] **Step 2: Run and confirm RED**
 
 Run: `node --test tests/ai-mode-ui.test.js`
 
-- [ ] **Step 3: Implement a generated-only global entry component**
+- [x] **Step 3: Implement a generated-only global entry component**
 
 The entry component accepts:
 
@@ -335,15 +335,15 @@ properties: {
 
 On tap, call `wx.openAgent` with the page-specific prompt and a small serializable context payload. Register it globally only in the copied AI project's `app.json`.
 
-- [ ] **Step 4: Implement deterministic page overlays**
+- [x] **Step 4: Implement deterministic page overlays**
 
 Store overlay definitions in `ai-mode/page-overlays.json` and append one `<ai-entry>` tag to each target WXML during build. Do not edit any source WXML in `miniprogram/`.
 
-- [ ] **Step 5: Implement the two half-screen pages**
+- [x] **Step 5: Implement the two half-screen pages**
 
 `style-results` renders ranked style cards. `taste-refine` renders the five taste dimensions and returns a concise follow-up instruction through `wx.navigateBackAgent`.
 
-- [ ] **Step 6: Build and run focused tests**
+- [x] **Step 6: Build and run focused tests**
 
 Run:
 
@@ -352,7 +352,7 @@ npm run build:ai-mode
 node --test tests/ai-mode-ui.test.js
 ```
 
-- [ ] **Step 7: Commit**
+- [x] **Step 7: Commit**
 
 ```bash
 git add tests/ai-mode-ui.test.js ai-mode/entry-component ai-mode/detail-pages ai-mode/page-overlays.json scripts/build_ai_mode_project.cjs

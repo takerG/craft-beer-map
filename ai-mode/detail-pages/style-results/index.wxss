@@ -1,0 +1,63 @@
+page {
+  background: #10151d;
+}
+
+.page {
+  min-height: 100vh;
+  padding-right: 28rpx;
+  padding-bottom: 48rpx;
+  padding-left: 28rpx;
+  color: #f7f2e8;
+}
+
+.page-title {
+  display: block;
+  padding: 22rpx 0;
+  font-size: 36rpx;
+  font-weight: 700;
+}
+
+.result-row {
+  display: flex;
+  align-items: center;
+  min-height: 112rpx;
+  padding: 0 24rpx;
+  margin-bottom: 16rpx;
+  background: #17202a;
+  border: 1rpx solid #293746;
+  border-radius: 22rpx;
+}
+
+.result-code {
+  width: 90rpx;
+  color: #f6ad55;
+  font-size: 22rpx;
+}
+
+.result-copy {
+  display: flex;
+  flex: 1;
+  min-width: 0;
+  flex-direction: column;
+}
+
+.result-name,
+.result-en {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.result-name {
+  font-size: 28rpx;
+}
+
+.result-en {
+  color: #93a1b3;
+  font-size: 21rpx;
+}
+
+.result-action {
+  color: #f6ad55;
+  font-size: 23rpx;
+}
