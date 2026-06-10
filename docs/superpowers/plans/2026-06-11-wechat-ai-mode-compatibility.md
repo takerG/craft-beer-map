@@ -88,7 +88,7 @@ git commit -m "Add isolated AI mode build boundary"
 - Create: `ai-mode/shared/catalog-runtime.cjs`
 - Modify: `scripts/build_ai_mode_project.cjs`
 
-- [ ] **Step 1: Write failing catalog parity tests**
+- [x] **Step 1: Write failing catalog parity tests**
 
 Test the runtime with catalog data generated from:
 
@@ -108,13 +108,13 @@ assert.ok(runtime.findAcademyArticles(catalog, 'IPA').length > 0);
 
 Assert no generated JavaScript data file exceeds the WeChat package single-file limit.
 
-- [ ] **Step 2: Run and confirm RED**
+- [x] **Step 2: Run and confirm RED**
 
 Run: `node --test tests/ai-mode-catalog.test.js`
 
 Expected: FAIL because no runtime or generated catalog exists.
 
-- [ ] **Step 3: Implement pure catalog functions**
+- [x] **Step 3: Implement pure catalog functions**
 
 Implement in `ai-mode/shared/catalog-runtime.cjs`:
 
@@ -136,7 +136,7 @@ module.exports = {
 
 Keep matching deterministic and reuse the existing five visible taste dimensions: `sweetness`, `sourness`, `bitterness`, `body`, and `strength`.
 
-- [ ] **Step 4: Extend the build generator**
+- [x] **Step 4: Extend the build generator**
 
 Use dynamic imports from the CJS build script:
 
@@ -150,7 +150,7 @@ Write a normalized CommonJS catalog module into:
 
 Copy the pure runtime beside it.
 
-- [ ] **Step 5: Run focused tests and confirm GREEN**
+- [x] **Step 5: Run focused tests and confirm GREEN**
 
 Run:
 
@@ -159,7 +159,7 @@ npm run build:ai-mode
 node --test tests/ai-mode-catalog.test.js
 ```
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add tests/ai-mode-catalog.test.js ai-mode/shared/catalog-runtime.cjs scripts/build_ai_mode_project.cjs
