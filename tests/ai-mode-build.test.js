@@ -30,7 +30,16 @@ test('AI mode build emits an isolated developer-tools project', () => {
   const projectConfig = readJson(path.join(artifactRoot, 'project.config.json'));
   const skillPackage = app.subpackages.find((item) => item.root === 'skills');
 
-  assert.equal(app.agent, 'skills/craft-beer-guide');
+  assert.deepEqual(app.agent, {
+    skills: [
+      {
+        name: 'craft-beer-guide',
+        description: '精酿啤酒风格搜索、口味推荐、详情、收藏与学院文章',
+        path: 'skills/craft-beer-guide',
+      },
+    ],
+    pageMetadata: 'page-meta.json',
+  });
   assert.deepEqual(skillPackage, {
     root: 'skills',
     pages: [],
@@ -49,7 +58,7 @@ test('generated AI mode projects stay outside source control', () => {
 });
 
 function runBuild() {
-  execFileSync(process.execPath, ['scripts/build_ai_mode_project.cjs'], {
+  execFileSync(process.execPath, ['scripts/build_ai_mode_project.cjs', '--if-current'], {
     cwd: root,
     stdio: 'pipe',
   });

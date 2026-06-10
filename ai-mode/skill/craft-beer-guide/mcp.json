@@ -1,0 +1,221 @@
+{
+  "apis": [
+    {
+      "name": "searchBeerStyles",
+      "description": "按用户明确提供的 BJCP 编号、中文名、英文名或常见叫法搜索风格。用户只表达模糊饮用偏好时不要调用，应改用 recommendBeerStyles。",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "query": {
+            "type": "string",
+            "description": "来自用户原话的风格编号、名称或常见叫法，禁止编造。"
+          },
+          "limit": {
+            "type": "number",
+            "description": "最多返回条数，默认 8，最大 30。"
+          }
+        },
+        "required": ["query"]
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "styleRef": {
+                  "type": "object",
+                  "properties": {
+                    "kind": { "type": "string", "enum": ["bjcp", "extension"] },
+                    "id": { "type": "string" }
+                  },
+                  "required": ["kind", "id"]
+                },
+                "displayName": { "type": "string" },
+                "name_en": { "type": "string" }
+              }
+            }
+          },
+          "total": { "type": "number" },
+          "keyword": { "type": "string" }
+        }
+      },
+      "_meta": { "ui": { "componentPath": "components/style-list-card/index" } }
+    },
+    {
+      "name": "recommendBeerStyles",
+      "description": "根据用户的场景与口味偏好推荐风格。偏好不明确时先简短澄清；不要把未表达的维度强行设为高或低。",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "preferences": {
+            "type": "object",
+            "description": "五个维度使用 -1（低）、0（中立或未指定）、1（高）。",
+            "properties": {
+              "sweetness": { "type": "number", "enum": [-1, 0, 1] },
+              "sourness": { "type": "number", "enum": [-1, 0, 1] },
+              "bitterness": { "type": "number", "enum": [-1, 0, 1] },
+              "body": { "type": "number", "enum": [-1, 0, 1] },
+              "strength": { "type": "number", "enum": [-1, 0, 1] }
+            }
+          },
+          "limit": { "type": "number" }
+        }
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "items": { "type": "array", "items": { "type": "object" } },
+          "total": { "type": "number" },
+          "preferences": { "type": "object" }
+        }
+      },
+      "_meta": { "ui": { "componentPath": "components/style-list-card/index" } }
+    },
+    {
+      "name": "getBeerStyleDetail",
+      "description": "读取一个已选风格的详情。styleRef 必须来自搜索、推荐或收藏 API 的原始返回值，禁止从自然语言猜测 id。",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "styleRef": {
+            "type": "object",
+            "properties": {
+              "kind": { "type": "string", "enum": ["bjcp", "extension"] },
+              "id": { "type": "string" }
+            },
+            "required": ["kind", "id"]
+          }
+        },
+        "required": ["styleRef"]
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "style": { "type": "object" },
+          "category": { "type": "object" },
+          "stats": { "type": "array" },
+          "sections": { "type": "array" },
+          "sourceLabel": { "type": "string" },
+          "bjcpRefs": { "type": "array" }
+        }
+      },
+      "_meta": { "ui": { "componentPath": "components/style-detail-card/index" } }
+    },
+    {
+      "name": "listFavoriteBeerStyles",
+      "description": "读取本机收藏的啤酒风格。用于回答用户收藏了什么，或在收藏变更前确认目标。",
+      "inputSchema": {
+        "type": "object",
+        "properties": {}
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "items": { "type": "array", "items": { "type": "object" } },
+          "total": { "type": "number" }
+        }
+      },
+      "_meta": { "ui": { "componentPath": "components/style-list-card/index" } }
+    },
+    {
+      "name": "addFavoriteBeerStyle",
+      "description": "将已确认的风格加入本机收藏。只有 API 成功返回 isFavorite=true 后才能向用户确认收藏成功。",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "styleRef": {
+            "type": "object",
+            "properties": {
+              "kind": { "type": "string", "enum": ["bjcp", "extension"] },
+              "id": { "type": "string" }
+            },
+            "required": ["kind", "id"]
+          }
+        },
+        "required": ["styleRef"]
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "action": { "type": "string", "enum": ["added"] },
+          "isFavorite": { "type": "boolean" },
+          "style": { "type": "object" },
+          "total": { "type": "number" }
+        }
+      },
+      "_meta": { "ui": { "componentPath": "components/favorite-status-card/index" } }
+    },
+    {
+      "name": "removeFavoriteBeerStyle",
+      "description": "从本机收藏移除一个已确认的风格。只有 API 成功返回 isFavorite=false 后才能向用户确认取消成功。",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "styleRef": {
+            "type": "object",
+            "properties": {
+              "kind": { "type": "string", "enum": ["bjcp", "extension"] },
+              "id": { "type": "string" }
+            },
+            "required": ["kind", "id"]
+          }
+        },
+        "required": ["styleRef"]
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "action": { "type": "string", "enum": ["removed"] },
+          "isFavorite": { "type": "boolean" },
+          "style": { "type": "object" },
+          "total": { "type": "number" }
+        }
+      },
+      "_meta": { "ui": { "componentPath": "components/favorite-status-card/index" } }
+    },
+    {
+      "name": "findAcademyArticles",
+      "description": "按概念、风格或学习主题查找小程序学院文章。回答只引用返回的文章信息。",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "query": {
+            "type": "string",
+            "description": "用户原话中的概念、风格或学习主题；空字符串表示最新文章。"
+          },
+          "limit": { "type": "number" }
+        }
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "items": { "type": "array", "items": { "type": "object" } },
+          "total": { "type": "number" },
+          "keyword": { "type": "string" }
+        }
+      },
+      "_meta": { "ui": { "componentPath": "components/academy-article-list-card/index" } }
+    }
+  ],
+  "components": [
+    {
+      "path": "components/style-list-card/index",
+      "relatedPage": "/aiDetail/pages/style-results/index"
+    },
+    {
+      "path": "components/style-detail-card/index",
+      "relatedPage": "/pages/search/index"
+    },
+    {
+      "path": "components/favorite-status-card/index",
+      "relatedPage": "/pages/favorites/index"
+    },
+    {
+      "path": "components/academy-article-list-card/index",
+      "relatedPage": "/pages/academy/index"
+    }
+  ]
+}

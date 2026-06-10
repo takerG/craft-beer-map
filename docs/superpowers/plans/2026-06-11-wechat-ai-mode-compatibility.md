@@ -183,7 +183,7 @@ git commit -m "Generate local catalog for AI mode"
 - Create: `ai-mode/skill/craft-beer-guide/utils/favorite-store.js`
 - Modify: `scripts/build_ai_mode_project.cjs`
 
-- [ ] **Step 1: Write failing protocol and behavior tests**
+- [x] **Step 1: Write failing protocol and behavior tests**
 
 Assert:
 
@@ -195,11 +195,11 @@ Assert:
 
 Stub `global.wx` in tests to verify add/list/remove behavior without a backend.
 
-- [ ] **Step 2: Run and confirm RED**
+- [x] **Step 2: Run and confirm RED**
 
 Run: `node --test tests/ai-mode-skill.test.js`
 
-- [ ] **Step 3: Write Skill instructions and manifest**
+- [x] **Step 3: Write Skill instructions and manifest**
 
 `SKILL.md` must state:
 
@@ -219,11 +219,11 @@ Declare exactly:
 6. `removeFavoriteBeerStyle`
 7. `findAcademyArticles`
 
-- [ ] **Step 4: Implement API modules and exports**
+- [x] **Step 4: Implement API modules and exports**
 
 Each API module should expose one async handler and return serializable data. Keep `wx` access inside the favorite store adapter so read-only APIs remain pure.
 
-- [ ] **Step 5: Build and run focused tests**
+- [x] **Step 5: Build and run focused tests**
 
 Run:
 
@@ -234,7 +234,7 @@ node --test tests/ai-mode-skill.test.js
 
 Expected: PASS.
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add tests/ai-mode-skill.test.js ai-mode/skill scripts/build_ai_mode_project.cjs

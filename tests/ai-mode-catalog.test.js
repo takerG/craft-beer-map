@@ -93,7 +93,7 @@ function buildAndLoadCatalog() {
 }
 
 function buildAiMode() {
-  execFileSync(process.execPath, ['scripts/build_ai_mode_project.cjs'], {
+  execFileSync(process.execPath, ['scripts/build_ai_mode_project.cjs', '--if-current'], {
     cwd: root,
     stdio: 'pipe',
   });

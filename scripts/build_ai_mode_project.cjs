@@ -1,5 +1,6 @@
 const fs = require('node:fs');
 const path = require('node:path');
+const crypto = require('node:crypto');
 const { pathToFileURL } = require('node:url');
 
 const root = path.resolve(__dirname, '..');
@@ -11,12 +12,20 @@ const buildLockPath = path.join(root, 'artifacts', '.ai-mode-build.lock');
 async function main() {
   const lockHandle = acquireBuildLock();
   try {
+    const fingerprint = buildFingerprint();
+    if (process.argv.includes('--if-current') && isCurrentBuild(fingerprint)) {
+      console.log(`Using current ${path.relative(root, outputRoot)}`);
+      return;
+    }
+
     resetOutput();
     copyProductionMiniProgram();
     writeAiAppConfig();
     writeProjectConfig();
     writeNodeProjectConfig();
+    copyAiSkillTemplates();
     await writeCatalog();
+    fs.writeFileSync(path.join(outputRoot, '.build-fingerprint'), fingerprint, 'utf8');
   } finally {
     releaseBuildLock(lockHandle);
   }
@@ -60,6 +69,42 @@ function resetOutput() {
   fs.mkdirSync(outputRoot, { recursive: true });
 }
 
+function buildFingerprint() {
+  const hash = crypto.createHash('sha256');
+  const sourcePaths = [
+    ...listFiles(path.join(root, 'miniprogram')),
+    ...listFiles(path.join(root, 'ai-mode')),
+    path.join(root, 'project.config.json'),
+    __filename,
+  ].sort();
+
+  sourcePaths.forEach((filePath) => {
+    hash.update(path.relative(root, filePath).replaceAll('\\', '/'));
+    hash.update('\0');
+    hash.update(fs.readFileSync(filePath));
+    hash.update('\0');
+  });
+  return hash.digest('hex');
+}
+
+function isCurrentBuild(fingerprint) {
+  const markerPath = path.join(outputRoot, '.build-fingerprint');
+  const appPath = path.join(outputMiniProgramRoot, 'app.json');
+  try {
+    return fs.readFileSync(markerPath, 'utf8') === fingerprint && fs.existsSync(appPath);
+  } catch (error) {
+    if (error.code === 'ENOENT') return false;
+    throw error;
+  }
+}
+
+function listFiles(dir) {
+  return fs.readdirSync(dir, { withFileTypes: true }).flatMap((entry) => {
+    const filePath = path.join(dir, entry.name);
+    return entry.isDirectory() ? listFiles(filePath) : [filePath];
+  });
+}
+
 function copyProductionMiniProgram() {
   fs.cpSync(sourceMiniProgramRoot, outputMiniProgramRoot, { recursive: true });
 }
@@ -69,7 +114,16 @@ function writeAiAppConfig() {
   const app = readJson(appPath);
   const subpackages = (app.subpackages || []).filter((item) => item.root !== 'skills');
 
-  app.agent = 'skills/craft-beer-guide';
+  app.agent = {
+    skills: [
+      {
+        name: 'craft-beer-guide',
+        description: '精酿啤酒风格搜索、口味推荐、详情、收藏与学院文章',
+        path: 'skills/craft-beer-guide',
+      },
+    ],
+    pageMetadata: 'page-meta.json',
+  };
   app.subpackages = [
     ...subpackages,
     {
@@ -99,6 +153,12 @@ function writeNodeProjectConfig() {
     private: true,
     type: 'commonjs',
   });
+}
+
+function copyAiSkillTemplates() {
+  const sourceSkillRoot = path.join(root, 'ai-mode', 'skill', 'craft-beer-guide');
+  const targetSkillRoot = path.join(outputMiniProgramRoot, 'skills', 'craft-beer-guide');
+  fs.cpSync(sourceSkillRoot, targetSkillRoot, { recursive: true });
 }
 
 async function writeCatalog() {
