@@ -423,7 +423,7 @@ git commit -m "Generate AI metadata and knowledge base"
 - Modify: `package.json`
 - Modify: `tests/ai-mode-build.test.js`
 
-- [ ] **Step 1: Write failing verifier tests**
+- [x] **Step 1: Write failing verifier tests**
 
 Assert `check:ai-mode`:
 
@@ -433,15 +433,15 @@ Assert `check:ai-mode`:
 - Rejects generated files above configured size limits.
 - Reports actionable file paths on failure.
 
-- [ ] **Step 2: Run and confirm RED**
+- [x] **Step 2: Run and confirm RED**
 
 Run: `npm run check:ai-mode`
 
-- [ ] **Step 3: Implement the verifier**
+- [x] **Step 3: Implement the verifier**
 
 The verifier should call the build script, run structural checks, and exit non-zero on violations. Keep it dependency-free.
 
-- [ ] **Step 4: Write the runbook**
+- [x] **Step 4: Write the runbook**
 
 Document:
 
@@ -452,7 +452,7 @@ Document:
 5. Execute the 12 acceptance dialogs from the design specification.
 6. Never submit the generated beta project as the formal mini-program release.
 
-- [ ] **Step 5: Run focused verification**
+- [x] **Step 5: Run focused verification**
 
 Run:
 
@@ -461,7 +461,7 @@ npm run check:ai-mode
 node --test tests/ai-mode-*.test.js
 ```
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add scripts/check_ai_mode_project.cjs docs/wechat-ai-mode-runbook.md package.json tests/ai-mode-build.test.js
@@ -473,19 +473,19 @@ git commit -m "Add AI mode verification runbook"
 **Files:**
 - Modify only files required by failures found during verification.
 
-- [ ] **Step 1: Run generated-data drift checks**
+- [x] **Step 1: Run generated-data drift checks**
 
 Run: `npm run check:generated`
 
 Expected: PASS.
 
-- [ ] **Step 2: Run the complete test suite**
+- [x] **Step 2: Run the complete test suite**
 
 Run: `npm test`
 
 Expected: PASS with no skipped AI-mode structural tests.
 
-- [ ] **Step 3: Rebuild and run strict AI verification**
+- [x] **Step 3: Rebuild and run strict AI verification**
 
 Run:
 
@@ -496,7 +496,7 @@ npm run check:ai-mode
 
 Expected: PASS and artifact paths printed.
 
-- [ ] **Step 4: Audit the production boundary**
+- [x] **Step 4: Audit the production boundary**
 
 Run:
 
@@ -506,7 +506,7 @@ rg -n "openAgent|onAgentOpen|navigateBackAgent|\"agent\"|craft-beer-guide" minip
 
 Expected: no matches.
 
-- [ ] **Step 5: Review repository changes**
+- [x] **Step 5: Review repository changes**
 
 Run:
 
@@ -518,7 +518,7 @@ git diff --stat
 
 Confirm generated `artifacts/` are not tracked and all tracked AI source lives under `ai-mode/`, `scripts/`, `tests/`, and `docs/`.
 
-- [ ] **Step 6: Commit final fixes, if any**
+- [x] **Step 6: Commit final fixes, if any**
 
 ```bash
 git add <only-files-changed-for-final-fixes>

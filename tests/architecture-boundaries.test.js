@@ -60,6 +60,16 @@ test('generated mini program data has an explicit drift check command', () => {
   assert.equal(fs.existsSync(path.join(root, 'scripts', 'check_generated_data.cjs')), true);
 });
 
+test('generated data drift check is stable across working-tree line endings', () => {
+  assert.doesNotThrow(() => {
+    execFileSync(process.execPath, ['scripts/check_generated_data.cjs'], {
+      cwd: root,
+      encoding: 'utf8',
+      stdio: 'pipe',
+    });
+  });
+});
+
 test('choose taste dimensions are declared in one shared schema module', async () => {
   const schema = await import('../miniprogram/utils/taste-schema.js');
 

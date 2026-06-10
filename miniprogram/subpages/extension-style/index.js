@@ -1,6 +1,7 @@
 import { getExtensionStyleDetail } from '../../utils/beer-model.js';
 import { deferSetData, navigateOnce, redirectOnce, switchTabOnce } from '../../utils/page-performance.js';
 import { buildShareMessage, buildTimelineShareMessage, enableShareMenu } from '../../utils/share.js';
+import { isStyleFavorite, toggleFavoriteStyle } from '../../utils/style-favorites.js';
 import { trackEvent } from '../../utils/telemetry.js';
 
 Page({
@@ -9,6 +10,8 @@ Page({
     errorMessage: '',
     contentReady: false,
     detail: null,
+    isFavorite: false,
+    favoriteActionLabel: '收藏',
   },
 
   onLoad(options) {
@@ -25,11 +28,14 @@ Page({
         });
         return;
       }
+      const isFavorite = isStyleFavorite(detail.style.id);
       wx.setNavigationBarTitle({ title: detail.style.displayName });
       this.setData({
         loadStatus: 'ready',
         errorMessage: '',
         contentReady: false,
+        isFavorite,
+        favoriteActionLabel: isFavorite ? '已收藏' : '收藏',
         detail: {
           ...detail,
           description: '',
@@ -81,6 +87,23 @@ Page({
     const { styleId } = event.currentTarget.dataset;
     trackEvent('style_open', { styleId, source: 'extension_crosswalk' });
     navigateOnce(this, `/subpages/style/index?styleId=${styleId}`);
+  },
+
+  toggleFavorite() {
+    const style = this.data.detail && this.data.detail.style;
+    if (!style) return;
+
+    const result = toggleFavoriteStyle(style.id);
+    this.setData({
+      isFavorite: result.isFavorite,
+      favoriteActionLabel: result.isFavorite ? '已收藏' : '收藏',
+    });
+    trackEvent('favorite_toggle', { styleId: style.id, isFavorite: result.isFavorite });
+    wx.showToast({
+      title: result.isFavorite ? '已加入收藏' : '已取消收藏',
+      icon: 'none',
+      duration: 1100,
+    });
   },
 
   openGroup() {

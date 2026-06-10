@@ -43,8 +43,12 @@ Page({
   },
 
   openStyle(event) {
-    const { styleId } = event.currentTarget.dataset;
-    trackEvent('style_open', { styleId, source: 'favorites' });
+    const { styleId, itemKind } = event.currentTarget.dataset;
+    trackEvent('style_open', { styleId, itemKind, source: 'favorites' });
+    if (itemKind === 'extension') {
+      navigateOnce(this, `/subpages/extension-style/index?styleId=${styleId}`);
+      return;
+    }
     navigateOnce(this, `/subpages/style/index?styleId=${styleId}`);
   },
 

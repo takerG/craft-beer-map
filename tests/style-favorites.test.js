@@ -70,3 +70,16 @@ test('favorite summaries ignore stale local ids and stay lightweight', () => {
   assert.ok(summaries.every((style) => style.kind === 'bjcp'));
   assert.ok(summaries.every((style) => !Object.hasOwn(style, 'details')));
 });
+
+test('favorite summaries resolve extension style ids from the existing storage key', () => {
+  const storage = createMemoryStorage(['ext-west-coast-ipa', '21A']);
+  const summaries = getFavoriteStyleSummaries(storage);
+
+  assert.deepEqual(
+    summaries.map((style) => ({ id: style.id, kind: style.kind })),
+    [
+      { id: 'ext-west-coast-ipa', kind: 'extension' },
+      { id: '21A', kind: 'bjcp' },
+    ],
+  );
+});

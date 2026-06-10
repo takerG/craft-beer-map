@@ -1,5 +1,5 @@
 const { catalog, runtime } = require('../utils/catalog.js');
-const { addFavoriteStyleRef } = require('../utils/favorite-store.js');
+const { addFavoriteStyleRef, hasFavoriteStyleRef, listFavoriteStyleRefs } = require('../utils/favorite-store.js');
 const { failure, success } = require('../utils/result.js');
 
 async function addFavoriteBeerStyle({ styleRef } = {}) {
@@ -8,11 +8,14 @@ async function addFavoriteBeerStyle({ styleRef } = {}) {
     return failure('无法收藏：目录中不存在这个 styleRef。请先搜索并使用返回的原始值。');
   }
 
-  const favoriteRefs = addFavoriteStyleRef(style.styleRef);
+  const alreadyFavorite = hasFavoriteStyleRef(style.styleRef);
+  const favoriteRefs = alreadyFavorite
+    ? listFavoriteStyleRefs()
+    : addFavoriteStyleRef(style.styleRef);
   return success(
-    `已将 ${style.displayName} 加入收藏。`,
+    alreadyFavorite ? `${style.displayName} 此前已收藏。` : `已将 ${style.displayName} 加入收藏。`,
     {
-      action: 'added',
+      action: alreadyFavorite ? 'already-favorite' : 'added',
       isFavorite: true,
       style,
       total: favoriteRefs.length,

@@ -140,7 +140,7 @@
       "outputSchema": {
         "type": "object",
         "properties": {
-          "action": { "type": "string", "enum": ["added"] },
+          "action": { "type": "string", "enum": ["added", "already-favorite"] },
           "isFavorite": { "type": "boolean" },
           "style": { "type": "object" },
           "total": { "type": "number" }
@@ -168,7 +168,7 @@
       "outputSchema": {
         "type": "object",
         "properties": {
-          "action": { "type": "string", "enum": ["removed"] },
+          "action": { "type": "string", "enum": ["removed", "not-favorite"] },
           "isFavorite": { "type": "boolean" },
           "style": { "type": "object" },
           "total": { "type": "number" }

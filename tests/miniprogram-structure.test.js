@@ -663,6 +663,22 @@ test('style favorites are stored locally and surfaced from detail and bottom tab
   assert.doesNotMatch(exploreWxml, /favorite-panel|favorite-strip|favorite-empty|我的收藏/);
 });
 
+test('extension styles share the existing favorite storage and route by item kind', () => {
+  const favoriteUtil = readMiniPage('utils/style-favorites.js');
+  const favoritesJs = readMiniPage('pages/favorites/index.js');
+  const favoritesWxml = readMiniPage('pages/favorites/index.wxml');
+  const extensionJs = readMiniPage('subpages/extension-style/index.js');
+  const extensionWxml = readMiniPage('subpages/extension-style/index.wxml');
+
+  assert.match(favoriteUtil, /getExtensionStyleDetail/);
+  assert.match(favoritesJs, /itemKind/);
+  assert.match(favoritesJs, /extension-style/);
+  assert.match(favoritesWxml, /data-item-kind="{{item\.kind}}"/);
+  assert.match(extensionJs, /toggleFavoriteStyle/);
+  assert.match(extensionJs, /isStyleFavorite/);
+  assert.match(extensionWxml, /bindtap="toggleFavorite"/);
+});
+
 test('choose tab provides taste filters, switchable visuals, and fixed results', () => {
   const chooseJs = readMiniPage('pages/choose/index.js');
   const chooseWxml = readMiniPage('pages/choose/index.wxml');

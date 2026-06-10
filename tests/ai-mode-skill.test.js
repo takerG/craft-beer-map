@@ -112,6 +112,50 @@ test('favorite APIs persist BJCP favorites to the existing storage key', async (
   assert.deepEqual(memory.get('craftBeerFavoriteStyleIds.v1'), []);
 });
 
+test('favorite APIs are idempotent and retain extension references locally', async () => {
+  memory.clear();
+  const add = loadApi('addFavoriteBeerStyle');
+  const list = loadApi('listFavoriteBeerStyles');
+  const remove = loadApi('removeFavoriteBeerStyle');
+  const extensionRef = { kind: 'extension', id: 'ext-west-coast-ipa' };
+
+  const firstAdd = await add({ styleRef: extensionRef });
+  const secondAdd = await add({ styleRef: extensionRef });
+  const listResult = await list();
+
+  assert.equal(firstAdd.structuredContent.action, 'added');
+  assert.equal(secondAdd.structuredContent.action, 'already-favorite');
+  assert.deepEqual(listResult.structuredContent.items.map((item) => item.styleRef), [extensionRef]);
+  assert.deepEqual(memory.get('craftBeerFavoriteStyleIds.v1'), ['ext-west-coast-ipa']);
+
+  const firstRemove = await remove({ styleRef: extensionRef });
+  const secondRemove = await remove({ styleRef: extensionRef });
+
+  assert.equal(firstRemove.structuredContent.action, 'removed');
+  assert.equal(secondRemove.structuredContent.action, 'not-favorite');
+  assert.deepEqual(memory.get('craftBeerFavoriteStyleIds.v1'), []);
+});
+
+test('Skill APIs reject missing or unknown identifiers without inventing results', async () => {
+  const search = loadApi('searchBeerStyles');
+  const detail = loadApi('getBeerStyleDetail');
+  const add = loadApi('addFavoriteBeerStyle');
+  const academy = loadApi('findAcademyArticles');
+
+  const results = await Promise.all([
+    search({}),
+    detail({ styleRef: { kind: 'bjcp', id: 'missing-style' } }),
+    add({ styleRef: { kind: 'extension', id: 'missing-style' } }),
+    academy({ query: 'this-topic-does-not-exist-anywhere' }),
+  ]);
+
+  results.forEach((result) => {
+    assert.equal(result.isError, true);
+    assert.ok(Array.isArray(result.content));
+    assert.equal(Object.hasOwn(result, 'structuredContent'), false);
+  });
+});
+
 test('favorite store uses local wx storage without network access', () => {
   const source = fs.readFileSync(path.join(skillRoot, 'utils', 'favorite-store.js'), 'utf8');
 

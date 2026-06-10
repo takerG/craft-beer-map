@@ -14,6 +14,10 @@ Component({
     },
   },
 
+  data: {
+    isSupported: false,
+  },
+
   lifetimes: {
     attached() {
       this._agentOpenCallback = () => ({
@@ -23,6 +27,7 @@ Component({
       if (typeof wx.onAgentOpen === 'function') {
         wx.onAgentOpen(this._agentOpenCallback);
       }
+      this.refreshSupport();
     },
 
     detached() {
@@ -33,6 +38,17 @@ Component({
   },
 
   methods: {
+    refreshSupport() {
+      if (typeof wx.checkIsSupportAgent !== 'function') {
+        this.setData({ isSupported: false });
+        return;
+      }
+      wx.checkIsSupportAgent({
+        success: (result) => this.setData({ isSupported: Boolean(result && result.isSupport) }),
+        fail: () => this.setData({ isSupported: false }),
+      });
+    },
+
     openAgent() {
       if (typeof wx.checkIsSupportAgent !== 'function') {
         this.showUnsupported();

@@ -11,6 +11,10 @@ function readText(relativePath) {
   return fs.readFileSync(path.join(root, relativePath), 'utf8');
 }
 
+function normalizeLineEndings(value) {
+  return value.replace(/\r\n/g, '\n');
+}
+
 function formatExport(comment, exportName, value) {
   return `${comment}\nexport const ${exportName} = ${JSON.stringify(value, null, 2)};\n`;
 }
@@ -59,7 +63,7 @@ function buildExpectedOutputs() {
 const drifted = buildExpectedOutputs()
   .map(({ path: outputPath, expected }) => ({
     path: outputPath,
-    synced: readText(outputPath) === expected,
+    synced: normalizeLineEndings(readText(outputPath)) === normalizeLineEndings(expected),
   }))
   .filter((result) => !result.synced);
 

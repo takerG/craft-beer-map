@@ -57,6 +57,50 @@ test('generated AI mode projects stay outside source control', () => {
   assert.equal(gitignore.includes('artifacts/'), true);
 });
 
+test('strict AI mode verifier validates the current build and reports artifact locations', () => {
+  const packageJson = readJson(path.join(root, 'package.json'));
+  const output = execFileSync(
+    process.execPath,
+    ['scripts/check_ai_mode_project.cjs', '--if-current'],
+    {
+      cwd: root,
+      encoding: 'utf8',
+    },
+  );
+
+  assert.equal(
+    packageJson.scripts['check:ai-mode'],
+    'node scripts/check_ai_mode_project.cjs && node --test tests/ai-mode-*.test.js',
+  );
+  assert.match(output, /AI mode project verified/);
+  assert.match(output, /artifacts[\\/]ai-mode-project/);
+  assert.match(output, /artifacts[\\/]ai-knowledge-base/);
+});
+
+test('AI mode runbook documents build, upload, acceptance, and release isolation', () => {
+  const runbook = fs.readFileSync(path.join(root, 'docs', 'wechat-ai-mode-runbook.md'), 'utf8');
+
+  [
+    'npm run build:ai-mode',
+    'npm run check:ai-mode',
+    'artifacts/ai-mode-project/project.config.json',
+    'artifacts/ai-knowledge-base/',
+    '想喝点清爽不苦的',
+    '配烧烤喝什么',
+    '找西海岸 IPA',
+    '21A 是什么',
+    '浑浊 IPA 有哪些叫法',
+    '不存在的风格',
+    '收藏这个',
+    '再次收藏',
+    '取消收藏',
+    '看看我的收藏',
+    '冷 IPA 和西海岸 IPA',
+    '适合入门的文章',
+    '不得作为正式版本提交',
+  ].forEach((phrase) => assert.equal(runbook.includes(phrase), true, phrase));
+});
+
 function runBuild() {
   execFileSync(process.execPath, ['scripts/build_ai_mode_project.cjs', '--if-current'], {
     cwd: root,

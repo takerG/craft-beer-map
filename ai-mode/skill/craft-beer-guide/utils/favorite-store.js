@@ -1,16 +1,15 @@
 const LEGACY_BJCP_KEY = 'craftBeerFavoriteStyleIds.v1';
-const AI_STYLE_REFS_KEY = 'craftBeerAiFavoriteStyleRefs.v1';
 const MAX_FAVORITES = 120;
 
 function listFavoriteStyleRefs(storage = defaultStorage()) {
-  const legacyRefs = readArray(storage, LEGACY_BJCP_KEY)
-    .map((id) => normalizeStyleRef({ kind: 'bjcp', id }))
-    .filter(Boolean);
-  const aiRefs = readArray(storage, AI_STYLE_REFS_KEY)
-    .map(normalizeStyleRef)
+  const refs = readArray(storage, LEGACY_BJCP_KEY)
+    .map((id) => normalizeStyleRef({
+      kind: typeof id === 'string' && id.startsWith('ext-') ? 'extension' : 'bjcp',
+      id,
+    }))
     .filter(Boolean);
 
-  return uniqueStyleRefs([...aiRefs, ...legacyRefs]).slice(0, MAX_FAVORITES);
+  return uniqueStyleRefs(refs).slice(0, MAX_FAVORITES);
 }
 
 function addFavoriteStyleRef(styleRef, storage = defaultStorage()) {
@@ -35,12 +34,18 @@ function removeFavoriteStyleRef(styleRef, storage = defaultStorage()) {
   return refs;
 }
 
+function hasFavoriteStyleRef(styleRef, storage = defaultStorage()) {
+  const normalized = normalizeStyleRef(styleRef);
+  if (!normalized) return false;
+  return listFavoriteStyleRefs(storage)
+    .some((item) => styleRefKey(item) === styleRefKey(normalized));
+}
+
 function persistRefs(refs, storage) {
-  writeValue(storage, AI_STYLE_REFS_KEY, refs);
   writeValue(
     storage,
     LEGACY_BJCP_KEY,
-    refs.filter((item) => item.kind === 'bjcp').map((item) => item.id),
+    refs.map((item) => item.id),
   );
 }
 
@@ -96,6 +101,7 @@ function defaultStorage() {
 
 module.exports = {
   addFavoriteStyleRef,
+  hasFavoriteStyleRef,
   listFavoriteStyleRefs,
   removeFavoriteStyleRef,
 };

@@ -1,5 +1,5 @@
 const { catalog, runtime } = require('../utils/catalog.js');
-const { removeFavoriteStyleRef } = require('../utils/favorite-store.js');
+const { hasFavoriteStyleRef, listFavoriteStyleRefs, removeFavoriteStyleRef } = require('../utils/favorite-store.js');
 const { failure, success } = require('../utils/result.js');
 
 async function removeFavoriteBeerStyle({ styleRef } = {}) {
@@ -8,11 +8,14 @@ async function removeFavoriteBeerStyle({ styleRef } = {}) {
     return failure('无法取消收藏：目录中不存在这个 styleRef。请先读取收藏列表。');
   }
 
-  const favoriteRefs = removeFavoriteStyleRef(style.styleRef);
+  const wasFavorite = hasFavoriteStyleRef(style.styleRef);
+  const favoriteRefs = wasFavorite
+    ? removeFavoriteStyleRef(style.styleRef)
+    : listFavoriteStyleRefs();
   return success(
-    `已取消收藏 ${style.displayName}。`,
+    wasFavorite ? `已取消收藏 ${style.displayName}。` : `${style.displayName} 当前不在收藏中。`,
     {
-      action: 'removed',
+      action: wasFavorite ? 'removed' : 'not-favorite',
       isFavorite: false,
       style,
       total: favoriteRefs.length,

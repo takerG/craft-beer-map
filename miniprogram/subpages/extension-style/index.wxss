@@ -51,6 +51,29 @@
     linear-gradient(145deg, #202b3b 0%, #151f2c 68%, #101720 100%);
 }
 
+.style-hero-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.favorite-action {
+  display: flex;
+  align-items: center;
+  min-height: 48rpx;
+  padding: 0 18rpx;
+  color: #a9b5c7;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 999rpx;
+  font-size: 22rpx;
+  font-weight: 800;
+}
+
+.favorite-action-active {
+  color: #f6ad55;
+  background: rgba(246, 173, 85, 0.14);
+}
+
 .style-code {
   display: inline-flex;
   align-items: center;

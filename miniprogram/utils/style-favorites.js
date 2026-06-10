@@ -1,4 +1,4 @@
-import { getStyleDetail } from './beer-model.js';
+import { getExtensionStyleDetail, getStyleDetail } from './beer-model.js';
 
 export const FAVORITE_STYLE_STORAGE_KEY = 'craftBeerFavoriteStyleIds.v1';
 const MAX_FAVORITE_STYLES = 120;
@@ -41,7 +41,11 @@ export function isStyleFavorite(styleId, storage = getDefaultStorage()) {
 
 export function getFavoriteStyleSummaries(storage = getDefaultStorage()) {
   return getFavoriteStyleIds(storage)
-    .map((styleId) => getStyleDetail(styleId))
+    .map((styleId) => (
+      styleId.startsWith('ext-')
+        ? getExtensionStyleDetail(styleId)
+        : getStyleDetail(styleId)
+    ))
     .filter(Boolean)
     .map((detail) => detail.style);
 }

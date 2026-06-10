@@ -16,9 +16,10 @@
       hover-class="tap-hover"
       hover-stay-time="80"
       data-style-id="{{item.id}}"
+      data-item-kind="{{item.kind}}"
       bindtap="openStyle"
     >
-      <text class="favorite-code">{{item.code}}</text>
+      <text class="favorite-code">{{item.kind === 'extension' ? 'EX' : item.code}}</text>
       <view class="favorite-main">
         <text class="favorite-name">{{item.displayName}}</text>
         <text class="favorite-en">{{item.name_en}}</text>

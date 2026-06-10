@@ -23,7 +23,17 @@
 
 <view class="page extension-style-page" wx:elif="{{detail}}">
   <view class="style-hero" style="border-left-color: {{detail.style.color}}">
-    <text class="style-code">扩展风格</text>
+    <view class="style-hero-head">
+      <text class="style-code">扩展风格</text>
+      <view
+        class="favorite-action {{isFavorite ? 'favorite-action-active' : ''}}"
+        hover-class="tap-hover"
+        hover-stay-time="80"
+        bindtap="toggleFavorite"
+      >
+        <text>{{favoriteActionLabel}}</text>
+      </view>
+    </view>
     <text class="style-name">{{detail.style.displayName}}</text>
     <text class="style-en">{{detail.style.name_en}}</text>
     <text class="style-source">{{detail.sourceLabel}}</text>

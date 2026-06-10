@@ -47,6 +47,10 @@ test('AI entry checks support, opens Agent, and supplies capsule-open context', 
     path.join(artifactMiniProgramRoot, 'components', 'ai-entry', 'index.js'),
     'utf8',
   );
+  const template = fs.readFileSync(
+    path.join(artifactMiniProgramRoot, 'components', 'ai-entry', 'index.wxml'),
+    'utf8',
+  );
 
   assert.match(source, /wx\.checkIsSupportAgent/);
   assert.match(source, /wx\.openAgent/);
@@ -54,6 +58,8 @@ test('AI entry checks support, opens Agent, and supplies capsule-open context', 
   assert.match(source, /wx\.offAgentOpen/);
   assert.match(source, /followUpMessage/);
   assert.match(source, /context/);
+  assert.match(source, /isSupported:\s*false/);
+  assert.match(template, /wx:if="{{isSupported}}"/);
 });
 
 test('entry overlays exist only in generated target pages', () => {

@@ -15,13 +15,13 @@
     "path": "pages/academy/index.wxml",
     "prompt": "帮我找一篇适合现在阅读的精酿学院文章",
     "contextType": "academy",
-    "contextBinding": "{{feedSites}}"
+    "contextBinding": "{{activeType}}"
   },
   {
     "path": "pages/favorites/index.wxml",
     "prompt": "看看我的收藏，并帮我决定下一杯",
     "contextType": "favorites",
-    "contextBinding": "{{favoriteStyles}}"
+    "contextBinding": "{{favoriteCountLabel}}"
   },
   {
     "path": "pages/search/index.wxml",
