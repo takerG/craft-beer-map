@@ -1,5 +1,6 @@
 node_modules/
 artifacts/
+.worktrees/
 vendor/
 .superpowers/
 .claude/settings.local.json
@@ -8,4 +9,3 @@ __pycache__/
 *.pyo
 *.log
 *.err.log
-
