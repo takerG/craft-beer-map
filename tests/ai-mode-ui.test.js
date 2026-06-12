@@ -69,6 +69,21 @@ test('AI entries exist directly in the real target pages', () => {
   });
 });
 
+test('detail AI entries stay inside the loaded branch', () => {
+  [
+    'subpages/style/index.wxml',
+    'subpages/extension-style/index.wxml',
+  ].forEach((relativePath) => {
+    const source = fs.readFileSync(path.join(artifactMiniProgramRoot, relativePath), 'utf8');
+
+    assert.match(
+      source,
+      /<view class="page [^"]+" wx:elif="{{detail}}">\s*<ai-entry\b/,
+      `${relativePath} should keep wx:if and wx:elif siblings adjacent`,
+    );
+  });
+});
+
 test('half-screen pages return follow-up messages without normal route APIs', () => {
   [
     'aiDetail/pages/style-results/index.js',
@@ -84,6 +99,18 @@ test('half-screen pages return follow-up messages without normal route APIs', ()
       /wx\.(?:navigateTo|redirectTo|switchTab|reLaunch|navigateBack)\b/,
       relativePath,
     );
+  });
+});
+
+test('half-screen page scripts are syntactically valid', () => {
+  [
+    'aiDetail/pages/style-results/index.js',
+    'aiDetail/pages/taste-refine/index.js',
+  ].forEach((relativePath) => {
+    execFileSync(process.execPath, ['--check', relativePath], {
+      cwd: artifactMiniProgramRoot,
+      stdio: 'pipe',
+    });
   });
 });
 

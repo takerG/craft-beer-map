@@ -5,12 +5,6 @@
   </view>
 </view>
 
-<ai-entry
-  prompt="解释当前 BJCP 风格，并告诉我适合什么场景"
-  context-type="bjcp-style"
-  context-data="{{detail.style}}"
-/>
-
 <view class="page style-page" wx:elif="{{loadStatus === 'not-found'}}">
   <view class="state-card">
     <text class="state-title">没有找到这个风格</text>
@@ -28,6 +22,12 @@
 </view>
 
 <view class="page style-page" wx:elif="{{detail}}">
+  <ai-entry
+    prompt="解释当前 BJCP 风格，并告诉我适合什么场景"
+    context-type="bjcp-style"
+    context-data="{{detail.style}}"
+  />
+
   <view class="style-hero" style="border-left-color: {{detail.style.color}}">
     <view class="style-hero-head">
       <text class="style-code">{{detail.style.code}}</text>

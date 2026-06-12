@@ -26,17 +26,16 @@ Page({
 
     const modelContext = wx.modelContext.getContext();
     modelContext.sendFollowUpMessage({
-        content: [
-          { type: 'text', text: `查看${item.displayName}的风格详情` },
-          {
-            type: 'api/call',
-            data: {
-              name: 'getBeerStyleDetail',
-              arguments: { styleRef: item.styleRef },
-            },
+      content: [
+        { type: 'text', text: `查看${item.displayName}的风格详情` },
+        {
+          type: 'api/call',
+          data: {
+            name: 'getBeerStyleDetail',
+            arguments: { styleRef: item.styleRef },
           },
-        ],
-      },
+        },
+      ],
     });
   },
 

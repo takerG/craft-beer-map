@@ -18,6 +18,14 @@ Page({
     enableShareMenu();
 
     const styleId = options.styleId || '';
+    if (options.kind === 'extension') {
+      redirectOnce(
+        this,
+        `/subpages/extension-style/index?styleId=${encodeURIComponent(styleId)}`,
+      );
+      return;
+    }
+
     try {
       const detail = getStyleDetail(styleId);
       if (!detail) {

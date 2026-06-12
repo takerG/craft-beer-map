@@ -207,7 +207,7 @@
     },
     {
       "path": "components/style-detail-card/index",
-      "relatedPage": "/pages/search/index"
+      "relatedPage": "/subpages/style/index"
     },
     {
       "path": "components/favorite-status-card/index",

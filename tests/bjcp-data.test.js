@@ -138,6 +138,22 @@ function normalizeName(value) {
   return value.normalize('NFKD').replace(/[\u0300-\u036f]/g, '');
 }
 
+function visitStrings(value, path = 'data', visit) {
+  if (typeof value === 'string') {
+    visit(value, path);
+    return;
+  }
+
+  if (Array.isArray(value)) {
+    value.forEach((item, index) => visitStrings(item, `${path}[${index}]`, visit));
+    return;
+  }
+
+  if (value && typeof value === 'object') {
+    Object.entries(value).forEach(([key, item]) => visitStrings(item, `${path}.${key}`, visit));
+  }
+}
+
 test('beer data matches the BJCP 2021 main guideline style set', () => {
   const byCode = new Map(data.styles.map((style) => [style.code || style.id, style]));
 
@@ -148,6 +164,36 @@ test('beer data matches the BJCP 2021 main guideline style set', () => {
     assert.equal(byCode.has(code), true, `${code} should exist`);
     assert.equal(normalizeName(byCode.get(code).name_en), name);
   });
+});
+
+test('BJCP Chinese copy does not contain broken inline spacing', () => {
+  const spacingRules = [
+    ['between Chinese characters', /\p{Script=Han}[ \u3000]+\p{Script=Han}/u],
+    ['before Chinese punctuation', /[ \u3000]+[，。；：！？、（）【】《》“”‘’]/u],
+    ['after Chinese punctuation', /[，。；：！？、（）【】《》“”‘’][ \u3000]+/u],
+    ['before an inline parenthesis', /\p{Script=Han}[ \u3000]+\(/u],
+    ['inside an opening parenthesis', /\([ \u3000]+/u],
+    ['inside a closing parenthesis', /[ \u3000]+\)/u],
+    ['after an inline parenthesis', /\)[ \u3000]+\p{Script=Han}/u],
+  ];
+  const issues = [];
+
+  visitStrings(data, 'data', (value, path) => {
+    spacingRules.forEach(([type, pattern]) => {
+      const match = value.match(pattern);
+      if (match) {
+        const start = Math.max(0, match.index - 12);
+        const end = Math.min(value.length, match.index + match[0].length + 12);
+        issues.push(`${path}: ${type}: ${value.slice(start, end)}`);
+      }
+    });
+  });
+
+  assert.equal(
+    issues.length,
+    0,
+    `Found ${issues.length} BJCP copy spacing issues:\n${issues.slice(0, 20).join('\n')}`,
+  );
 });
 
 test('beer data includes searchable community aliases for official Chinese style names', () => {

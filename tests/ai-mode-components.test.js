@@ -86,6 +86,31 @@ test('favorite status cards expire earlier cards without an unverified notificat
   assert.doesNotMatch(source, /NotificationType\.Expire/);
 });
 
+test('style detail card enters the matching style detail page instead of search', () => {
+  const mcp = readJson(path.join(skillRoot, 'mcp.json'));
+  const detailComponent = mcp.components.find(
+    (item) => item.path === 'components/style-detail-card/index',
+  );
+  const componentSource = fs.readFileSync(
+    path.join(skillRoot, 'components', 'style-detail-card', 'index.js'),
+    'utf8',
+  );
+  const bjcpDetailSource = fs.readFileSync(
+    path.join(root, 'subpages', 'style', 'index.js'),
+    'utf8',
+  );
+
+  assert.equal(detailComponent?.relatedPage, '/subpages/style/index');
+  assert.match(
+    componentSource,
+    /query:\s*`kind=\$\{style\.styleRef\.kind\}&styleId=\$\{encodeURIComponent\(style\.styleRef\.id\)\}`/,
+  );
+  assert.match(
+    bjcpDetailSource,
+    /options\.kind === 'extension'[\s\S]*\/subpages\/extension-style\/index\?styleId=/,
+  );
+});
+
 function readJson(filePath) {
   return JSON.parse(fs.readFileSync(filePath, 'utf8'));
 }
