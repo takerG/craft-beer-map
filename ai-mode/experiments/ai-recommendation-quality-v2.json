@@ -1,0 +1,10 @@
+{
+  "experimentId": "ai-rec-quality-v2-20260612",
+  "variants": ["control", "candidate"],
+  "defaultTelemetryMode": "off",
+  "flowTtlMinutes": 30,
+  "metadataRetentionHours": 24,
+  "maximumStoredFlows": 20,
+  "directionalFlowsPerVariant": 200,
+  "maximumContaminationRate": 0.05
+}

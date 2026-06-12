@@ -1,0 +1,74 @@
+.recommendation-card {
+  box-sizing: border-box;
+  padding: 28rpx;
+  overflow: hidden;
+  color: #f6f1e8;
+  background: #151d27;
+  border: 1rpx solid #2b3948;
+  border-radius: 28rpx;
+}
+
+.card-head,
+.style-item,
+.actions {
+  display: flex;
+}
+
+.card-head,
+.style-item {
+  justify-content: space-between;
+}
+
+.card-title {
+  font-size: 34rpx;
+  font-weight: 700;
+}
+
+.adjust-action,
+.action {
+  color: #f6ad55;
+}
+
+.summary,
+.style-reason,
+.style-tradeoff {
+  color: #93a1b3;
+  font-size: 22rpx;
+}
+
+.style-item {
+  padding: 20rpx 0;
+  border-top: 1rpx solid #283442;
+}
+
+.style-copy {
+  display: flex;
+  min-width: 0;
+  flex: 1;
+  flex-direction: column;
+}
+
+.style-name {
+  font-size: 28rpx;
+}
+
+.actions {
+  align-items: center;
+  gap: 16rpx;
+}
+
+.action {
+  padding: 12rpx 16rpx;
+  border: 1rpx solid #f6ad55;
+  border-radius: 18rpx;
+  font-size: 22rpx;
+}
+
+.action.primary {
+  color: #151d27;
+  background: #f6ad55;
+}
+
+.tap-hover {
+  opacity: 0.78;
+}

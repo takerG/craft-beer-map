@@ -34,7 +34,7 @@ function buildExpectedOutputs() {
 
   return [
     {
-      path: 'miniprogram/data/beer-data.js',
+      path: 'data/beer-data.js',
       expected: formatExport(
         '// Generated from data/beer-data-source.json. Run npm run build:mini-data after BJCP data changes.',
         'beerData',
@@ -42,7 +42,7 @@ function buildExpectedOutputs() {
       ),
     },
     {
-      path: 'miniprogram/data/style-aliases.js',
+      path: 'data/style-aliases.js',
       expected: formatExport(
         '// Generated from data/beer-data-source.json. Run npm run build:mini-data after alias changes.',
         'styleAliases',
@@ -50,7 +50,7 @@ function buildExpectedOutputs() {
       ),
     },
     {
-      path: 'miniprogram/data/styleLanguageMap.js',
+      path: 'data/styleLanguageMap.js',
       expected: formatExport(
         '// Generated from data/style-language-map.json. Run npm run build:mini-data after style language changes.',
         'styleLanguageMap',

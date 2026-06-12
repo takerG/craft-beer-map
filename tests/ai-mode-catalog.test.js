@@ -5,15 +5,12 @@ import { createRequire } from 'node:module';
 import fs from 'node:fs';
 import path from 'node:path';
 
-import { getStyleDetail, searchStyles } from '../miniprogram/utils/beer-model.js';
+import { getStyleDetail, searchStyles } from '../utils/beer-model.js';
 
 const require = createRequire(import.meta.url);
 const root = process.cwd();
 const artifactSkillRoot = path.join(
   root,
-  'artifacts',
-  'ai-mode-project',
-  'miniprogram',
   'skills',
   'craft-beer-guide',
 );

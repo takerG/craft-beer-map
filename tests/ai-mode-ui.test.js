@@ -5,7 +5,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 const root = process.cwd();
-const artifactMiniProgramRoot = path.join(root, 'artifacts', 'ai-mode-project', 'miniprogram');
+const artifactMiniProgramRoot = root;
 const overlayTargets = [
   'pages/explore/index.wxml',
   'pages/choose/index.wxml',
@@ -24,9 +24,9 @@ test.before(() => {
   });
 });
 
-test('generated app registers the AI entry and independent detail package', () => {
+test('app registers the AI entry and independent detail package', () => {
   const app = readJson(path.join(artifactMiniProgramRoot, 'app.json'));
-  const detailPackage = app.subpackages.find((item) => item.root === 'aiDetail');
+  const detailPackage = app.subPackages.find((item) => item.root === 'aiDetail');
 
   assert.equal(app.usingComponents['ai-entry'], '/components/ai-entry/index');
   assert.deepEqual(detailPackage, {
@@ -62,13 +62,10 @@ test('AI entry checks support, opens Agent, and supplies capsule-open context', 
   assert.match(template, /wx:if="{{isSupported}}"/);
 });
 
-test('entry overlays exist only in generated target pages', () => {
+test('AI entries exist directly in the real target pages', () => {
   overlayTargets.forEach((relativePath) => {
-    const generated = fs.readFileSync(path.join(artifactMiniProgramRoot, relativePath), 'utf8');
-    const production = fs.readFileSync(path.join(root, 'miniprogram', relativePath), 'utf8');
-
-    assert.match(generated, /<ai-entry\b/, `${relativePath} generated entry`);
-    assert.doesNotMatch(production, /<ai-entry\b/, `${relativePath} production boundary`);
+    const source = fs.readFileSync(path.join(artifactMiniProgramRoot, relativePath), 'utf8');
+    assert.match(source, /<ai-entry\b/, `${relativePath} AI entry`);
   });
 });
 
@@ -79,7 +76,9 @@ test('half-screen pages return follow-up messages without normal route APIs', ()
   ].forEach((relativePath) => {
     const source = fs.readFileSync(path.join(artifactMiniProgramRoot, relativePath), 'utf8');
 
-    assert.match(source, /wx\.navigateBackAgent/);
+    assert.match(source, /modelContext\.getContext/);
+    assert.match(source, /sendFollowUpMessage/);
+    assert.doesNotMatch(source, /wx\.navigateBackAgent/);
     assert.doesNotMatch(
       source,
       /wx\.(?:navigateTo|redirectTo|switchTab|reLaunch|navigateBack)\b/,

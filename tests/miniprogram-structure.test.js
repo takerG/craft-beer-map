@@ -4,10 +4,29 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 const root = process.cwd();
-const miniprogramRoot = path.join(root, 'miniprogram');
+const miniprogramRoot = root;
+const miniProgramRuntimeEntries = [
+  'AGENTS.md',
+  'app.js',
+  'app.json',
+  'app.wxss',
+  'page-meta.json',
+  'project.config.json',
+  'project.private.config.json',
+  'sitemap.json',
+  'aiDetail',
+  'assets',
+  'components',
+  'data',
+  'pages',
+  'skills',
+  'subpages',
+  'templates',
+  'utils',
+];
 const appJson = JSON.parse(fs.readFileSync(path.join(miniprogramRoot, 'app.json'), 'utf8'));
 const tabBarPagePaths = appJson.tabBar.list.map((item) => item.pagePath);
-const subpackagePagePaths = (appJson.subpackages || []).flatMap((subpackage) =>
+const subpackagePagePaths = (appJson.subPackages || []).flatMap((subpackage) =>
   subpackage.pages.map((pagePath) => `${subpackage.root}/${pagePath}`),
 );
 const allDeclaredPagePaths = [...appJson.pages, ...subpackagePagePaths];
@@ -55,7 +74,7 @@ test('main package keeps only first-run tab pages and search entrypoints', () =>
 });
 
 test('secondary content pages are isolated in a subpackage', () => {
-  assert.deepEqual(appJson.subpackages, [
+  assert.deepEqual(appJson.subPackages, [
     {
       root: 'subpages',
       pages: [
@@ -66,6 +85,22 @@ test('secondary content pages are isolated in a subpackage', () => {
         'extension-group/index',
         'extension-style/index',
       ],
+    },
+    {
+      root: 'skills',
+      pages: [],
+      independent: true,
+    },
+    {
+      root: 'aiDetail',
+      name: 'ai-detail',
+      pages: [
+        'pages/style-results/index',
+        'pages/taste-refine/index',
+      ],
+      independent: true,
+      componentFramework: 'glass-easel',
+      renderer: 'skyline',
     },
   ]);
 });
@@ -171,7 +206,7 @@ test('mini program copy avoids removed local map messaging', () => {
 });
 
 test('mini program styles avoid known unstable layout features', () => {
-  const wxssFiles = listFiles(miniprogramRoot, '.wxss');
+  const wxssFiles = listMiniProgramFiles('.wxss');
 
   wxssFiles.forEach((filePath) => {
     const source = fs.readFileSync(filePath, 'utf8');
@@ -181,7 +216,7 @@ test('mini program styles avoid known unstable layout features', () => {
 });
 
 test('mini program pages avoid canvas node bridge APIs that timed out in devtools', () => {
-  const jsFiles = listFiles(miniprogramRoot, '.js');
+  const jsFiles = listMiniProgramFiles('.js');
 
   jsFiles.forEach((filePath) => {
     const source = fs.readFileSync(filePath, 'utf8');
@@ -516,7 +551,7 @@ test('release checklist covers the first shipping gate', () => {
 });
 
 test('private devtools config keeps API hook disabled to avoid service timeout noise', () => {
-  const privateConfigPath = path.join(root, 'project.private.config.json');
+  const privateConfigPath = path.join(miniprogramRoot, 'project.private.config.json');
   const privateConfig = JSON.parse(fs.readFileSync(privateConfigPath, 'utf8'));
 
   assert.equal(privateConfig.setting.useApiHook, false);
@@ -767,7 +802,7 @@ test('choose tab default state knows the expanded taste dimensions', () => {
 
 test('local image and audio resources stay below the devtools package warning threshold', () => {
   const mediaExtensions = new Set(['.png', '.jpg', '.jpeg', '.gif', '.webp', '.mp3', '.wav', '.aac', '.m4a']);
-  const mediaFiles = listFiles(miniprogramRoot).filter((filePath) =>
+  const mediaFiles = listMiniProgramFiles().filter((filePath) =>
     mediaExtensions.has(path.extname(filePath).toLowerCase()),
   );
 
@@ -780,7 +815,7 @@ test('local image and audio resources stay below the devtools package warning th
 
 test('local image and audio resources stay below the devtools code package total threshold', () => {
   const mediaExtensions = new Set(['.png', '.jpg', '.jpeg', '.gif', '.webp', '.mp3', '.wav', '.aac', '.m4a']);
-  const mediaFiles = listFiles(miniprogramRoot).filter((filePath) =>
+  const mediaFiles = listMiniProgramFiles().filter((filePath) =>
     mediaExtensions.has(path.extname(filePath).toLowerCase()),
   );
   const totalBytes = mediaFiles.reduce((sum, filePath) => sum + fs.statSync(filePath).size, 0);
@@ -794,6 +829,15 @@ function listFiles(dir, extension = '') {
     const filePath = path.join(dir, entry.name);
     if (entry.isDirectory()) return listFiles(filePath, extension);
     return entry.isFile() && (!extension || filePath.endsWith(extension)) ? [filePath] : [];
+  });
+}
+
+function listMiniProgramFiles(extension = '') {
+  return miniProgramRuntimeEntries.flatMap((entry) => {
+    const filePath = path.join(miniprogramRoot, entry);
+    const stat = fs.statSync(filePath);
+    if (stat.isDirectory()) return listFiles(filePath, extension);
+    return !extension || filePath.endsWith(extension) ? [filePath] : [];
   });
 }
 

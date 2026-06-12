@@ -1,5 +1,7 @@
 node_modules/
 artifacts/
+cli-agent-run/
+tmp/
 .worktrees/
 vendor/
 .superpowers/

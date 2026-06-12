@@ -3,7 +3,7 @@ const path = require('path');
 
 const root = path.resolve(__dirname, '..');
 const inputPath = path.join(root, 'data', 'beer-data-source.json');
-const outputDir = path.join(root, 'miniprogram', 'data');
+const outputDir = path.join(root, 'data');
 const outputPath = path.join(outputDir, 'beer-data.js');
 const aliasesOutputPath = path.join(outputDir, 'style-aliases.js');
 const styleLanguageInputPath = path.join(root, 'data', 'style-language-map.json');

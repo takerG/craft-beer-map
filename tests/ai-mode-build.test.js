@@ -5,30 +5,15 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 const root = process.cwd();
-const artifactRoot = path.join(root, 'artifacts', 'ai-mode-project');
-const artifactMiniProgramRoot = path.join(artifactRoot, 'miniprogram');
+const miniProgramRoot = root;
+const legacyArtifactRoot = path.join(root, 'artifacts', 'ai-mode-project');
 
-test('production mini program contains no AI mode declarations', () => {
-  const sourceApp = readJson(path.join(root, 'miniprogram', 'app.json'));
-  const sourceFiles = listFiles(path.join(root, 'miniprogram'))
-    .map((filePath) => path.relative(path.join(root, 'miniprogram'), filePath).replaceAll('\\', '/'));
-
-  assert.equal(Object.hasOwn(sourceApp, 'agent'), false);
-  assert.equal(sourceApp.subpackages.some((item) => item.root === 'skills'), false);
-  assert.deepEqual(
-    sourceFiles.filter((filePath) =>
-      /(^|\/)(skills|ai-detail|ai-entry)(\/|$)/.test(filePath),
-    ),
-    [],
-  );
-});
-
-test('AI mode build emits an isolated developer-tools project', () => {
+test('AI mode is integrated into the real developer-tools project', () => {
   runBuild();
 
-  const app = readJson(path.join(artifactMiniProgramRoot, 'app.json'));
-  const projectConfig = readJson(path.join(artifactRoot, 'project.config.json'));
-  const skillPackage = app.subpackages.find((item) => item.root === 'skills');
+  const app = readJson(path.join(miniProgramRoot, 'app.json'));
+  const projectConfig = readJson(path.join(miniProgramRoot, 'project.config.json'));
+  const skillPackage = app.subPackages.find((item) => item.root === 'skills');
 
   assert.deepEqual(app.agent, {
     skills: [
@@ -38,6 +23,7 @@ test('AI mode build emits an isolated developer-tools project', () => {
         path: 'skills/craft-beer-guide',
       },
     ],
+    instruction: 'AGENTS.md',
     pageMetadata: 'page-meta.json',
   });
   assert.deepEqual(skillPackage, {
@@ -45,16 +31,28 @@ test('AI mode build emits an isolated developer-tools project', () => {
     pages: [],
     independent: true,
   });
-  assert.equal(projectConfig.miniprogramRoot, 'miniprogram/');
-  assert.equal(projectConfig.projectname, 'craft-beer-map-ai-mode');
-  assert.equal(projectConfig.libVersion, 'latest');
-  assert.equal(fs.existsSync(path.join(artifactMiniProgramRoot, 'pages', 'explore', 'index.js')), true);
+  assert.equal(Object.hasOwn(projectConfig, 'miniprogramRoot'), false);
+  assert.equal(projectConfig.projectname, 'craft-beer-map');
+  assert.equal(fs.existsSync(path.join(miniProgramRoot, 'pages', 'explore', 'index.js')), true);
+  assert.equal(fs.existsSync(path.join(legacyArtifactRoot, 'miniprogram')), false);
 });
 
-test('generated AI mode projects stay outside source control', () => {
-  const gitignore = fs.readFileSync(path.join(root, '.gitignore'), 'utf8');
+test('AI mode build generates only project data and knowledge artifacts', () => {
+  runBuild();
 
-  assert.equal(gitignore.includes('artifacts/'), true);
+  [
+    'skills/craft-beer-guide/data/catalog.js',
+    'skills/craft-beer-guide/utils/catalog-runtime.js',
+    'aiDetail/data/catalog.js',
+    'aiDetail/utils/catalog-runtime.js',
+    'page-meta.json',
+  ].forEach((relativePath) => {
+    assert.equal(fs.existsSync(path.join(miniProgramRoot, relativePath)), true, relativePath);
+  });
+  assert.equal(
+    fs.existsSync(path.join(root, 'artifacts', 'ai-knowledge-base', 'bjcp-style-guide.md')),
+    true,
+  );
 });
 
 test('strict AI mode verifier validates the current build and reports artifact locations', () => {
@@ -73,7 +71,7 @@ test('strict AI mode verifier validates the current build and reports artifact l
     'node scripts/check_ai_mode_project.cjs && node --test tests/ai-mode-*.test.js',
   );
   assert.match(output, /AI mode project verified/);
-  assert.match(output, /artifacts[\\/]ai-mode-project/);
+  assert.match(output, /(?:^|\r?\n)- \.(?:\r?\n|$)/);
   assert.match(output, /artifacts[\\/]ai-knowledge-base/);
 });
 
@@ -83,7 +81,10 @@ test('AI mode runbook documents build, upload, acceptance, and release isolation
   [
     'npm run build:ai-mode',
     'npm run check:ai-mode',
-    'artifacts/ai-mode-project/project.config.json',
+    '仓库根目录',
+    '微信开发者工具应直接导入仓库根目录',
+    'validate.mjs .',
+    'project.config.json',
     'artifacts/ai-knowledge-base/',
     '想喝点清爽不苦的',
     '配烧烤喝什么',
@@ -97,8 +98,11 @@ test('AI mode runbook documents build, upload, acceptance, and release isolation
     '看看我的收藏',
     '冷 IPA 和西海岸 IPA',
     '适合入门的文章',
-    '不得作为正式版本提交',
+    '官方 validator',
   ].forEach((phrase) => assert.equal(runbook.includes(phrase), true, phrase));
+  assert.equal(runbook.includes('artifacts/ai-mode-project/project.config.json'), false);
+  assert.equal(runbook.includes('唯一微信项目根目录是 `miniprogram/`'), false);
+  assert.equal(runbook.includes('直接导入 `miniprogram/`'), false);
 });
 
 function runBuild() {
@@ -110,11 +114,4 @@ function runBuild() {
 
 function readJson(filePath) {
   return JSON.parse(fs.readFileSync(filePath, 'utf8'));
-}
-
-function listFiles(dir) {
-  return fs.readdirSync(dir, { withFileTypes: true }).flatMap((entry) => {
-    const filePath = path.join(dir, entry.name);
-    return entry.isDirectory() ? listFiles(filePath) : [filePath];
-  });
 }

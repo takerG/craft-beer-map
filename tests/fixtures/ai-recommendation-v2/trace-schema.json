@@ -1,0 +1,93 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "traceSource",
+    "experimentId",
+    "experimentBuildId",
+    "sourceTreeFingerprint",
+    "catalogFingerprint",
+    "variant",
+    "recommendationContract",
+    "capturedAt",
+    "cases"
+  ],
+  "properties": {
+    "traceSource": { "enum": ["synthetic", "wechat-platform"] },
+    "experimentId": { "type": "string" },
+    "experimentBuildId": { "type": "string" },
+    "sourceTreeFingerprint": { "type": "string" },
+    "catalogFingerprint": { "type": "string" },
+    "variant": { "enum": ["control", "candidate"] },
+    "recommendationContract": { "enum": ["legacy-v1", "semantic-v2"] },
+    "capturedAt": { "type": "string" },
+    "cases": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "caseId", "testerCode", "turns", "assistantOutputs", "apiCalls",
+          "cardActions", "started", "shown", "completed"
+        ],
+        "properties": {
+          "caseId": { "type": "string" },
+          "testerCode": { "type": "string" },
+          "turns": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["turnId", "role", "content"],
+              "properties": {
+                "turnId": { "type": "string" },
+                "role": { "enum": ["user", "assistant"] },
+                "content": { "type": "string" }
+              }
+            }
+          },
+          "assistantOutputs": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["turnId", "content"],
+              "properties": {
+                "turnId": { "type": "string" },
+                "content": { "type": "string" }
+              }
+            }
+          },
+          "apiCalls": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["name", "arguments", "result"],
+              "properties": {
+                "name": { "type": "string" },
+                "arguments": {},
+                "result": {}
+              }
+            }
+          },
+          "cardActions": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["type", "status"],
+              "properties": {
+                "type": { "type": "string" },
+                "status": { "enum": ["success", "failure"] }
+              }
+            }
+          },
+          "started": { "type": "boolean" },
+          "shown": { "type": "boolean" },
+          "completed": { "type": "boolean" }
+        }
+      }
+    }
+  }
+}

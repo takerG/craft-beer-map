@@ -3,8 +3,8 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import path from 'node:path';
 
-import { getAcademyHome, getAcademySites } from '../miniprogram/utils/academy-feed-model.js';
-import { getAcademyArticle } from '../miniprogram/subpages/utils/academy-model.js';
+import { getAcademyHome, getAcademySites } from '../utils/academy-feed-model.js';
+import { getAcademyArticle } from '../subpages/utils/academy-model.js';
 
 const root = process.cwd();
 const academyRoot = path.join(root, 'academy-sites');
@@ -95,7 +95,7 @@ test('academy feed sites omit thumbnail image payload', () => {
 });
 
 test('generated academy data omits local cover image payload', async () => {
-  const { academySites } = await import('../miniprogram/data/academy-sites.js');
+  const { academySites } = await import('../data/academy-sites.js');
 
   academySites.forEach((site) => {
     assert.equal(Object.hasOwn(site, 'coverImage'), false, `${site.slug} generated data should not reference local covers`);
@@ -121,7 +121,7 @@ test('academy home exposes feed type filters with counts', () => {
 });
 
 test('academy feed filter strip keeps a fixed horizontal scroll height', () => {
-  const wxss = fs.readFileSync(path.join(root, 'miniprogram/pages/academy/index.wxss'), 'utf8');
+  const wxss = fs.readFileSync(path.join(root, 'pages/academy/index.wxss'), 'utf8');
   const filterStripRule = wxss.match(/\.filter-strip\s*\{(?<body>[\s\S]*?)\}/);
 
   assert.ok(filterStripRule, 'academy filter strip styles should exist');

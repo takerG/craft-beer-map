@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "status": "blocked",
+  "checkedAt": null,
+  "appIdPermissionConfirmed": false,
+  "devToolsVersion": null,
+  "baseLibraryVersion": null,
+  "capabilities": {
+    "officialValidator": { "status": "unverified", "evidence": null },
+    "halfScreenSendFollowUp": { "status": "unverified", "evidence": null },
+    "halfScreenStructuredInput": { "status": "unverified", "evidence": null },
+    "expirePreviousCards": { "status": "unverified", "evidence": null },
+    "expireAllCards": { "status": "unverified", "evidence": null },
+    "overflowNotification": { "status": "unverified", "evidence": null },
+    "ordinaryPageAnalytics": { "status": "unverified", "evidence": null }
+  }
+}

@@ -1,18 +1,5 @@
-const { catalog, runtime } = require('../utils/catalog.js');
-const { success } = require('../utils/result.js');
+const experiment = require('../generated/experiment.js');
 
-async function recommendBeerStyles({ preferences = {}, limit = 6 } = {}) {
-  const items = runtime.recommendBeerStyles(catalog, preferences, limit);
-
-  return success(
-    `已按当前口味偏好生成 ${items.length} 个候选。请展示推荐卡片，不要用纯文本重复完整列表。`,
-    {
-      items,
-      total: items.length,
-      preferences,
-    },
-    { viewItems: items },
-  );
-}
-
-module.exports = recommendBeerStyles;
+module.exports = experiment.recommendationContract === 'semantic-v2'
+  ? require('./recommendBeerStylesCandidate.js')
+  : require('./recommendBeerStylesControl.js');

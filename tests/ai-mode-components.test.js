@@ -5,14 +5,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 const root = process.cwd();
-const skillRoot = path.join(
-  root,
-  'artifacts',
-  'ai-mode-project',
-  'miniprogram',
-  'skills',
-  'craft-beer-guide',
-);
+const skillRoot = path.join(root, 'skills', 'craft-beer-guide');
 const componentNames = [
   'style-list-card',
   'style-detail-card',
@@ -57,10 +50,24 @@ test('atomic components consume modelContext results and keep interactions const
     assert.match(js, /wx\.modelContext\.getContext\(this\)/, `${name} model context`);
     assert.match(js, /wx\.modelContext\.getViewContext\(this\)/, `${name} view context`);
     assert.match(js, /NotificationType\.Result/, `${name} result notification`);
-    assert.match(wxss, /\bheight:\s*\d+rpx;/, `${name} fixed height`);
+    assert.match(js, /NotificationType\.Overflow/, `${name} overflow notification`);
+    assert.match(js, /\[ai-mode\].*overflow monitor=on/, `${name} overflow monitor log`);
+    const rootClass = wxml.match(/<view[^>]*class="([^"]+)"/)?.[1].split(/\s+/)[0];
+    const rootRule = rootClass
+      ? wxss.match(new RegExp(`\\.${rootClass}\\s*\\{([^}]*)\\}`, 's'))?.[1] || ''
+      : '';
+    assert.ok(rootClass, `${name} root class`);
+    assert.doesNotMatch(
+      rootRule,
+      /(?:^|;)\s*(?:min-|max-)?height\s*:/,
+      `${name} root height must be host-controlled`,
+    );
     assert.doesNotMatch(wxss, /overflow-y/, `${name} vertical scrolling`);
     assert.doesNotMatch(wxml, /bind(?!tap)[a-z]+=/i, `${name} only tap bindings`);
     assert.doesNotMatch(wxml, /<image\b/i, `${name} no first-phase images`);
+    [...wxml.matchAll(/<[^>]+\bbindtap="[^"]+"[^>]*>/g)].forEach((match) => {
+      assert.match(match[0], /\bhover-class="[^"]+"/, `${name} tap target hover class`);
+    });
     assert.doesNotMatch(
       js,
       /wx\.(?:navigateTo|redirectTo|switchTab|reLaunch|request)|setTimeout|setInterval/,
@@ -69,14 +76,14 @@ test('atomic components consume modelContext results and keep interactions const
   });
 });
 
-test('favorite status cards expire earlier mutation cards', () => {
+test('favorite status cards expire earlier cards without an unverified notification', () => {
   const source = fs.readFileSync(
     path.join(skillRoot, 'components', 'favorite-status-card', 'index.js'),
     'utf8',
   );
 
   assert.match(source, /expirePreviousCards/);
-  assert.match(source, /NotificationType\.Expire/);
+  assert.doesNotMatch(source, /NotificationType\.Expire/);
 });
 
 function readJson(filePath) {

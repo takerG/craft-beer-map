@@ -1,0 +1,51 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "experimentId",
+    "experimentBuildId",
+    "rosterOwner",
+    "reviewer",
+    "auditAt",
+    "windowStartedAt",
+    "windowEndedAt",
+    "testers"
+  ],
+  "properties": {
+    "experimentId": { "type": "string" },
+    "experimentBuildId": { "type": "string" },
+    "rosterOwner": { "type": "string" },
+    "reviewer": { "type": "string" },
+    "auditAt": { "type": "string" },
+    "windowStartedAt": { "type": "string" },
+    "windowEndedAt": { "type": "string" },
+    "testers": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "testerCode", "assignedVariant", "observedVariants",
+          "executedCaseIds", "countedStartedFlows"
+        ],
+        "properties": {
+          "testerCode": { "type": "string" },
+          "assignedVariant": { "enum": ["control", "candidate"] },
+          "observedVariants": {
+            "type": "array",
+            "items": { "enum": ["control", "candidate"] }
+          },
+          "executedCaseIds": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "countedStartedFlows": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 5
+          }
+        }
+      }
+    }
+  }
+}

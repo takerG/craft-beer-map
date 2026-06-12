@@ -1,0 +1,80 @@
+{
+  "pages": [
+    {
+      "path": "pages/explore/index",
+      "name": "精酿风格探索",
+      "description": "浏览 BJCP 2021 标准风格大类、市场扩展风格与高频风格入口。"
+    },
+    {
+      "path": "pages/choose/index",
+      "name": "今晚择饮",
+      "description": "按饮用场景和甜度、酸度、苦味、酒体、强度偏好推荐啤酒风格。"
+    },
+    {
+      "path": "pages/academy/index",
+      "name": "精酿学院",
+      "description": "按发布时间浏览精酿概念、风格辨析与感官训练文章。"
+    },
+    {
+      "path": "pages/favorites/index",
+      "name": "我的风格收藏",
+      "description": "查看保存在当前设备上的啤酒风格收藏。"
+    },
+    {
+      "path": "pages/search/index",
+      "name": "风格搜索",
+      "description": "按 BJCP 编号、中文名、英文名或常见叫法搜索标准与市场扩展风格。"
+    },
+    {
+      "path": "subpages/style/index",
+      "name": "BJCP 风格详情",
+      "description": "展示一个 BJCP 官方标准风格的感官描述、参数、标签与相关风格。",
+      "query": {
+        "type": "object",
+        "properties": {
+          "styleId": {
+            "type": "string",
+            "description": "BJCP 风格编号，例如 21A。"
+          }
+        },
+        "required": [
+          "styleId"
+        ]
+      }
+    },
+    {
+      "path": "subpages/extension-style/index",
+      "name": "市场扩展风格详情",
+      "description": "展示一个 BA/WBC/GABF 市场扩展风格及其接近的 BJCP 对照入口。",
+      "query": {
+        "type": "object",
+        "properties": {
+          "styleId": {
+            "type": "string",
+            "description": "市场扩展风格稳定 ID。"
+          }
+        },
+        "required": [
+          "styleId"
+        ]
+      }
+    },
+    {
+      "path": "subpages/academy-article/index",
+      "name": "精酿学院文章",
+      "description": "阅读一篇仓库内的精酿概念、风格辨析或感官训练文章。",
+      "query": {
+        "type": "object",
+        "properties": {
+          "slug": {
+            "type": "string",
+            "description": "学院文章稳定 slug。"
+          }
+        },
+        "required": [
+          "slug"
+        ]
+      }
+    }
+  ]
+}

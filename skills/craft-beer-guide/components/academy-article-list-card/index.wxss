@@ -1,0 +1,52 @@
+.card-shell {
+  box-sizing: border-box;
+  padding: 28rpx;
+  overflow: hidden;
+  color: #f7f2e8;
+  background: #151d27;
+  border: 1rpx solid #2b3948;
+  border-radius: 28rpx;
+}
+
+.card-title {
+  display: block;
+  margin-bottom: 12rpx;
+  font-size: 34rpx;
+  font-weight: 700;
+}
+
+.article-row {
+  padding: 18rpx 0;
+  border-top: 1rpx solid #283442;
+}
+
+.article-meta {
+  display: flex;
+  justify-content: space-between;
+  color: #93a1b3;
+  font-size: 20rpx;
+}
+
+.article-title,
+.article-description {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.article-title {
+  margin-top: 8rpx;
+  font-size: 27rpx;
+  font-weight: 600;
+}
+
+.article-description {
+  margin-top: 5rpx;
+  color: #b8c3d0;
+  font-size: 22rpx;
+}
+
+.tap-hover {
+  opacity: 0.78;
+}
