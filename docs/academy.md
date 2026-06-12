@@ -33,13 +33,13 @@ academy-sites/
 npm run build:academy
 ```
 
-构建会生成 `miniprogram/data/academy-sites.js`。为控制小程序代码包大小，feed 不再生成本地封面图。常规 `npm run build:mini-data` 也会顺带执行学院内容构建。
+构建会生成 `data/academy-sites.js`。为控制小程序代码包大小，feed 不再生成本地封面图。常规 `npm run build:mini-data` 也会顺带执行学院内容构建。
 
 ## 小程序入口
 
-- `miniprogram/pages/academy/`：学院 tab 首页。
-- `miniprogram/pages/academy-article/`：通用互动文章宿主页。
-- `miniprogram/utils/academy-feed-model.js`：学院首页 feed 数据模型。
-- `miniprogram/subpages/utils/academy-model.js`：学院文章详情数据模型，随内容分包加载。
+- `pages/academy/`：学院 tab 首页。
+- `subpages/academy-article/`：通用互动文章宿主页。
+- `utils/academy-feed-model.js`：学院首页 feed 数据模型。
+- `subpages/utils/academy-model.js`：学院文章详情数据模型，随内容分包加载。
 
 新增内容时，优先新增 `academy-sites/<slug>/meta.json`、`publish.json` 和 `content.json`，再运行 `npm run build:academy`。

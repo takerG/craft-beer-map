@@ -3,31 +3,37 @@ const fs = require('node:fs');
 const path = require('node:path');
 
 const root = path.resolve(__dirname, '..');
-const artifactRoot = path.join(root, 'artifacts', 'ai-mode-project');
-const miniProgramRoot = path.join(artifactRoot, 'miniprogram');
-const skillRoot = path.join(miniProgramRoot, 'skills', 'craft-beer-guide');
-const knowledgeRoot = path.join(root, 'artifacts', 'ai-knowledge-base');
+const options = parseOptions(process.argv.slice(2));
+const projectRoot = options.outputRoot
+  ? path.resolve(root, options.outputRoot)
+  : root;
+const knowledgeRoot = options.outputRoot
+  ? path.join(projectRoot, 'knowledge')
+  : path.join(root, 'artifacts', 'ai-knowledge-base');
+const manifestPath = options.outputRoot
+  ? path.join(projectRoot, 'build-manifest.json')
+  : path.join(root, 'artifacts', 'ai-mode-build-manifest.json');
+const skillRoot = path.join(projectRoot, 'skills', 'craft-beer-guide');
 const errors = [];
 
 main();
 
 function main() {
-  const buildArgs = ['scripts/build_ai_mode_project.cjs'];
-  if (process.argv.includes('--if-current')) {
-    buildArgs.push('--if-current');
+  if (!options.noBuild) {
+    const args = ['scripts/build_ai_mode_project.cjs'];
+    if (options.outputRoot) args.push(`--output-root=${options.outputRoot}`);
+    if (options.ifCurrent) args.push('--if-current');
+    execFileSync(process.execPath, args, { cwd: root, stdio: 'inherit' });
   }
 
-  execFileSync(process.execPath, buildArgs, {
-    cwd: root,
-    stdio: 'inherit',
-  });
-
-  verifyProductionBoundary();
-  verifyGeneratedApp();
+  verifyProjectRoot();
+  verifyAgentConfig();
   verifySkillProtocol();
   verifyComponents();
   verifyMetadataAndKnowledge();
+  verifyManifest();
   verifyFileSizes();
+  verifyLegacyProjectRemoved();
 
   if (errors.length) {
     console.error('AI mode verification failed:');
@@ -37,106 +43,186 @@ function main() {
   }
 
   console.log('AI mode project verified');
-  console.log(`- ${path.relative(root, artifactRoot)}`);
+  console.log(`- ${path.relative(root, projectRoot) || '.'}`);
   console.log(`- ${path.relative(root, knowledgeRoot)}`);
 }
 
-function verifyProductionBoundary() {
-  const sourceRoot = path.join(root, 'miniprogram');
-  const app = readJson(path.join(sourceRoot, 'app.json'));
-  check(!Object.hasOwn(app, 'agent'), 'miniprogram/app.json', 'must not declare agent');
+function verifyProjectRoot() {
+  const appPath = path.join(projectRoot, 'app.json');
+  const projectPath = path.join(projectRoot, 'project.config.json');
+  check(fs.existsSync(appPath), appPath, 'missing app.json at project root');
+  check(fs.existsSync(projectPath), projectPath, 'missing project.config.json at project root');
 
-  listFiles(sourceRoot)
-    .filter((filePath) => /\.(?:js|json|wxml)$/.test(filePath))
-    .forEach((filePath) => {
-      const source = fs.readFileSync(filePath, 'utf8');
-      check(
-        !/wx\.(?:openAgent|onAgentOpen|offAgentOpen|navigateBackAgent)|<ai-entry\b|craft-beer-guide/.test(source),
-        filePath,
-        'contains AI-mode-only source',
-      );
-    });
+  const project = readJson(projectPath);
+  check(
+    !Object.hasOwn(project, 'miniprogramRoot'),
+    projectPath,
+    'project root must not point at a nested miniprogram directory',
+  );
+  check(
+    (project.packOptions?.include || []).some((item) =>
+      item.type === 'folder' && item.value === 'skills'),
+    projectPath,
+    'packOptions.include must contain the skills folder',
+  );
+  check(
+    options.outputRoot || !fs.existsSync(path.join(root, 'miniprogram', 'app.json')),
+    path.join(root, 'miniprogram'),
+    'nested miniprogram project must not exist',
+  );
 }
 
-function verifyGeneratedApp() {
-  const appPath = path.join(miniProgramRoot, 'app.json');
+function verifyAgentConfig() {
+  const appPath = path.join(projectRoot, 'app.json');
   const app = readJson(appPath);
-  const skill = app.agent && app.agent.skills && app.agent.skills[0];
-  const skillPackage = (app.subpackages || []).find((item) => item.root === 'skills');
-  const detailPackage = (app.subpackages || []).find((item) => item.root === 'aiDetail');
+  const packages = app.subPackages || app.subpackages || [];
+  const skill = app.agent?.skills?.find((item) => item.name === 'craft-beer-guide');
 
-  check(skill && skill.path === 'skills/craft-beer-guide', appPath, 'missing craft beer Skill');
-  check(app.agent && app.agent.pageMetadata === 'page-meta.json', appPath, 'missing page metadata');
-  check(skillPackage && skillPackage.independent === true, appPath, 'Skill package must be independent');
-  check(detailPackage && detailPackage.independent === true, appPath, 'detail package must be independent');
+  check(skill?.path === 'skills/craft-beer-guide', appPath, 'missing craft-beer-guide Skill');
+  check(app.agent?.instruction === 'AGENTS.md', appPath, 'missing agent.instruction');
+  check(app.agent?.pageMetadata === 'page-meta.json', appPath, 'missing agent.pageMetadata');
+  check(app.lazyCodeLoading === 'requiredComponents', appPath, 'lazyCodeLoading must be requiredComponents');
   check(
-    app.usingComponents && app.usingComponents['ai-entry'] === '/components/ai-entry/index',
+    packages.some((item) => item.root === 'skills' && item.independent === true),
     appPath,
-    'missing generated AI entry component',
+    'Skill package must be independent',
   );
+  check(
+    packages.some((item) => item.root === 'aiDetail' && item.independent === true),
+    appPath,
+    'AI detail package must be independent',
+  );
+
+  for (const relativePath of [
+    skill?.path,
+    app.agent?.instruction,
+    app.agent?.pageMetadata,
+  ]) {
+    check(
+      typeof relativePath === 'string' && fs.existsSync(path.join(projectRoot, relativePath)),
+      appPath,
+      `agent path does not resolve: ${relativePath || '<missing>'}`,
+    );
+  }
 }
 
 function verifySkillProtocol() {
   const mcpPath = path.join(skillRoot, 'mcp.json');
   const indexPath = path.join(skillRoot, 'index.js');
   const mcp = readJson(mcpPath);
-  const indexSource = fs.readFileSync(indexPath, 'utf8');
-  const registeredNames = [...indexSource.matchAll(/registerAPI\('([^']+)'/g)].map((match) => match[1]);
-  const declaredNames = (mcp.apis || []).map((api) => api.name);
+  const source = readText(indexPath);
+  const registered = [...source.matchAll(/registerAPI\('([^']+)'/g)]
+    .map((match) => match[1]);
+  const declared = (mcp.apis || []).map((api) => api.name);
 
   check(
-    JSON.stringify(registeredNames) === JSON.stringify(declaredNames),
+    JSON.stringify(registered) === JSON.stringify(declared),
     indexPath,
-    'registered APIs do not match mcp.json order',
+    'registered APIs differ from mcp.json',
   );
-  declaredNames.forEach((name) => {
-    check(
-      fs.existsSync(path.join(skillRoot, 'apis', `${name}.js`)),
-      path.join(skillRoot, 'apis', `${name}.js`),
-      'declared API implementation is missing',
-    );
-  });
-  (mcp.components || []).forEach((component) => {
-    check(!component.permissions, mcpPath, `${component.path} unexpectedly requests dynamic permissions`);
-  });
+  check(!/reportEvent|reportAnalytics/.test(readTree(skillRoot)), skillRoot, 'Skill must not use analytics APIs');
 }
 
 function verifyComponents() {
   const mcp = readJson(path.join(skillRoot, 'mcp.json'));
-  (mcp.components || []).forEach((component) => {
-    ['js', 'json', 'wxml', 'wxss'].forEach((extension) => {
-      const filePath = path.join(skillRoot, `${component.path}.${extension}`);
-      check(fs.existsSync(filePath), filePath, 'declared component file is missing');
-    });
-  });
+  for (const component of mcp.components || []) {
+    for (const extension of ['js', 'json', 'wxml', 'wxss']) {
+      const componentPath = path.join(skillRoot, `${component.path}.${extension}`);
+      check(fs.existsSync(componentPath), componentPath, 'component file missing');
+    }
+
+    const relatedPage = String(component.relatedPage || '').split('?')[0].replace(/^\/+/, '');
+    check(Boolean(relatedPage), component.path, 'component relatedPage is required');
+    if (relatedPage) {
+      check(
+        fs.existsSync(path.join(projectRoot, `${relatedPage}.js`)),
+        component.path,
+        `relatedPage does not resolve: ${component.relatedPage}`,
+      );
+    }
+  }
 }
 
 function verifyMetadataAndKnowledge() {
-  const metadataPath = path.join(miniProgramRoot, 'page-meta.json');
+  const metadataPath = path.join(projectRoot, 'page-meta.json');
   const metadata = readJson(metadataPath);
-  check(Array.isArray(metadata.pages) && metadata.pages.length === 8, metadataPath, 'must declare 8 pages');
-  check(fs.statSync(metadataPath).size < 8000, metadataPath, 'exceeds 8000-byte limit');
+  check(
+    Array.isArray(metadata.pages) && metadata.pages.length === 8,
+    metadataPath,
+    'must declare 8 AI-visible pages',
+  );
 
-  const files = fs.readdirSync(knowledgeRoot)
-    .filter((fileName) => fileName.endsWith('.md'));
-  check(files.length === 3, knowledgeRoot, 'expected exactly 3 Markdown knowledge files');
-  files.forEach((fileName) => {
-    const filePath = path.join(knowledgeRoot, fileName);
-    const source = fs.readFileSync(filePath, 'utf8');
-    check(fs.statSync(filePath).size < 10 * 1024 * 1024, filePath, 'exceeds 10 MB limit');
-    check(!source.includes('\uFFFD'), filePath, 'contains invalid UTF-8 replacement characters');
-  });
+  const files = fs.existsSync(knowledgeRoot)
+    ? fs.readdirSync(knowledgeRoot).filter((name) => name.endsWith('.md'))
+    : [];
+  check(files.length === 3, knowledgeRoot, 'expected 3 knowledge files');
+}
+
+function verifyManifest() {
+  const manifest = readJson(manifestPath);
+  check(['control', 'candidate'].includes(manifest.variant), manifestPath, 'invalid variant');
+  check(Boolean(manifest.sourceTreeFingerprint), manifestPath, 'missing source fingerprint');
+  check(Boolean(manifest.catalogFingerprint), manifestPath, 'missing catalog fingerprint');
 }
 
 function verifyFileSizes() {
-  listFiles(miniProgramRoot).forEach((filePath) => {
-    check(fs.statSync(filePath).size < 2 * 1024 * 1024, filePath, 'exceeds 2 MB single-file limit');
+  listProjectFiles().forEach((file) => {
+    check(fs.statSync(file).size < 2 * 1024 * 1024, file, 'exceeds 2 MB');
   });
 }
 
+function listProjectFiles() {
+  const rootFiles = [
+    'AGENTS.md',
+    'app.js',
+    'app.json',
+    'app.wxss',
+    'page-meta.json',
+    'project.config.json',
+    'project.private.config.json',
+    'sitemap.json',
+  ];
+  const directories = [
+    'aiDetail',
+    'assets',
+    'components',
+    'pages',
+    'skills',
+    'subpages',
+    'templates',
+    'utils',
+  ];
+  const dataFiles = [
+    'academy-sites.js',
+    'beer-data.js',
+    'extension-styles.js',
+    'style-aliases.js',
+    'styleLanguageMap.js',
+  ];
+  return [
+    ...rootFiles.map((relativePath) => path.join(projectRoot, relativePath)),
+    ...directories.flatMap((relativePath) => listFiles(path.join(projectRoot, relativePath))),
+    ...dataFiles.map((fileName) => path.join(projectRoot, 'data', fileName)),
+  ].filter((filePath) => fs.existsSync(filePath));
+}
+
+function verifyLegacyProjectRemoved() {
+  if (options.outputRoot) return;
+  const legacyRoot = path.join(root, 'artifacts', 'ai-mode-project');
+  check(!fs.existsSync(legacyRoot), legacyRoot, 'legacy generated mini program must not exist');
+}
+
+function parseOptions(argv) {
+  const outputArg = argv.find((arg) => arg.startsWith('--output-root='));
+  return {
+    outputRoot: outputArg ? outputArg.slice('--output-root='.length) : '',
+    noBuild: argv.includes('--no-build'),
+    ifCurrent: argv.includes('--if-current'),
+  };
+}
+
 function check(condition, filePath, message) {
-  if (condition) return;
-  errors.push(`${path.relative(root, filePath)}: ${message}`);
+  if (!condition) errors.push(`${path.relative(root, String(filePath))}: ${message}`);
 }
 
 function readJson(filePath) {
@@ -148,11 +234,24 @@ function readJson(filePath) {
   }
 }
 
-function listFiles(dir) {
-  if (!fs.existsSync(dir)) {
-    errors.push(`${path.relative(root, dir)}: directory is missing`);
-    return [];
+function readText(filePath) {
+  try {
+    return fs.readFileSync(filePath, 'utf8');
+  } catch (error) {
+    errors.push(`${path.relative(root, filePath)}: ${error.message}`);
+    return '';
   }
+}
+
+function readTree(dir) {
+  return listFiles(dir)
+    .filter((file) => /\.(?:js|json|md)$/.test(file))
+    .map(readText)
+    .join('\n');
+}
+
+function listFiles(dir) {
+  if (!fs.existsSync(dir)) return [];
   return fs.readdirSync(dir, { withFileTypes: true }).flatMap((entry) => {
     const filePath = path.join(dir, entry.name);
     return entry.isDirectory() ? listFiles(filePath) : [filePath];

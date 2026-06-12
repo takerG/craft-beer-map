@@ -1,0 +1,39 @@
+<view class="recommendation-card">
+  <view class="card-head">
+    <text class="card-title">为你推荐</text>
+    <view
+      class="adjust-action"
+      hover-class="tap-hover"
+      hover-stay-time="80"
+      bindtap="onTapAdjust"
+    >调整偏好</view>
+  </view>
+  <view wx:if="{{explanation.matched.length}}" class="summary">
+    {{explanation.matched.join(' · ')}}
+  </view>
+  <view wx:for="{{items}}" wx:key="id" class="style-item">
+    <view class="style-copy">
+      <text class="style-name">{{item.displayName}}</text>
+      <text class="style-reason">{{item.explanation.matched.join(' · ')}}</text>
+      <text wx:if="{{item.explanation.tradeoffs.length}}" class="style-tradeoff">
+        {{item.explanation.tradeoffs.join(' · ')}}
+      </text>
+    </view>
+    <view class="actions">
+      <view
+        class="action"
+        data-item="{{item}}"
+        hover-class="tap-hover"
+        hover-stay-time="80"
+        bindtap="onTapDetail"
+      >详情</view>
+      <view
+        class="action primary"
+        data-item="{{item}}"
+        hover-class="tap-hover"
+        hover-stay-time="80"
+        bindtap="onTapFavorite"
+      >收藏</view>
+    </view>
+  </view>
+</view>

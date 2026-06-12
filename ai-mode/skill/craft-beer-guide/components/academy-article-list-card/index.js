@@ -6,11 +6,10 @@ Component({
 
   lifetimes: {
     created() {
-      this._modelCtx = wx.modelContext.getContext(this);
-      this._viewCtx = wx.modelContext.getViewContext(this);
+      const modelContext = wx.modelContext.getContext(this);
       const { NotificationType } = wx.modelContext;
 
-      this._modelCtx.on(NotificationType.Result, (data) => {
+      modelContext.on(NotificationType.Result, (data) => {
         const result = data && data.result ? data.result : {};
         const content = result.structuredContent || {};
         const meta = result._meta || {};
@@ -26,8 +25,9 @@ Component({
     onTapArticle(event) {
       const item = event.currentTarget.dataset.item;
       if (!item || !item.route) return;
-      this._viewCtx.setRelatedPage({ query: `slug=${encodeURIComponent(item.slug)}` });
-      this._viewCtx.openDetailPage({ url: item.route });
+      const viewContext = wx.modelContext.getViewContext(this);
+      viewContext.setRelatedPage({ query: `slug=${encodeURIComponent(item.slug)}` });
+      viewContext.openDetailPage({ url: item.route });
     },
   },
 });

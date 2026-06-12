@@ -1,0 +1,28 @@
+.ai-entry {
+  position: fixed;
+  right: 28rpx;
+  bottom: 154rpx;
+  z-index: 80;
+  display: flex;
+  align-items: center;
+  gap: 10rpx;
+  padding: 18rpx 24rpx;
+  color: #111820;
+  background: #f6ad55;
+  border: 1rpx solid rgba(255, 255, 255, 0.35);
+  border-radius: 999rpx;
+  box-shadow: 0 14rpx 36rpx rgba(0, 0, 0, 0.3);
+  font-size: 25rpx;
+  font-weight: 700;
+}
+
+.ai-entry--pressed {
+  opacity: 0.82;
+}
+
+.ai-entry-dot {
+  width: 14rpx;
+  height: 14rpx;
+  background: #fff8e8;
+  border-radius: 50%;
+}

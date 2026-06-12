@@ -5,7 +5,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 const root = process.cwd();
-const artifactRoot = path.join(root, 'artifacts', 'ai-mode-project');
+const miniProgramRoot = root;
 const knowledgeRoot = path.join(root, 'artifacts', 'ai-knowledge-base');
 const expectedPagePaths = [
   'pages/explore/index',
@@ -26,7 +26,7 @@ test.before(() => {
 });
 
 test('generated page metadata covers the AI-visible mini program pages', () => {
-  const metadataPath = path.join(artifactRoot, 'miniprogram', 'page-meta.json');
+  const metadataPath = path.join(miniProgramRoot, 'page-meta.json');
   const metadata = readJson(metadataPath);
 
   assert.deepEqual(metadata.pages.map((page) => page.path), expectedPagePaths);
@@ -57,7 +57,7 @@ test('knowledge-base files are generated from current repository content', () =>
 });
 
 test('AI operator instructions prohibit external factual supplementation', () => {
-  const instructions = fs.readFileSync(path.join(artifactRoot, 'AGENTS.md'), 'utf8');
+  const instructions = fs.readFileSync(path.join(miniProgramRoot, 'AGENTS.md'), 'utf8');
 
   [
     '只使用本仓库',

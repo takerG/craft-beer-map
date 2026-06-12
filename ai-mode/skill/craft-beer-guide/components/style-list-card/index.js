@@ -9,11 +9,10 @@ Component({
 
   lifetimes: {
     created() {
-      this._modelCtx = wx.modelContext.getContext(this);
-      this._viewCtx = wx.modelContext.getViewContext(this);
+      const modelContext = wx.modelContext.getContext(this);
       const { NotificationType } = wx.modelContext;
 
-      this._modelCtx.on(NotificationType.Result, (data) => {
+      modelContext.on(NotificationType.Result, (data) => {
         const result = data && data.result ? data.result : {};
         const content = result.structuredContent || {};
         const meta = result._meta || {};
@@ -27,7 +26,10 @@ Component({
           keyword,
           title: keyword ? `“${keyword}”搜索结果` : '风格推荐',
         });
-        if (keyword) this._viewCtx.setRelatedPage({ query: `keyword=${encodeURIComponent(keyword)}` });
+        if (keyword) {
+          wx.modelContext.getViewContext(this)
+            .setRelatedPage({ query: `keyword=${encodeURIComponent(keyword)}` });
+        }
       });
     },
   },
@@ -37,7 +39,7 @@ Component({
       const item = event.currentTarget.dataset.item;
       if (!item || !item.styleRef) return;
 
-      this._modelCtx.sendFollowUpMessage({
+      wx.modelContext.getContext(this).sendFollowUpMessage({
         content: [
           { type: 'text', text: `查看${item.displayName}的风格详情` },
           {
@@ -52,7 +54,7 @@ Component({
     },
 
     onTapMore() {
-      this._viewCtx.openDetailPage({
+      wx.modelContext.getViewContext(this).openDetailPage({
         url: this.data.keyword
           ? `/aiDetail/pages/style-results/index?keyword=${encodeURIComponent(this.data.keyword)}`
           : '/aiDetail/pages/style-results/index',

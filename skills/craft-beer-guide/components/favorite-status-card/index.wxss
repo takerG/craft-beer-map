@@ -1,0 +1,43 @@
+.card-shell {
+  box-sizing: border-box;
+  padding: 30rpx;
+  overflow: hidden;
+  color: #f7f2e8;
+  background: #17231f;
+  border: 1rpx solid #2f5a49;
+  border-radius: 28rpx;
+}
+
+.card-expired {
+  opacity: 0.48;
+}
+
+.status-kicker,
+.style-name {
+  display: block;
+  color: #94a3b8;
+  font-size: 23rpx;
+}
+
+.status-title {
+  display: block;
+  margin-top: 14rpx;
+  color: #6ee7b7;
+  font-size: 36rpx;
+  font-weight: 700;
+}
+
+.style-name {
+  margin-top: 8rpx;
+  color: #dbe7df;
+}
+
+.favorites-action {
+  margin-top: 26rpx;
+  color: #6ee7b7;
+  font-size: 25rpx;
+}
+
+.tap-hover {
+  opacity: 0.78;
+}

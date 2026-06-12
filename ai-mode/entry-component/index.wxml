@@ -1,4 +1,0 @@
-<view wx:if="{{isSupported}}" class="ai-entry" bindtap="openAgent">
-  <view class="ai-entry-dot"></view>
-  <text>问 AI</text>
-</view>

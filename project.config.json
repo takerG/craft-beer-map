@@ -1,7 +1,6 @@
 {
   "appid": "wx1e433810aee059a1",
   "compileType": "miniprogram",
-  "miniprogramRoot": "miniprogram/",
   "projectname": "craft-beer-map",
   "setting": {
     "es6": true,
@@ -29,8 +28,120 @@
   },
   "simulatorPluginLibVersion": {},
   "packOptions": {
-    "ignore": [],
-    "include": []
+    "ignore": [
+      {
+        "type": "folder",
+        "value": ".claude"
+      },
+      {
+        "type": "folder",
+        "value": ".git"
+      },
+      {
+        "type": "folder",
+        "value": ".superpowers"
+      },
+      {
+        "type": "folder",
+        "value": ".worktrees"
+      },
+      {
+        "type": "folder",
+        "value": "academy-sites"
+      },
+      {
+        "type": "folder",
+        "value": "ai-mode"
+      },
+      {
+        "type": "folder",
+        "value": "artifacts"
+      },
+      {
+        "type": "folder",
+        "value": "cli-agent-run"
+      },
+      {
+        "type": "folder",
+        "value": "docs"
+      },
+      {
+        "type": "folder",
+        "value": "node_modules"
+      },
+      {
+        "type": "folder",
+        "value": "scripts"
+      },
+      {
+        "type": "folder",
+        "value": "tests"
+      },
+      {
+        "type": "folder",
+        "value": "tmp"
+      },
+      {
+        "type": "folder",
+        "value": "vendor"
+      },
+      {
+        "type": "file",
+        "value": ".gitignore"
+      },
+      {
+        "type": "file",
+        "value": "bjcp_2015_guidelines_cn.pdf"
+      },
+      {
+        "type": "file",
+        "value": "CLAUDE.md"
+      },
+      {
+        "type": "file",
+        "value": "package.json"
+      },
+      {
+        "type": "file",
+        "value": "README.md"
+      },
+      {
+        "type": "file",
+        "value": "requirements.txt"
+      },
+      {
+        "type": "file",
+        "value": "data/beer-data-source.json"
+      },
+      {
+        "type": "file",
+        "value": "data/style-language-map.json"
+      }
+    ],
+    "include": [
+      {
+        "type": "folder",
+        "value": "skills"
+      }
+    ]
   },
-  "editorSetting": {}
+  "editorSetting": {},
+  "watchOptions": {
+    "ignore": [
+      ".claude/**/*",
+      ".git/**/*",
+      ".superpowers/**/*",
+      ".worktrees/**/*",
+      "academy-sites/**/*",
+      "ai-mode/**/*",
+      "artifacts/**/*",
+      "cli-agent-run/**/*",
+      "docs/**/*",
+      "node_modules/**/*",
+      "scripts/**/*",
+      "tests/**/*",
+      "tmp/**/*",
+      "vendor/**/*"
+    ]
+  }
 }

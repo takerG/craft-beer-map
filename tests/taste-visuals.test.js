@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 
-import { buildFlavorWheelVisual } from '../miniprogram/utils/taste-visuals.js';
+import { buildFlavorWheelVisual } from '../utils/taste-visuals.js';
 
 const filters = [
   { id: 'sweetness', label: 'sweetness' },

@@ -1,0 +1,617 @@
+{
+  "apis": [
+    {
+      "name": "searchBeerStyles",
+      "description": "按用户明确提供的编号、名称或叫法搜索风格。",
+      "inputSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "query": { "type": "string" },
+          "limit": { "type": "integer", "minimum": 1, "maximum": 30 }
+        },
+        "required": ["query"]
+      },
+      "outputSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "styleRef": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "properties": {
+                    "kind": { "type": "string", "enum": ["bjcp", "extension"] },
+                    "id": { "type": "string" }
+                  },
+                  "required": ["kind", "id"]
+                },
+                "id": { "type": "string" },
+                "kind": { "type": "string", "enum": ["bjcp", "extension"] },
+                "code": { "type": "string" },
+                "displayName": { "type": "string" },
+                "name_zh": { "type": "string" },
+                "name_en": { "type": "string" },
+                "aliases": { "type": "array", "items": { "type": "string" } },
+                "sourceLabel": { "type": "string" },
+                "route": { "type": "string" }
+              },
+              "required": [
+                "styleRef", "id", "kind", "code", "displayName", "name_zh",
+                "name_en", "aliases", "sourceLabel", "route"
+              ]
+            }
+          },
+          "total": { "type": "integer" },
+          "keyword": { "type": "string" }
+        },
+        "required": ["items", "total", "keyword"]
+      },
+      "_meta": { "ui": { "componentPath": "components/style-list-card/index" } }
+    },
+    {
+      "name": "recommendBeerStyles",
+      "description": "根据完整语义口味快照推荐风格；后续修改必须使用最新流程修订号。",
+      "inputSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "scenario": {
+            "type": "string",
+            "enum": ["easy", "meal", "bold", "explore", "unspecified"]
+          },
+          "preferences": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "sweetness": { "$ref": "#/$defs/preference" },
+              "sourness": { "$ref": "#/$defs/preference" },
+              "bitterness": { "$ref": "#/$defs/preference" },
+              "body": { "$ref": "#/$defs/preference" },
+              "strength": { "$ref": "#/$defs/preference" }
+            },
+            "required": ["sweetness", "sourness", "bitterness", "body", "strength"]
+          },
+          "flow": {
+            "oneOf": [
+              {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "mode": { "const": "start" },
+                  "requestId": { "$ref": "#/$defs/requestId" }
+                },
+                "required": ["mode", "requestId"]
+              },
+              {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "mode": { "const": "continue" },
+                  "flowId": { "$ref": "#/$defs/flowId" },
+                  "expectedRevision": { "type": "integer", "minimum": 0 },
+                  "requestId": { "$ref": "#/$defs/requestId" }
+                },
+                "required": ["mode", "flowId", "expectedRevision", "requestId"]
+              }
+            ]
+          },
+          "limit": { "type": "integer", "minimum": 1, "maximum": 12 }
+        },
+        "required": ["scenario", "preferences", "flow"],
+        "$defs": {
+          "preference": {
+            "type": "string",
+            "enum": ["low", "neutral", "high", "unspecified"]
+          },
+          "flowId": {
+            "type": "string",
+            "pattern": "^arf_[0-9a-f]{12,32}$"
+          },
+          "requestId": {
+            "type": "string",
+            "pattern": "^req_[0-9a-f]{10,32}$"
+          }
+        }
+      },
+      "outputSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "contract": { "const": "semantic-v2" },
+          "status": {
+            "type": "string",
+            "enum": ["recommended", "needs-clarification", "conflict", "no-compatible-match"]
+          },
+          "flow": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "flowId": { "type": "string" },
+              "revision": { "type": "integer" },
+              "refined": { "type": "boolean" }
+            },
+            "required": ["flowId", "revision", "refined"]
+          },
+          "snapshot": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "scenario": {
+                "type": "string",
+                "enum": ["easy", "meal", "bold", "explore", "unspecified"]
+              },
+              "preferences": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "sweetness": { "type": "string", "enum": ["low", "neutral", "high", "unspecified"] },
+                  "sourness": { "type": "string", "enum": ["low", "neutral", "high", "unspecified"] },
+                  "bitterness": { "type": "string", "enum": ["low", "neutral", "high", "unspecified"] },
+                  "body": { "type": "string", "enum": ["low", "neutral", "high", "unspecified"] },
+                  "strength": { "type": "string", "enum": ["low", "neutral", "high", "unspecified"] }
+                },
+                "required": ["sweetness", "sourness", "bitterness", "body", "strength"]
+              }
+            },
+            "required": ["scenario", "preferences"]
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "styleRef": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "properties": {
+                    "kind": { "type": "string", "enum": ["bjcp", "extension"] },
+                    "id": { "type": "string" }
+                  },
+                  "required": ["kind", "id"]
+                },
+                "id": { "type": "string" },
+                "kind": { "type": "string", "enum": ["bjcp", "extension"] },
+                "code": { "type": "string" },
+                "displayName": { "type": "string" },
+                "name_zh": { "type": "string" },
+                "name_en": { "type": "string" },
+                "aliases": { "type": "array", "items": { "type": "string" } },
+                "sourceLabel": { "type": "string" },
+                "route": { "type": "string" },
+                "tasteProfile": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "properties": {
+                    "sweetness": { "type": "integer", "enum": [-1, 0, 1] },
+                    "sourness": { "type": "integer", "enum": [-1, 0, 1] },
+                    "bitterness": { "type": "integer", "enum": [-1, 0, 1] },
+                    "body": { "type": "integer", "enum": [-1, 0, 1] },
+                    "strength": { "type": "integer", "enum": [-1, 0, 1] }
+                  },
+                  "required": ["sweetness", "sourness", "bitterness", "body", "strength"]
+                },
+                "matchScore": { "type": "number" },
+                "matchReasons": { "type": "array", "items": { "type": "string" } },
+                "explanation": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "properties": {
+                    "matched": { "type": "array", "items": { "type": "string" } },
+                    "tradeoffs": { "type": "array", "items": { "type": "string" } }
+                  },
+                  "required": ["matched", "tradeoffs"]
+                }
+              },
+              "required": [
+                "styleRef", "id", "kind", "code", "displayName", "name_zh",
+                "name_en", "aliases", "sourceLabel", "route", "tasteProfile",
+                "matchScore", "matchReasons", "explanation"
+              ]
+            }
+          },
+          "explanation": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "matched": { "type": "array", "items": { "type": "string" } },
+              "tradeoffs": { "type": "array", "items": { "type": "string" } },
+              "adjustments": { "type": "array", "items": { "type": "string" } }
+            },
+            "required": ["matched", "tradeoffs", "adjustments"]
+          },
+          "relaxation": {
+            "oneOf": [
+              { "type": "null" },
+              {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "dimensions": { "type": "array", "items": { "type": "string" } },
+                  "count": { "type": "integer", "minimum": 0 }
+                },
+                "required": ["dimensions", "count"]
+              }
+            ]
+          }
+        },
+        "required": ["contract", "status", "flow", "snapshot", "items", "explanation", "relaxation"]
+      },
+      "_meta": { "ui": { "componentPath": "components/recommendation-v2-card/index" } }
+    },
+    {
+      "name": "getBeerStyleDetail",
+      "description": "读取已选择风格详情；推荐上下文只能来自最新推荐卡片。",
+      "inputSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "styleRef": { "$ref": "#/$defs/styleRef" },
+          "recommendationContext": { "$ref": "#/$defs/recommendationContext" }
+        },
+        "required": ["styleRef"],
+        "$defs": {
+          "styleRef": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "kind": { "type": "string", "enum": ["bjcp", "extension"] },
+              "id": { "type": "string" }
+            },
+            "required": ["kind", "id"]
+          },
+          "recommendationContext": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "flowId": { "type": "string", "pattern": "^arf_[0-9a-f]{12,32}$" },
+              "expectedRevision": { "type": "integer", "minimum": 0 },
+              "requestId": { "type": "string", "pattern": "^req_[0-9a-f]{10,32}$" }
+            },
+            "required": ["flowId", "expectedRevision", "requestId"]
+          }
+        }
+      },
+      "outputSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "style": { "$ref": "#/$defs/styleSummary" },
+          "category": {
+            "oneOf": [
+              { "type": "null" },
+              {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "id": { "type": "string" },
+                  "name_zh": { "type": "string" },
+                  "name_en": { "type": "string" }
+                },
+                "required": ["id", "name_zh", "name_en"]
+              }
+            ]
+          },
+          "stats": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "label": { "type": "string" },
+                "value": { "type": "string" }
+              },
+              "required": ["label", "value"]
+            }
+          },
+          "sections": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "key": { "type": "string" },
+                "label": { "type": "string" },
+                "content": { "type": "string" }
+              },
+              "required": ["key", "label", "content"]
+            }
+          },
+          "tags": { "type": "array", "items": { "type": "string" } },
+          "sourceLabel": { "type": "string" },
+          "description": { "type": "string" },
+          "bjcpNote": { "type": "string" },
+          "bjcpRefs": { "type": "array", "items": { "$ref": "#/$defs/styleSummary" } }
+        },
+        "required": ["style"],
+        "$defs": {
+          "styleSummary": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "styleRef": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "kind": { "type": "string", "enum": ["bjcp", "extension"] },
+                  "id": { "type": "string" }
+                },
+                "required": ["kind", "id"]
+              },
+              "id": { "type": "string" },
+              "kind": { "type": "string", "enum": ["bjcp", "extension"] },
+              "code": { "type": "string" },
+              "displayName": { "type": "string" },
+              "name_zh": { "type": "string" },
+              "name_en": { "type": "string" },
+              "aliases": { "type": "array", "items": { "type": "string" } },
+              "sourceLabel": { "type": "string" },
+              "route": { "type": "string" }
+            },
+            "required": [
+              "styleRef", "id", "kind", "code", "displayName", "name_zh",
+              "name_en", "aliases", "sourceLabel", "route"
+            ]
+          }
+        }
+      },
+      "_meta": { "ui": { "componentPath": "components/style-detail-card/index" } }
+    },
+    {
+      "name": "listFavoriteBeerStyles",
+      "description": "读取本机收藏。",
+      "inputSchema": { "type": "object", "additionalProperties": false, "properties": {} },
+      "outputSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "items": { "type": "array", "items": { "$ref": "#/$defs/styleSummary" } },
+          "total": { "type": "integer", "minimum": 0 }
+        },
+        "required": ["items", "total"],
+        "$defs": {
+          "styleSummary": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "styleRef": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "kind": { "type": "string", "enum": ["bjcp", "extension"] },
+                  "id": { "type": "string" }
+                },
+                "required": ["kind", "id"]
+              },
+              "id": { "type": "string" },
+              "kind": { "type": "string", "enum": ["bjcp", "extension"] },
+              "code": { "type": "string" },
+              "displayName": { "type": "string" },
+              "name_zh": { "type": "string" },
+              "name_en": { "type": "string" },
+              "aliases": { "type": "array", "items": { "type": "string" } },
+              "sourceLabel": { "type": "string" },
+              "route": { "type": "string" }
+            },
+            "required": [
+              "styleRef", "id", "kind", "code", "displayName", "name_zh",
+              "name_en", "aliases", "sourceLabel", "route"
+            ]
+          }
+        }
+      },
+      "_meta": { "ui": { "componentPath": "components/style-list-card/index" } }
+    },
+    {
+      "name": "addFavoriteBeerStyle",
+      "description": "收藏已确认风格；推荐卡片动作必须携带最新推荐上下文。",
+      "inputSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "styleRef": { "$ref": "#/$defs/styleRef" },
+          "recommendationContext": { "$ref": "#/$defs/recommendationContext" }
+        },
+        "required": ["styleRef"],
+        "$defs": {
+          "styleRef": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "kind": { "type": "string", "enum": ["bjcp", "extension"] },
+              "id": { "type": "string" }
+            },
+            "required": ["kind", "id"]
+          },
+          "recommendationContext": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "flowId": { "type": "string", "pattern": "^arf_[0-9a-f]{12,32}$" },
+              "expectedRevision": { "type": "integer", "minimum": 0 },
+              "requestId": { "type": "string", "pattern": "^req_[0-9a-f]{10,32}$" }
+            },
+            "required": ["flowId", "expectedRevision", "requestId"]
+          }
+        }
+      },
+      "outputSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "action": { "type": "string", "enum": ["added", "already-favorite"] },
+          "isFavorite": { "const": true },
+          "style": { "$ref": "#/$defs/styleSummary" },
+          "total": { "type": "integer", "minimum": 0 }
+        },
+        "required": ["action", "isFavorite", "style", "total"],
+        "$defs": {
+          "styleSummary": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "styleRef": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "kind": { "type": "string", "enum": ["bjcp", "extension"] },
+                  "id": { "type": "string" }
+                },
+                "required": ["kind", "id"]
+              },
+              "id": { "type": "string" },
+              "kind": { "type": "string", "enum": ["bjcp", "extension"] },
+              "code": { "type": "string" },
+              "displayName": { "type": "string" },
+              "name_zh": { "type": "string" },
+              "name_en": { "type": "string" },
+              "aliases": { "type": "array", "items": { "type": "string" } },
+              "sourceLabel": { "type": "string" },
+              "route": { "type": "string" }
+            },
+            "required": [
+              "styleRef", "id", "kind", "code", "displayName", "name_zh",
+              "name_en", "aliases", "sourceLabel", "route"
+            ]
+          }
+        }
+      },
+      "_meta": { "ui": { "componentPath": "components/favorite-status-card/index" } }
+    },
+    {
+      "name": "removeFavoriteBeerStyle",
+      "description": "取消收藏已确认风格。",
+      "inputSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "styleRef": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "kind": { "type": "string", "enum": ["bjcp", "extension"] },
+              "id": { "type": "string" }
+            },
+            "required": ["kind", "id"]
+          }
+        },
+        "required": ["styleRef"]
+      },
+      "outputSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "action": { "type": "string", "enum": ["removed", "not-favorite"] },
+          "isFavorite": { "const": false },
+          "style": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "styleRef": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "kind": { "type": "string", "enum": ["bjcp", "extension"] },
+                  "id": { "type": "string" }
+                },
+                "required": ["kind", "id"]
+              },
+              "id": { "type": "string" },
+              "kind": { "type": "string", "enum": ["bjcp", "extension"] },
+              "code": { "type": "string" },
+              "displayName": { "type": "string" },
+              "name_zh": { "type": "string" },
+              "name_en": { "type": "string" },
+              "aliases": { "type": "array", "items": { "type": "string" } },
+              "sourceLabel": { "type": "string" },
+              "route": { "type": "string" }
+            },
+            "required": [
+              "styleRef", "id", "kind", "code", "displayName", "name_zh",
+              "name_en", "aliases", "sourceLabel", "route"
+            ]
+          },
+          "total": { "type": "integer", "minimum": 0 }
+        },
+        "required": ["action", "isFavorite", "style", "total"]
+      },
+      "_meta": { "ui": { "componentPath": "components/favorite-status-card/index" } }
+    },
+    {
+      "name": "findAcademyArticles",
+      "description": "按主题查找学院文章。",
+      "inputSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "query": { "type": "string" },
+          "limit": { "type": "integer", "minimum": 1, "maximum": 30 }
+        }
+      },
+      "outputSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "slug": { "type": "string" },
+                "title": { "type": "string" },
+                "description": { "type": "string" },
+                "type": { "type": "string" },
+                "difficulty": { "type": "string" },
+                "readingTime": { "type": "number" },
+                "tags": { "type": "array", "items": { "type": "string" } },
+                "relatedStyles": { "type": "array", "items": { "type": "string" } },
+                "publishedAt": { "type": "string" },
+                "route": { "type": "string" }
+              },
+              "required": [
+                "slug", "title", "description", "type", "difficulty", "readingTime",
+                "tags", "relatedStyles", "publishedAt", "route"
+              ]
+            }
+          },
+          "total": { "type": "integer", "minimum": 0 },
+          "keyword": { "type": "string" }
+        },
+        "required": ["items", "total", "keyword"]
+      },
+      "_meta": { "ui": { "componentPath": "components/academy-article-list-card/index" } }
+    }
+  ],
+  "components": [
+    {
+      "path": "components/style-list-card/index",
+      "relatedPage": "/aiDetail/pages/style-results/index"
+    },
+    {
+      "path": "components/recommendation-v2-card/index",
+      "expirable": true,
+      "expiredText": "推荐条件已更新，请使用最新结果"
+    },
+    {
+      "path": "components/style-detail-card/index",
+      "relatedPage": "/pages/search/index"
+    },
+    {
+      "path": "components/favorite-status-card/index",
+      "relatedPage": "/pages/favorites/index",
+      "expirable": true,
+      "expiredText": "收藏状态已更新"
+    },
+    {
+      "path": "components/academy-article-list-card/index",
+      "relatedPage": "/subpages/academy-article/index"
+    }
+  ]
+}

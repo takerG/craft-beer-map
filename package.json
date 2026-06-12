@@ -4,7 +4,7 @@
   "description": "BJCP beer style guide WeChat mini program",
   "type": "module",
   "scripts": {
-    "test": "node --test",
+    "test": "node --test --test-concurrency=1",
     "check:generated": "node scripts/check_generated_data.cjs",
     "build:data": "python scripts/extract_bjcp_2015_pdf.py && python scripts/parse_bjcp_2015_pdf.py && node scripts/build_bjcp_2015_data.cjs && node scripts/apply_bjcp_2021_updates.cjs && node scripts/apply_style_aliases.cjs && node scripts/apply_taste_profiles.cjs && npm run build:mini-data",
     "apply:aliases": "node scripts/apply_style_aliases.cjs && npm run build:mini-data",
@@ -12,7 +12,12 @@
     "build:academy": "node scripts/build_academy_sites.cjs",
     "build:mini-data": "node scripts/build_miniprogram_data.cjs && npm run build:academy",
     "build:ai-mode": "node scripts/build_ai_mode_project.cjs",
-    "check:ai-mode": "node scripts/check_ai_mode_project.cjs && node --test tests/ai-mode-*.test.js"
+    "check:ai-mode": "node scripts/check_ai_mode_project.cjs && node --test tests/ai-mode-*.test.js",
+    "build:ai-experiment": "node scripts/build_ai_mode_experiment.cjs",
+    "build:ai-experiment:dev": "node scripts/build_ai_mode_experiment.cjs --allow-dirty",
+    "test:ai-recommendation-m1": "node --test tests/ai-platform-contract.test.js tests/ai-recommendation-v2.test.js tests/ai-flow-state.test.js tests/ai-recommendation-candidate.test.js tests/ai-recommendation-components.test.js",
+    "score:ai-recommendation": "node scripts/score_ai_recommendation_traces.cjs",
+    "audit:ai-recommendation-release": "node scripts/audit_ai_recommendation_release.cjs"
   },
   "repository": {
     "type": "git",

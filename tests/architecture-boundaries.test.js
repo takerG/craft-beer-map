@@ -71,7 +71,7 @@ test('generated data drift check is stable across working-tree line endings', ()
 });
 
 test('choose taste dimensions are declared in one shared schema module', async () => {
-  const schema = await import('../miniprogram/utils/taste-schema.js');
+  const schema = await import('../utils/taste-schema.js');
 
   assert.deepEqual(schema.TASTE_PROFILE_DIMENSIONS, [
     'sweetness',
@@ -98,8 +98,8 @@ test('choose taste dimensions are declared in one shared schema module', async (
 });
 
 test('academy tab model stays independent from article detail style resolution', () => {
-  const academyPage = readFile('miniprogram/pages/academy/index.js');
-  const feedModel = readFile('miniprogram/utils/academy-feed-model.js');
+  const academyPage = readFile('pages/academy/index.js');
+  const feedModel = readFile('utils/academy-feed-model.js');
 
   assert.match(academyPage, /utils\/academy-feed-model\.js/);
   assert.doesNotMatch(academyPage, /utils\/academy-model\.js/);
@@ -107,10 +107,10 @@ test('academy tab model stays independent from article detail style resolution',
 });
 
 test('academy article detail model stays inside the content subpackage', () => {
-  const articlePage = readFile('miniprogram/subpages/academy-article/index.js');
+  const articlePage = readFile('subpages/academy-article/index.js');
 
-  assert.equal(fs.existsSync(path.join(root, 'miniprogram/utils/academy-model.js')), false);
-  assert.equal(fs.existsSync(path.join(root, 'miniprogram/subpages/utils/academy-model.js')), true);
+  assert.equal(fs.existsSync(path.join(root, 'utils/academy-model.js')), false);
+  assert.equal(fs.existsSync(path.join(root, 'subpages/utils/academy-model.js')), true);
   assert.match(articlePage, /from '\.\.\/utils\/academy-model\.js'/);
   assert.doesNotMatch(articlePage, /\.\.\/\.\.\/utils\/academy-model\.js/);
 });

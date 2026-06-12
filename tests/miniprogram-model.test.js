@@ -17,11 +17,11 @@ import {
   getTasteFilters,
   getTasteMatches,
   searchStyles,
-} from '../miniprogram/utils/beer-model.js';
-import { beerData } from '../miniprogram/data/beer-data.js';
-import { extensionGroups, extensionStyles } from '../miniprogram/data/extension-styles.js';
-import { styleLanguageMap } from '../miniprogram/data/styleLanguageMap.js';
-import { SUPER_GROUPS } from '../miniprogram/utils/super-groups.js';
+} from '../utils/beer-model.js';
+import { beerData } from '../data/beer-data.js';
+import { extensionGroups, extensionStyles } from '../data/extension-styles.js';
+import { styleLanguageMap } from '../data/styleLanguageMap.js';
+import { SUPER_GROUPS } from '../utils/super-groups.js';
 
 const root = process.cwd();
 
@@ -371,8 +371,8 @@ test('taste matching does not score neutral sweetness as a near-perfect sweet ma
 });
 
 test('mini program keeps community aliases outside the generated BJCP payload', () => {
-  const beerDataPath = path.join(root, 'miniprogram', 'data', 'beer-data.js');
-  const styleAliasesPath = path.join(root, 'miniprogram', 'data', 'style-aliases.js');
+  const beerDataPath = path.join(root, 'data', 'beer-data.js');
+  const styleAliasesPath = path.join(root, 'data', 'style-aliases.js');
   const beerDataSource = fs.readFileSync(beerDataPath, 'utf8');
   const styleAliasesSource = fs.readFileSync(styleAliasesPath, 'utf8');
 

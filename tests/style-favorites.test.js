@@ -9,7 +9,7 @@ import {
   isStyleFavorite,
   removeFavoriteStyle,
   toggleFavoriteStyle,
-} from '../miniprogram/utils/style-favorites.js';
+} from '../utils/style-favorites.js';
 
 function createMemoryStorage(initialValue) {
   const store = new Map();

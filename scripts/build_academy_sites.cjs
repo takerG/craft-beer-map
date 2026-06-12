@@ -3,7 +3,7 @@ const path = require('node:path');
 
 const root = path.resolve(__dirname, '..');
 const sourceRoot = path.join(root, 'academy-sites');
-const outputPath = path.join(root, 'miniprogram', 'data', 'academy-sites.js');
+const outputPath = path.join(root, 'data', 'academy-sites.js');
 
 const REQUIRED_META_FIELDS = ['slug', 'title', 'description', 'type', 'difficulty', 'readingTime', 'tags', 'relatedStyles'];
 const REQUIRED_PUBLISH_FIELDS = ['publishedAt'];

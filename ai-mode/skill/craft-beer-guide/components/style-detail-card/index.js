@@ -7,11 +7,10 @@ Component({
 
   lifetimes: {
     created() {
-      this._modelCtx = wx.modelContext.getContext(this);
-      this._viewCtx = wx.modelContext.getViewContext(this);
+      const modelContext = wx.modelContext.getContext(this);
       const { NotificationType } = wx.modelContext;
 
-      this._modelCtx.on(NotificationType.Result, (data) => {
+      modelContext.on(NotificationType.Result, (data) => {
         const result = data && data.result ? data.result : {};
         const detail = result._meta && result._meta.detail
           ? result._meta.detail
@@ -27,7 +26,7 @@ Component({
             : '',
         });
         if (style && style.styleRef) {
-          this._viewCtx.setRelatedPage({
+          wx.modelContext.getViewContext(this).setRelatedPage({
             query: `kind=${style.styleRef.kind}&styleId=${encodeURIComponent(style.styleRef.id)}`,
           });
         }
@@ -38,7 +37,7 @@ Component({
   methods: {
     onTapFavorite() {
       if (!this.data.style || !this.data.style.styleRef) return;
-      this._modelCtx.sendFollowUpMessage({
+      wx.modelContext.getContext(this).sendFollowUpMessage({
         content: [
           { type: 'text', text: `收藏${this.data.style.displayName}` },
           {
@@ -54,7 +53,7 @@ Component({
 
     onTapQuestion() {
       if (!this.data.style) return;
-      this._modelCtx.sendFollowUpMessage({
+      wx.modelContext.getContext(this).sendFollowUpMessage({
         content: [
           { type: 'text', text: `用更容易理解的方式解释${this.data.style.displayName}，并说明适合什么场景` },
         ],

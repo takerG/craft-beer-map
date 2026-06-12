@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 
-import { trackEvent } from '../miniprogram/utils/telemetry.js';
+import { trackEvent } from '../utils/telemetry.js';
 
 test.afterEach(() => {
   delete globalThis.wx;

@@ -1,0 +1,75 @@
+.card-shell {
+  box-sizing: border-box;
+  padding: 28rpx;
+  overflow: hidden;
+  color: #f6f1e8;
+  background: #151d27;
+  border: 1rpx solid #2b3948;
+  border-radius: 28rpx;
+}
+
+.card-head,
+.style-row {
+  display: flex;
+  align-items: center;
+}
+
+.card-head {
+  justify-content: space-between;
+  margin-bottom: 18rpx;
+}
+
+.card-title {
+  font-size: 34rpx;
+  font-weight: 700;
+}
+
+.card-count,
+.style-en {
+  color: #93a1b3;
+  font-size: 22rpx;
+}
+
+.style-row {
+  min-height: 104rpx;
+  border-top: 1rpx solid #283442;
+}
+
+.style-code {
+  width: 86rpx;
+  color: #f6ad55;
+  font-size: 22rpx;
+}
+
+.style-copy {
+  display: flex;
+  flex: 1;
+  min-width: 0;
+  flex-direction: column;
+}
+
+.style-name,
+.style-en {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.style-name {
+  font-size: 28rpx;
+}
+
+.row-action,
+.more-action {
+  color: #f6ad55;
+  font-size: 24rpx;
+}
+
+.more-action {
+  padding-top: 18rpx;
+  text-align: center;
+}
+
+.tap-hover {
+  opacity: 0.78;
+}

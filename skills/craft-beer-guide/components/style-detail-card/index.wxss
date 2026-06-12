@@ -1,0 +1,79 @@
+.card-shell {
+  box-sizing: border-box;
+  padding: 32rpx;
+  overflow: hidden;
+  color: #f7f2e8;
+  background: #151d27;
+  border-left: 10rpx solid #f6ad55;
+  border-radius: 28rpx;
+}
+
+.detail-head,
+.action-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.kind-pill {
+  padding: 8rpx 16rpx;
+  color: #111820;
+  background: #f6ad55;
+  border-radius: 999rpx;
+  font-size: 22rpx;
+  font-weight: 700;
+}
+
+.source-label,
+.style-en {
+  color: #93a1b3;
+  font-size: 22rpx;
+}
+
+.style-name {
+  display: block;
+  margin-top: 24rpx;
+  font-size: 38rpx;
+  font-weight: 700;
+}
+
+.style-en {
+  display: block;
+  margin-top: 4rpx;
+}
+
+.summary {
+  display: -webkit-box;
+  margin-top: 22rpx;
+  overflow: hidden;
+  color: #cbd5e1;
+  font-size: 25rpx;
+  line-height: 1.6;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+}
+
+.action-row {
+  margin-top: 28rpx;
+}
+
+.secondary-action,
+.primary-action {
+  padding: 16rpx 22rpx;
+  border-radius: 18rpx;
+  font-size: 24rpx;
+}
+
+.secondary-action {
+  color: #d4deea;
+  background: #263342;
+}
+
+.primary-action {
+  color: #111820;
+  background: #f6ad55;
+}
+
+.tap-hover {
+  opacity: 0.78;
+}

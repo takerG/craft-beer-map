@@ -2,7 +2,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 const zlib = require('node:zlib');
 
-const outputDir = path.resolve(__dirname, '..', 'miniprogram', 'assets', 'tabbar');
+const outputDir = path.resolve(__dirname, '..', 'assets', 'tabbar');
 
 writeIcon(path.join(outputDir, 'academy.png'), [141, 154, 173, 255]);
 writeIcon(path.join(outputDir, 'academy-active.png'), [246, 173, 85, 255]);

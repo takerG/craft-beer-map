@@ -4,38 +4,62 @@ const crypto = require('node:crypto');
 const { pathToFileURL } = require('node:url');
 
 const root = path.resolve(__dirname, '..');
-const sourceMiniProgramRoot = path.join(root, 'miniprogram');
-const outputRoot = path.join(root, 'artifacts', 'ai-mode-project');
-const outputMiniProgramRoot = path.join(outputRoot, 'miniprogram');
-const knowledgeOutputRoot = path.join(root, 'artifacts', 'ai-knowledge-base');
-const buildLockPath = path.join(root, 'artifacts', '.ai-mode-build.lock');
+const sourceProjectRoot = root;
+const PROJECT_ROOT_FILES = [
+  'AGENTS.md',
+  'app.js',
+  'app.json',
+  'app.wxss',
+  'page-meta.json',
+  'project.config.json',
+  'project.private.config.json',
+  'sitemap.json',
+];
+const PROJECT_DIRECTORIES = [
+  'aiDetail',
+  'assets',
+  'components',
+  'pages',
+  'skills',
+  'subpages',
+  'templates',
+  'utils',
+];
+const PROJECT_DATA_FILES = [
+  'academy-sites.js',
+  'beer-data.js',
+  'extension-styles.js',
+  'style-aliases.js',
+  'styleLanguageMap.js',
+];
+const buildContext = createBuildContext(process.argv.slice(2));
+const outputRoot = buildContext.outputRoot;
+const outputProjectRoot = buildContext.projectRoot;
+const knowledgeOutputRoot = buildContext.knowledgeOutputRoot;
+const buildLockPath = buildContext.lockPath;
 
 async function main() {
   const lockHandle = acquireBuildLock();
   try {
     const fingerprint = buildFingerprint();
     if (process.argv.includes('--if-current') && isCurrentBuild(fingerprint)) {
-      console.log(`Using current ${path.relative(root, outputRoot)}`);
+      console.log(`Using current ${displayPath(outputProjectRoot)}`);
       return;
     }
 
     resetOutput();
-    copyProductionMiniProgram();
-    writeAiAppConfig();
-    writeProjectConfig();
-    writeNodeProjectConfig();
-    copyOperatorInstructions();
+    if (buildContext.isSnapshot) copyProductionMiniProgram();
     writePageMetadata();
-    copyAiSkillTemplates();
-    copyAiUiTemplates();
-    applyPageOverlays();
-    await writeCatalog();
-    fs.writeFileSync(path.join(outputRoot, '.build-fingerprint'), fingerprint, 'utf8');
+    prepareSkillRuntime();
+    copyPageTelemetry();
+    const catalogFingerprint = await writeCatalog();
+    writeBuildManifest(fingerprint, catalogFingerprint);
+    fs.writeFileSync(buildContext.fingerprintPath, fingerprint, 'utf8');
   } finally {
     releaseBuildLock(lockHandle);
   }
 
-  console.log(`Built ${path.relative(root, outputRoot)}`);
+  console.log(`Built ${displayPath(outputProjectRoot)}`);
 }
 
 function acquireBuildLock() {
@@ -70,21 +94,31 @@ function releaseBuildLock(lockHandle) {
 }
 
 function resetOutput() {
-  fs.rmSync(outputRoot, { recursive: true, force: true });
+  if (buildContext.isSnapshot) {
+    fs.rmSync(outputRoot, { recursive: true, force: true });
+    fs.mkdirSync(outputRoot, { recursive: true });
+  } else {
+    fs.rmSync(path.join(root, 'artifacts', 'ai-mode-project'), {
+      recursive: true,
+      force: true,
+    });
+  }
   fs.rmSync(knowledgeOutputRoot, { recursive: true, force: true });
-  fs.mkdirSync(outputRoot, { recursive: true });
   fs.mkdirSync(knowledgeOutputRoot, { recursive: true });
 }
 
 function buildFingerprint() {
   const hash = crypto.createHash('sha256');
-  const sourcePaths = [
-    ...listFiles(path.join(root, 'miniprogram')),
-    ...listFiles(path.join(root, 'ai-mode')),
-    path.join(root, 'project.config.json'),
-    __filename,
-  ].sort();
-
+  hash.update(JSON.stringify({
+    experimentId: buildContext.experimentId,
+    experimentBuildId: buildContext.experimentBuildId,
+    variant: buildContext.variant,
+    recommendationContract: buildContext.recommendationContract,
+    telemetryMode: buildContext.telemetryMode,
+    outputRoot: buildContext.outputRoot,
+    knowledgeOutputRoot: buildContext.knowledgeOutputRoot,
+  }));
+  const sourcePaths = sourceFingerprintPaths();
   sourcePaths.forEach((filePath) => {
     hash.update(path.relative(root, filePath).replaceAll('\\', '/'));
     hash.update('\0');
@@ -94,15 +128,62 @@ function buildFingerprint() {
   return hash.digest('hex');
 }
 
+function sourceTreeFingerprint() {
+  const hash = crypto.createHash('sha256');
+  const sourcePaths = sourceFingerprintPaths();
+  sourcePaths.forEach((filePath) => {
+    hash.update(path.relative(root, filePath).replaceAll('\\', '/'));
+    hash.update('\0');
+    hash.update(fs.readFileSync(filePath));
+    hash.update('\0');
+  });
+  return hash.digest('hex');
+}
+
+function sourceFingerprintPaths() {
+  return [
+    ...listProductionProjectFiles().filter((filePath) =>
+      !isGeneratedProjectFile(filePath)),
+    ...listFiles(path.join(root, 'ai-mode')),
+    path.join(root, 'package.json'),
+    path.join(root, 'scripts', 'build_ai_mode_experiment.cjs'),
+    path.join(root, 'scripts', 'check_ai_mode_project.cjs'),
+    __filename,
+  ].sort();
+}
+
+function isGeneratedProjectFile(filePath) {
+  const relativePath = path.relative(sourceProjectRoot, filePath).replaceAll('\\', '/');
+  return [
+    'page-meta.json',
+    'skills/craft-beer-guide/data/catalog.js',
+    'skills/craft-beer-guide/generated/experiment.js',
+    'skills/craft-beer-guide/utils/catalog-runtime.cjs',
+    'skills/craft-beer-guide/utils/catalog-runtime.js',
+    'skills/craft-beer-guide/utils/flow-state.js',
+    'skills/craft-beer-guide/utils/recommendation-v2.js',
+    'aiDetail/data/catalog.js',
+    'aiDetail/utils/catalog-runtime.js',
+  ].includes(relativePath);
+}
+
 function isCurrentBuild(fingerprint) {
-  const markerPath = path.join(outputRoot, '.build-fingerprint');
-  const appPath = path.join(outputMiniProgramRoot, 'app.json');
-  const knowledgePath = path.join(knowledgeOutputRoot, 'bjcp-style-guide.md');
+  const markerPath = buildContext.fingerprintPath;
+  const requiredPaths = [
+    path.join(outputProjectRoot, 'project.config.json'),
+    path.join(outputProjectRoot, 'AGENTS.md'),
+    path.join(outputProjectRoot, 'app.json'),
+    path.join(outputProjectRoot, 'aiDetail', 'pages', 'style-results', 'index.js'),
+    path.join(outputProjectRoot, 'aiDetail', 'pages', 'taste-refine', 'index.js'),
+    path.join(outputProjectRoot, 'skills', 'craft-beer-guide', 'mcp.json'),
+    path.join(outputProjectRoot, 'skills', 'craft-beer-guide', 'data', 'catalog.js'),
+    path.join(outputProjectRoot, 'aiDetail', 'data', 'catalog.js'),
+    path.join(knowledgeOutputRoot, 'bjcp-style-guide.md'),
+  ];
   try {
     return (
       fs.readFileSync(markerPath, 'utf8') === fingerprint &&
-      fs.existsSync(appPath) &&
-      fs.existsSync(knowledgePath)
+      requiredPaths.every((filePath) => fs.existsSync(filePath))
     );
   } catch (error) {
     if (error.code === 'ENOENT') return false;
@@ -117,76 +198,41 @@ function listFiles(dir) {
   });
 }
 
+function displayPath(filePath) {
+  return path.relative(root, filePath) || '.';
+}
+
+function listProductionProjectFiles() {
+  return [
+    ...PROJECT_ROOT_FILES.map((relativePath) => path.join(sourceProjectRoot, relativePath)),
+    ...PROJECT_DIRECTORIES.flatMap((relativePath) =>
+      listFiles(path.join(sourceProjectRoot, relativePath))),
+    ...PROJECT_DATA_FILES.map((fileName) =>
+      path.join(sourceProjectRoot, 'data', fileName)),
+  ].filter((filePath) => fs.existsSync(filePath));
+}
+
 function copyProductionMiniProgram() {
-  fs.cpSync(sourceMiniProgramRoot, outputMiniProgramRoot, { recursive: true });
-}
-
-function writeAiAppConfig() {
-  const appPath = path.join(outputMiniProgramRoot, 'app.json');
-  const app = readJson(appPath);
-  const subpackages = (app.subpackages || []).filter((item) => item.root !== 'skills');
-
-  app.agent = {
-    skills: [
-      {
-        name: 'craft-beer-guide',
-        description: '精酿啤酒风格搜索、口味推荐、详情、收藏与学院文章',
-        path: 'skills/craft-beer-guide',
-      },
-    ],
-    pageMetadata: 'page-meta.json',
-  };
-  app.subpackages = [
-    ...subpackages,
-    {
-      root: 'skills',
-      pages: [],
-      independent: true,
-    },
-    {
-      root: 'aiDetail',
-      name: 'ai-detail',
-      pages: [
-        'pages/style-results/index',
-        'pages/taste-refine/index',
-      ],
-      independent: true,
-      componentFramework: 'glass-easel',
-      renderer: 'skyline',
-    },
-  ];
-  app.usingComponents = {
-    ...(app.usingComponents || {}),
-    'ai-entry': '/components/ai-entry/index',
-  };
-
-  writeJson(appPath, app);
-}
-
-function writeProjectConfig() {
-  const sourceConfig = readJson(path.join(root, 'project.config.json'));
-  const projectConfig = {
-    ...sourceConfig,
-    projectname: 'craft-beer-map-ai-mode',
-    miniprogramRoot: 'miniprogram/',
-    libVersion: 'latest',
-  };
-
-  writeJson(path.join(outputRoot, 'project.config.json'), projectConfig);
-}
-
-function writeNodeProjectConfig() {
-  writeJson(path.join(outputRoot, 'package.json'), {
-    private: true,
-    type: 'commonjs',
+  fs.mkdirSync(outputProjectRoot, { recursive: true });
+  PROJECT_ROOT_FILES.forEach((relativePath) => {
+    copyFile(
+      path.join(sourceProjectRoot, relativePath),
+      path.join(outputProjectRoot, relativePath),
+    );
   });
-}
-
-function copyOperatorInstructions() {
-  copyFile(
-    path.join(root, 'ai-mode', 'AGENTS.md'),
-    path.join(outputRoot, 'AGENTS.md'),
-  );
+  PROJECT_DIRECTORIES.forEach((relativePath) => {
+    fs.cpSync(
+      path.join(sourceProjectRoot, relativePath),
+      path.join(outputProjectRoot, relativePath),
+      { recursive: true },
+    );
+  });
+  PROJECT_DATA_FILES.forEach((fileName) => {
+    copyFile(
+      path.join(sourceProjectRoot, 'data', fileName),
+      path.join(outputProjectRoot, 'data', fileName),
+    );
+  });
 }
 
 function writePageMetadata() {
@@ -202,44 +248,99 @@ function writePageMetadata() {
     'academy-article.json',
   ];
   const pages = order.map((fileName) => readJson(path.join(pageMetaRoot, fileName)));
-  writeJson(path.join(outputMiniProgramRoot, 'page-meta.json'), { pages });
+  writeJson(path.join(outputProjectRoot, 'page-meta.json'), { pages });
 }
 
-function copyAiSkillTemplates() {
+function prepareSkillRuntime() {
   const sourceSkillRoot = path.join(root, 'ai-mode', 'skill', 'craft-beer-guide');
-  const targetSkillRoot = path.join(outputMiniProgramRoot, 'skills', 'craft-beer-guide');
+  const targetSkillRoot = path.join(outputProjectRoot, 'skills', 'craft-beer-guide');
+  if (!buildContext.isSnapshot) {
+    [
+      'generated/experiment.js',
+      'utils/catalog-runtime.cjs',
+      'utils/flow-state.js',
+      'utils/recommendation-v2.js',
+    ].forEach((relativePath) => {
+      fs.rmSync(path.join(targetSkillRoot, relativePath), { force: true });
+    });
+    return;
+  }
   fs.cpSync(sourceSkillRoot, targetSkillRoot, { recursive: true });
-}
-
-function copyAiUiTemplates() {
-  fs.cpSync(
-    path.join(root, 'ai-mode', 'entry-component'),
-    path.join(outputMiniProgramRoot, 'components', 'ai-entry'),
-    { recursive: true },
-  );
-  fs.cpSync(
-    path.join(root, 'ai-mode', 'detail-pages'),
-    path.join(outputMiniProgramRoot, 'aiDetail', 'pages'),
-    { recursive: true },
-  );
-}
-
-function applyPageOverlays() {
-  const overlays = readJson(path.join(root, 'ai-mode', 'page-overlays.json'));
-  overlays.forEach((overlay) => {
-    const targetPath = path.join(outputMiniProgramRoot, overlay.path);
-    const source = fs.readFileSync(targetPath, 'utf8');
-    const markup = [
-      '',
-      '<ai-entry',
-      `  prompt="${escapeXmlAttribute(overlay.prompt)}"`,
-      `  context-type="${escapeXmlAttribute(overlay.contextType)}"`,
-      `  context-data="${overlay.contextBinding}"`,
-      '/>',
-      '',
-    ].join('\n');
-    fs.writeFileSync(targetPath, `${source.trimEnd()}\n${markup}`, 'utf8');
+  const skillTemplate = buildContext.variant === 'candidate'
+    ? 'SKILL.candidate.md'
+    : 'SKILL.md';
+  const mcpTemplate = buildContext.variant === 'candidate'
+    ? 'mcp.candidate.json'
+    : 'mcp.json';
+  copyFile(path.join(sourceSkillRoot, skillTemplate), path.join(targetSkillRoot, 'SKILL.md'));
+  copyFile(path.join(sourceSkillRoot, mcpTemplate), path.join(targetSkillRoot, 'mcp.json'));
+  fs.mkdirSync(path.join(targetSkillRoot, 'generated'), { recursive: true });
+  writeCommonJsModule(path.join(targetSkillRoot, 'generated', 'experiment.js'), {
+    experimentId: buildContext.experimentId,
+    variant: buildContext.variant,
+    recommendationContract: buildContext.recommendationContract,
+    telemetryMode: buildContext.telemetryMode,
+    enableExpirePreviousCards: buildContext.enableExpirePreviousCards,
   });
+  copyFile(
+    path.join(root, 'ai-mode', 'shared', 'recommendation-v2.cjs'),
+    path.join(targetSkillRoot, 'utils', 'recommendation-v2.js'),
+  );
+  copyFile(
+    path.join(root, 'ai-mode', 'shared', 'catalog-runtime.cjs'),
+    path.join(targetSkillRoot, 'utils', 'catalog-runtime.cjs'),
+  );
+  copyFile(
+    path.join(root, 'ai-mode', 'shared', 'flow-state.cjs'),
+    path.join(targetSkillRoot, 'utils', 'flow-state.js'),
+  );
+  const flowStorePath = path.join(targetSkillRoot, 'utils', 'flow-store.js');
+  const flowStoreSource = fs.readFileSync(flowStorePath, 'utf8')
+    .replace("require('../../../shared/flow-state.cjs')", "require('./flow-state.js')");
+  fs.writeFileSync(flowStorePath, flowStoreSource, 'utf8');
+  if (buildContext.variant === 'control') {
+    copyFile(
+      path.join(sourceSkillRoot, 'apis', 'getBeerStyleDetailControl.js'),
+      path.join(targetSkillRoot, 'apis', 'getBeerStyleDetail.js'),
+    );
+    copyFile(
+      path.join(sourceSkillRoot, 'apis', 'addFavoriteBeerStyleControl.js'),
+      path.join(targetSkillRoot, 'apis', 'addFavoriteBeerStyle.js'),
+    );
+    [
+      'apis/getBeerStyleDetailControl.js',
+      'apis/addFavoriteBeerStyleControl.js',
+      'apis/recommendBeerStylesCandidate.js',
+      'components/recommendation-v2-card',
+      'utils/flow-state.js',
+      'utils/flow-store.js',
+      'utils/recommendation-session.js',
+      'utils/recommendation-v2.js',
+      'utils/redacted-logger.js',
+    ].forEach((relativePath) => {
+      fs.rmSync(path.join(targetSkillRoot, relativePath), { recursive: true, force: true });
+    });
+  } else {
+    [
+      'apis/getBeerStyleDetailControl.js',
+      'apis/addFavoriteBeerStyleControl.js',
+      'apis/recommendBeerStylesControl.js',
+    ].forEach((relativePath) => {
+      fs.rmSync(path.join(targetSkillRoot, relativePath), { force: true });
+    });
+  }
+  ['SKILL.control.md', 'SKILL.candidate.md', 'mcp.candidate.json'].forEach((fileName) => {
+    fs.rmSync(path.join(targetSkillRoot, fileName), { force: true });
+  });
+}
+
+function copyPageTelemetry() {
+  if (buildContext.telemetryMode === 'page-only') {
+    copyFile(
+      path.join(root, 'ai-mode', 'page-runtime', 'ai-recommendation-telemetry.js'),
+      path.join(outputProjectRoot, 'utils', 'ai-recommendation-telemetry.js'),
+    );
+  }
 }
 
 async function writeCatalog() {
@@ -249,13 +350,13 @@ async function writeCatalog() {
     { extensionStyles },
     { academySites },
   ] = await Promise.all([
-    importSourceModule('miniprogram/data/beer-data.js'),
-    importSourceModule('miniprogram/data/style-aliases.js'),
-    importSourceModule('miniprogram/data/extension-styles.js'),
-    importSourceModule('miniprogram/data/academy-sites.js'),
+    importSourceModule('data/beer-data.js'),
+    importSourceModule('data/style-aliases.js'),
+    importSourceModule('data/extension-styles.js'),
+    importSourceModule('data/academy-sites.js'),
   ]);
-  const skillRoot = path.join(outputMiniProgramRoot, 'skills', 'craft-beer-guide');
-  const detailRoot = path.join(outputMiniProgramRoot, 'aiDetail');
+  const skillRoot = path.join(outputProjectRoot, 'skills', 'craft-beer-guide');
+  const detailRoot = path.join(outputProjectRoot, 'aiDetail');
   const catalog = {
     schemaVersion: 1,
     categories: beerData.categories || [],
@@ -312,6 +413,106 @@ async function writeCatalog() {
     path.join(detailRoot, 'utils', 'catalog-runtime.js'),
   );
   writeKnowledgeBase(catalog);
+  return `sha256:${crypto.createHash('sha256').update(JSON.stringify(catalog)).digest('hex')}`;
+}
+
+function writeBuildManifest(fingerprint, catalogFingerprint) {
+  writeJson(buildContext.manifestPath, {
+    experimentId: buildContext.experimentId,
+    experimentBuildId: buildContext.experimentBuildId,
+    variant: buildContext.variant,
+    recommendationContract: buildContext.recommendationContract,
+    telemetryMode: buildContext.telemetryMode,
+    sourceCommit: buildContext.sourceCommit,
+    sourceTreeFingerprint: `sha256:${sourceTreeFingerprint()}`,
+    catalogFingerprint,
+    dirty: buildContext.dirty,
+  });
+}
+
+function createBuildContext(argv) {
+  const values = new Map(
+    argv
+      .filter((arg) => arg.startsWith('--') && arg.includes('='))
+      .map((arg) => {
+        const [key, ...rest] = arg.slice(2).split('=');
+        return [key, rest.join('=')];
+      }),
+  );
+  const variant = values.get('variant') || 'control';
+  if (!['control', 'candidate'].includes(variant)) {
+    throw new Error(`Unknown AI recommendation variant: ${variant}`);
+  }
+  const recommendationContract = variant === 'candidate' ? 'semantic-v2' : 'legacy-v1';
+  const platformCapabilities = JSON.parse(fs.readFileSync(
+    path.join(root, 'ai-mode', 'experiments', 'platform-capabilities.json'),
+    'utf8',
+  ));
+  const telemetryMode = values.get('telemetry-mode') || 'off';
+  if (!['off', 'page-only'].includes(telemetryMode)) {
+    throw new Error(`Unknown telemetry mode: ${telemetryMode}`);
+  }
+  if (telemetryMode === 'page-only') {
+    const capabilities = JSON.parse(fs.readFileSync(
+      path.join(root, 'ai-mode', 'experiments', 'platform-capabilities.json'),
+      'utf8',
+    ));
+    const analytics = capabilities.capabilities?.ordinaryPageAnalytics;
+    const evidencePath = analytics?.evidence
+      ? path.resolve(root, analytics.evidence)
+      : null;
+    if (
+      capabilities.status !== 'verified' ||
+      capabilities.appIdPermissionConfirmed !== true ||
+      !capabilities.devToolsVersion ||
+      !capabilities.baseLibraryVersion ||
+      analytics?.status !== 'verified' ||
+      !evidencePath ||
+      !fs.statSync(evidencePath, { throwIfNoEntry: false })?.isFile()
+    ) {
+      throw new Error('page-only analytics is blocked until ordinary-page capability is verified');
+    }
+  }
+  const isSnapshot = values.has('output-root');
+  const outputRelative = values.get('output-root') || '.';
+  const outputRootValue = path.resolve(root, outputRelative);
+  const defaultKnowledgeRoot = isSnapshot
+    ? path.join(outputRootValue, 'knowledge')
+    : path.join(root, 'artifacts', 'ai-knowledge-base');
+  return {
+    experimentId: values.get('experiment-id') || 'ai-rec-quality-v2-20260612',
+    experimentBuildId: values.get('experiment-build-id') || 'development',
+    variant,
+    recommendationContract,
+    telemetryMode,
+    enableExpirePreviousCards:
+      platformCapabilities.status === 'verified' &&
+      platformCapabilities.capabilities?.expirePreviousCards?.status === 'verified',
+    sourceCommit: readGit(['rev-parse', 'HEAD']).trim(),
+    dirty: Boolean(readGit(['status', '--porcelain']).trim()),
+    isSnapshot,
+    outputRoot: outputRootValue,
+    projectRoot: outputRootValue,
+    knowledgeOutputRoot: defaultKnowledgeRoot,
+    manifestPath: isSnapshot
+      ? path.join(outputRootValue, 'build-manifest.json')
+      : path.join(root, 'artifacts', 'ai-mode-build-manifest.json'),
+    lockPath: path.join(
+      root,
+      'artifacts',
+      isSnapshot
+        ? `.${path.basename(outputRootValue)}.build.lock`
+        : '.ai-mode-build.lock',
+    ),
+    fingerprintPath: isSnapshot
+      ? path.join(outputRootValue, '.build-fingerprint')
+      : path.join(root, 'artifacts', '.ai-mode-build-fingerprint'),
+  };
+}
+
+function readGit(args) {
+  const { execFileSync } = require('node:child_process');
+  return execFileSync('git', args, { cwd: root, encoding: 'utf8' });
 }
 
 function writeKnowledgeBase(catalog) {
@@ -453,14 +654,6 @@ function writeCommonJsModule(filePath, value) {
 function copyFile(sourcePath, targetPath) {
   fs.mkdirSync(path.dirname(targetPath), { recursive: true });
   fs.copyFileSync(sourcePath, targetPath);
-}
-
-function escapeXmlAttribute(value) {
-  return String(value || '')
-    .replaceAll('&', '&amp;')
-    .replaceAll('"', '&quot;')
-    .replaceAll('<', '&lt;')
-    .replaceAll('>', '&gt;');
 }
 
 function readJson(filePath) {

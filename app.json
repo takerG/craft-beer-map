@@ -1,0 +1,110 @@
+{
+  "pages": [
+    "pages/explore/index",
+    "pages/choose/index",
+    "pages/academy/index",
+    "pages/favorites/index",
+    "pages/search/index"
+  ],
+  "subPackages": [
+    {
+      "root": "subpages",
+      "pages": [
+        "academy-article/index",
+        "style-language/index",
+        "group/index",
+        "style/index",
+        "extension-group/index",
+        "extension-style/index"
+      ]
+    },
+    {
+      "root": "skills",
+      "pages": [],
+      "independent": true
+    },
+    {
+      "root": "aiDetail",
+      "name": "ai-detail",
+      "pages": [
+        "pages/style-results/index",
+        "pages/taste-refine/index"
+      ],
+      "independent": true,
+      "componentFramework": "glass-easel",
+      "renderer": "skyline"
+    }
+  ],
+  "preloadRule": {
+    "pages/academy/index": {
+      "network": "all",
+      "packages": ["subpages"]
+    },
+    "pages/search/index": {
+      "network": "wifi",
+      "packages": ["subpages"]
+    }
+  },
+  "lazyCodeLoading": "requiredComponents",
+  "agent": {
+    "skills": [
+      {
+        "name": "craft-beer-guide",
+        "description": "精酿啤酒风格搜索、口味推荐、详情、收藏与学院文章",
+        "path": "skills/craft-beer-guide"
+      }
+    ],
+    "instruction": "AGENTS.md",
+    "pageMetadata": "page-meta.json"
+  },
+  "usingComponents": {
+    "ai-entry": "/components/ai-entry/index"
+  },
+  "window": {
+    "navigationBarTitleText": "精酿风格指南",
+    "navigationBarBackgroundColor": "#111820",
+    "navigationBarTextStyle": "white",
+    "backgroundColor": "#10151d",
+    "backgroundTextStyle": "dark"
+  },
+  "tabBar": {
+    "color": "#8d9aad",
+    "selectedColor": "#f6ad55",
+    "backgroundColor": "#111820",
+    "borderStyle": "black",
+    "list": [
+      {
+        "pagePath": "pages/explore/index",
+        "text": "探寻",
+        "iconPath": "assets/tabbar/explore.png",
+        "selectedIconPath": "assets/tabbar/explore-active.png"
+      },
+      {
+        "pagePath": "pages/choose/index",
+        "text": "择饮",
+        "iconPath": "assets/tabbar/choose.png",
+        "selectedIconPath": "assets/tabbar/choose-active.png"
+      },
+      {
+        "pagePath": "pages/academy/index",
+        "text": "学院",
+        "iconPath": "assets/tabbar/academy.png",
+        "selectedIconPath": "assets/tabbar/academy-active.png"
+      },
+      {
+        "pagePath": "pages/favorites/index",
+        "text": "收藏",
+        "iconPath": "assets/tabbar/favorites.png",
+        "selectedIconPath": "assets/tabbar/favorites-active.png"
+      },
+      {
+        "pagePath": "pages/search/index",
+        "text": "搜索",
+        "iconPath": "assets/tabbar/search.png",
+        "selectedIconPath": "assets/tabbar/search-active.png"
+      }
+    ]
+  },
+  "style": "v2",
+  "sitemapLocation": "sitemap.json"
+}

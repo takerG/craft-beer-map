@@ -7,14 +7,7 @@ import path from 'node:path';
 
 const require = createRequire(import.meta.url);
 const root = process.cwd();
-const skillRoot = path.join(
-  root,
-  'artifacts',
-  'ai-mode-project',
-  'miniprogram',
-  'skills',
-  'craft-beer-guide',
-);
+const skillRoot = path.join(root, 'skills', 'craft-beer-guide');
 const expectedApiNames = [
   'searchBeerStyles',
   'recommendBeerStyles',
