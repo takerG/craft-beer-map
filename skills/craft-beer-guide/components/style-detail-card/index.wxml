@@ -11,8 +11,8 @@
       class="secondary-action"
       hover-class="tap-hover"
       hover-stay-time="80"
-      bindtap="onTapQuestion"
-    >继续问这个风格</view>
+      bindtap="onTapDetail"
+    >查看完整详情</view>
     <view
       class="primary-action"
       hover-class="tap-hover"

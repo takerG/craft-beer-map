@@ -91,20 +91,44 @@ test('style detail card enters the matching style detail page instead of search'
   const detailComponent = mcp.components.find(
     (item) => item.path === 'components/style-detail-card/index',
   );
-  const componentSource = fs.readFileSync(
-    path.join(skillRoot, 'components', 'style-detail-card', 'index.js'),
-    'utf8',
-  );
+  const detailComponentRoots = [
+    path.join(
+      root,
+      'ai-mode',
+      'skill',
+      'craft-beer-guide',
+      'components',
+      'style-detail-card',
+    ),
+    path.join(skillRoot, 'components', 'style-detail-card'),
+  ];
   const bjcpDetailSource = fs.readFileSync(
     path.join(root, 'subpages', 'style', 'index.js'),
     'utf8',
   );
 
   assert.equal(detailComponent?.relatedPage, '/subpages/style/index');
-  assert.match(
-    componentSource,
-    /query:\s*`kind=\$\{style\.styleRef\.kind\}&styleId=\$\{encodeURIComponent\(style\.styleRef\.id\)\}`/,
-  );
+  detailComponentRoots.forEach((componentRoot) => {
+    const componentSource = fs.readFileSync(path.join(componentRoot, 'index.js'), 'utf8');
+    const componentTemplate = fs.readFileSync(path.join(componentRoot, 'index.wxml'), 'utf8');
+    const componentStyles = fs.readFileSync(path.join(componentRoot, 'index.wxss'), 'utf8');
+
+    assert.match(
+      componentSource,
+      /query:\s*`kind=\$\{style\.styleRef\.kind\}&styleId=\$\{encodeURIComponent\(style\.styleRef\.id\)\}`/,
+    );
+    assert.match(componentSource, /onTapDetail\(\)/);
+    assert.match(componentSource, /styleRef\.kind === 'extension'/);
+    assert.match(componentSource, /\/subpages\/extension-style\/index/);
+    assert.match(componentSource, /\/subpages\/style\/index/);
+    assert.match(
+      componentSource,
+      /openDetailPage\(\{\s*url:\s*`\$\{route\}\?styleId=\$\{encodeURIComponent\(styleRef\.id\)\}`/,
+    );
+    assert.match(componentTemplate, /bindtap="onTapDetail"/);
+    assert.match(componentTemplate, />查看完整详情<\/view>/);
+    assert.match(componentStyles, /\.tap-hover\s*\{/);
+  });
   assert.match(
     bjcpDetailSource,
     /options\.kind === 'extension'[\s\S]*\/subpages\/extension-style\/index\?styleId=/,

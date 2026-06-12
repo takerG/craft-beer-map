@@ -51,12 +51,15 @@ Component({
       });
     },
 
-    onTapQuestion() {
-      if (!this.data.style) return;
-      wx.modelContext.getContext(this).sendFollowUpMessage({
-        content: [
-          { type: 'text', text: `用更容易理解的方式解释${this.data.style.displayName}，并说明适合什么场景` },
-        ],
+    onTapDetail() {
+      const styleRef = this.data.style && this.data.style.styleRef;
+      if (!styleRef || !styleRef.id) return;
+
+      const route = styleRef.kind === 'extension'
+        ? '/subpages/extension-style/index'
+        : '/subpages/style/index';
+      wx.modelContext.getViewContext(this).openDetailPage({
+        url: `${route}?styleId=${encodeURIComponent(styleRef.id)}`,
       });
     },
   },
