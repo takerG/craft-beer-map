@@ -24,17 +24,17 @@ const styleAliases = Object.fromEntries(
 fs.mkdirSync(outputDir, { recursive: true });
 fs.writeFileSync(
   outputPath,
-  `// Generated from data/beer-data-source.json. Run npm run build:mini-data after BJCP data changes.\nexport const beerData = ${JSON.stringify(miniProgramData, null, 2)};\n`,
+  `// Generated from data/beer-data-source.json. Run npm run build:mini-data after BJCP data changes.\nexport const beerData = ${JSON.stringify(miniProgramData)};\n`,
   'utf8',
 );
 fs.writeFileSync(
   aliasesOutputPath,
-  `// Generated from data/beer-data-source.json. Run npm run build:mini-data after alias changes.\nexport const styleAliases = ${JSON.stringify(styleAliases, null, 2)};\n`,
+  `// Generated from data/beer-data-source.json. Run npm run build:mini-data after alias changes.\nexport const styleAliases = ${JSON.stringify(styleAliases)};\n`,
   'utf8',
 );
 fs.writeFileSync(
   styleLanguageOutputPath,
-  `// Generated from data/style-language-map.json. Run npm run build:mini-data after style language changes.\nexport const styleLanguageMap = ${JSON.stringify(styleLanguageMap, null, 2)};\n`,
+  `// Generated from data/style-language-map.json. Run npm run build:mini-data after style language changes.\nexport const styleLanguageMap = ${JSON.stringify(styleLanguageMap)};\n`,
   'utf8',
 );
 

@@ -58,6 +58,55 @@ test('all declared WeChat AI paths resolve inside the project root', () => {
   });
 });
 
+test('the upload source stays below the repository package budget', () => {
+  const project = readJson(path.join(root, 'project.config.json'));
+
+  assert.equal(
+    project.setting?.uploadWithSourceMap,
+    false,
+    'release uploads should not include source maps',
+  );
+  assert.ok(
+    measureUploadSourceBytes(project) < 1950 * 1024,
+    'upload source should leave headroom below the 2048 KB limit',
+  );
+});
+
 function readJson(filePath) {
   return JSON.parse(fs.readFileSync(filePath, 'utf8'));
+}
+
+function measureUploadSourceBytes(project) {
+  const ignoredFolders = new Set(
+    (project.packOptions?.ignore || [])
+      .filter((item) => item.type === 'folder')
+      .map((item) => normalizePath(item.value)),
+  );
+  const ignoredFiles = new Set(
+    (project.packOptions?.ignore || [])
+      .filter((item) => item.type === 'file')
+      .map((item) => normalizePath(item.value)),
+  );
+
+  return walk(root)
+    .filter((filePath) => {
+      const relativePath = normalizePath(path.relative(root, filePath));
+      const topLevelFolder = relativePath.split('/')[0];
+      return !ignoredFolders.has(topLevelFolder) && !ignoredFiles.has(relativePath);
+    })
+    .reduce((total, filePath) => total + fs.statSync(filePath).size, 0);
+}
+
+function walk(directory) {
+  return fs.readdirSync(directory, { withFileTypes: true }).flatMap((entry) => {
+    const entryPath = path.join(directory, entry.name);
+    if (entry.isDirectory()) {
+      return walk(entryPath);
+    }
+    return entry.isFile() ? [entryPath] : [];
+  });
+}
+
+function normalizePath(filePath) {
+  return filePath.replaceAll('\\', '/').replace(/^\.?\//, '');
 }

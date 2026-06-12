@@ -16,7 +16,7 @@ function normalizeLineEndings(value) {
 }
 
 function formatExport(comment, exportName, value) {
-  return `${comment}\nexport const ${exportName} = ${JSON.stringify(value, null, 2)};\n`;
+  return `${comment}\nexport const ${exportName} = ${JSON.stringify(value)};\n`;
 }
 
 function buildExpectedOutputs() {
