@@ -2,9 +2,12 @@
   <view class="search-box">
     <input
       value="{{query}}"
+      focus="{{inputFocused}}"
       placeholder="输入编号、中英文名或常见叫法"
       placeholder-class="search-placeholder"
       bindinput="onInput"
+      bindfocus="onInputFocus"
+      bindblur="onInputBlur"
       bindconfirm="submitSearch"
       confirm-type="search"
     />
@@ -32,10 +35,11 @@
     <text class="empty-title">没有找到匹配风格</text>
     <text class="empty-copy">当前资料覆盖 BJCP 官方标准风格与 BA/WBC/GABF 市场扩展风格。</text>
     <text class="empty-copy">可以换一个编号、中文关键词、英文名称或常见叫法再试。</text>
-    <view class="empty-action" hover-class="tap-hover" hover-stay-time="80" bindtap="clearSearch">清空重新搜索</view>
+    <view class="empty-action" hover-class="tap-hover" hover-stay-time="80" bindtap="restartSearch">清空重新搜索</view>
   </view>
 
   <view wx:else class="result-list">
+    <text wx:if="{{resultCountLabel}}" class="result-count">{{resultCountLabel}}</text>
     <view
       wx:for="{{results}}"
       wx:key="id"

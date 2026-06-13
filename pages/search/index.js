@@ -9,6 +9,8 @@ Page({
     results: [],
     hasQuery: false,
     hasResults: false,
+    inputFocused: false,
+    resultCountLabel: '',
     suggestions: ['IPA', '果汁感', '小甜水', '咖啡世涛', '茶感', '不苦'],
   },
 
@@ -41,6 +43,19 @@ Page({
       results,
       hasQuery: Boolean(query.trim()),
       hasResults: results.length > 0,
+      resultCountLabel: results.length ? `${results.length} 个结果` : '',
+    });
+  },
+
+  onInputFocus() {
+    this.setData({
+      inputFocused: true,
+    });
+  },
+
+  onInputBlur() {
+    this.setData({
+      inputFocused: false,
     });
   },
 
@@ -51,6 +66,18 @@ Page({
       results: [],
       hasQuery: false,
       hasResults: false,
+      resultCountLabel: '',
+    });
+  },
+
+  restartSearch() {
+    this.setData({
+      query: '',
+      results: [],
+      hasQuery: false,
+      hasResults: false,
+      inputFocused: true,
+      resultCountLabel: '',
     });
   },
 
@@ -67,6 +94,7 @@ Page({
       results,
       hasQuery: Boolean(query.trim()),
       hasResults: results.length > 0,
+      resultCountLabel: results.length ? `${results.length} 个结果` : '',
     });
   },
 

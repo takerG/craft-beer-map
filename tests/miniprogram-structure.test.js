@@ -53,6 +53,7 @@ const contextualSharePagePaths = [
 const genericSharePagePaths = shareablePagePaths.filter((pagePath) => !contextualSharePagePaths.includes(pagePath));
 let choosePageDefinition = null;
 let explorePageDefinition = null;
+let searchPageDefinition = null;
 
 globalThis.Page = (definition) => {
   choosePageDefinition = definition;
@@ -62,6 +63,10 @@ globalThis.Page = (definition) => {
   explorePageDefinition = definition;
 };
 await import('../pages/explore/index.js?miniprogram-structure-test');
+globalThis.Page = (definition) => {
+  searchPageDefinition = definition;
+};
+await import('../pages/search/index.js?miniprogram-structure-test');
 delete globalThis.Page;
 
 test('every app.json page has the required mini program files', () => {
@@ -693,6 +698,84 @@ test('search clear button keeps its label centered', () => {
   assert.match(searchWxss, /\.clear-btn\s*\{[^}]*line-height:\s*56rpx;/s);
 });
 
+test('search feedback reports result count and clears it with the query', () => {
+  const page = createSearchPage();
+
+  page.onInput({ detail: { value: 'IPA' } });
+
+  assert.equal(page.data.hasQuery, true);
+  assert.equal(page.data.hasResults, true);
+  assert.ok(page.data.results.length > 0);
+  assert.equal(page.data.resultCountLabel, `${page.data.results.length} 个结果`);
+
+  page.clearSearch();
+
+  assert.equal(page.data.query, '');
+  assert.deepEqual(page.data.results, []);
+  assert.equal(page.data.hasQuery, false);
+  assert.equal(page.data.hasResults, false);
+  assert.equal(page.data.resultCountLabel, '');
+});
+
+test('search restart clears an empty result and requests input focus', () => {
+  const page = createSearchPage();
+
+  page.onInput({ detail: { value: 'no-style-matches-this-query' } });
+  assert.equal(page.data.hasQuery, true);
+  assert.equal(page.data.hasResults, false);
+  assert.equal(page.data.resultCountLabel, '');
+
+  page.restartSearch();
+
+  assert.equal(page.data.query, '');
+  assert.deepEqual(page.data.results, []);
+  assert.equal(page.data.hasQuery, false);
+  assert.equal(page.data.hasResults, false);
+  assert.equal(page.data.resultCountLabel, '');
+  assert.equal(page.data.inputFocused, true);
+});
+
+test('search suggestions update the query, results, and result count together', () => {
+  const page = createSearchPage();
+
+  page.useSuggestion({
+    currentTarget: {
+      dataset: {
+        query: 'IPA',
+      },
+    },
+  });
+
+  assert.equal(page.data.query, 'IPA');
+  assert.equal(page.data.hasQuery, true);
+  assert.equal(page.data.hasResults, true);
+  assert.ok(page.data.results.length > 0);
+  assert.equal(page.data.resultCountLabel, `${page.data.results.length} 个结果`);
+});
+
+test('search input focus handlers keep page focus state synchronized', () => {
+  const page = createSearchPage();
+
+  assert.equal(page.data.inputFocused, false);
+  page.onInputFocus();
+  assert.equal(page.data.inputFocused, true);
+  page.onInputBlur();
+  assert.equal(page.data.inputFocused, false);
+});
+
+test('search template binds focus, restart action, and result count feedback', () => {
+  const searchWxml = readMiniPage('pages/search/index.wxml');
+  const searchWxss = readMiniPage('pages/search/index.wxss');
+
+  assert.match(searchWxml, /focus="{{inputFocused}}"/);
+  assert.match(searchWxml, /bindfocus="onInputFocus"/);
+  assert.match(searchWxml, /bindblur="onInputBlur"/);
+  assert.match(searchWxml, /bindtap="restartSearch"/);
+  assert.match(searchWxml, /wx:if="{{resultCountLabel}}" class="result-count"/);
+  assert.match(searchWxml, /{{resultCountLabel}}/);
+  assert.match(searchWxss, /\.result-count\s*\{/);
+});
+
 test('featured style card text truncates overflowing copy', () => {
   const exploreWxss = readMiniPage('pages/explore/index.wxss');
 
@@ -1088,6 +1171,23 @@ function createExplorePage() {
   };
 
   Object.entries(explorePageDefinition).forEach(([key, value]) => {
+    if (typeof value === 'function') {
+      page[key] = value.bind(page);
+    }
+  });
+
+  return page;
+}
+
+function createSearchPage() {
+  const page = {
+    data: structuredClone(searchPageDefinition.data),
+    setData(patch) {
+      Object.assign(this.data, patch);
+    },
+  };
+
+  Object.entries(searchPageDefinition).forEach(([key, value]) => {
     if (typeof value === 'function') {
       page[key] = value.bind(page);
     }

@@ -41,6 +41,14 @@
   margin-top: 28rpx;
 }
 
+.result-count {
+  display: block;
+  margin-bottom: 14rpx;
+  color: #9aa8bb;
+  font-size: 22rpx;
+  text-align: right;
+}
+
 .empty-state {
   margin-top: 36rpx;
   padding: 42rpx 30rpx;
