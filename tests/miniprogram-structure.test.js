@@ -867,6 +867,30 @@ test('choose taste refinement marks the scene and preserves explanation and visu
   assert.equal(page.data.activeVisualIndex, 2);
 });
 
+test('choose taste refinement clears the adjusted label after returning to the scene preset', () => {
+  const page = createChoosePage();
+  page.refreshTasteMatches(page.data.filterState, page.data.activeSceneId);
+
+  page.changeFilter({
+    currentTarget: {
+      dataset: {
+        filterId: 'sweetness',
+        filterValue: 1,
+      },
+    },
+  });
+  page.changeFilter({
+    currentTarget: {
+      dataset: {
+        filterId: 'sweetness',
+        filterValue: -1,
+      },
+    },
+  });
+
+  assert.equal(page.data.activeSceneLabel, '轻松畅饮');
+});
+
 test('choose scene changes restore the preset and reset explanation and visual state', () => {
   const page = createChoosePage();
   page.refreshTasteMatches(page.data.filterState, page.data.activeSceneId);

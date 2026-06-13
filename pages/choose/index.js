@@ -153,7 +153,6 @@ Page({
       sceneId: this.data.activeSceneId,
     });
     this.refreshTasteMatches(nextFilterState, this.data.activeSceneId, {
-      isTasteAdjusted: true,
       preserveInteractionState: true,
     });
   },
@@ -235,12 +234,13 @@ Page({
     const primaryPick = visibleResults[0] || null;
     const alternativeResults = visibleResults.slice(1);
     const visualData = buildVisualData(filters, filterState, results);
+    const isTasteAdjusted = hasFilterAdjustments(filterState, scene.filterState);
     const showExplanation = options.preserveInteractionState ? this.data.showExplanation : false;
     const activeVisualIndex = options.preserveInteractionState ? this.data.activeVisualIndex : 0;
 
     this.setData({
       activeSceneId: scene.id,
-      activeSceneLabel: options.isTasteAdjusted ? `${scene.label} · 已微调` : scene.label,
+      activeSceneLabel: isTasteAdjusted ? `${scene.label} · 已微调` : scene.label,
       activeSceneIntent: scene.intent,
       scenePresets: buildScenePresets(scene.id),
       filterState,
@@ -294,6 +294,12 @@ function buildMatchLabel(matchScore) {
 
 function getScenePreset(sceneId) {
   return SCENE_PRESETS.find((scene) => scene.id === sceneId) || null;
+}
+
+function hasFilterAdjustments(filterState, presetState) {
+  return Object.keys(presetState).some(
+    (key) => Number(filterState[key]) !== Number(presetState[key]),
+  );
 }
 
 function buildFilterRows(filters, filterState) {
