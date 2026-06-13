@@ -4,7 +4,6 @@ import { buildShareMessage, buildTimelineShareMessage, enableShareMenu } from '.
 import { trackEvent } from '../../utils/telemetry.js';
 
 const FEATURED_LIMIT = 6;
-const FEATURED_SEARCH_LIMIT = 100;
 const FEATURED_SYSTEM_LABELS = {
   bjcp: 'BJCP 官方标准风格 · IPA',
   extension: 'BA/WBC/GABF 市场扩展风格 · IPA',
@@ -14,9 +13,21 @@ export function buildFeaturedSection(featuredSource, sectionId) {
   const kind = sectionId === 'extension' ? 'extension' : 'bjcp';
 
   return {
-    featured: featuredSource.filter((style) => style.kind === kind).slice(0, FEATURED_LIMIT),
+    featured: featuredSource
+      .filter((style) => style.kind === kind && hasDirectIpaIdentity(style))
+      .slice(0, FEATURED_LIMIT),
     featuredSystemLabel: FEATURED_SYSTEM_LABELS[kind],
   };
+}
+
+function hasDirectIpaIdentity(style) {
+  return [
+    style.displayName,
+    style.name_en,
+    ...(Array.isArray(style.aliases) ? style.aliases : []),
+  ]
+    .filter(Boolean)
+    .some((identity) => /ipa/i.test(identity));
 }
 
 Page({
@@ -36,7 +47,7 @@ Page({
     const groups = getSuperGroups();
     const extensionGroups = getExtensionGroups();
     const overview = getGuideOverview();
-    const featuredSource = searchStyles('ipa', FEATURED_SEARCH_LIMIT);
+    const featuredSource = searchStyles('ipa', Number.MAX_SAFE_INTEGER);
     const featuredSection = buildFeaturedSection(featuredSource, this.data.activeSection);
     this.featuredSource = featuredSource;
 
@@ -75,7 +86,7 @@ Page({
     const { sectionId } = event.currentTarget.dataset;
     if (!sectionId || sectionId === this.data.activeSection) return;
     trackEvent('explore_section_switch', { sectionId });
-    const featuredSource = this.featuredSource || searchStyles('ipa', FEATURED_SEARCH_LIMIT);
+    const featuredSource = this.featuredSource || searchStyles('ipa', Number.MAX_SAFE_INTEGER);
     this.setData({
       activeSection: sectionId,
       ...buildFeaturedSection(featuredSource, sectionId),

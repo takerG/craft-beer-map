@@ -542,6 +542,7 @@ test('explore IPA featured entries follow the active style system', () => {
   page.onLoad();
   assert.ok(page.data.featured.length > 0);
   assert.equal(page.data.featured.every((style) => style.kind === 'bjcp'), true);
+  page.data.featured.forEach(assertDirectIpaIdentity);
   assert.equal(page.data.featuredSystemLabel, 'BJCP 官方标准风格 · IPA');
 
   page.switchSection({
@@ -553,7 +554,15 @@ test('explore IPA featured entries follow the active style system', () => {
   });
   assert.ok(page.data.featured.length > 0);
   assert.equal(page.data.featured.every((style) => style.kind === 'extension'), true);
+  page.data.featured.forEach(assertDirectIpaIdentity);
   assert.equal(page.data.featuredSystemLabel, 'BA/WBC/GABF 市场扩展风格 · IPA');
+});
+
+test('explore IPA featured search requests complete repository results before filtering', () => {
+  const exploreJs = readMiniPage('pages/explore/index.js');
+
+  assert.match(exploreJs, /searchStyles\('ipa',\s*Number\.MAX_SAFE_INTEGER\)/);
+  assert.doesNotMatch(exploreJs, /FEATURED_SEARCH_LIMIT\s*=\s*100/);
 });
 
 test('explore quick entry renders its dynamic style system label', () => {
@@ -1085,6 +1094,19 @@ function createExplorePage() {
   });
 
   return page;
+}
+
+function assertDirectIpaIdentity(style) {
+  const directIdentity = [
+    style.displayName,
+    style.name_en,
+    ...(Array.isArray(style.aliases) ? style.aliases : []),
+    style.code,
+  ]
+    .filter(Boolean)
+    .join(' ');
+
+  assert.match(directIdentity, /ipa/i, `${style.kind}:${style.id} should identify directly as IPA`);
 }
 
 function toChooseResultKey(result) {
