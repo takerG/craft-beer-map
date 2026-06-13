@@ -717,22 +717,94 @@ test('search feedback reports result count and clears it with the query', () => 
   assert.equal(page.data.resultCountLabel, '');
 });
 
-test('search restart clears an empty result and requests input focus', () => {
+test('search restart creates a false-to-true focus edge after the next render', () => {
+  const nextTick = createNextTickController();
   const page = createSearchPage();
 
-  page.onInput({ detail: { value: 'no-style-matches-this-query' } });
-  assert.equal(page.data.hasQuery, true);
-  assert.equal(page.data.hasResults, false);
-  assert.equal(page.data.resultCountLabel, '');
+  try {
+    page.data.inputFocused = true;
+    page.onInput({ detail: { value: 'no-style-matches-this-query' } });
+    page.restartSearch();
 
-  page.restartSearch();
+    assert.equal(page.data.query, '');
+    assert.deepEqual(page.data.results, []);
+    assert.equal(page.data.hasQuery, false);
+    assert.equal(page.data.hasResults, false);
+    assert.equal(page.data.resultCountLabel, '');
+    assert.equal(page.data.inputFocused, false);
+    assert.equal(nextTick.pendingCount(), 1);
 
-  assert.equal(page.data.query, '');
-  assert.deepEqual(page.data.results, []);
-  assert.equal(page.data.hasQuery, false);
-  assert.equal(page.data.hasResults, false);
-  assert.equal(page.data.resultCountLabel, '');
-  assert.equal(page.data.inputFocused, true);
+    nextTick.flushNext();
+
+    assert.equal(page.data.inputFocused, true);
+    assert.deepEqual(
+      page.setDataCalls.slice(-2).map((patch) => patch.inputFocused),
+      [false, true],
+    );
+  } finally {
+    nextTick.restore();
+  }
+});
+
+test('search restart ignores blur while the focus request is pending', () => {
+  const nextTick = createNextTickController();
+  const page = createSearchPage();
+
+  try {
+    page.restartSearch();
+    page.onInputBlur();
+
+    assert.equal(page.data.inputFocused, false);
+    nextTick.flushNext();
+    assert.equal(page.data.inputFocused, true);
+  } finally {
+    nextTick.restore();
+  }
+});
+
+test('search focus confirmation clears pending state before normal blur', () => {
+  const nextTick = createNextTickController();
+  const page = createSearchPage();
+
+  try {
+    page.restartSearch();
+    nextTick.flushNext();
+
+    page.onInputBlur();
+    assert.equal(page.data.inputFocused, true);
+
+    page.onInputFocus();
+    page.onInputBlur();
+    assert.equal(page.data.inputFocused, false);
+  } finally {
+    nextTick.restore();
+  }
+});
+
+test('consecutive search restarts each create a new focus edge', () => {
+  const nextTick = createNextTickController();
+  const page = createSearchPage();
+
+  try {
+    page.restartSearch();
+    assert.equal(page.data.inputFocused, false);
+    nextTick.flushNext();
+    assert.equal(page.data.inputFocused, true);
+
+    page.restartSearch();
+    assert.equal(page.data.inputFocused, false);
+    nextTick.flushNext();
+    assert.equal(page.data.inputFocused, true);
+
+    assert.deepEqual(
+      page.setDataCalls
+        .filter((patch) => Object.hasOwn(patch, 'inputFocused'))
+        .map((patch) => patch.inputFocused),
+      [false, true, false, true],
+    );
+  } finally {
+    nextTick.restore();
+  }
 });
 
 test('search suggestions update the query, results, and result count together', () => {
@@ -1182,8 +1254,13 @@ function createExplorePage() {
 function createSearchPage() {
   const page = {
     data: structuredClone(searchPageDefinition.data),
-    setData(patch) {
+    setDataCalls: [],
+    setData(patch, callback) {
+      this.setDataCalls.push(structuredClone(patch));
       Object.assign(this.data, patch);
+      if (typeof callback === 'function') {
+        callback();
+      }
     },
   };
 
@@ -1194,6 +1271,34 @@ function createSearchPage() {
   });
 
   return page;
+}
+
+function createNextTickController() {
+  const callbacks = [];
+  const previousWx = globalThis.wx;
+  globalThis.wx = {
+    ...(previousWx || {}),
+    nextTick(callback) {
+      callbacks.push(callback);
+    },
+  };
+
+  return {
+    pendingCount() {
+      return callbacks.length;
+    },
+    flushNext() {
+      assert.ok(callbacks.length > 0, 'a next render callback should be pending');
+      callbacks.shift()();
+    },
+    restore() {
+      if (previousWx === undefined) {
+        delete globalThis.wx;
+        return;
+      }
+      globalThis.wx = previousWx;
+    },
+  };
 }
 
 function assertDirectIpaIdentity(style) {

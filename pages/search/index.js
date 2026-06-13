@@ -3,7 +3,18 @@ import { navigateOnce } from '../../utils/page-performance.js';
 import { buildShareMessage, buildTimelineShareMessage, enableShareMenu } from '../../utils/share.js';
 import { trackEvent } from '../../utils/telemetry.js';
 
+function runAfterNextRender(callback) {
+  const wxApi = typeof wx !== 'undefined' ? wx : null;
+  if (wxApi && typeof wxApi.nextTick === 'function') {
+    wxApi.nextTick(callback);
+    return;
+  }
+  Promise.resolve().then(callback);
+}
+
 Page({
+  _focusAfterRestart: false,
+
   data: {
     query: '',
     results: [],
@@ -48,12 +59,14 @@ Page({
   },
 
   onInputFocus() {
+    this._focusAfterRestart = false;
     this.setData({
       inputFocused: true,
     });
   },
 
   onInputBlur() {
+    if (this._focusAfterRestart) return;
     this.setData({
       inputFocused: false,
     });
@@ -71,13 +84,21 @@ Page({
   },
 
   restartSearch() {
+    this._focusAfterRestart = true;
     this.setData({
       query: '',
       results: [],
       hasQuery: false,
       hasResults: false,
-      inputFocused: true,
+      inputFocused: false,
       resultCountLabel: '',
+    }, () => {
+      runAfterNextRender(() => {
+        if (!this._focusAfterRestart) return;
+        this.setData({
+          inputFocused: true,
+        });
+      });
     });
   },
 
