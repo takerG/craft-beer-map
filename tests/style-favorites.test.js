@@ -6,6 +6,7 @@ import {
   addFavoriteStyle,
   getFavoriteStyleIds,
   getFavoriteStyleSummaries,
+  getFavoriteStyleSummariesResult,
   isStyleFavorite,
   removeFavoriteStyle,
   toggleFavoriteStyle,
@@ -170,5 +171,40 @@ test('favorite summaries resolve extension style ids from the existing storage k
       { id: 'ext-west-coast-ipa', kind: 'extension' },
       { id: '21A', kind: 'bjcp' },
     ],
+  );
+});
+
+test('favorite summary result reports a successful trusted read', () => {
+  const storage = createMemoryStorage(['ext-west-coast-ipa', 'missing-style', '21A']);
+
+  assert.deepEqual(
+    getFavoriteStyleSummariesResult(storage),
+    {
+      ok: true,
+      favoriteStyles: getFavoriteStyleSummaries(storage),
+    },
+  );
+});
+
+test('favorite summary result reports storage read failures without claiming an empty collection', () => {
+  const storage = {
+    getStorageSync() {
+      throw new Error('storage unavailable');
+    },
+  };
+
+  assert.deepEqual(getFavoriteStyleSummariesResult(storage), {
+    ok: false,
+    favoriteStyles: [],
+    error: 'storage-failed',
+  });
+});
+
+test('legacy favorite summaries stay compatible with the trusted result API', () => {
+  const storage = createMemoryStorage(['21A', 'ext-west-coast-ipa']);
+
+  assert.deepEqual(
+    getFavoriteStyleSummaries(storage),
+    getFavoriteStyleSummariesResult(storage).favoriteStyles,
   );
 });

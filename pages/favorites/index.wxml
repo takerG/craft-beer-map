@@ -2,37 +2,64 @@
   <view class="favorite-hero">
     <text class="page-title">收藏</text>
     <text class="page-subtitle">你标记过的 BJCP 官方标准风格与 BA/WBC/GABF 市场扩展风格会保存在本机，方便反复查看。</text>
-    <view class="favorite-count">
+
+    <view wx:if="{{loadStatus === 'loading'}}" class="favorite-status">
+      <text>正在读取收藏...</text>
+    </view>
+
+    <view wx:elif="{{loadStatus === 'error'}}" class="favorite-status favorite-status-error">
+      <text>{{errorMessage}}</text>
+      <view
+        class="retry-action"
+        hover-class="tap-hover"
+        hover-stay-time="80"
+        bindtap="retryFavoriteStyles"
+      >重试</view>
+    </view>
+
+    <view wx:elif="{{loadStatus === 'ready'}}" class="favorite-count">
       <text>{{favoriteCountLabel}}</text>
     </view>
   </view>
 
-  <view wx:if="{{hasFavoriteStyles}}" class="favorite-list">
-    <view
-      wx:for="{{favoriteStyles}}"
-      wx:key="id"
-      class="favorite-row"
-      style="border-left-color: {{item.color}}"
-      hover-class="tap-hover"
-      hover-stay-time="80"
-      data-style-id="{{item.id}}"
-      data-item-kind="{{item.kind}}"
-      bindtap="openStyle"
-    >
-      <text class="favorite-code">{{item.kind === 'extension' ? 'EX' : item.code}}</text>
-      <view class="favorite-main">
-        <text class="favorite-name">{{item.displayName}}</text>
-        <text class="favorite-en">{{item.name_en}}</text>
+  <block wx:if="{{loadStatus === 'ready'}}">
+    <view wx:if="{{hasFavoriteStyles}}" class="favorite-list">
+      <view
+        wx:for="{{favoriteStyles}}"
+        wx:key="id"
+        class="favorite-row"
+        style="border-left-color: {{item.color}}"
+        hover-class="tap-hover"
+        hover-stay-time="80"
+        data-style-id="{{item.id}}"
+        data-item-kind="{{item.kind}}"
+        bindtap="openStyle"
+      >
+        <text class="favorite-code">{{item.kind === 'extension' ? '扩展风格' : item.code}}</text>
+        <view class="favorite-main">
+          <text class="favorite-name">{{item.displayName}}</text>
+          <text class="favorite-en">{{item.name_en}}</text>
+        </view>
+        <view class="favorite-row-actions">
+          <text class="favorite-action">查看</text>
+          <view
+            class="favorite-remove"
+            hover-class="tap-hover"
+            hover-stay-time="80"
+            data-style-id="{{item.id}}"
+            data-item-kind="{{item.kind}}"
+            catchtap="removeFavorite"
+          >取消</view>
+        </view>
       </view>
-      <text class="favorite-action">查看</text>
     </view>
-  </view>
 
-  <view wx:else class="empty-state">
-    <text class="empty-title">还没有收藏的风格</text>
-    <text class="empty-copy">打开任意 BJCP 官方标准风格或 BA/WBC/GABF 市场扩展风格详情，点收藏就会加入这里。</text>
-    <view class="empty-action" hover-class="tap-hover" hover-stay-time="80" bindtap="goSearch">去搜索风格</view>
-  </view>
+    <view wx:else class="empty-state">
+      <text class="empty-title">还没有收藏的风格</text>
+      <text class="empty-copy">打开任意 BJCP 官方标准风格或 BA/WBC/GABF 市场扩展风格详情，点收藏就会加入这里。</text>
+      <view class="empty-action" hover-class="tap-hover" hover-stay-time="80" bindtap="goSearch">去搜索风格</view>
+    </view>
+  </block>
 </view>
 
 <ai-entry

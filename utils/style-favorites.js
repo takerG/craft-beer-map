@@ -41,8 +41,28 @@ export function isStyleFavorite(styleId, storage = getDefaultStorage()) {
   return getFavoriteStyleIds(storage).includes(normalizedId);
 }
 
+export function getFavoriteStyleSummariesResult(storage = getDefaultStorage()) {
+  const result = readFavoriteIds(storage);
+  if (!result.ok) {
+    return {
+      ok: false,
+      favoriteStyles: [],
+      error: 'storage-failed',
+    };
+  }
+
+  return {
+    ok: true,
+    favoriteStyles: resolveFavoriteStyleSummaries(result.favoriteIds),
+  };
+}
+
 export function getFavoriteStyleSummaries(storage = getDefaultStorage()) {
-  return getFavoriteStyleIds(storage)
+  return getFavoriteStyleSummariesResult(storage).favoriteStyles;
+}
+
+function resolveFavoriteStyleSummaries(favoriteIds) {
+  return favoriteIds
     .map((styleId) => (
       styleId.startsWith('ext-')
         ? getExtensionStyleDetail(styleId)

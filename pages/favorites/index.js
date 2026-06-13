@@ -1,13 +1,18 @@
 import { navigateOnce, switchTabOnce } from '../../utils/page-performance.js';
 import { buildShareMessage, buildTimelineShareMessage, enableShareMenu } from '../../utils/share.js';
-import { getFavoriteStyleSummaries } from '../../utils/style-favorites.js';
+import {
+  getFavoriteStyleSummariesResult,
+  removeFavoriteStyle,
+} from '../../utils/style-favorites.js';
 import { trackEvent } from '../../utils/telemetry.js';
 
 Page({
   data: {
+    loadStatus: 'loading',
+    errorMessage: '',
     favoriteStyles: [],
     hasFavoriteStyles: false,
-    favoriteCountLabel: '0 个收藏',
+    favoriteCountLabel: '',
   },
 
   onLoad() {
@@ -34,12 +39,53 @@ Page({
   },
 
   refreshFavoriteStyles() {
-    const favoriteStyles = getFavoriteStyleSummaries();
     this.setData({
+      loadStatus: 'loading',
+      errorMessage: '',
+    });
+    const result = getFavoriteStyleSummariesResult();
+    if (!result.ok) {
+      this.setData({
+        loadStatus: 'error',
+        errorMessage: '收藏读取失败，请重试',
+      });
+      return;
+    }
+
+    const { favoriteStyles } = result;
+    this.setData({
+      loadStatus: 'ready',
       favoriteStyles,
       hasFavoriteStyles: favoriteStyles.length > 0,
       favoriteCountLabel: `${favoriteStyles.length} 个收藏`,
     });
+  },
+
+  retryFavoriteStyles() {
+    this.refreshFavoriteStyles();
+  },
+
+  removeFavorite(event) {
+    const { styleId, itemKind } = event.currentTarget.dataset;
+    const result = removeFavoriteStyle(styleId);
+    if (!result.ok) {
+      wx.showToast({
+        title: '取消失败，请重试',
+        icon: 'none',
+      });
+      return;
+    }
+
+    trackEvent('favorite_remove_success', {
+      styleId,
+      itemKind,
+      source: 'favorites',
+    });
+    wx.showToast({
+      title: '已取消收藏',
+      icon: 'success',
+    });
+    this.refreshFavoriteStyles();
   },
 
   openStyle(event) {

@@ -27,6 +27,35 @@
   font-weight: 900;
 }
 
+.favorite-status {
+  display: flex;
+  align-items: center;
+  min-height: 58rpx;
+  margin-top: 24rpx;
+  color: #cbd5e1;
+  font-size: 23rpx;
+  line-height: 1.5;
+}
+
+.favorite-status-error {
+  justify-content: space-between;
+  color: #ffcf85;
+}
+
+.retry-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 58rpx;
+  margin-left: 20rpx;
+  padding: 0 24rpx;
+  border-radius: 999rpx;
+  background: rgba(246, 173, 85, 0.14);
+  color: #f6ad55;
+  font-size: 23rpx;
+  font-weight: 800;
+}
+
 .favorite-list {
   margin-top: 28rpx;
 }
@@ -47,11 +76,13 @@
 
 .favorite-code {
   display: flex;
+  flex: 0 0 auto;
   align-items: center;
   justify-content: center;
-  width: 76rpx;
+  min-width: 76rpx;
   height: 76rpx;
   margin-right: 18rpx;
+  padding: 0 12rpx;
   border-radius: 12rpx;
   background: rgba(246, 173, 85, 0.14);
   color: #f6ad55;
@@ -85,11 +116,32 @@
   white-space: nowrap;
 }
 
-.favorite-action {
+.favorite-row-actions {
+  display: flex;
+  flex: 0 0 auto;
+  flex-direction: column;
+  align-items: center;
   margin-left: 16rpx;
+}
+
+.favorite-action {
   color: #f6ad55;
   font-size: 22rpx;
   font-weight: 900;
+}
+
+.favorite-remove {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 58rpx;
+  margin-top: 8rpx;
+  padding: 0 22rpx;
+  border-radius: 999rpx;
+  background: rgba(255, 255, 255, 0.08);
+  color: #d7deea;
+  font-size: 22rpx;
+  font-weight: 800;
 }
 
 .empty-state {
