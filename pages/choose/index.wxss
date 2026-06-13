@@ -849,12 +849,12 @@
 }
 
 .exact-match-code {
-  flex: 0 0 68rpx;
-  overflow: hidden;
+  flex: 0 0 auto;
+  min-width: 68rpx;
+  margin-right: 12rpx;
   color: #ffcf85;
   font-size: 22rpx;
   font-weight: 950;
-  text-overflow: ellipsis;
   white-space: nowrap;
 }
 

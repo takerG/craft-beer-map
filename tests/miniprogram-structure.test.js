@@ -827,7 +827,8 @@ test('choose count reflects only the visible recommendations', () => {
   page.refreshTasteMatches(page.data.filterState, page.data.activeSceneId);
 
   const visibleResults = [page.data.primaryPick, ...page.data.alternativeResults].filter(Boolean);
-  assert.ok(visibleResults.length <= 3);
+  assert.equal(visibleResults.length, 3);
+  assert.equal(page.data.alternativeResults.length, 2);
   assert.equal(page.data.resultCountLabel, `${visibleResults.length} 个推荐`);
 });
 
@@ -944,6 +945,16 @@ test('choose primary, related, and exact match reasons allow at most two lines',
     );
     assert.match(chooseWxss, rulePattern, `${className} should clamp at two lines`);
   });
+});
+
+test('choose exact match labels leave enough width for the extension identity', () => {
+  const chooseWxss = readMiniPage('pages/choose/index.wxss');
+  const codeRule = chooseWxss.match(/\.exact-match-code\s*\{([^}]*)\}/s);
+
+  assert.ok(codeRule, 'exact match code styles should exist');
+  assert.match(codeRule[1], /flex:\s*0 0 auto;/);
+  assert.match(codeRule[1], /min-width:\s*68rpx;/);
+  assert.doesNotMatch(codeRule[1], /text-overflow:\s*ellipsis;/);
 });
 
 test('choose tab default state knows the expanded taste dimensions', () => {
