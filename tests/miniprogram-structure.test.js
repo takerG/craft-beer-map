@@ -52,11 +52,16 @@ const contextualSharePagePaths = [
 ];
 const genericSharePagePaths = shareablePagePaths.filter((pagePath) => !contextualSharePagePaths.includes(pagePath));
 let choosePageDefinition = null;
+let explorePageDefinition = null;
 
 globalThis.Page = (definition) => {
   choosePageDefinition = definition;
 };
 await import('../pages/choose/index.js?miniprogram-structure-test');
+globalThis.Page = (definition) => {
+  explorePageDefinition = definition;
+};
+await import('../pages/explore/index.js?miniprogram-structure-test');
 delete globalThis.Page;
 
 test('every app.json page has the required mini program files', () => {
@@ -494,8 +499,8 @@ test('academy page renders a simple publish-sorted feed', () => {
   const academyJs = readMiniPage('pages/academy/index.js');
 
   assert.doesNotMatch(academyWxml, /class="feed-head"/);
-  assert.doesNotMatch(academyWxml, /class="page-title">\{\{title\}\}/);
-  assert.doesNotMatch(academyWxml, /class="page-subtitle">\{\{subtitle\}\}/);
+  assert.match(academyWxml, /class="page-title">\{\{title\}\}/);
+  assert.match(academyWxml, /class="page-subtitle">\{\{subtitle\}\}/);
   assert.doesNotMatch(academyWxml, /class="feed-count"/);
   assert.doesNotMatch(academyJs, /articleCountLabel/);
   assert.match(academyWxml, /<scroll-view[^>]*class="filter-strip"[^>]*scroll-x="true"/s);
@@ -518,6 +523,44 @@ test('academy page renders a simple publish-sorted feed', () => {
   assert.match(academyWxss, /\.feed-card\s*\{[^}]*width:\s*100%;/s);
   assert.doesNotMatch(academyWxss, /\.feed-card\s*\{[^}]*min-height:\s*\d+rpx;/s);
   assert.doesNotMatch(academyWxml, /featured-strip|track-tabs|track-panel|tool-list/);
+});
+
+test('academy feed titles clamp at two lines', () => {
+  const academyWxss = readMiniPage('pages/academy/index.wxss');
+  const feedTitleRule = academyWxss.match(/\.feed-title\s*\{(?<body>[\s\S]*?)\}/);
+
+  assert.ok(feedTitleRule, 'academy feed title styles should exist');
+  assert.match(feedTitleRule.groups.body, /display:\s*-webkit-box;/);
+  assert.match(feedTitleRule.groups.body, /-webkit-box-orient:\s*vertical;/);
+  assert.match(feedTitleRule.groups.body, /-webkit-line-clamp:\s*2;/);
+  assert.doesNotMatch(feedTitleRule.groups.body, /white-space:\s*nowrap;/);
+});
+
+test('explore IPA featured entries follow the active style system', () => {
+  const page = createExplorePage();
+
+  page.onLoad();
+  assert.ok(page.data.featured.length > 0);
+  assert.equal(page.data.featured.every((style) => style.kind === 'bjcp'), true);
+  assert.equal(page.data.featuredSystemLabel, 'BJCP 官方标准风格 · IPA');
+
+  page.switchSection({
+    currentTarget: {
+      dataset: {
+        sectionId: 'extension',
+      },
+    },
+  });
+  assert.ok(page.data.featured.length > 0);
+  assert.equal(page.data.featured.every((style) => style.kind === 'extension'), true);
+  assert.equal(page.data.featuredSystemLabel, 'BA/WBC/GABF 市场扩展风格 · IPA');
+});
+
+test('explore quick entry renders its dynamic style system label', () => {
+  const exploreWxml = readMiniPage('pages/explore/index.wxml');
+
+  assert.match(exploreWxml, /\{\{featuredSystemLabel\}\}/);
+  assert.doesNotMatch(exploreWxml, /<text>IPA<\/text>/);
 });
 
 test('academy article long-form text is selectable in devtools and devices', () => {
@@ -1019,6 +1062,23 @@ function createChoosePage() {
   };
 
   Object.entries(choosePageDefinition).forEach(([key, value]) => {
+    if (typeof value === 'function') {
+      page[key] = value.bind(page);
+    }
+  });
+
+  return page;
+}
+
+function createExplorePage() {
+  const page = {
+    data: structuredClone(explorePageDefinition.data),
+    setData(patch) {
+      Object.assign(this.data, patch);
+    },
+  };
+
+  Object.entries(explorePageDefinition).forEach(([key, value]) => {
     if (typeof value === 'function') {
       page[key] = value.bind(page);
     }

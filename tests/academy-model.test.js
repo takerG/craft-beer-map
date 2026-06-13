@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import path from 'node:path';
 
-import { getAcademyHome, getAcademySites } from '../utils/academy-feed-model.js';
+import { buildAcademyTypeFilters, getAcademyHome, getAcademySites } from '../utils/academy-feed-model.js';
 import { getAcademyArticle } from '../subpages/utils/academy-model.js';
 
 const root = process.cwd();
@@ -112,12 +112,26 @@ test('academy home exposes feed type filters with counts', () => {
       ['all', '全部', 6],
       ['map', '地图', 1],
       ['comparison', '对比', 2],
-      ['simulator', '工具', 1],
+      ['simulator', '互动', 1],
       ['tool', '工具', 2],
     ],
   );
   assert.equal(home.filterOptions[0].className, 'filter-chip is-active');
   assert.equal(home.filterOptions.slice(1).every((option) => option.className === 'filter-chip'), true);
+});
+
+test('academy feed type labels uniquely distinguish simulator from tool', () => {
+  const filters = buildAcademyTypeFilters([
+    { type: 'simulator' },
+    { type: 'tool' },
+    { type: 'map' },
+  ]);
+  const contentFilters = filters.filter((option) => option.type !== 'all');
+  const labels = contentFilters.map((option) => option.label);
+
+  assert.equal(contentFilters.find((option) => option.type === 'simulator').label, '互动');
+  assert.equal(contentFilters.find((option) => option.type === 'tool').label, '工具');
+  assert.equal(new Set(labels).size, labels.length);
 });
 
 test('academy feed filter strip keeps a fixed horizontal scroll height', () => {

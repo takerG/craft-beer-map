@@ -3,6 +3,10 @@
   background: #10151d;
 }
 
+.academy-head {
+  margin-bottom: 20rpx;
+}
+
 .feed-list {
   width: 100%;
 }
@@ -71,15 +75,16 @@
 }
 
 .feed-title {
-  display: block;
+  display: -webkit-box;
   margin-top: 14rpx;
   overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
   color: #f8fafc;
   font-size: 31rpx;
   font-weight: 950;
   line-height: 1.25;
   text-overflow: ellipsis;
-  white-space: nowrap;
 }
 
 .feed-desc {

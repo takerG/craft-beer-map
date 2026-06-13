@@ -145,7 +145,7 @@
 
   <view class="section-head">
     <text>快速入口</text>
-    <text>IPA</text>
+    <text>{{featuredSystemLabel}}</text>
   </view>
 
   <scroll-view scroll-x class="featured-strip">

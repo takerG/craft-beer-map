@@ -5,6 +5,8 @@ import { trackEvent } from '../../utils/telemetry.js';
 
 Page({
   data: {
+    title: '',
+    subtitle: '',
     allFeedSites: [],
     feedSites: [],
     typeFilters: [],
@@ -17,6 +19,8 @@ Page({
     const home = getAcademyHome();
 
     this.setData({
+      title: home.title,
+      subtitle: home.subtitle,
       allFeedSites: home.feedSites,
       feedSites: home.feedSites,
       typeFilters: home.filterOptions,

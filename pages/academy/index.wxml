@@ -1,4 +1,9 @@
 <view class="page academy-page">
+  <view class="academy-head">
+    <text class="page-title">{{title}}</text>
+    <text class="page-subtitle">{{subtitle}}</text>
+  </view>
+
   <scroll-view class="filter-strip" scroll-x="true" show-scrollbar="false">
     <view
       wx:for="{{typeFilters}}"

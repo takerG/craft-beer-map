@@ -1,7 +1,7 @@
 import { academySites } from '../data/academy-sites.js';
 
 const TYPE_LABELS = {
-  simulator: '工具',
+  simulator: '互动',
   tool: '工具',
   map: '地图',
   comparison: '对比',
