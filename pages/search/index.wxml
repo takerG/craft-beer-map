@@ -2,7 +2,7 @@
   <view class="search-box">
     <input
       value="{{query}}"
-      placeholder="输入 BJCP 编号、中英文名"
+      placeholder="输入编号、中英文名或常见叫法"
       placeholder-class="search-placeholder"
       bindinput="onInput"
       bindconfirm="submitSearch"
@@ -13,7 +13,8 @@
 
   <view wx:if="{{!hasQuery}}" class="empty-state">
     <text class="empty-title">搜索风格</text>
-    <text class="empty-copy">输入 BJCP 编号、中文名或英文名，结果会直接进入详情页。</text>
+    <text class="empty-copy">可搜索 BJCP 编号、中英文名与常见叫法，结果会直接进入对应详情页。</text>
+    <text class="empty-copy">资料同时覆盖 BJCP 官方标准风格与 BA/WBC/GABF 市场扩展风格。</text>
     <view class="suggestion-list">
       <text
         wx:for="{{suggestions}}"
@@ -29,9 +30,8 @@
 
   <view wx:elif="{{!hasResults}}" class="empty-state">
     <text class="empty-title">没有找到匹配风格</text>
-    <text class="empty-copy">当前只收录 BJCP 官方标准风格。</text>
-    <text class="empty-copy">水果酸艾尔、冷 IPA 等未被 BJCP 收录的风格暂时搜不到。</text>
-    <text class="empty-copy">可以换一个编号、中文关键词或英文名称再试。</text>
+    <text class="empty-copy">当前资料覆盖 BJCP 官方标准风格与 BA/WBC/GABF 市场扩展风格。</text>
+    <text class="empty-copy">可以换一个编号、中文关键词、英文名称或常见叫法再试。</text>
     <view class="empty-action" hover-class="tap-hover" hover-stay-time="80" bindtap="clearSearch">清空重新搜索</view>
   </view>
 

@@ -2,8 +2,10 @@
 
 ## 1. 微信开发者工具
 
-- 使用微信开发者工具打开仓库根目录 `D:\work\craft-beer-map` 并完成编译。
-- 确认根目录 `project.config.json` 与 `app.json` 同级。
+- 运行 `npm run build:profiles` 与 `npm run check:profiles`。
+- 使用微信开发者工具打开 `D:\work\craft-beer-map\artifacts\production` 并完成编译。
+- 确认 production 根目录 `project.config.json` 与 `app.json` 同级。
+- 禁止从仓库根目录或 `artifacts/ai-beta` 正式上传。
 - 检查控制台没有页面脚本错误、资源缺失、setData 过大告警或样式解析异常。
 - 走通探寻、搜索、大类详情、标准风格详情、扩展分组、扩展风格详情。
 
@@ -39,11 +41,13 @@
 - 新用户 60 秒内能完成一次搜索或打开一个风格详情。
 - 没有明显卡顿、跳转重复、布局溢出。
 - `npm test` 全部通过。
+- `npm run check:generated` 与 `npm run check:profiles` 全部通过。
+- production 不包含 `agent`、`skills/`、`aiDetail/`、`ai-entry` 或 AI metadata。
 
 ## 7. AI 推荐质量 V2
 
 - `npm run build:ai-mode` 与 `npm run check:ai-mode` 通过。
-- 官方 validator 以仓库根目录为项目根并能发现 `craft-beer-guide`。
+- 官方 validator 以仓库根目录或 `artifacts/ai-beta` 为 beta 项目根并能发现 `craft-beer-guide`。
 - `project.config.json` 的 `packOptions.include` 包含 `skills`。
 - `app.json` 声明 `agent.skills`、`agent.instruction` 和 `agent.pageMetadata`。
 - 原子组件无根节点固定高度，已启用 Overflow 监测和点击反馈。

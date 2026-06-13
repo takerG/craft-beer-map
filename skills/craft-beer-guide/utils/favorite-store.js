@@ -14,24 +14,24 @@ function listFavoriteStyleRefs(storage = defaultStorage()) {
 
 function addFavoriteStyleRef(styleRef, storage = defaultStorage()) {
   const normalized = normalizeStyleRef(styleRef);
-  if (!normalized) return listFavoriteStyleRefs(storage);
+  const previous = readFavoriteState(storage);
+  if (!normalized || !previous.ok) return mutationFailure(previous.refs);
 
   const refs = uniqueStyleRefs([
     normalized,
-    ...listFavoriteStyleRefs(storage).filter((item) => styleRefKey(item) !== styleRefKey(normalized)),
+    ...previous.refs.filter((item) => styleRefKey(item) !== styleRefKey(normalized)),
   ]).slice(0, MAX_FAVORITES);
-  persistRefs(refs, storage);
-  return refs;
+  return persistRefs(refs, previous.refs, normalized, true, storage);
 }
 
 function removeFavoriteStyleRef(styleRef, storage = defaultStorage()) {
   const normalized = normalizeStyleRef(styleRef);
-  if (!normalized) return listFavoriteStyleRefs(storage);
+  const previous = readFavoriteState(storage);
+  if (!normalized || !previous.ok) return mutationFailure(previous.refs);
 
-  const refs = listFavoriteStyleRefs(storage)
+  const refs = previous.refs
     .filter((item) => styleRefKey(item) !== styleRefKey(normalized));
-  persistRefs(refs, storage);
-  return refs;
+  return persistRefs(refs, previous.refs, normalized, false, storage);
 }
 
 function hasFavoriteStyleRef(styleRef, storage = defaultStorage()) {
@@ -41,34 +41,89 @@ function hasFavoriteStyleRef(styleRef, storage = defaultStorage()) {
     .some((item) => styleRefKey(item) === styleRefKey(normalized));
 }
 
-function persistRefs(refs, storage) {
-  writeValue(
-    storage,
-    LEGACY_BJCP_KEY,
-    refs.map((item) => item.id),
-  );
+function persistRefs(refs, previousRefs, targetRef, targetFavorite, storage) {
+  const wasFavorite = previousRefs
+    .some((item) => styleRefKey(item) === styleRefKey(targetRef));
+  try {
+    if (!storage || typeof storage.setStorageSync !== 'function') {
+      return mutationFailure(previousRefs);
+    }
+    storage.setStorageSync(LEGACY_BJCP_KEY, refs.map((item) => item.id));
+  } catch (error) {
+    restoreRefs(previousRefs, storage);
+    return mutationFailure(previousRefs);
+  }
+
+  const confirmed = readFavoriteState(storage);
+  const confirmedFavorite = confirmed.refs
+    .some((item) => styleRefKey(item) === styleRefKey(targetRef));
+  if (
+    !confirmed.ok
+    || confirmedFavorite !== targetFavorite
+    || !sameStyleRefs(confirmed.refs, refs)
+  ) {
+    restoreRefs(previousRefs, storage);
+    return mutationFailure(previousRefs);
+  }
+  return { ok: true, refs: confirmed.refs, wasFavorite };
 }
 
 function readArray(storage, key) {
+  return readArrayState(storage, key).value;
+}
+
+function readArrayState(storage, key) {
   try {
     const value = storage && typeof storage.getStorageSync === 'function'
       ? storage.getStorageSync(key)
       : [];
-    return Array.isArray(value) ? value : [];
+    return {
+      ok: true,
+      value: Array.isArray(value) ? value : [],
+    };
   } catch (error) {
-    return [];
+    return {
+      ok: false,
+      value: [],
+    };
   }
 }
 
-function writeValue(storage, key, value) {
+function readFavoriteState(storage) {
+  const stored = readArrayState(storage, LEGACY_BJCP_KEY);
+  return {
+    ok: stored.ok,
+    refs: uniqueStyleRefs(stored.value
+      .map((id) => normalizeStyleRef({
+        kind: typeof id === 'string' && id.startsWith('ext-') ? 'extension' : 'bjcp',
+        id,
+      }))
+      .filter(Boolean))
+      .slice(0, MAX_FAVORITES),
+  };
+}
+
+function restoreRefs(refs, storage) {
   try {
     if (storage && typeof storage.setStorageSync === 'function') {
-      storage.setStorageSync(key, value);
+      storage.setStorageSync(LEGACY_BJCP_KEY, refs.map((item) => item.id));
     }
   } catch (error) {
-    return value;
+    // The API still reports failure and never claims the mutation succeeded.
   }
-  return value;
+}
+
+function mutationFailure(refs) {
+  return {
+    ok: false,
+    refs: uniqueStyleRefs(refs || []).slice(0, MAX_FAVORITES),
+    error: 'storage-failed',
+  };
+}
+
+function sameStyleRefs(left, right) {
+  return left.length === right.length
+    && left.every((item, index) => styleRefKey(item) === styleRefKey(right[index]));
 }
 
 function uniqueStyleRefs(refs) {

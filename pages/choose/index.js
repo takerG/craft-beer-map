@@ -268,8 +268,15 @@ function toChooseResult(result) {
   return {
     ...result,
     codeLabel: result.kind === 'extension' ? 'EX' : result.code,
+    matchLabel: buildMatchLabel(result.matchScore),
     reasonText: result.matchReasons.join('、') || '风味轮廓接近',
   };
+}
+
+function buildMatchLabel(matchScore) {
+  if (matchScore >= 90) return '高度匹配';
+  if (matchScore >= 75) return '较为匹配';
+  return '可以尝试';
 }
 
 function getScenePreset(sceneId) {

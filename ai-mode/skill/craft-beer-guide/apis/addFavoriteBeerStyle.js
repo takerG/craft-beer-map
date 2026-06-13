@@ -1,5 +1,5 @@
 const { catalog, runtime } = require('../utils/catalog.js');
-const { addFavoriteStyleRef, hasFavoriteStyleRef, listFavoriteStyleRefs } = require('../utils/favorite-store.js');
+const { addFavoriteStyleRef } = require('../utils/favorite-store.js');
 const { failure, success } = require('../utils/result.js');
 const { createFlowStore } = require('../utils/flow-store.js');
 const { hasRecommendedStyle } = require('../utils/recommendation-session.js');
@@ -62,13 +62,12 @@ async function addFavoriteBeerStyle({ styleRef, recommendationContext } = {}) {
 }
 
 function persistFavorite(style) {
-  const alreadyFavorite = hasFavoriteStyleRef(style.styleRef);
-  const favoriteRefs = alreadyFavorite
-    ? listFavoriteStyleRefs()
-    : addFavoriteStyleRef(style.styleRef);
-  if (!alreadyFavorite && !hasFavoriteStyleRef(style.styleRef)) {
+  const mutation = addFavoriteStyleRef(style.styleRef);
+  if (!mutation.ok) {
     return failure('收藏未能写入本机存储，请稍后重试。', 'storage-failed');
   }
+  const alreadyFavorite = mutation.wasFavorite;
+  const favoriteRefs = mutation.refs;
   return success(
     alreadyFavorite ? `${style.displayName} 此前已收藏。` : `已将 ${style.displayName} 加入收藏。`,
     {

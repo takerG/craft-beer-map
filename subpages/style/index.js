@@ -103,6 +103,19 @@ Page({
     if (!style) return;
 
     const result = toggleFavoriteStyle(style.id);
+    if (!result.ok) {
+      trackEvent('favorite_toggle_failed', {
+        styleId: style.id,
+        targetFavorite: !this.data.isFavorite,
+        error: result.error,
+      });
+      wx.showToast({
+        title: '收藏状态未保存，请重试',
+        icon: 'none',
+        duration: 1500,
+      });
+      return;
+    }
     this.setData({
       isFavorite: result.isFavorite,
       favoriteActionLabel: result.isFavorite ? '已收藏' : '收藏',

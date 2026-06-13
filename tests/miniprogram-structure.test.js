@@ -642,12 +642,16 @@ test('featured style card text truncates overflowing copy', () => {
   });
 });
 
-test('search empty result explains BJCP official coverage', () => {
+test('search and favorites copy explain both official and market extension coverage', () => {
   const searchWxml = readMiniPage('pages/search/index.wxml');
+  const favoritesWxml = readMiniPage('pages/favorites/index.wxml');
 
   assert.match(searchWxml, /BJCP 官方标准风格/);
-  assert.equal(searchWxml.includes('水果酸艾尔'), true);
-  assert.match(searchWxml, /冷 IPA/);
+  assert.match(searchWxml, /BA\/WBC\/GABF 市场扩展风格/);
+  assert.doesNotMatch(searchWxml, /当前只收录 BJCP/);
+  assert.doesNotMatch(searchWxml, /暂时搜不到/);
+  assert.match(favoritesWxml, /BJCP 官方标准风格/);
+  assert.match(favoritesWxml, /BA\/WBC\/GABF 市场扩展风格/);
 });
 
 test('search results and style details expose community aliases', () => {
@@ -766,6 +770,23 @@ test('choose tab frames matches as a tonight decision workbench', () => {
   assert.match(chooseWxss, /\.primary-pick-card/);
   assert.match(chooseWxss, /\.alternative-grid/);
   assert.match(chooseWxss, /\.why-recommendation/);
+});
+
+test('choose tab uses qualitative match labels and hides explanations without results', () => {
+  const chooseJs = readMiniPage('pages/choose/index.js');
+  const chooseWxml = readMiniPage('pages/choose/index.wxml');
+
+  assert.match(chooseJs, /function buildMatchLabel\(matchScore\)/);
+  ['高度匹配', '较为匹配', '可以尝试'].forEach((label) => {
+    assert.equal(chooseJs.includes(label), true, label);
+  });
+  assert.doesNotMatch(chooseWxml, /matchScore}}%/);
+  assert.match(chooseWxml, /{{primaryPick\.matchLabel}}/);
+  assert.match(chooseWxml, /{{item\.matchLabel}}/);
+  assert.match(
+    chooseWxml,
+    /wx:if="{{hasResults}}" class="result-region"[\s\S]*class="why-recommendation"[\s\S]*wx:else class="choose-empty"/,
+  );
 });
 
 test('choose tab expands all exact compound taste matches below related styles', () => {

@@ -33,20 +33,30 @@ test('favorite style ids are normalized and deduplicated from local storage', ()
 test('adding a favorite keeps the most recent style first', () => {
   const storage = createMemoryStorage(['1B', '21A']);
 
-  assert.deepEqual(addFavoriteStyle('18A', storage), ['18A', '1B', '21A']);
-  assert.deepEqual(addFavoriteStyle('1B', storage), ['1B', '18A', '21A']);
+  assert.deepEqual(addFavoriteStyle('18A', storage), {
+    ok: true,
+    favoriteIds: ['18A', '1B', '21A'],
+    isFavorite: true,
+  });
+  assert.deepEqual(addFavoriteStyle('1B', storage), {
+    ok: true,
+    favoriteIds: ['1B', '18A', '21A'],
+    isFavorite: true,
+  });
 });
 
 test('toggleFavoriteStyle returns the next favorite state and persists it', () => {
   const storage = createMemoryStorage(['1B']);
 
   assert.deepEqual(toggleFavoriteStyle('21A', storage), {
+    ok: true,
     favoriteIds: ['21A', '1B'],
     isFavorite: true,
   });
   assert.equal(isStyleFavorite('21A', storage), true);
 
   assert.deepEqual(toggleFavoriteStyle('21A', storage), {
+    ok: true,
     favoriteIds: ['1B'],
     isFavorite: false,
   });
@@ -56,7 +66,86 @@ test('toggleFavoriteStyle returns the next favorite state and persists it', () =
 test('removing a favorite leaves other records intact', () => {
   const storage = createMemoryStorage(['21A', '1B', '18A']);
 
-  assert.deepEqual(removeFavoriteStyle('1B', storage), ['21A', '18A']);
+  assert.deepEqual(removeFavoriteStyle('1B', storage), {
+    ok: true,
+    favoriteIds: ['21A', '18A'],
+    isFavorite: false,
+  });
+});
+
+test('failed favorite writes keep the previous state and return an explicit failure', () => {
+  const storage = createMemoryStorage(['1B']);
+  storage.setStorageSync = () => {
+    throw new Error('storage full');
+  };
+
+  assert.deepEqual(toggleFavoriteStyle('21A', storage), {
+    ok: false,
+    favoriteIds: ['1B'],
+    isFavorite: false,
+    error: 'storage-failed',
+  });
+  assert.deepEqual(getFavoriteStyleIds(storage), ['1B']);
+});
+
+test('failed favorite removals keep the previous state and return an explicit failure', () => {
+  const storage = createMemoryStorage(['21A', '1B']);
+  storage.setStorageSync = () => {
+    throw new Error('storage full');
+  };
+
+  assert.deepEqual(toggleFavoriteStyle('21A', storage), {
+    ok: false,
+    favoriteIds: ['21A', '1B'],
+    isFavorite: true,
+    error: 'storage-failed',
+  });
+  assert.deepEqual(getFavoriteStyleIds(storage), ['21A', '1B']);
+});
+
+test('read-back failures roll back the attempted favorite change', () => {
+  const store = new Map([[FAVORITE_STYLE_STORAGE_KEY, ['1B']]]);
+  let reads = 0;
+  const storage = {
+    getStorageSync(key) {
+      reads += 1;
+      if (reads === 2) throw new Error('read failed');
+      return store.get(key);
+    },
+    setStorageSync(key, value) {
+      store.set(key, value);
+    },
+  };
+
+  assert.deepEqual(addFavoriteStyle('21A', storage), {
+    ok: false,
+    favoriteIds: ['1B'],
+    isFavorite: false,
+    error: 'storage-failed',
+  });
+  assert.deepEqual(store.get(FAVORITE_STYLE_STORAGE_KEY), ['1B']);
+});
+
+test('read-back mismatches roll back the attempted favorite change', () => {
+  const store = new Map([[FAVORITE_STYLE_STORAGE_KEY, ['1B']]]);
+  let writes = 0;
+  const storage = {
+    getStorageSync(key) {
+      return store.get(key);
+    },
+    setStorageSync(key, value) {
+      writes += 1;
+      store.set(key, writes === 1 ? ['1B'] : value);
+    },
+  };
+
+  assert.deepEqual(addFavoriteStyle('21A', storage), {
+    ok: false,
+    favoriteIds: ['1B'],
+    isFavorite: false,
+    error: 'storage-failed',
+  });
+  assert.deepEqual(store.get(FAVORITE_STYLE_STORAGE_KEY), ['1B']);
 });
 
 test('favorite summaries ignore stale local ids and stay lightweight', () => {

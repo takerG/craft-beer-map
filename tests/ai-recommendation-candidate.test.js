@@ -181,11 +181,56 @@ test('favorite storage failure neither reports success nor consumes completion r
   };
   const failed = await favorite({ styleRef: item.styleRef, recommendationContext: context });
   assert.equal(failed.isError, true);
+  assert.equal(failed._meta?.failureCode, 'storage-failed');
 
   global.wx.setStorageSync = originalSet;
   const retry = await favorite({ styleRef: item.styleRef, recommendationContext: context });
   assert.equal(retry.isError, false);
   assert.equal(retry._meta.completion.firstCompletion, true);
+});
+
+test('favorite removal storage failure keeps the favorite and returns failure', async () => {
+  memory.clear();
+  const remove = loadApi('removeFavoriteBeerStyle');
+  const styleRef = { kind: 'bjcp', id: '21A' };
+  memory.set('craftBeerFavoriteStyleIds.v1', ['21A']);
+  const originalSet = global.wx.setStorageSync;
+  global.wx.setStorageSync = () => {
+    throw new Error('storage-failed');
+  };
+
+  try {
+    const result = await remove({ styleRef });
+
+    assert.equal(result.isError, true);
+    assert.equal(result._meta?.failureCode, 'storage-failed');
+    assert.deepEqual(memory.get('craftBeerFavoriteStyleIds.v1'), ['21A']);
+  } finally {
+    global.wx.setStorageSync = originalSet;
+  }
+});
+
+test('candidate favorite APIs fail when favorite storage cannot be read', async () => {
+  memory.clear();
+  const add = loadApi('addFavoriteBeerStyle');
+  const remove = loadApi('removeFavoriteBeerStyle');
+  const styleRef = { kind: 'bjcp', id: '21A' };
+  const originalGet = global.wx.getStorageSync;
+  global.wx.getStorageSync = () => {
+    throw new Error('storage-failed');
+  };
+
+  try {
+    const addResult = await add({ styleRef });
+    const removeResult = await remove({ styleRef });
+
+    assert.equal(addResult.isError, true);
+    assert.equal(addResult._meta?.failureCode, 'storage-failed');
+    assert.equal(removeResult.isError, true);
+    assert.equal(removeResult._meta?.failureCode, 'storage-failed');
+  } finally {
+    global.wx.getStorageSync = originalGet;
+  }
 });
 
 function candidateArgs(flow) {

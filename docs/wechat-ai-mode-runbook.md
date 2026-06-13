@@ -2,10 +2,13 @@
 
 ## 构建入口
 
-AI Mode 直接扩展现有小程序。唯一微信项目根目录是仓库根目录
+AI Mode 直接扩展现有小程序。AI beta 的 canonical 开发项目根目录是仓库根目录
 `D:\work\craft-beer-map`，其中
 `project.config.json`、`app.json`、`AGENTS.md`、`page-meta.json` 和
 `skills/` 处于同一层级。
+
+仓库根目录与 `artifacts/ai-beta` 均为非生产项目。正式发布只能使用
+`artifacts/production`，不得从根目录或 AI beta 画像上传。
 
 官方文档和示例中的 `miniprogram` 通常是“用户的小程序项目目录”的代称，
 不是必须在仓库中新增的固定子目录。
@@ -13,26 +16,30 @@ AI Mode 直接扩展现有小程序。唯一微信项目根目录是仓库根目
 ```powershell
 npm run build:ai-mode
 npm run check:ai-mode
+npm run build:profiles
+npm run check:profiles
 ```
 
 - 开发者工具项目：`project.config.json`
 - Skill：`skills/craft-beer-guide/`
 - 知识库文件：`artifacts/ai-knowledge-base/`
 
-`build:ai-mode` 只生成 Skill/半屏页目录数据和知识库文件，不复制第二套小程序。
-微信开发者工具应直接导入仓库根目录 `D:\work\craft-beer-map`。
+`build:ai-mode` 只生成 Skill/半屏页目录数据和知识库文件。
+AI beta 调试可直接导入仓库根目录；需要隔离画像时导入 `artifacts/ai-beta`。
+正式版编译、预览和上传只能导入 `artifacts/production`。
 
 ## 官方 validator
 
 使用微信官方 `wechat-miniprogram/ai-mode-skills` 中的 validator，并把当前
-仓库根目录作为唯一参数：
+仓库根目录或构建后的 `artifacts/ai-beta` 作为参数：
 
 ```powershell
 node tmp/official-ai-mode-skills/wxa-skills-validate/scripts/validate.mjs .
+node tmp/official-ai-mode-skills/wxa-skills-validate/scripts/validate.mjs artifacts/ai-beta
 ```
 
-validator 必须能从根目录 `app.json` 的 `agent.skills` 自动发现
-`skills/craft-beer-guide`。不得改为传入某个嵌套生成目录。
+validator 必须能从所选 beta 项目根的 `app.json` 自动发现
+`skills/craft-beer-guide`。该验证结果不赋予 beta 画像正式发布资格。
 
 对照实验开发构建：
 

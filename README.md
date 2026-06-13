@@ -43,18 +43,26 @@ npm run check:generated
 npm run build:mini-data
 npm run build:ai-mode
 npm run check:ai-mode
+npm run build:profiles
+npm run check:profiles
 npm run apply:aliases
 ```
 
 `build:mini-data` 会从 `data/beer-data-source.json` 生成 `data/beer-data.js` 和 `data/style-aliases.js`。
 `check:generated` 用来在提交前检查这些生成数据是否和源数据同步。
+`build:profiles` 会生成 `artifacts/production` 与 `artifacts/ai-beta`；
+`check:profiles` 会检查正式包 AI 隔离、文件哈希、确定性与包体预算。
 
 ## 开发方式
 
 用微信开发者工具直接打开仓库根目录 `craft-beer-map/`。该目录同时包含
 `project.config.json`、`app.json` 和 `skills/`，也是官方 AI Mode
-validator 的唯一项目根目录。官方文档或示例中名为 `miniprogram` 的目录通常只是
+validator 可识别的 beta 开发项目根目录。仓库根目录和 `artifacts/ai-beta`
+仅用于 AI beta 开发与验证，不得作为正式发布上传源。官方文档或示例中名为 `miniprogram` 的目录通常只是
 “用户的小程序项目目录”的代称，本仓库不再额外创建同名子目录。
+
+正式发布前必须运行 `npm run build:profiles` 和 `npm run check:profiles`，
+微信开发者工具只能导入 `artifacts/production` 进行正式版编译、预览与上传。
 
 如果更新 BJCP 源数据或别名，先更新 `data/beer-data-source.json` 或 `scripts/style_aliases.cjs`，再运行对应脚本并执行测试。
 如果更新 AI Skill、页面元数据或知识库来源，运行 `npm run build:ai-mode` 和

@@ -1,7 +1,7 @@
 <view class="page favorites-page">
   <view class="favorite-hero">
     <text class="page-title">收藏</text>
-    <text class="page-subtitle">你标记过的 BJCP 风格会保存在本机，方便反复对照风味、参数和相关风格。</text>
+    <text class="page-subtitle">你标记过的 BJCP 官方标准风格与 BA/WBC/GABF 市场扩展风格会保存在本机，方便反复查看。</text>
     <view class="favorite-count">
       <text>{{favoriteCountLabel}}</text>
     </view>
@@ -30,7 +30,7 @@
 
   <view wx:else class="empty-state">
     <text class="empty-title">还没有收藏的风格</text>
-    <text class="empty-copy">打开任意 BJCP 风格详情，点右上角星标就会加入这里。</text>
+    <text class="empty-copy">打开任意 BJCP 官方标准风格或 BA/WBC/GABF 市场扩展风格详情，点收藏就会加入这里。</text>
     <view class="empty-action" hover-class="tap-hover" hover-stay-time="80" bindtap="goSearch">去搜索风格</view>
   </view>
 </view>

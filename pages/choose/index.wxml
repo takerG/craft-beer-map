@@ -63,7 +63,7 @@
   <view wx:if="{{hasResults}}" class="result-region">
     <view class="result-head">
       <text>今晚首选</text>
-      <text>{{primaryPick.matchScore}}% 匹配</text>
+      <text>{{primaryPick.matchLabel}}</text>
     </view>
 
     <view
@@ -81,7 +81,7 @@
           <text class="primary-pick-name">{{primaryPick.displayName}}</text>
           <text class="primary-pick-en">{{primaryPick.name_en}}</text>
         </view>
-        <text class="primary-pick-score">{{primaryPick.matchScore}}%</text>
+        <text class="primary-pick-score">{{primaryPick.matchLabel}}</text>
       </view>
       <text class="primary-pick-reason">{{primaryPick.reasonText}}</text>
       <view class="primary-pick-tags">
@@ -113,7 +113,7 @@
         >
           <view class="alternative-card-head">
             <text class="alternative-code">{{item.codeLabel}}</text>
-            <text class="alternative-score">{{item.matchScore}}%</text>
+            <text class="alternative-score">{{item.matchLabel}}</text>
           </view>
           <text class="alternative-name">{{item.displayName}}</text>
           <text class="alternative-reason">{{item.reasonText}}</text>
@@ -152,17 +152,11 @@
             <text class="exact-match-name">{{item.displayName}}</text>
             <text class="exact-match-reason">{{item.reasonText}}</text>
           </view>
-          <text class="exact-match-score">{{item.matchScore}}%</text>
+          <text class="exact-match-score">{{item.matchLabel}}</text>
         </view>
       </view>
     </view>
-  </view>
-
-  <view wx:else class="choose-empty">
-    <text>这组条件太苛刻了，放宽一个维度再试。</text>
-  </view>
-
-  <view class="why-recommendation">
+    <view class="why-recommendation">
     <view
       class="why-toggle"
       hover-class="tap-hover"
@@ -281,6 +275,11 @@
         </swiper-item>
       </swiper>
     </view>
+    </view>
+  </view>
+
+  <view wx:else class="choose-empty">
+    <text>当前条件没有稳定匹配，可以放宽一个口味维度再试。</text>
   </view>
 </view>
 

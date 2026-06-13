@@ -129,6 +129,55 @@ test('favorite APIs are idempotent and retain extension references locally', asy
   assert.deepEqual(memory.get('craftBeerFavoriteStyleIds.v1'), []);
 });
 
+test('favorite APIs report storage failures without changing the stored state', async () => {
+  memory.clear();
+  const add = loadApi('addFavoriteBeerStyle');
+  const remove = loadApi('removeFavoriteBeerStyle');
+  const styleRef = { kind: 'bjcp', id: '21A' };
+  const originalSet = global.wx.setStorageSync;
+
+  global.wx.setStorageSync = () => {
+    throw new Error('storage full');
+  };
+  try {
+    const addResult = await add({ styleRef });
+    assert.equal(addResult.isError, true);
+    assert.equal(addResult._meta?.failureCode, 'storage-failed');
+    assert.equal(memory.has('craftBeerFavoriteStyleIds.v1'), false);
+
+    memory.set('craftBeerFavoriteStyleIds.v1', ['21A']);
+    const removeResult = await remove({ styleRef });
+    assert.equal(removeResult.isError, true);
+    assert.equal(removeResult._meta?.failureCode, 'storage-failed');
+    assert.deepEqual(memory.get('craftBeerFavoriteStyleIds.v1'), ['21A']);
+  } finally {
+    global.wx.setStorageSync = originalSet;
+  }
+});
+
+test('favorite APIs do not claim success when favorite storage cannot be read', async () => {
+  memory.clear();
+  const add = loadApi('addFavoriteBeerStyle');
+  const remove = loadApi('removeFavoriteBeerStyle');
+  const styleRef = { kind: 'bjcp', id: '21A' };
+  const originalGet = global.wx.getStorageSync;
+
+  global.wx.getStorageSync = () => {
+    throw new Error('storage unavailable');
+  };
+  try {
+    const addResult = await add({ styleRef });
+    const removeResult = await remove({ styleRef });
+
+    assert.equal(addResult.isError, true);
+    assert.equal(addResult._meta?.failureCode, 'storage-failed');
+    assert.equal(removeResult.isError, true);
+    assert.equal(removeResult._meta?.failureCode, 'storage-failed');
+  } finally {
+    global.wx.getStorageSync = originalGet;
+  }
+});
+
 test('Skill APIs reject missing or unknown identifiers without inventing results', async () => {
   const search = loadApi('searchBeerStyles');
   const detail = loadApi('getBeerStyleDetail');
