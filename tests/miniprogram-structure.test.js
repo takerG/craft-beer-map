@@ -51,6 +51,13 @@ const contextualSharePagePaths = [
   'subpages/extension-style/index',
 ];
 const genericSharePagePaths = shareablePagePaths.filter((pagePath) => !contextualSharePagePaths.includes(pagePath));
+let choosePageDefinition = null;
+
+globalThis.Page = (definition) => {
+  choosePageDefinition = definition;
+};
+await import('../pages/choose/index.js?miniprogram-structure-test');
+delete globalThis.Page;
 
 test('every app.json page has the required mini program files', () => {
   allDeclaredPagePaths.forEach((pagePath) => {
@@ -604,12 +611,13 @@ test('choose taste matches route extension styles to extension details', () => {
   assert.match(chooseWxml, /data-item-kind="{{item.kind}}"/);
 });
 
-test('choose taste matches reserve a code label for extension styles', () => {
+test('choose taste matches label extension styles for users without EX shorthand', () => {
   const chooseJs = readMiniPage('pages/choose/index.js');
   const chooseWxml = readMiniPage('pages/choose/index.wxml');
 
   assert.match(chooseJs, /codeLabel/);
-  assert.match(chooseJs, /EX/);
+  assert.match(chooseJs, /扩展风格/);
+  assert.doesNotMatch(chooseJs, /codeLabel:\s*result\.kind === 'extension' \? 'EX'/);
   assert.match(chooseWxml, /{{item\.codeLabel}}/);
 });
 
@@ -813,6 +821,107 @@ test('choose tab expands all exact compound taste matches below related styles',
   assert.match(chooseWxss, /\.exact-match-card/);
 });
 
+test('choose count reflects only the visible recommendations', () => {
+  const page = createChoosePage();
+
+  page.refreshTasteMatches(page.data.filterState, page.data.activeSceneId);
+
+  const visibleResults = [page.data.primaryPick, ...page.data.alternativeResults].filter(Boolean);
+  assert.ok(visibleResults.length <= 3);
+  assert.equal(page.data.resultCountLabel, `${visibleResults.length} 个推荐`);
+});
+
+test('choose exact compound matches exclude the visible recommendations', () => {
+  const page = createChoosePage();
+
+  page.refreshTasteMatches(page.data.filterState, page.data.activeSceneId);
+
+  const visibleKeys = new Set(
+    [page.data.primaryPick, ...page.data.alternativeResults]
+      .filter(Boolean)
+      .map(toChooseResultKey),
+  );
+  page.data.exactMatchResults.forEach((result) => {
+    assert.equal(visibleKeys.has(toChooseResultKey(result)), false, `${toChooseResultKey(result)} should not repeat`);
+  });
+});
+
+test('choose taste refinement marks the scene and preserves explanation and visual state', () => {
+  const page = createChoosePage();
+  page.refreshTasteMatches(page.data.filterState, page.data.activeSceneId);
+  page.data.showExplanation = true;
+  page.data.activeVisualIndex = 2;
+
+  page.changeFilter({
+    currentTarget: {
+      dataset: {
+        filterId: 'sweetness',
+        filterValue: 1,
+      },
+    },
+  });
+
+  assert.equal(page.data.activeSceneLabel, '轻松畅饮 · 已微调');
+  assert.equal(page.data.showExplanation, true);
+  assert.equal(page.data.explanationToggleLabel, '收起推荐依据');
+  assert.equal(page.data.activeVisualIndex, 2);
+});
+
+test('choose scene changes restore the preset and reset explanation and visual state', () => {
+  const page = createChoosePage();
+  page.refreshTasteMatches(page.data.filterState, page.data.activeSceneId);
+  page.data.showExplanation = true;
+  page.data.activeVisualIndex = 2;
+  page.data.filterState = {
+    ...page.data.filterState,
+    sweetness: 1,
+  };
+
+  page.changeScene({
+    currentTarget: {
+      dataset: {
+        sceneId: 'meal',
+      },
+    },
+  });
+
+  assert.equal(page.data.activeSceneLabel, '搭餐');
+  assert.deepEqual(page.data.filterState, {
+    sweetness: 0,
+    sourness: -1,
+    bitterness: 0,
+    body: 0,
+    strength: 0,
+  });
+  assert.equal(page.data.showExplanation, false);
+  assert.equal(page.data.explanationToggleLabel, '展开推荐依据');
+  assert.equal(page.data.activeVisualIndex, 0);
+});
+
+test('choose visuals omit fixed radar fill and star connector decorations', () => {
+  const chooseWxml = readMiniPage('pages/choose/index.wxml');
+  const chooseWxss = readMiniPage('pages/choose/index.wxss');
+
+  assert.doesNotMatch(chooseWxml, /class="radar-fill"/);
+  assert.doesNotMatch(chooseWxml, /class="star-line/);
+  assert.doesNotMatch(chooseWxss, /\.radar-fill\s*\{/);
+  assert.doesNotMatch(chooseWxss, /\.star-line(?:-[a-z]+)?\s*\{/);
+  assert.match(chooseWxml, /wx:for="{{radarMetrics}}"/);
+  assert.match(chooseWxml, /wx:for="{{starNodes}}"/);
+});
+
+test('choose primary, related, and exact match reasons allow at most two lines', () => {
+  const chooseWxss = readMiniPage('pages/choose/index.wxss');
+
+  ['primary-pick-reason', 'alternative-reason', 'exact-match-reason'].forEach((className) => {
+    const rulePattern = new RegExp(
+      `\\.${className}\\s*\\{[^}]*display:\\s*-webkit-box;[^}]*-webkit-box-orient:\\s*vertical;[^}]*-webkit-line-clamp:\\s*2;`,
+      's',
+    );
+    assert.match(chooseWxss, rulePattern, `${className} should clamp at two lines`);
+  });
+});
+
 test('choose tab default state knows the expanded taste dimensions', () => {
   const chooseJs = readMiniPage('pages/choose/index.js');
 
@@ -864,4 +973,25 @@ function listMiniProgramFiles(extension = '') {
 
 function readMiniPage(relativePath) {
   return fs.readFileSync(path.join(miniprogramRoot, relativePath), 'utf8');
+}
+
+function createChoosePage() {
+  const page = {
+    data: structuredClone(choosePageDefinition.data),
+    setData(patch) {
+      Object.assign(this.data, patch);
+    },
+  };
+
+  Object.entries(choosePageDefinition).forEach(([key, value]) => {
+    if (typeof value === 'function') {
+      page[key] = value.bind(page);
+    }
+  });
+
+  return page;
+}
+
+function toChooseResultKey(result) {
+  return `${result.kind}:${result.id}`;
 }

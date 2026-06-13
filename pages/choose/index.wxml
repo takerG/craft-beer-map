@@ -234,7 +234,6 @@
               <view class="radar-ring radar-ring-one"></view>
               <view class="radar-ring radar-ring-two"></view>
               <view class="radar-ring radar-ring-three"></view>
-              <view class="radar-fill"></view>
               <view
                 wx:for="{{radarMetrics}}"
                 wx:key="id"
@@ -254,9 +253,6 @@
               <text>Style stars</text>
             </view>
             <view class="star-map">
-              <view class="star-line star-line-one"></view>
-              <view class="star-line star-line-two"></view>
-              <view class="star-line star-line-three"></view>
               <view
                 wx:for="{{starNodes}}"
                 wx:key="id"

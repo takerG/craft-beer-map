@@ -97,7 +97,7 @@ Page({
     showExactMatches: false,
     exactMatchesToggleLabel: '展开全部复合匹配',
     exactMatchesCountLabel: '',
-    resultCountLabel: '0 个匹配',
+    resultCountLabel: '0 个推荐',
     showExplanation: false,
     explanationToggleLabel: '展开推荐依据',
     explanationSummary: '',
@@ -152,7 +152,10 @@ Page({
       filterValue: Number(filterValue),
       sceneId: this.data.activeSceneId,
     });
-    this.refreshTasteMatches(nextFilterState, this.data.activeSceneId);
+    this.refreshTasteMatches(nextFilterState, this.data.activeSceneId, {
+      isTasteAdjusted: true,
+      preserveInteractionState: true,
+    });
   },
 
   toggleExplanation(event) {
@@ -220,18 +223,24 @@ Page({
     navigateOnce(this, `/subpages/style/index?styleId=${styleId}`);
   },
 
-  refreshTasteMatches(filterState, sceneId = DEFAULT_SCENE_ID) {
+  refreshTasteMatches(filterState, sceneId = DEFAULT_SCENE_ID, options = {}) {
     const scene = getScenePreset(sceneId) || getScenePreset(DEFAULT_SCENE_ID);
     const filters = getTasteFilters();
     const results = getTasteMatches(filterState, 12).map(toChooseResult);
-    const exactMatchResults = getExactTasteMatches(filterState).map(toChooseResult);
-    const primaryPick = results[0] || null;
-    const alternativeResults = results.slice(1, 3);
+    const visibleResults = results.slice(0, 3);
+    const visibleResultKeys = new Set(visibleResults.map(toResultKey));
+    const exactMatchResults = getExactTasteMatches(filterState)
+      .map(toChooseResult)
+      .filter((result) => !visibleResultKeys.has(toResultKey(result)));
+    const primaryPick = visibleResults[0] || null;
+    const alternativeResults = visibleResults.slice(1);
     const visualData = buildVisualData(filters, filterState, results);
+    const showExplanation = options.preserveInteractionState ? this.data.showExplanation : false;
+    const activeVisualIndex = options.preserveInteractionState ? this.data.activeVisualIndex : 0;
 
     this.setData({
       activeSceneId: scene.id,
-      activeSceneLabel: scene.label,
+      activeSceneLabel: options.isTasteAdjusted ? `${scene.label} · 已微调` : scene.label,
       activeSceneIntent: scene.intent,
       scenePresets: buildScenePresets(scene.id),
       filterState,
@@ -247,11 +256,11 @@ Page({
       showExactMatches: false,
       exactMatchesToggleLabel: buildExactMatchesToggleLabel(false, exactMatchResults.length),
       exactMatchesCountLabel: buildExactMatchesCountLabel(exactMatchResults, filters, filterState),
-      resultCountLabel: `${results.length} 个匹配`,
-      showExplanation: false,
-      explanationToggleLabel: '展开推荐依据',
+      resultCountLabel: `${visibleResults.length} 个推荐`,
+      showExplanation,
+      explanationToggleLabel: showExplanation ? '收起推荐依据' : '展开推荐依据',
       explanationSummary: buildExplanationSummary(primaryPick, alternativeResults, scene),
-      activeVisualIndex: 0,
+      activeVisualIndex,
       ...visualData,
     });
   },
@@ -267,10 +276,14 @@ function buildScenePresets(activeSceneId) {
 function toChooseResult(result) {
   return {
     ...result,
-    codeLabel: result.kind === 'extension' ? 'EX' : result.code,
+    codeLabel: result.kind === 'extension' ? '扩展风格' : result.code,
     matchLabel: buildMatchLabel(result.matchScore),
     reasonText: result.matchReasons.join('、') || '风味轮廓接近',
   };
+}
+
+function toResultKey(result) {
+  return `${result.kind}:${result.id}`;
 }
 
 function buildMatchLabel(matchScore) {
