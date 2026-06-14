@@ -133,6 +133,13 @@ function commitFavoriteIds({
 }
 
 function readFavoriteIds(storage) {
+  if (!storage || typeof storage.getStorageSync !== 'function') {
+    return {
+      ok: false,
+      favoriteIds: [],
+    };
+  }
+
   try {
     return {
       ok: true,

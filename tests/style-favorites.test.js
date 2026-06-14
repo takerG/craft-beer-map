@@ -200,6 +200,44 @@ test('favorite summary result reports storage read failures without claiming an 
   });
 });
 
+test('favorite summary result rejects unavailable storage readers while legacy summaries stay empty', () => {
+  const unavailableStorages = [
+    ['null storage', null],
+    ['undefined storage', undefined],
+    ['missing getStorageSync', {}],
+  ];
+
+  unavailableStorages.forEach(([label, storage]) => {
+    assert.deepEqual(
+      getFavoriteStyleSummariesResult(storage),
+      {
+        ok: false,
+        favoriteStyles: [],
+        error: 'storage-failed',
+      },
+      label,
+    );
+    assert.deepEqual(getFavoriteStyleSummaries(storage), [], label);
+  });
+});
+
+test('favorite mutations fail without writing when storage cannot be read', () => {
+  let writes = 0;
+  const storage = {
+    setStorageSync() {
+      writes += 1;
+    },
+  };
+
+  assert.deepEqual(addFavoriteStyle('21A', storage), {
+    ok: false,
+    favoriteIds: [],
+    isFavorite: false,
+    error: 'storage-failed',
+  });
+  assert.equal(writes, 0);
+});
+
 test('legacy favorite summaries stay compatible with the trusted result API', () => {
   const storage = createMemoryStorage(['21A', 'ext-west-coast-ipa']);
 

@@ -42,6 +42,9 @@ Page({
     this.setData({
       loadStatus: 'loading',
       errorMessage: '',
+      favoriteStyles: [],
+      hasFavoriteStyles: false,
+      favoriteCountLabel: '',
     });
     const result = getFavoriteStyleSummariesResult();
     if (!result.ok) {

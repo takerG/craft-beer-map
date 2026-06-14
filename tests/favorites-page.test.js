@@ -64,6 +64,45 @@ test('favorites page reports a read error without claiming zero favorites and re
   }
 });
 
+test('favorites page clears trusted list and AI count context before a later read failure', () => {
+  let shouldFail = false;
+  const storage = createWxStorage(['21A']);
+  storage.getStorageSync = (key) => {
+    if (shouldFail) throw new Error('read failed');
+    return storage.store.get(key);
+  };
+  const restoreGlobals = installGlobals(storage);
+  const page = createFavoritesPage();
+
+  try {
+    page.refreshFavoriteStyles();
+
+    assert.equal(page.data.loadStatus, 'ready');
+    assert.equal(page.data.hasFavoriteStyles, true);
+    assert.equal(page.data.favoriteCountLabel, '1 个收藏');
+    assert.deepEqual(page.data.favoriteStyles.map((style) => style.id), ['21A']);
+
+    shouldFail = true;
+    const callCountBeforeFailure = page.setDataCalls.length;
+    page.refreshFavoriteStyles();
+
+    assert.deepEqual(page.setDataCalls[callCountBeforeFailure], {
+      loadStatus: 'loading',
+      errorMessage: '',
+      favoriteStyles: [],
+      hasFavoriteStyles: false,
+      favoriteCountLabel: '',
+    });
+    assert.equal(page.data.loadStatus, 'error');
+    assert.notEqual(page.data.errorMessage, '');
+    assert.deepEqual(page.data.favoriteStyles, []);
+    assert.equal(page.data.hasFavoriteStyles, false);
+    assert.equal(page.data.favoriteCountLabel, '');
+  } finally {
+    restoreGlobals();
+  }
+});
+
 test('successful favorite removal refreshes from storage and reports success', () => {
   const storage = createWxStorage(['21A', '1B']);
   const restoreGlobals = installGlobals(storage);
