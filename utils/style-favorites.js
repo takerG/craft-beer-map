@@ -20,9 +20,10 @@ export function removeFavoriteStyle(styleId, storage = getDefaultStorage()) {
 export function toggleFavoriteStyle(styleId, storage = getDefaultStorage()) {
   const normalizedId = normalizeStyleId(styleId);
   const previous = readFavoriteIds(storage);
-  if (!normalizedId || !previous.ok) {
+  if (!normalizedId) {
     return buildMutationFailure(previous.favoriteIds, normalizedId);
   }
+  if (!previous.ok) return buildUnreadableMutationFailure();
   const wasFavorite = previous.favoriteIds.includes(normalizedId);
   return commitFavoriteIds({
     targetIds: wasFavorite
@@ -105,9 +106,10 @@ function readStoredValue(storage) {
 
 function mutateFavoriteStyle(styleId, targetFavorite, storage) {
   const previous = readFavoriteIds(storage);
-  if (!styleId || !previous.ok) {
+  if (!styleId) {
     return buildMutationFailure(previous.favoriteIds, styleId);
   }
+  if (!previous.ok) return buildUnreadableMutationFailure();
   const targetIds = targetFavorite
     ? [styleId, ...previous.favoriteIds.filter((id) => id !== styleId)]
     : previous.favoriteIds.filter((id) => id !== styleId);
@@ -221,6 +223,15 @@ function buildUncertainMutationFailure() {
     favoriteIds: [],
     isFavorite: null,
     error: 'storage-uncertain',
+  };
+}
+
+function buildUnreadableMutationFailure() {
+  return {
+    ok: false,
+    favoriteIds: [],
+    isFavorite: null,
+    error: 'storage-failed',
   };
 }
 

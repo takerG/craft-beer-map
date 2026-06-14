@@ -133,7 +133,8 @@ Page({
         targetFavorite,
         error: result.error,
       });
-      if (result.error === 'storage-uncertain') {
+      const favoriteStateUnknown = result.isFavorite === null;
+      if (favoriteStateUnknown) {
         this.setData({
           favoriteStatus: 'error',
           favoriteActionLabel: '重试收藏状态',

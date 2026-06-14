@@ -424,21 +424,32 @@ test('favorite summary result rejects unavailable storage readers while legacy s
   });
 });
 
-test('favorite mutations fail without writing when storage cannot be read', () => {
-  let writes = 0;
-  const storage = {
-    setStorageSync() {
-      writes += 1;
-    },
-  };
+test('favorite mutations report unknown state without writing when storage cannot be read', () => {
+  const mutations = [
+    ['add', addFavoriteStyle],
+    ['remove', removeFavoriteStyle],
+    ['toggle', toggleFavoriteStyle],
+  ];
 
-  assert.deepEqual(addFavoriteStyle('21A', storage), {
-    ok: false,
-    favoriteIds: [],
-    isFavorite: false,
-    error: 'storage-failed',
+  mutations.forEach(([label, mutate]) => {
+    let writes = 0;
+    const storage = {
+      getStorageSync() {
+        throw new Error('storage unavailable');
+      },
+      setStorageSync() {
+        writes += 1;
+      },
+    };
+
+    assert.deepEqual(mutate('21A', storage), {
+      ok: false,
+      favoriteIds: [],
+      isFavorite: null,
+      error: 'storage-failed',
+    }, label);
+    assert.equal(writes, 0, label);
   });
-  assert.equal(writes, 0);
 });
 
 test('legacy favorite summaries stay compatible with the trusted result API', () => {

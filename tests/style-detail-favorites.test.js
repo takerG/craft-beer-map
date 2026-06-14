@@ -98,6 +98,55 @@ for (const [label, definition, styleId] of detailPages) {
       runtime.restore();
     }
   });
+
+  test(`${label} refreshes trusted state before retrying an unreadable mutation`, () => {
+    const storage = createControlledStorage([]);
+    const runtime = installMiniProgramRuntime(storage);
+    const page = createPage(definition);
+
+    try {
+      page.onLoad({ styleId });
+
+      assert.equal(page.data.favoriteStatus, 'ready');
+      assert.equal(page.data.isFavorite, false);
+      assert.equal(storage.writes, 0);
+
+      storage.failReads = true;
+      page.toggleFavorite();
+
+      assert.equal(storage.writes, 0);
+      assert.equal(page.data.favoriteStatus, 'error');
+      assert.equal(
+        runtime.analyticsQueue.some((event) => event.eventName === 'favorite_toggle'),
+        false,
+      );
+
+      storage.failReads = false;
+      storage.value = [styleId];
+      page.toggleFavorite();
+
+      assert.equal(storage.writes, 0);
+      assert.equal(page.data.favoriteStatus, 'ready');
+      assert.equal(page.data.isFavorite, true);
+      assert.equal(
+        runtime.analyticsQueue.some((event) => event.eventName === 'favorite_toggle'),
+        false,
+      );
+
+      page.toggleFavorite();
+
+      assert.equal(storage.writes, 1);
+      assert.deepEqual(storage.value, []);
+      assert.equal(page.data.favoriteStatus, 'ready');
+      assert.equal(page.data.isFavorite, false);
+      assert.equal(
+        runtime.analyticsQueue.filter((event) => event.eventName === 'favorite_toggle').length,
+        1,
+      );
+    } finally {
+      runtime.restore();
+    }
+  });
 }
 
 function createPage(definition) {
