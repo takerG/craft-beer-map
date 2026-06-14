@@ -110,7 +110,15 @@ function commitFavoriteIds({
     }
     storage.setStorageSync(FAVORITE_STYLE_STORAGE_KEY, normalizedTarget);
   } catch (error) {
-    restoreFavoriteIds(storage, previousIds);
+    if (!restoreFavoriteIds(storage, previousIds)) {
+      const current = readFavoriteIds(storage);
+      if (
+        !current.ok
+        || !sameFavoriteIds(current.favoriteIds, normalizeFavoriteIds(previousIds))
+      ) {
+        return buildUncertainMutationFailure();
+      }
+    }
     return buildMutationFailure(previousIds, styleId);
   }
 
@@ -121,7 +129,9 @@ function commitFavoriteIds({
     || confirmedFavorite !== targetFavorite
     || !sameFavoriteIds(confirmed.favoriteIds, normalizedTarget)
   ) {
-    restoreFavoriteIds(storage, previousIds);
+    if (!restoreFavoriteIds(storage, previousIds)) {
+      return buildUncertainMutationFailure();
+    }
     return buildMutationFailure(previousIds, styleId);
   }
 
@@ -154,16 +164,24 @@ function readFavoriteIds(storage) {
 }
 
 function restoreFavoriteIds(storage, favoriteIds) {
+  const normalizedIds = normalizeFavoriteIds(favoriteIds).slice(0, MAX_FAVORITE_STYLES);
   try {
-    if (storage && typeof storage.setStorageSync === 'function') {
-      storage.setStorageSync(
-        FAVORITE_STYLE_STORAGE_KEY,
-        normalizeFavoriteIds(favoriteIds).slice(0, MAX_FAVORITE_STYLES),
-      );
-    }
+    if (!storage || typeof storage.setStorageSync !== 'function') return false;
+    storage.setStorageSync(FAVORITE_STYLE_STORAGE_KEY, normalizedIds);
+    const restored = readFavoriteIds(storage);
+    return restored.ok && sameFavoriteIds(restored.favoriteIds, normalizedIds);
   } catch (error) {
-    // The caller still receives a failure and never claims the mutation succeeded.
+    return false;
   }
+}
+
+function buildUncertainMutationFailure() {
+  return {
+    ok: false,
+    favoriteIds: [],
+    isFavorite: null,
+    error: 'storage-uncertain',
+  };
 }
 
 function buildMutationFailure(previousIds, styleId) {

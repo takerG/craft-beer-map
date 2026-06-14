@@ -136,6 +136,71 @@ test('successful favorite removal refreshes from storage and reports success', (
   }
 });
 
+test('repeated removal of the same rendered favorite only mutates and reports once', () => {
+  const storage = createWxStorage(['21A', '1B']);
+  const restoreGlobals = installGlobals(storage);
+  const page = createFavoritesPage();
+
+  try {
+    page.refreshFavoriteStyles();
+    let refreshCount = 0;
+    const refresh = page.refreshFavoriteStyles;
+    page.refreshFavoriteStyles = () => {
+      refreshCount += 1;
+      refresh();
+    };
+    const event = createRemoveEvent('21A', 'bjcp');
+
+    page.removeFavorite(event);
+    page.removeFavorite(event);
+
+    assert.equal(refreshCount, 1);
+    assert.equal(storage.toasts.length, 1);
+    assert.equal(
+      storage.analyticsQueue.filter(
+        (entry) => entry.eventName === 'favorite_remove_success',
+      ).length,
+      1,
+    );
+    assert.deepEqual(page.data.favoriteStyles.map((style) => style.id), ['1B']);
+  } finally {
+    restoreGlobals();
+  }
+});
+
+test('successful removal can report success before refresh enters a read error state', () => {
+  const storage = createWxStorage(['21A', '1B']);
+  let reads = 0;
+  storage.getStorageSync = (key) => {
+    reads += 1;
+    if (reads === 4) throw new Error('refresh read failed');
+    return storage.store.get(key);
+  };
+  const restoreGlobals = installGlobals(storage);
+  const page = createFavoritesPage();
+
+  try {
+    page.refreshFavoriteStyles();
+    page.removeFavorite(createRemoveEvent('21A', 'bjcp'));
+
+    assert.equal(storage.toasts.length, 1);
+    assert.equal(storage.toasts[0].icon, 'success');
+    assert.notEqual(storage.toasts[0].title, '');
+    assert.equal(
+      storage.analyticsQueue.filter(
+        (entry) => entry.eventName === 'favorite_remove_success',
+      ).length,
+      1,
+    );
+    assert.equal(page.data.loadStatus, 'error');
+    assert.deepEqual(page.data.favoriteStyles, []);
+    assert.equal(page.data.hasFavoriteStyles, false);
+    assert.equal(page.data.favoriteCountLabel, '');
+  } finally {
+    restoreGlobals();
+  }
+});
+
 test('failed favorite removal keeps the rendered list and does not refresh or report success', () => {
   const storage = createWxStorage(['21A', '1B']);
   const restoreGlobals = installGlobals(storage);

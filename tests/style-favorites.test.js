@@ -95,7 +95,7 @@ test('failed favorite removals keep the previous state and return an explicit fa
     throw new Error('storage full');
   };
 
-  assert.deepEqual(toggleFavoriteStyle('21A', storage), {
+  assert.deepEqual(removeFavoriteStyle('21A', storage), {
     ok: false,
     favoriteIds: ['21A', '1B'],
     isFavorite: true,
@@ -125,6 +125,32 @@ test('read-back failures roll back the attempted favorite change', () => {
     error: 'storage-failed',
   });
   assert.deepEqual(store.get(FAVORITE_STYLE_STORAGE_KEY), ['1B']);
+});
+
+test('failed rollback reports an uncertain storage state without claiming favorites', () => {
+  const store = new Map([[FAVORITE_STYLE_STORAGE_KEY, ['1B']]]);
+  let reads = 0;
+  let writes = 0;
+  const storage = {
+    getStorageSync(key) {
+      reads += 1;
+      if (reads === 2) throw new Error('confirmation read failed');
+      return store.get(key);
+    },
+    setStorageSync(key, value) {
+      writes += 1;
+      if (writes === 2) throw new Error('rollback write failed');
+      store.set(key, value);
+    },
+  };
+
+  assert.deepEqual(addFavoriteStyle('21A', storage), {
+    ok: false,
+    favoriteIds: [],
+    isFavorite: null,
+    error: 'storage-uncertain',
+  });
+  assert.deepEqual(store.get(FAVORITE_STYLE_STORAGE_KEY), ['21A', '1B']);
 });
 
 test('read-back mismatches roll back the attempted favorite change', () => {

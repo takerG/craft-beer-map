@@ -70,6 +70,8 @@ Page({
 
   removeFavorite(event) {
     const { styleId, itemKind } = event.currentTarget.dataset;
+    if (!this.data.favoriteStyles.some((style) => style.id === styleId)) return;
+
     const result = removeFavoriteStyle(styleId);
     if (!result.ok) {
       wx.showToast({
