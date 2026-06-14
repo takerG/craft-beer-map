@@ -897,7 +897,9 @@ test('style favorites are stored locally and surfaced from detail and bottom tab
   assert.match(favoriteUtil, /FAVORITE_STYLE_STORAGE_KEY/);
   assert.match(favoriteUtil, /getStorageSync/);
   assert.match(favoriteUtil, /setStorageSync/);
-  assert.match(styleJs, /toggleFavoriteStyle/);
+  assert.match(styleJs, /addFavoriteStyle/);
+  assert.match(styleJs, /removeFavoriteStyle/);
+  assert.doesNotMatch(styleJs, /toggleFavoriteStyle/);
   assert.match(styleJs, /isStyleFavorite/);
   assert.match(styleJs, /favorite_toggle/);
   assert.match(styleWxml, /class="favorite-action/);
@@ -928,9 +930,32 @@ test('extension styles share the existing favorite storage and route by item kin
   assert.match(favoritesJs, /itemKind/);
   assert.match(favoritesJs, /extension-style/);
   assert.match(favoritesWxml, /data-item-kind="{{item\.kind}}"/);
-  assert.match(extensionJs, /toggleFavoriteStyle/);
+  assert.match(extensionJs, /addFavoriteStyle/);
+  assert.match(extensionJs, /removeFavoriteStyle/);
+  assert.doesNotMatch(extensionJs, /toggleFavoriteStyle/);
   assert.match(extensionJs, /isStyleFavorite/);
   assert.match(extensionWxml, /bindtap="toggleFavorite"/);
+});
+
+test('style detail favorite actions retry an explicit target state safely', () => {
+  [
+    'subpages/style/index.js',
+    'subpages/extension-style/index.js',
+  ].forEach((relativePath) => {
+    const source = readMiniPage(relativePath);
+
+    assert.match(source, /const targetFavorite = !this\.data\.isFavorite;/);
+    assert.match(
+      source,
+      /targetFavorite\s*\?\s*addFavoriteStyle\(style\.id\)\s*:\s*removeFavoriteStyle\(style\.id\)/s,
+    );
+    assert.match(source, /targetFavorite,\s*\n\s*error: result\.error/);
+    assert.match(source, /result\.error === 'storage-uncertain'/);
+    assert.match(source, /状态暂无法确认/);
+    assert.match(source, /重试/);
+    assert.match(source, /isFavorite: result\.isFavorite/);
+    assert.doesNotMatch(source, /toggleFavoriteStyle/);
+  });
 });
 
 test('choose tab provides taste filters, switchable visuals, and fixed results', () => {

@@ -1,7 +1,11 @@
 import { getExtensionStyleDetail } from '../../utils/beer-model.js';
 import { deferSetData, navigateOnce, redirectOnce, switchTabOnce } from '../../utils/page-performance.js';
 import { buildShareMessage, buildTimelineShareMessage, enableShareMenu } from '../../utils/share.js';
-import { isStyleFavorite, toggleFavoriteStyle } from '../../utils/style-favorites.js';
+import {
+  addFavoriteStyle,
+  isStyleFavorite,
+  removeFavoriteStyle,
+} from '../../utils/style-favorites.js';
 import { trackEvent } from '../../utils/telemetry.js';
 
 Page({
@@ -93,15 +97,20 @@ Page({
     const style = this.data.detail && this.data.detail.style;
     if (!style) return;
 
-    const result = toggleFavoriteStyle(style.id);
+    const targetFavorite = !this.data.isFavorite;
+    const result = targetFavorite
+      ? addFavoriteStyle(style.id)
+      : removeFavoriteStyle(style.id);
     if (!result.ok) {
       trackEvent('favorite_toggle_failed', {
         styleId: style.id,
-        targetFavorite: !this.data.isFavorite,
+        targetFavorite,
         error: result.error,
       });
       wx.showToast({
-        title: '收藏状态未保存，请重试',
+        title: result.error === 'storage-uncertain'
+          ? '状态暂无法确认，请重试同一操作'
+          : '收藏状态未保存，请重试',
         icon: 'none',
         duration: 1500,
       });

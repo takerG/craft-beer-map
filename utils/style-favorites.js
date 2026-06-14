@@ -110,7 +110,11 @@ function commitFavoriteIds({
     }
     storage.setStorageSync(FAVORITE_STYLE_STORAGE_KEY, normalizedTarget);
   } catch (error) {
-    if (!restoreFavoriteIds(storage, previousIds)) {
+    const rollback = restoreFavoriteIds(storage, previousIds);
+    if (!rollback.ok) {
+      if (rollback.writeSucceeded) {
+        return buildUncertainMutationFailure();
+      }
       const current = readFavoriteIds(storage);
       if (
         !current.ok
@@ -129,7 +133,7 @@ function commitFavoriteIds({
     || confirmedFavorite !== targetFavorite
     || !sameFavoriteIds(confirmed.favoriteIds, normalizedTarget)
   ) {
-    if (!restoreFavoriteIds(storage, previousIds)) {
+    if (!restoreFavoriteIds(storage, previousIds).ok) {
       return buildUncertainMutationFailure();
     }
     return buildMutationFailure(previousIds, styleId);
@@ -166,12 +170,23 @@ function readFavoriteIds(storage) {
 function restoreFavoriteIds(storage, favoriteIds) {
   const normalizedIds = normalizeFavoriteIds(favoriteIds).slice(0, MAX_FAVORITE_STYLES);
   try {
-    if (!storage || typeof storage.setStorageSync !== 'function') return false;
+    if (!storage || typeof storage.setStorageSync !== 'function') {
+      return {
+        ok: false,
+        writeSucceeded: false,
+      };
+    }
     storage.setStorageSync(FAVORITE_STYLE_STORAGE_KEY, normalizedIds);
     const restored = readFavoriteIds(storage);
-    return restored.ok && sameFavoriteIds(restored.favoriteIds, normalizedIds);
+    return {
+      ok: restored.ok && sameFavoriteIds(restored.favoriteIds, normalizedIds),
+      writeSucceeded: true,
+    };
   } catch (error) {
-    return false;
+    return {
+      ok: false,
+      writeSucceeded: false,
+    };
   }
 }
 

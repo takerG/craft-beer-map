@@ -153,6 +153,128 @@ test('failed rollback reports an uncertain storage state without claiming favori
   assert.deepEqual(store.get(FAVORITE_STYLE_STORAGE_KEY), ['21A', '1B']);
 });
 
+test('uncertain favorite additions can retry the same target without reversing it', () => {
+  const store = new Map([[FAVORITE_STYLE_STORAGE_KEY, ['1B']]]);
+  let unstable = true;
+  let reads = 0;
+  let writes = 0;
+  const storage = {
+    getStorageSync(key) {
+      reads += 1;
+      if (unstable && reads === 2) throw new Error('confirmation read failed');
+      return store.get(key);
+    },
+    setStorageSync(key, value) {
+      writes += 1;
+      if (unstable && writes === 2) throw new Error('rollback write failed');
+      store.set(key, value);
+    },
+  };
+
+  assert.deepEqual(addFavoriteStyle('21A', storage), {
+    ok: false,
+    favoriteIds: [],
+    isFavorite: null,
+    error: 'storage-uncertain',
+  });
+  assert.deepEqual(store.get(FAVORITE_STYLE_STORAGE_KEY), ['21A', '1B']);
+
+  unstable = false;
+  assert.deepEqual(addFavoriteStyle('21A', storage), {
+    ok: true,
+    favoriteIds: ['21A', '1B'],
+    isFavorite: true,
+  });
+  assert.deepEqual(store.get(FAVORITE_STYLE_STORAGE_KEY), ['21A', '1B']);
+});
+
+test('uncertain favorite removals can retry the same target without reversing it', () => {
+  const store = new Map([[FAVORITE_STYLE_STORAGE_KEY, ['21A', '1B']]]);
+  let unstable = true;
+  let reads = 0;
+  let writes = 0;
+  const storage = {
+    getStorageSync(key) {
+      reads += 1;
+      if (unstable && reads === 2) throw new Error('confirmation read failed');
+      return store.get(key);
+    },
+    setStorageSync(key, value) {
+      writes += 1;
+      if (unstable && writes === 2) throw new Error('rollback write failed');
+      store.set(key, value);
+    },
+  };
+
+  assert.deepEqual(removeFavoriteStyle('21A', storage), {
+    ok: false,
+    favoriteIds: [],
+    isFavorite: null,
+    error: 'storage-uncertain',
+  });
+  assert.deepEqual(store.get(FAVORITE_STYLE_STORAGE_KEY), ['1B']);
+
+  unstable = false;
+  assert.deepEqual(removeFavoriteStyle('21A', storage), {
+    ok: true,
+    favoriteIds: ['1B'],
+    isFavorite: false,
+  });
+  assert.deepEqual(store.get(FAVORITE_STYLE_STORAGE_KEY), ['1B']);
+});
+
+test('rollback read failures stay uncertain even when a later read sees the previous state', () => {
+  const store = new Map([[FAVORITE_STYLE_STORAGE_KEY, ['1B']]]);
+  let reads = 0;
+  let writes = 0;
+  const storage = {
+    getStorageSync(key) {
+      reads += 1;
+      if (reads === 2) throw new Error('rollback read failed');
+      return store.get(key);
+    },
+    setStorageSync(key, value) {
+      writes += 1;
+      store.set(key, value);
+      if (writes === 1) throw new Error('target write result unavailable');
+    },
+  };
+
+  assert.deepEqual(addFavoriteStyle('21A', storage), {
+    ok: false,
+    favoriteIds: [],
+    isFavorite: null,
+    error: 'storage-uncertain',
+  });
+  assert.deepEqual(store.get(FAVORITE_STYLE_STORAGE_KEY), ['1B']);
+});
+
+test('rollback read mismatches stay uncertain even when a later read sees the previous state', () => {
+  const store = new Map([[FAVORITE_STYLE_STORAGE_KEY, ['1B']]]);
+  let reads = 0;
+  let writes = 0;
+  const storage = {
+    getStorageSync(key) {
+      reads += 1;
+      if (reads === 2) return ['unexpected-style'];
+      return store.get(key);
+    },
+    setStorageSync(key, value) {
+      writes += 1;
+      store.set(key, value);
+      if (writes === 1) throw new Error('target write result unavailable');
+    },
+  };
+
+  assert.deepEqual(addFavoriteStyle('21A', storage), {
+    ok: false,
+    favoriteIds: [],
+    isFavorite: null,
+    error: 'storage-uncertain',
+  });
+  assert.deepEqual(store.get(FAVORITE_STYLE_STORAGE_KEY), ['1B']);
+});
+
 test('read-back mismatches roll back the attempted favorite change', () => {
   const store = new Map([[FAVORITE_STYLE_STORAGE_KEY, ['1B']]]);
   let writes = 0;
