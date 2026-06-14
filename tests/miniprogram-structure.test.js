@@ -897,14 +897,21 @@ test('style favorites are stored locally and surfaced from detail and bottom tab
   assert.match(favoriteUtil, /FAVORITE_STYLE_STORAGE_KEY/);
   assert.match(favoriteUtil, /getStorageSync/);
   assert.match(favoriteUtil, /setStorageSync/);
+  assert.match(favoriteUtil, /getFavoriteStyleStateResult/);
   assert.match(styleJs, /addFavoriteStyle/);
   assert.match(styleJs, /removeFavoriteStyle/);
   assert.doesNotMatch(styleJs, /toggleFavoriteStyle/);
-  assert.match(styleJs, /isStyleFavorite/);
+  assert.match(styleJs, /getFavoriteStyleStateResult/);
+  assert.doesNotMatch(styleJs, /isStyleFavorite/);
+  assert.match(styleJs, /favoriteStatus/);
+  assert.match(styleJs, /refreshFavoriteState/);
   assert.match(styleJs, /favorite_toggle/);
   assert.match(styleWxml, /class="favorite-action/);
   assert.match(styleWxml, /bindtap="toggleFavorite"/);
+  assert.match(styleWxml, /wx:if="{{favoriteStatus === 'ready'}}"/);
+  assert.match(styleWxml, /favorite-action-error/);
   assert.match(styleWxss, /\.favorite-action/);
+  assert.match(styleWxss, /\.favorite-action-error/);
 
   assert.ok(appJson.pages.includes('pages/favorites/index'));
   assert.ok(appJson.tabBar.list.some((item) => item.pagePath === 'pages/favorites/index' && item.text === '收藏'));
@@ -933,8 +940,13 @@ test('extension styles share the existing favorite storage and route by item kin
   assert.match(extensionJs, /addFavoriteStyle/);
   assert.match(extensionJs, /removeFavoriteStyle/);
   assert.doesNotMatch(extensionJs, /toggleFavoriteStyle/);
-  assert.match(extensionJs, /isStyleFavorite/);
+  assert.match(extensionJs, /getFavoriteStyleStateResult/);
+  assert.doesNotMatch(extensionJs, /isStyleFavorite/);
+  assert.match(extensionJs, /favoriteStatus/);
+  assert.match(extensionJs, /refreshFavoriteState/);
   assert.match(extensionWxml, /bindtap="toggleFavorite"/);
+  assert.match(extensionWxml, /wx:if="{{favoriteStatus === 'ready'}}"/);
+  assert.match(extensionWxml, /favorite-action-error/);
 });
 
 test('style detail favorite actions retry an explicit target state safely', () => {
@@ -944,6 +956,7 @@ test('style detail favorite actions retry an explicit target state safely', () =
   ].forEach((relativePath) => {
     const source = readMiniPage(relativePath);
 
+    assert.match(source, /if \(this\.data\.favoriteStatus !== 'ready'\) \{\s*this\.refreshFavoriteState\(\);\s*return;/s);
     assert.match(source, /const targetFavorite = !this\.data\.isFavorite;/);
     assert.match(
       source,
@@ -951,8 +964,8 @@ test('style detail favorite actions retry an explicit target state safely', () =
     );
     assert.match(source, /targetFavorite,\s*\n\s*error: result\.error/);
     assert.match(source, /result\.error === 'storage-uncertain'/);
-    assert.match(source, /状态暂无法确认/);
-    assert.match(source, /重试/);
+    assert.match(source, /favoriteStatus: 'error'/);
+    assert.match(source, /favoriteActionLabel: '重试收藏状态'/);
     assert.match(source, /isFavorite: result\.isFavorite/);
     assert.doesNotMatch(source, /toggleFavoriteStyle/);
   });

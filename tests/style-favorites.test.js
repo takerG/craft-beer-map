@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 
+import * as favoriteUtils from '../utils/style-favorites.js';
 import {
   FAVORITE_STYLE_STORAGE_KEY,
   addFavoriteStyle,
@@ -29,6 +30,60 @@ test('favorite style ids are normalized and deduplicated from local storage', ()
   const storage = createMemoryStorage(['21A', '', '1B', '21A', null, 42, ' 18A ']);
 
   assert.deepEqual(getFavoriteStyleIds(storage), ['21A', '1B', '18A']);
+});
+
+test('trusted favorite state reads distinguish favorite and non-favorite styles', () => {
+  assert.equal(typeof favoriteUtils.getFavoriteStyleStateResult, 'function');
+  const storage = createMemoryStorage(['21A']);
+
+  assert.deepEqual(favoriteUtils.getFavoriteStyleStateResult('21A', storage), {
+    ok: true,
+    isFavorite: true,
+  });
+  assert.deepEqual(favoriteUtils.getFavoriteStyleStateResult('1B', storage), {
+    ok: true,
+    isFavorite: false,
+  });
+});
+
+test('trusted favorite state reads report storage failures without claiming false', () => {
+  assert.equal(typeof favoriteUtils.getFavoriteStyleStateResult, 'function');
+  const unavailableStorages = [
+    ['null storage', null],
+    ['missing reader', {}],
+    ['throwing reader', {
+      getStorageSync() {
+        throw new Error('storage unavailable');
+      },
+    }],
+  ];
+
+  unavailableStorages.forEach(([label, storage]) => {
+    assert.deepEqual(
+      favoriteUtils.getFavoriteStyleStateResult('21A', storage),
+      {
+        ok: false,
+        isFavorite: null,
+        error: 'storage-failed',
+      },
+      label,
+    );
+  });
+});
+
+test('trusted favorite state reads reject invalid style ids explicitly', () => {
+  assert.equal(typeof favoriteUtils.getFavoriteStyleStateResult, 'function');
+
+  ['', '   ', null, 21].forEach((styleId) => {
+    assert.deepEqual(
+      favoriteUtils.getFavoriteStyleStateResult(styleId, createMemoryStorage([])),
+      {
+        ok: false,
+        isFavorite: null,
+        error: 'invalid-style-id',
+      },
+    );
+  });
 });
 
 test('adding a favorite keeps the most recent style first', () => {

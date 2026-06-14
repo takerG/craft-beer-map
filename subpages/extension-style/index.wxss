@@ -74,6 +74,11 @@
   background: rgba(246, 173, 85, 0.14);
 }
 
+.favorite-action-error {
+  color: #fecaca;
+  background: rgba(248, 113, 113, 0.12);
+}
+
 .style-code {
   display: inline-flex;
   align-items: center;

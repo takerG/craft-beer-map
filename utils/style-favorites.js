@@ -41,6 +41,31 @@ export function isStyleFavorite(styleId, storage = getDefaultStorage()) {
   return getFavoriteStyleIds(storage).includes(normalizedId);
 }
 
+export function getFavoriteStyleStateResult(styleId, storage = getDefaultStorage()) {
+  const normalizedId = normalizeStyleId(styleId);
+  if (!normalizedId) {
+    return {
+      ok: false,
+      isFavorite: null,
+      error: 'invalid-style-id',
+    };
+  }
+
+  const result = readFavoriteIds(storage);
+  if (!result.ok) {
+    return {
+      ok: false,
+      isFavorite: null,
+      error: 'storage-failed',
+    };
+  }
+
+  return {
+    ok: true,
+    isFavorite: result.favoriteIds.includes(normalizedId),
+  };
+}
+
 export function getFavoriteStyleSummariesResult(storage = getDefaultStorage()) {
   const result = readFavoriteIds(storage);
   if (!result.ok) {

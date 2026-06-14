@@ -3,7 +3,7 @@ import { deferSetData, navigateOnce, redirectOnce, switchTabOnce } from '../../u
 import { buildShareMessage, buildTimelineShareMessage, enableShareMenu } from '../../utils/share.js';
 import {
   addFavoriteStyle,
-  isStyleFavorite,
+  getFavoriteStyleStateResult,
   removeFavoriteStyle,
 } from '../../utils/style-favorites.js';
 import { trackEvent } from '../../utils/telemetry.js';
@@ -15,7 +15,8 @@ Page({
     contentReady: false,
     detail: null,
     isFavorite: false,
-    favoriteActionLabel: '收藏',
+    favoriteStatus: 'loading',
+    favoriteActionLabel: '读取收藏状态',
   },
 
   onLoad(options) {
@@ -42,14 +43,13 @@ Page({
         });
         return;
       }
-      const isFavorite = isStyleFavorite(detail.style.id);
       wx.setNavigationBarTitle({ title: `${detail.style.code} ${detail.style.displayName}` });
       this.setData({
         loadStatus: 'ready',
         errorMessage: '',
         contentReady: false,
-        isFavorite,
-        favoriteActionLabel: isFavorite ? '已收藏' : '收藏',
+        favoriteStatus: 'loading',
+        favoriteActionLabel: '读取收藏状态',
         detail: {
           ...detail,
           stats: [],
@@ -58,6 +58,7 @@ Page({
           related: [],
         },
       });
+      this.refreshFavoriteState();
       deferSetData(this, {
         contentReady: true,
         'detail.stats': detail.stats,
@@ -102,9 +103,34 @@ Page({
     redirectOnce(this, `/subpages/style/index?styleId=${styleId}`);
   },
 
+  refreshFavoriteState() {
+    const style = this.data.detail && this.data.detail.style;
+    if (!style) return null;
+
+    const result = getFavoriteStyleStateResult(style.id);
+    if (!result.ok) {
+      this.setData({
+        favoriteStatus: 'error',
+        favoriteActionLabel: '重试收藏状态',
+      });
+      return result;
+    }
+
+    this.setData({
+      favoriteStatus: 'ready',
+      isFavorite: result.isFavorite,
+      favoriteActionLabel: result.isFavorite ? '已收藏' : '收藏',
+    });
+    return result;
+  },
+
   toggleFavorite() {
     const style = this.data.detail && this.data.detail.style;
     if (!style) return;
+    if (this.data.favoriteStatus !== 'ready') {
+      this.refreshFavoriteState();
+      return;
+    }
 
     const targetFavorite = !this.data.isFavorite;
     const result = targetFavorite
@@ -116,9 +142,15 @@ Page({
         targetFavorite,
         error: result.error,
       });
+      if (result.error === 'storage-uncertain') {
+        this.setData({
+          favoriteStatus: 'error',
+          favoriteActionLabel: '重试收藏状态',
+        });
+      }
       wx.showToast({
         title: result.error === 'storage-uncertain'
-          ? '状态暂无法确认，请重试同一操作'
+          ? '收藏状态不可用，请点击重试'
           : '收藏状态未保存，请重试',
         icon: 'none',
         duration: 1500,
@@ -126,6 +158,7 @@ Page({
       return;
     }
     this.setData({
+      favoriteStatus: 'ready',
       isFavorite: result.isFavorite,
       favoriteActionLabel: result.isFavorite ? '已收藏' : '收藏',
     });

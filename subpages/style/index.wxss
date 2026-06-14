@@ -91,6 +91,12 @@
   color: #ffe4b8;
 }
 
+.favorite-action-error {
+  border-color: rgba(248, 113, 113, 0.52);
+  background: rgba(248, 113, 113, 0.12);
+  color: #fecaca;
+}
+
 .favorite-icon {
   margin-right: 8rpx;
   font-size: 25rpx;

@@ -32,7 +32,17 @@
     <view class="style-hero-head">
       <text class="style-code">扩展风格</text>
       <view
+        wx:if="{{favoriteStatus === 'ready'}}"
         class="favorite-action {{isFavorite ? 'favorite-action-active' : ''}}"
+        hover-class="tap-hover"
+        hover-stay-time="80"
+        bindtap="toggleFavorite"
+      >
+        <text>{{favoriteActionLabel}}</text>
+      </view>
+      <view
+        wx:else
+        class="favorite-action {{favoriteStatus === 'error' ? 'favorite-action-error' : ''}}"
         hover-class="tap-hover"
         hover-stay-time="80"
         bindtap="toggleFavorite"
