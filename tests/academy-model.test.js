@@ -4,7 +4,17 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 import { buildAcademyTypeFilters, getAcademyHome, getAcademySites } from '../utils/academy-feed-model.js';
-import { getAcademyArticle } from '../subpages/utils/academy-model.js';
+import {
+  getAcademyArticlesMock,
+  getAleVsLagerArticleMock,
+  getBeerFreshDraftRawArticleMock,
+  getColdIpaArticleMock,
+  getFlavorRadarBasicsArticleMock,
+  getFruitPureeArticleMock,
+  getIpaFamilyMapArticleMock,
+} from '../subpages/utils/academy-article-mocks.js';
+import { getAcademyArticleFromRemote, getAcademyArticlesFromRemote } from '../subpages/utils/academy-article-remote.js';
+import { getAcademyArticle, normalizeAcademyArticlePayload } from '../subpages/utils/academy-model.js';
 
 const root = process.cwd();
 const academyRoot = path.join(root, 'academy-sites');
@@ -67,11 +77,52 @@ test('academy article sections are substantial enough to read as articles', () =
   });
 });
 
-test('academy home exposes a lightweight publish-time sorted feed', () => {
-  const home = getAcademyHome();
+test('academy remote facade exposes mock server articles with a direct-render content payload', async () => {
+  const articles = await getAcademyArticlesFromRemote();
+  const mockArticleSlugs = getAcademyArticlesMock().map((article) => article.slug);
+
+  assert.deepEqual(articles.map((article) => article.slug), mockArticleSlugs);
+  articles.forEach((article) => {
+    assert.equal(article.contentFormat, 'structured-v1');
+    assert.equal(typeof article.contentPayload, 'object');
+    assert.ok(Array.isArray(article.contentPayload.sections), `${article.slug} should expose mock server sections`);
+    assert.ok(Array.isArray(article.contentPayload.modules), `${article.slug} should expose mock server modules`);
+  });
+});
+
+test('academy mock server composes the article list from per-article mock functions', () => {
+  const articleMocks = [
+    getColdIpaArticleMock(),
+    getFruitPureeArticleMock(),
+    getBeerFreshDraftRawArticleMock(),
+    getFlavorRadarBasicsArticleMock(),
+    getIpaFamilyMapArticleMock(),
+    getAleVsLagerArticleMock(),
+  ];
+
+  assert.deepEqual(
+    getAcademyArticlesMock().map((article) => article.slug),
+    articleMocks.map((article) => article.slug),
+  );
+});
+
+test('academy remote article lookup returns isolated payload copies', async () => {
+  const firstArticle = await getAcademyArticleFromRemote('cold-ipa');
+  firstArticle.title = 'mutated title';
+
+  const secondArticle = await getAcademyArticleFromRemote('cold-ipa');
+
+  assert.equal(secondArticle.slug, 'cold-ipa');
+  assert.notEqual(secondArticle.title, 'mutated title');
+  assert.equal(await getAcademyArticleFromRemote('missing-site'), null);
+});
+
+test('academy home exposes a lightweight publish-time sorted feed', async () => {
+  const home = await getAcademyHome();
+  const sites = await getAcademySites();
 
   assert.equal(home.title, '学院');
-  assert.equal(home.feedSites.length, getAcademySites().length);
+  assert.equal(home.feedSites.length, sites.length);
   assert.deepEqual(
     home.feedSites.map((site) => site.slug),
     ['cold-ipa', 'fruit-puree', 'beer-fresh-draft-raw', 'flavor-radar-basics', 'ipa-family-map', 'ale-vs-lager'],
@@ -80,14 +131,14 @@ test('academy home exposes a lightweight publish-time sorted feed', () => {
     home.feedSites.map((site) => site.publishedAt),
     ['2026-06-08', '2026-06-08', '2026-06-05', '2026-06-04', '2026-06-03', '2026-06-02'],
   );
-  assert.equal(home.stats.siteCount, getAcademySites().length);
+  assert.equal(home.stats.siteCount, sites.length);
   assert.equal(home.feedSites.some((site) => Object.hasOwn(site, 'modules')), false);
   assert.equal(home.feedSites.some((site) => Object.hasOwn(site, 'coverImage')), false);
   assert.ok(Buffer.byteLength(JSON.stringify(home.feedSites)) < 13000);
 });
 
-test('academy feed sites omit thumbnail image payload', () => {
-  const home = getAcademyHome();
+test('academy feed sites omit thumbnail image payload', async () => {
+  const home = await getAcademyHome();
 
   home.feedSites.forEach((site) => {
     assert.equal(Object.hasOwn(site, 'coverImage'), false, `${site.slug} feed summary should not include coverImage`);
@@ -96,14 +147,21 @@ test('academy feed sites omit thumbnail image payload', () => {
 
 test('generated academy data omits local cover image payload', async () => {
   const { academySites } = await import('../data/academy-sites.js');
+  const { academyFeedSites } = await import('../data/academy-feed.js');
 
   academySites.forEach((site) => {
     assert.equal(Object.hasOwn(site, 'coverImage'), false, `${site.slug} generated data should not reference local covers`);
   });
+  academyFeedSites.forEach((site) => {
+    assert.equal(Object.hasOwn(site, 'hero'), false, `${site.slug} feed data should not include hero`);
+    assert.equal(Object.hasOwn(site, 'sections'), false, `${site.slug} feed data should not include sections`);
+    assert.equal(Object.hasOwn(site, 'modules'), false, `${site.slug} feed data should not include modules`);
+    assert.equal(Object.hasOwn(site, 'contentPayload'), false, `${site.slug} feed data should not include full content`);
+  });
 });
 
-test('academy home exposes feed type filters with counts', () => {
-  const home = getAcademyHome();
+test('academy home exposes feed type filters with counts', async () => {
+  const home = await getAcademyHome();
 
   assert.equal(home.subtitle, '按发布时间更新的精酿互动文章。');
   assert.deepEqual(
@@ -144,8 +202,8 @@ test('academy feed filter strip keeps a fixed horizontal scroll height', () => {
   assert.doesNotMatch(filterStripRule.groups.body, /display:\s*flex;/);
 });
 
-test('academy article resolves interactive modules and BJCP related styles', () => {
-  const article = getAcademyArticle('ipa-family-map');
+test('academy article resolves interactive modules and BJCP related styles', async () => {
+  const article = await getAcademyArticle('ipa-family-map');
 
   assert.equal(article.slug, 'ipa-family-map');
   assert.equal(article.title, 'IPA 家族地图');
@@ -165,12 +223,12 @@ test('academy article resolves interactive modules and BJCP related styles', () 
   assert.ok(article.relatedStyles.some((style) => style.kind === 'extension' && style.id === 'ext-west-coast-ipa'));
 });
 
-test('academy article model routes each article to a distinct experience', () => {
-  const aleLager = getAcademyArticle('ale-vs-lager');
-  const flavorRadar = getAcademyArticle('flavor-radar-basics');
-  const beerTerms = getAcademyArticle('beer-fresh-draft-raw');
-  const coldIpa = getAcademyArticle('cold-ipa');
-  const fruitPuree = getAcademyArticle('fruit-puree');
+test('academy article model routes each article to a distinct experience', async () => {
+  const aleLager = await getAcademyArticle('ale-vs-lager');
+  const flavorRadar = await getAcademyArticle('flavor-radar-basics');
+  const beerTerms = await getAcademyArticle('beer-fresh-draft-raw');
+  const coldIpa = await getAcademyArticle('cold-ipa');
+  const fruitPuree = await getAcademyArticle('fruit-puree');
 
   assert.equal(aleLager.experienceKey, 'ale-lager');
   assert.equal(aleLager.isAleLagerExperience, true);
@@ -205,6 +263,21 @@ test('academy article model routes each article to a distinct experience', () =>
   assert.ok(fruitPuree.relatedStyles.some((style) => style.kind === 'extension' && style.id === 'ext-fruited-sour-ale'));
 });
 
-test('academy article returns null for unknown slugs', () => {
-  assert.equal(getAcademyArticle('missing-site'), null);
+test('academy article returns null for unknown slugs', async () => {
+  assert.equal(await getAcademyArticle('missing-site'), null);
+});
+
+test('academy article model rejects unsupported remote content contracts', () => {
+  const articleMock = getColdIpaArticleMock();
+
+  assert.equal(normalizeAcademyArticlePayload({ ...articleMock, schemaVersion: 2 }), null);
+  assert.equal(normalizeAcademyArticlePayload({ ...articleMock, renderMode: 'rich-html' }), null);
+  assert.equal(normalizeAcademyArticlePayload({ ...articleMock, contentFormat: 'rich-html-v1' }), null);
+  assert.equal(
+    normalizeAcademyArticlePayload({
+      ...articleMock,
+      contentPayload: { ...articleMock.contentPayload, sections: null },
+    }),
+    null,
+  );
 });

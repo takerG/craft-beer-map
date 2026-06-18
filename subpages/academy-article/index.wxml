@@ -9,6 +9,12 @@
     <view class="empty-action" hover-class="tap-hover" hover-stay-time="80" bindtap="backToAcademy">回到学院</view>
   </view>
 
+  <view wx:if="{{isError}}" class="empty-state">
+    <text class="empty-title">学院内容暂时没有加载成功</text>
+    <text class="empty-copy" user-select="true">请稍后重试，当前不会展示未校验的远端内容。</text>
+    <view class="empty-action" hover-class="tap-hover" hover-stay-time="80" bindtap="retryArticle">重试</view>
+  </view>
+
   <view wx:if="{{isReady}}">
     <view wx:if="{{article.isColdIpaExperience}}" class="cold-ipa-hero">
       <view class="cold-ipa-hero-copy">

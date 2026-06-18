@@ -1,0 +1,107 @@
+// Generated from academy-sites/. Run npm run build:academy after content changes.
+export const academyFeedSites = [
+  {
+    "slug": "cold-ipa",
+    "title": "什么是冷 IPA？",
+    "description": "把冷 IPA 从低温饮用、IPL、西海岸 IPA 和浑浊 IPA 的混淆里拆出来，理解它为何干爽、清澈、酒花鲜明。",
+    "type": "comparison",
+    "difficulty": "进阶入门",
+    "readingTime": 9,
+    "tags": [
+      "冷 IPA",
+      "IPA",
+      "酒花",
+      "风格识别"
+    ],
+    "publishedAt": "2026-06-08",
+    "updatedAt": "2026-06-08",
+    "heroMetric": "4 杯对照",
+    "accent": "#f4bd38"
+  },
+  {
+    "slug": "fruit-puree",
+    "title": "什么是果泥",
+    "description": "把果泥、果汁、糖浆和香精这些常见水果添加方式拆开，理解果泥为什么会改变啤酒的香气、颜色、酸甜感和稳定性。",
+    "type": "tool",
+    "difficulty": "入门",
+    "readingTime": 8,
+    "tags": [
+      "果泥",
+      "水果啤酒",
+      "酸啤",
+      "辅料"
+    ],
+    "publishedAt": "2026-06-08",
+    "updatedAt": "2026-06-08",
+    "heroMetric": "4 条判断线",
+    "accent": "#fb7185"
+  },
+  {
+    "slug": "beer-fresh-draft-raw",
+    "title": "生啤、熟啤、原浆",
+    "description": "把生啤、熟啤、原浆、扎啤、鲜啤、纯生和精酿这些常见说法，拆成能实际选酒的判断线。",
+    "type": "tool",
+    "difficulty": "入门",
+    "readingTime": 8,
+    "tags": [
+      "术语",
+      "生啤",
+      "选酒"
+    ],
+    "publishedAt": "2026-06-05",
+    "updatedAt": "2026-06-05",
+    "heroMetric": "7 个名词",
+    "accent": "#34d399"
+  },
+  {
+    "slug": "flavor-radar-basics",
+    "title": "风味雷达入门",
+    "description": "不用硬背风味词，先把味道放回麦芽、酒花、酵母和发酵管理四个来源。",
+    "type": "simulator",
+    "difficulty": "入门",
+    "readingTime": 7,
+    "tags": [
+      "风味",
+      "选酒",
+      "感官训练"
+    ],
+    "publishedAt": "2026-06-04",
+    "updatedAt": "2026-06-04",
+    "heroMetric": "4 个来源",
+    "accent": "#fb7185"
+  },
+  {
+    "slug": "ipa-family-map",
+    "title": "IPA 家族地图",
+    "description": "把 IPA 从“很苦”或“果汁香”拆成酒花表达框架，理解历史、误解和常见分支。",
+    "type": "map",
+    "difficulty": "入门",
+    "readingTime": 8,
+    "tags": [
+      "IPA",
+      "酒花",
+      "风格识别"
+    ],
+    "publishedAt": "2026-06-03",
+    "updatedAt": "2026-06-03",
+    "heroMetric": "4 条分支",
+    "accent": "#f6ad55"
+  },
+  {
+    "slug": "ale-vs-lager",
+    "title": "艾尔 vs 拉格",
+    "description": "从酵母、温度、成熟和杯中表现重新理解艾尔与拉格，建立第一套精酿判断框架。",
+    "type": "comparison",
+    "difficulty": "入门",
+    "readingTime": 6,
+    "tags": [
+      "发酵",
+      "入门",
+      "拉格"
+    ],
+    "publishedAt": "2026-06-02",
+    "updatedAt": "2026-06-02",
+    "heroMetric": "2 条路径",
+    "accent": "#53d4da"
+  }
+];

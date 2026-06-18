@@ -59,15 +59,12 @@ function buildExpectedOutputs() {
         styleLanguageMap,
       ),
     },
-    {
-      path: 'data/academy-sites.js',
-      expected: buildExpectedAcademyData(),
-    },
+    ...buildExpectedAcademyOutputs(),
     ...buildExpectedAiOutputs(),
   ];
 }
 
-function buildExpectedAcademyData() {
+function buildExpectedAcademyOutputs() {
   const sourceRoot = path.join(root, 'academy-sites');
   const order = readJson('academy-sites/order.json');
   const sites = fs.readdirSync(sourceRoot, { withFileTypes: true })
@@ -91,7 +88,32 @@ function buildExpectedAcademyData() {
       String(b.publishedAt).localeCompare(String(a.publishedAt))
       || a.slug.localeCompare(b.slug));
 
-  return `// Generated from academy-sites/. Run npm run build:academy after content changes.\nexport const academyOrder = ${JSON.stringify(order, null, 2)};\n\nexport const academySites = ${JSON.stringify(sites, null, 2)};\n`;
+  return [
+    {
+      path: 'data/academy-sites.js',
+      expected: `// Generated from academy-sites/. Run npm run build:academy after content changes.\nexport const academyOrder = ${JSON.stringify(order, null, 2)};\n\nexport const academySites = ${JSON.stringify(sites, null, 2)};\n`,
+    },
+    {
+      path: 'data/academy-feed.js',
+      expected: `// Generated from academy-sites/. Run npm run build:academy after content changes.\nexport const academyFeedSites = ${JSON.stringify(sites.map(toAcademyFeedSite), null, 2)};\n`,
+    },
+  ];
+}
+
+function toAcademyFeedSite(site) {
+  return {
+    slug: site.slug,
+    title: site.title,
+    description: site.description,
+    type: site.type,
+    difficulty: site.difficulty,
+    readingTime: site.readingTime,
+    tags: [...site.tags],
+    publishedAt: site.publishedAt || site.date || '',
+    updatedAt: site.updatedAt || site.publishedAt || site.date || '',
+    heroMetric: site.heroMetric || '',
+    accent: site.accent || '#f6ad55',
+  };
 }
 
 function buildExpectedAiOutputs() {

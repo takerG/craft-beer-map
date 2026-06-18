@@ -4,7 +4,17 @@
     <text class="page-subtitle">{{subtitle}}</text>
   </view>
 
-  <scroll-view class="filter-strip" scroll-x="true" show-scrollbar="false">
+  <view wx:if="{{isLoading}}" class="academy-empty">
+    <text>正在加载学院内容</text>
+  </view>
+
+  <view wx:if="{{isError}}" class="academy-empty">
+    <text class="academy-empty-title">学院内容暂时没有加载成功</text>
+    <text class="academy-empty-copy" user-select="true">请稍后重试，当前不会展示未校验的远端内容。</text>
+    <view class="academy-empty-action" hover-class="tap-hover" hover-stay-time="80" bindtap="retryAcademyHome">重试</view>
+  </view>
+
+  <scroll-view wx:if="{{isReady}}" class="filter-strip" scroll-x="true" show-scrollbar="false">
     <view
       wx:for="{{typeFilters}}"
       wx:key="type"
@@ -19,7 +29,7 @@
     </view>
   </scroll-view>
 
-  <view class="feed-list">
+  <view wx:if="{{isReady}}" class="feed-list">
     <view
       wx:for="{{feedSites}}"
       wx:key="slug"

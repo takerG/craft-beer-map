@@ -469,7 +469,9 @@ test('academy articles render slug-specific experiences instead of generic modul
   assert.match(articleJs, /selectFlavorSource\(event\)/);
   assert.match(articleJs, /selectColdIpaComparison\(event\)/);
   assert.match(articleJs, /articleSections/);
-  assert.match(articleJs, /getFallbackSections/);
+  assert.doesNotMatch(articleJs, /getFallbackSections/);
+  assert.match(articleJs, /retryArticle\(\)/);
+  assert.match(articleJs, /academy_article_load_error/);
   assert.match(articleJs, /academy_ipa_branch_select/);
   assert.match(articleJs, /academy_fermentation_path_select/);
   assert.match(articleJs, /academy_flavor_source_select/);
@@ -508,6 +510,10 @@ test('academy page renders a simple publish-sorted feed', () => {
   assert.match(academyWxml, /class="page-subtitle">\{\{subtitle\}\}/);
   assert.doesNotMatch(academyWxml, /class="feed-count"/);
   assert.doesNotMatch(academyJs, /articleCountLabel/);
+  assert.match(academyJs, /loadAcademyHome/);
+  assert.match(academyJs, /retryAcademyHome\(\)/);
+  assert.match(academyJs, /academy_load_error/);
+  assert.match(academyWxml, /bindtap="retryAcademyHome"/);
   assert.match(academyWxml, /<scroll-view[^>]*class="filter-strip"[^>]*scroll-x="true"/s);
   assert.doesNotMatch(academyWxml, /<scroll-view[^>]*class="filter-strip"[^>]*enable-flex/s);
   assert.match(academyWxml, /wx:for="{{typeFilters}}"/);

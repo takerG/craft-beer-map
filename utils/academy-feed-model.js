@@ -1,4 +1,4 @@
-import { academySites } from '../data/academy-sites.js';
+import { getAcademyFeedFromRemote } from './academy-feed-remote.js';
 
 const TYPE_LABELS = {
   simulator: '互动',
@@ -10,12 +10,13 @@ const TYPE_LABELS = {
 };
 const TYPE_ORDER = ['map', 'comparison', 'simulator', 'tool', 'visual-story', 'quiz'];
 
-export function getAcademySites() {
-  return academySites.map(toSiteSummary);
+export async function getAcademySites() {
+  const feedSites = await getAcademyFeedFromRemote();
+  return feedSites.map(toSiteSummary);
 }
 
-export function getAcademyHome() {
-  const feedSites = getAcademySites()
+export async function getAcademyHome() {
+  const feedSites = (await getAcademySites())
     .sort((a, b) => String(b.publishedAt).localeCompare(String(a.publishedAt)) || a.slug.localeCompare(b.slug));
 
   return {
@@ -24,7 +25,7 @@ export function getAcademyHome() {
     feedSites,
     filterOptions: buildAcademyTypeFilters(feedSites, 'all'),
     stats: {
-      siteCount: academySites.length,
+      siteCount: feedSites.length,
     },
   };
 }
@@ -71,6 +72,5 @@ function toSiteSummary(site) {
     updatedAt: site.updatedAt || site.publishedAt || site.date || '',
     heroMetric: site.heroMetric || '',
     accent: site.accent || '#f6ad55',
-    hero: site.hero ? { ...site.hero } : null,
   };
 }

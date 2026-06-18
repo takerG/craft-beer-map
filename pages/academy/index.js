@@ -11,21 +11,53 @@ Page({
     feedSites: [],
     typeFilters: [],
     activeType: 'all',
+    loadStatus: 'loading',
+    isLoading: true,
+    isError: false,
+    isReady: false,
   },
 
-  onLoad() {
+  async onLoad() {
     enableShareMenu();
+    await this.loadAcademyHome();
+  },
 
-    const home = getAcademyHome();
-
+  async loadAcademyHome() {
     this.setData({
-      title: home.title,
-      subtitle: home.subtitle,
-      allFeedSites: home.feedSites,
-      feedSites: home.feedSites,
-      typeFilters: home.filterOptions,
-      activeType: 'all',
+      loadStatus: 'loading',
+      isLoading: true,
+      isError: false,
+      isReady: false,
     });
+
+    try {
+      const home = await getAcademyHome();
+
+      this.setData({
+        title: home.title,
+        subtitle: home.subtitle,
+        allFeedSites: home.feedSites,
+        feedSites: home.feedSites,
+        typeFilters: home.filterOptions,
+        activeType: 'all',
+        loadStatus: 'ready',
+        isLoading: false,
+        isError: false,
+        isReady: true,
+      });
+    } catch (error) {
+      trackEvent('academy_load_error', { message: getErrorMessage(error) });
+      this.setData({
+        loadStatus: 'error',
+        isLoading: false,
+        isError: true,
+        isReady: false,
+      });
+    }
+  },
+
+  retryAcademyHome() {
+    this.loadAcademyHome();
   },
 
   onShareAppMessage() {
@@ -66,3 +98,7 @@ Page({
     trackEvent('academy_filter_change', { type, count: feedSites.length });
   },
 });
+
+function getErrorMessage(error) {
+  return error && error.message ? String(error.message) : String(error || 'unknown');
+}

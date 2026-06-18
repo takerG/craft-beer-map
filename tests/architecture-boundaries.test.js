@@ -100,17 +100,31 @@ test('choose taste dimensions are declared in one shared schema module', async (
 test('academy tab model stays independent from article detail style resolution', () => {
   const academyPage = readFile('pages/academy/index.js');
   const feedModel = readFile('utils/academy-feed-model.js');
+  const feedRemote = readFile('utils/academy-feed-remote.js');
+  const feedMocks = readFile('utils/academy-feed-mocks.js');
 
   assert.match(academyPage, /utils\/academy-feed-model\.js/);
   assert.doesNotMatch(academyPage, /utils\/academy-model\.js/);
+  assert.match(feedModel, /academy-feed-remote\.js/);
+  assert.doesNotMatch(feedModel, /academy-article-remote\.js/);
   assert.doesNotMatch(feedModel, /beer-model\.js/);
+  assert.doesNotMatch(feedRemote, /academy-article/);
+  assert.doesNotMatch(feedMocks, /academy-sites\.js/);
+  assert.doesNotMatch(feedMocks, /sections|modules|contentPayload/);
+  assert.match(feedMocks, /academy-feed\.js/);
 });
 
 test('academy article detail model stays inside the content subpackage', () => {
   const articlePage = readFile('subpages/academy-article/index.js');
+  const articleModel = readFile('subpages/utils/academy-model.js');
 
   assert.equal(fs.existsSync(path.join(root, 'utils/academy-model.js')), false);
+  assert.equal(fs.existsSync(path.join(root, 'utils/academy-article-remote.js')), false);
+  assert.equal(fs.existsSync(path.join(root, 'utils/academy-article-mocks.js')), false);
   assert.equal(fs.existsSync(path.join(root, 'subpages/utils/academy-model.js')), true);
+  assert.equal(fs.existsSync(path.join(root, 'subpages/utils/academy-article-remote.js')), true);
+  assert.equal(fs.existsSync(path.join(root, 'subpages/utils/academy-article-mocks.js')), true);
   assert.match(articlePage, /from '\.\.\/utils\/academy-model\.js'/);
   assert.doesNotMatch(articlePage, /\.\.\/\.\.\/utils\/academy-model\.js/);
+  assert.match(articleModel, /\.\/academy-article-remote\.js/);
 });

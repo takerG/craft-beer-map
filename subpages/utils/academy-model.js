@@ -1,7 +1,9 @@
-import { academySites } from '../../data/academy-sites.js';
+import { getAcademyArticleFromRemote } from './academy-article-remote.js';
 import { getExtensionStyleDetail, getStyleDetail } from '../../utils/beer-model.js';
 
-const siteBySlug = new Map(academySites.map((site) => [site.slug, site]));
+const SUPPORTED_SCHEMA_VERSION = 1;
+const SUPPORTED_RENDER_MODE = 'structured';
+const SUPPORTED_CONTENT_FORMAT = 'structured-v1';
 const EXPERIENCE_KEYS = {
   'ipa-family-map': 'ipa-map',
   'ale-vs-lager': 'ale-lager',
@@ -9,14 +11,22 @@ const EXPERIENCE_KEYS = {
   'cold-ipa': 'cold-ipa',
 };
 
-export function getAcademyArticle(slug) {
-  const site = siteBySlug.get(slug);
+export async function getAcademyArticle(slug) {
+  const site = await getAcademyArticleFromRemote(slug);
+  return normalizeAcademyArticlePayload(site);
+}
+
+export function normalizeAcademyArticlePayload(site) {
   if (!site) return null;
-  const experienceKey = EXPERIENCE_KEYS[slug] || 'custom';
-  const modules = normalizeModules(site.modules);
+  if (!isSupportedRemotePayload(site)) return null;
+
+  const contentPayload = site.contentPayload;
+  const experienceKey = EXPERIENCE_KEYS[site.slug] || 'custom';
+  const modules = normalizeModules(contentPayload.modules);
 
   return {
     ...site,
+    hero: contentPayload.hero,
     experienceKey,
     isIpaMapExperience: experienceKey === 'ipa-map',
     isAleLagerExperience: experienceKey === 'ale-lager',
@@ -25,12 +35,29 @@ export function getAcademyArticle(slug) {
     showDefaultArticleHero: experienceKey !== 'cold-ipa',
     pageThemeClass: experienceKey === 'cold-ipa' ? 'cold-ipa-page' : '',
     selectedComparisonId: 'cold-ipa',
-    sections: normalizeSections(site.sections, site.experienceAfterSectionId, experienceKey),
+    sections: normalizeSections(
+      contentPayload.sections,
+      contentPayload.experienceAfterSectionId,
+      experienceKey,
+    ),
     modules,
     genericModules: experienceKey === 'custom' ? modules : [],
     hasGenericModules: experienceKey === 'custom' && modules.length > 0,
     relatedStyles: resolveRelatedStyles(site.relatedStyles),
   };
+}
+
+function isSupportedRemotePayload(site) {
+  if (site.schemaVersion !== SUPPORTED_SCHEMA_VERSION) return false;
+  if (site.renderMode !== SUPPORTED_RENDER_MODE) return false;
+  if (site.contentFormat !== SUPPORTED_CONTENT_FORMAT) return false;
+  if (!site.contentPayload || typeof site.contentPayload !== 'object') return false;
+
+  const { hero, sections, experienceAfterSectionId, modules } = site.contentPayload;
+  return Boolean(hero && typeof hero === 'object')
+    && Array.isArray(sections)
+    && typeof experienceAfterSectionId === 'string'
+    && Array.isArray(modules);
 }
 
 function normalizeModules(modules = []) {

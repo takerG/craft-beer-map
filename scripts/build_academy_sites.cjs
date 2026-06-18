@@ -4,6 +4,7 @@ const path = require('node:path');
 const root = path.resolve(__dirname, '..');
 const sourceRoot = path.join(root, 'academy-sites');
 const outputPath = path.join(root, 'data', 'academy-sites.js');
+const feedOutputPath = path.join(root, 'data', 'academy-feed.js');
 
 const REQUIRED_META_FIELDS = ['slug', 'title', 'description', 'type', 'difficulty', 'readingTime', 'tags', 'relatedStyles'];
 const REQUIRED_PUBLISH_FIELDS = ['publishedAt'];
@@ -87,7 +88,26 @@ function validateOrder(order, sites) {
 
 function writeData(payload) {
   const source = `// Generated from academy-sites/. Run npm run build:academy after content changes.\nexport const academyOrder = ${JSON.stringify(payload.order, null, 2)};\n\nexport const academySites = ${JSON.stringify(payload.sites, null, 2)};\n`;
+  const feedSource = `// Generated from academy-sites/. Run npm run build:academy after content changes.\nexport const academyFeedSites = ${JSON.stringify(payload.sites.map(toFeedSite), null, 2)};\n`;
+
   fs.writeFileSync(outputPath, source, 'utf8');
+  fs.writeFileSync(feedOutputPath, feedSource, 'utf8');
+}
+
+function toFeedSite(site) {
+  return {
+    slug: site.slug,
+    title: site.title,
+    description: site.description,
+    type: site.type,
+    difficulty: site.difficulty,
+    readingTime: site.readingTime,
+    tags: [...site.tags],
+    publishedAt: site.publishedAt || site.date || '',
+    updatedAt: site.updatedAt || site.publishedAt || site.date || '',
+    heroMetric: site.heroMetric || '',
+    accent: site.accent || '#f6ad55',
+  };
 }
 
 function readJson(filePath) {

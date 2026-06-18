@@ -9,6 +9,7 @@ Page({
     loadStatus: 'loading',
     isLoading: true,
     isNotFound: false,
+    isError: false,
     isReady: false,
     article: null,
     articleSections: [],
@@ -42,14 +43,43 @@ Page({
     });
   },
 
-  loadArticle(slug) {
-    const article = getAcademyArticle(slug);
+  async loadArticle(slug) {
+    this.setData({
+      slug,
+      loadStatus: 'loading',
+      isLoading: true,
+      isNotFound: false,
+      isError: false,
+      isReady: false,
+      article: null,
+      articleSections: [],
+    });
+
+    let article = null;
+    try {
+      article = await getAcademyArticle(slug);
+    } catch (error) {
+      trackEvent('academy_article_load_error', { slug, message: getErrorMessage(error) });
+      this.setData({
+        slug,
+        loadStatus: 'error',
+        isLoading: false,
+        isNotFound: false,
+        isError: true,
+        isReady: false,
+        article: null,
+        articleSections: [],
+      });
+      return;
+    }
+
     if (!article) {
       this.setData({
         slug,
         loadStatus: 'not-found',
         isLoading: false,
         isNotFound: true,
+        isError: false,
         isReady: false,
         article: null,
         articleSections: [],
@@ -73,6 +103,7 @@ Page({
       loadStatus: 'ready',
       isLoading: false,
       isNotFound: false,
+      isError: false,
       isReady: true,
       article: decoratedArticle,
       articleSections: getArticleSections(decoratedArticle),
@@ -163,6 +194,10 @@ Page({
     trackEvent('academy_article_back', { slug: this.data.slug });
     switchTabOnce(this, '/pages/academy/index');
   },
+
+  retryArticle() {
+    this.loadArticle(this.data.slug);
+  },
 });
 
 function decorateArticle(article, selections) {
@@ -177,67 +212,11 @@ function decorateArticle(article, selections) {
 
 function getArticleSections(article) {
   if (Array.isArray(article.sections) && article.sections.length > 0) return article.sections;
-  return getFallbackSections(article.slug, article.experienceKey);
+  return [];
 }
 
-function getFallbackSections(slug, experienceKey) {
-  const fallbacks = {
-    'ipa-family-map': [
-      {
-        id: 'what-is-ipa',
-        title: '什么是 IPA',
-        paragraphs: ['IPA 是 India Pale Ale 的缩写。现代精酿语境里的 IPA，重点是一类以酒花表达为核心的啤酒，而不是单一配方。'],
-        hasCallout: false,
-      },
-      {
-        id: 'why-name',
-        title: '为什么叫 IPA',
-        paragraphs: ['这个名字来自历史上的 India Pale Ale。今天的 IPA 已经被现代精酿重新发展，成为展示酒花香气、苦度和酒体平衡的风格家族。'],
-        hasCallout: false,
-      },
-      {
-        id: 'branches',
-        title: '衍生风格是怎么分化出来的',
-        paragraphs: ['West Coast、Hazy、Session、Double 等分支，本质上是在苦度、香气、酒体和强度之间选择不同平衡点。'],
-        callout: '下面的互动地图用来辅助理解这些分支的距离。',
-        hasCallout: true,
-        showIpaMapExperience: experienceKey === 'ipa-map',
-      },
-    ],
-    'ale-vs-lager': [
-      {
-        id: 'what-is-ale-lager',
-        title: '艾尔和拉格是什么',
-        paragraphs: ['艾尔和拉格不是高低贵贱，而是两条发酵管理路线。它们的差异主要来自温度、时间和酵母表达。'],
-        hasCallout: false,
-      },
-      {
-        id: 'process-paths',
-        title: '真正的差异在酿造路径',
-        paragraphs: ['Ale 通常更快、更外放；Lager 通常更慢、更克制。把路径看清楚，比死记上发酵和下发酵更有用。'],
-        callout: '下面的双路径对照用来辅助理解温度、时间和表达的差异。',
-        hasCallout: true,
-        showAleLagerExperience: experienceKey === 'ale-lager',
-      },
-    ],
-    'flavor-radar-basics': [
-      {
-        id: 'why-source',
-        title: '风味词要先看来源',
-        paragraphs: ['风味词不是背诵表。先判断它来自麦芽、酒花、酵母还是发酵管理，再去细分具体描述。'],
-        hasCallout: false,
-      },
-      {
-        id: 'sources',
-        title: '四个最常见的风味来源',
-        paragraphs: ['麦芽、酒花、酵母和发酵管理，是入门时最有用的四个风味来源坐标。'],
-        callout: '下面的雷达用来把词汇放回来源。',
-        hasCallout: true,
-        showFlavorRadarExperience: experienceKey === 'flavor-radar',
-      },
-    ],
-  };
-  return fallbacks[slug] || [];
+function getErrorMessage(error) {
+  return error && error.message ? String(error.message) : String(error || 'unknown');
 }
 
 function buildExperience(experienceKey, selections, article = null) {
