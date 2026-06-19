@@ -87,8 +87,8 @@ function validateOrder(order, sites) {
 }
 
 function writeData(payload) {
-  const source = `// Generated from academy-sites/. Run npm run build:academy after content changes.\nexport const academyOrder = ${JSON.stringify(payload.order, null, 2)};\n\nexport const academySites = ${JSON.stringify(payload.sites, null, 2)};\n`;
-  const feedSource = `// Generated from academy-sites/. Run npm run build:academy after content changes.\nexport const academyFeedSites = ${JSON.stringify(payload.sites.map(toFeedSite), null, 2)};\n`;
+  const source = `// Generated from academy-sites/. Run npm run build:academy after content changes.\nexport const academyOrder = ${JSON.stringify(payload.order)};\n\nexport const academySites = ${JSON.stringify(payload.sites)};\n`;
+  const feedSource = `// Generated from academy-sites/. Run npm run build:academy after content changes.\nexport const academyFeedSites = ${JSON.stringify(payload.sites.map(toFeedSite))};\n`;
 
   fs.writeFileSync(outputPath, source, 'utf8');
   fs.writeFileSync(feedOutputPath, feedSource, 'utf8');

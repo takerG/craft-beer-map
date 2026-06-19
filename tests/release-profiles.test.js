@@ -62,6 +62,12 @@ test('production text files contain no AI runtime references', () => {
     });
 });
 
+test('production profile keeps runtime data dependencies without duplicate tabbar assets', () => {
+  assert.equal(fs.existsSync(path.join(productionRoot, 'data', 'academy-feed.js')), true);
+  assert.equal(fs.existsSync(path.join(productionRoot, 'assets', 'tabbar', 'choose.png')), false);
+  assert.equal(fs.existsSync(path.join(productionRoot, 'assets', 'tabbar', 'choose-active.png')), false);
+});
+
 test('release profile manifests are deterministic across consecutive builds', () => {
   const firstProduction = readJson(
     path.join(productionRoot, 'release-profile-manifest.json'),

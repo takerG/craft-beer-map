@@ -16,6 +16,7 @@ const runtimeRootFiles = [
   'sitemap.json',
 ];
 const runtimeDataFiles = [
+  'academy-feed.js',
   'academy-sites.js',
   'beer-data.js',
   'extension-styles.js',
@@ -23,6 +24,8 @@ const runtimeDataFiles = [
   'styleLanguageMap.js',
 ];
 const productionExcludedPaths = new Set([
+  'assets/tabbar/choose-active.png',
+  'assets/tabbar/choose.png',
   'components/ai-entry',
 ]);
 
@@ -92,6 +95,22 @@ function buildAiBeta() {
     cwd: root,
     stdio: 'inherit',
   });
+  ignoreReleaseManifest(aiBetaRoot);
+}
+
+function ignoreReleaseManifest(projectRoot) {
+  const projectPath = path.join(projectRoot, 'project.config.json');
+  const project = readJson(projectPath);
+  const ignore = project.packOptions?.ignore || [];
+  const hasManifestIgnore = ignore.some((item) =>
+    item.type === 'file' && item.value === 'release-profile-manifest.json');
+  project.packOptions = {
+    ...(project.packOptions || {}),
+    ignore: hasManifestIgnore
+      ? ignore
+      : [...ignore, { type: 'file', value: 'release-profile-manifest.json' }],
+  };
+  writeJson(projectPath, project);
 }
 
 function copyDirectory(sourceRoot, targetRoot, relativeRoot) {

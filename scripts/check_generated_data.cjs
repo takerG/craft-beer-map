@@ -91,11 +91,11 @@ function buildExpectedAcademyOutputs() {
   return [
     {
       path: 'data/academy-sites.js',
-      expected: `// Generated from academy-sites/. Run npm run build:academy after content changes.\nexport const academyOrder = ${JSON.stringify(order, null, 2)};\n\nexport const academySites = ${JSON.stringify(sites, null, 2)};\n`,
+      expected: `// Generated from academy-sites/. Run npm run build:academy after content changes.\nexport const academyOrder = ${JSON.stringify(order)};\n\nexport const academySites = ${JSON.stringify(sites)};\n`,
     },
     {
       path: 'data/academy-feed.js',
-      expected: `// Generated from academy-sites/. Run npm run build:academy after content changes.\nexport const academyFeedSites = ${JSON.stringify(sites.map(toAcademyFeedSite), null, 2)};\n`,
+      expected: `// Generated from academy-sites/. Run npm run build:academy after content changes.\nexport const academyFeedSites = ${JSON.stringify(sites.map(toAcademyFeedSite))};\n`,
     },
   ];
 }

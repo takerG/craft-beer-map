@@ -82,8 +82,8 @@
       {
         "pagePath": "pages/choose/index",
         "text": "择饮",
-        "iconPath": "assets/tabbar/choose.png",
-        "selectedIconPath": "assets/tabbar/choose-active.png"
+        "iconPath": "assets/tabbar/explore.png",
+        "selectedIconPath": "assets/tabbar/explore-active.png"
       },
       {
         "pagePath": "pages/academy/index",

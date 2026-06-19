@@ -116,6 +116,14 @@
       {
         "type": "file",
         "value": "data/style-language-map.json"
+      },
+      {
+        "type": "file",
+        "value": "assets/tabbar/choose.png"
+      },
+      {
+        "type": "file",
+        "value": "assets/tabbar/choose-active.png"
       }
     ],
     "include": [
