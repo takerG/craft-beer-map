@@ -7,6 +7,7 @@ import path from 'node:path';
 const root = process.cwd();
 const miniProgramRoot = root;
 const legacyArtifactRoot = path.join(root, 'artifacts', 'ai-mode-project');
+const expectedSkillDescription = '微信 AI 精酿啤酒小程序助手：搜索 BJCP 编号、风格名和常见叫法；按场景与口味（甜酸苦、酒体、强度）偏好推荐；查看 BJCP 官方风格与 BA/WBC/GABF 市场扩展风格详情、收藏和学院文章。';
 
 test('AI mode is integrated into the real developer-tools project', () => {
   runBuild();
@@ -19,7 +20,7 @@ test('AI mode is integrated into the real developer-tools project', () => {
     skills: [
       {
         name: 'craft-beer-guide',
-        description: '精酿啤酒风格搜索、口味推荐、详情、收藏与学院文章',
+        description: expectedSkillDescription,
         path: 'skills/craft-beer-guide',
       },
     ],
@@ -35,6 +36,25 @@ test('AI mode is integrated into the real developer-tools project', () => {
   assert.equal(projectConfig.projectname, 'craft-beer-map');
   assert.equal(fs.existsSync(path.join(miniProgramRoot, 'pages', 'explore', 'index.js')), true);
   assert.equal(fs.existsSync(path.join(legacyArtifactRoot, 'miniprogram')), false);
+});
+
+test('Skill discovery description includes WeChat AI retrieval vocabulary', () => {
+  const app = readJson(path.join(miniProgramRoot, 'app.json'));
+  const description = app.agent.skills.find((item) => item.name === 'craft-beer-guide')
+    ?.description;
+
+  [
+    '微信 AI',
+    '精酿啤酒小程序',
+    'BJCP',
+    'BA/WBC/GABF',
+    '风格名',
+    '常见叫法',
+    '口味',
+    '推荐',
+    '收藏',
+    '学院文章',
+  ].forEach((phrase) => assert.equal(description.includes(phrase), true, phrase));
 });
 
 test('AI mode build generates only project data and knowledge artifacts', () => {

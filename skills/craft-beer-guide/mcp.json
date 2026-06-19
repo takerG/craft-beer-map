@@ -2,7 +2,7 @@
   "apis": [
     {
       "name": "searchBeerStyles",
-      "description": "按用户明确提供的 BJCP 编号、中文名、英文名或常见叫法搜索风格。用户只表达模糊饮用偏好时不要调用，应改用 recommendBeerStyles。",
+      "description": "用于“找/搜索/21A 是什么/西海岸 IPA/浑浊 IPA 有哪些叫法”等用户明确给出 BJCP 编号、中文名、英文名或常见叫法的风格检索；只表达清爽不苦、配烧烤等饮用偏好时改用 recommendBeerStyles。",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -46,7 +46,7 @@
     },
     {
       "name": "recommendBeerStyles",
-      "description": "根据用户的场景与口味偏好推荐风格。偏好不明确时先简短澄清；不要把未表达的维度强行设为高或低。",
+      "description": "用于“想喝点清爽不苦的/配烧烤喝什么/今晚想轻松喝”等场景与口味偏好推荐。偏好不明确时先简短澄清；不要把未表达的维度强行设为高或低。",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -76,7 +76,7 @@
     },
     {
       "name": "getBeerStyleDetail",
-      "description": "读取一个已选风格的详情。styleRef 必须来自搜索、推荐或收藏 API 的原始返回值，禁止从自然语言猜测 id。",
+      "description": "用于查看已选风格的详情卡片，例如用户点选搜索、推荐或收藏结果后问“这个是什么/详情”。styleRef 必须来自搜索、推荐或收藏 API 的原始返回值，禁止从自然语言猜测 id。",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -106,7 +106,7 @@
     },
     {
       "name": "listFavoriteBeerStyles",
-      "description": "读取本机收藏的啤酒风格。用于回答用户收藏了什么，或在收藏变更前确认目标。",
+      "description": "用于“看看我的收藏/我收藏了什么/从收藏里推荐”的本机啤酒风格收藏查询，或在收藏变更前确认目标。",
       "inputSchema": {
         "type": "object",
         "properties": {}
@@ -122,7 +122,7 @@
     },
     {
       "name": "addFavoriteBeerStyle",
-      "description": "将已确认的风格加入本机收藏。只有 API 成功返回 isFavorite=true 后才能向用户确认收藏成功。",
+      "description": "用于用户明确说“收藏这个/加到收藏/喜欢这个”且目标风格已确认时加入本机收藏。只有 API 成功返回 isFavorite=true 后才能向用户确认收藏成功。",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -150,7 +150,7 @@
     },
     {
       "name": "removeFavoriteBeerStyle",
-      "description": "从本机收藏移除一个已确认的风格。只有 API 成功返回 isFavorite=false 后才能向用户确认取消成功。",
+      "description": "用于用户明确说“取消收藏/移出收藏/不收藏这个”且目标风格已确认时移除本机收藏。只有 API 成功返回 isFavorite=false 后才能向用户确认取消成功。",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -178,7 +178,7 @@
     },
     {
       "name": "findAcademyArticles",
-      "description": "按概念、风格或学习主题查找小程序学院文章。回答只引用返回的文章信息。",
+      "description": "用于“推荐入门文章/冷 IPA 和西海岸 IPA 区别/学习某概念”等学院文章发现；按概念、风格或学习主题查找小程序学院文章，回答只引用返回的文章信息。",
       "inputSchema": {
         "type": "object",
         "properties": {

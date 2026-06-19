@@ -62,6 +62,26 @@ test('Skill instructions constrain answers and mutation claims', () => {
   ].forEach((phrase) => assert.equal(skillInstructions.includes(phrase), true, phrase));
 });
 
+test('Skill API descriptions cover common WeChat AI invocation phrases', () => {
+  const mcp = readJson(path.join(skillRoot, 'mcp.json'));
+  const descriptions = Object.fromEntries(
+    mcp.apis.map((api) => [api.name, api.description]),
+  );
+
+  [
+    ['searchBeerStyles', ['找', '搜索', '21A', '西海岸 IPA', '常见叫法']],
+    ['recommendBeerStyles', ['清爽不苦', '配烧烤', '场景', '口味偏好']],
+    ['getBeerStyleDetail', ['这个是什么', '详情', 'styleRef', '禁止']],
+    ['listFavoriteBeerStyles', ['看看我的收藏', '收藏了什么', '本机']],
+    ['addFavoriteBeerStyle', ['收藏这个', '已确认', 'isFavorite=true']],
+    ['removeFavoriteBeerStyle', ['取消收藏', '已确认', 'isFavorite=false']],
+    ['findAcademyArticles', ['入门文章', '区别', '学院文章']],
+  ].forEach(([apiName, phrases]) => {
+    phrases.forEach((phrase) =>
+      assert.equal(descriptions[apiName].includes(phrase), true, `${apiName}: ${phrase}`));
+  });
+});
+
 test('search, recommendation, detail, and academy APIs return official result envelopes', async () => {
   const search = loadApi('searchBeerStyles');
   const recommend = loadApi('recommendBeerStyles');

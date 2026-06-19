@@ -2,7 +2,7 @@
   "apis": [
     {
       "name": "searchBeerStyles",
-      "description": "按用户明确提供的编号、名称或叫法搜索风格。",
+      "description": "用于“找/搜索/21A 是什么/西海岸 IPA/浑浊 IPA 有哪些叫法”等用户明确给出 BJCP 编号、中文名、英文名或常见叫法的风格检索；只表达清爽不苦、配烧烤等饮用偏好时改用 recommendBeerStyles。",
       "inputSchema": {
         "type": "object",
         "additionalProperties": false,
@@ -56,7 +56,7 @@
     },
     {
       "name": "recommendBeerStyles",
-      "description": "根据完整语义口味快照推荐风格；后续修改必须使用最新流程修订号。",
+      "description": "用于“想喝点清爽不苦的/配烧烤喝什么/今晚想探索”等连续场景与口味偏好推荐；必须提交完整 semantic-v2 快照，未表达偏好使用 unspecified，后续调整必须使用最新流程修订号。",
       "inputSchema": {
         "type": "object",
         "additionalProperties": false,
@@ -247,7 +247,7 @@
     },
     {
       "name": "getBeerStyleDetail",
-      "description": "读取已选择风格详情；推荐上下文只能来自最新推荐卡片。",
+      "description": "用于用户从最新搜索、推荐或收藏卡片选择后查看风格详情，例如“这个是什么/看详情/为什么推荐它”；styleRef 必须来自 API 原始返回值，推荐上下文只能来自最新推荐卡片，禁止猜 id。",
       "inputSchema": {
         "type": "object",
         "additionalProperties": false,
@@ -365,7 +365,7 @@
     },
     {
       "name": "listFavoriteBeerStyles",
-      "description": "读取本机收藏。",
+      "description": "用于“看看我的收藏/我收藏了什么/从收藏里推荐”的本机啤酒风格收藏查询，或在收藏变更前确认目标。",
       "inputSchema": { "type": "object", "additionalProperties": false, "properties": {} },
       "outputSchema": {
         "type": "object",
@@ -410,7 +410,7 @@
     },
     {
       "name": "addFavoriteBeerStyle",
-      "description": "收藏已确认风格；推荐卡片动作必须携带最新推荐上下文。",
+      "description": "用于用户明确说“收藏这个/加到收藏/喜欢这个”且目标风格已确认时加入本机收藏；推荐卡片动作必须携带最新推荐上下文，只有 API 成功返回 isFavorite=true 后才能确认。",
       "inputSchema": {
         "type": "object",
         "additionalProperties": false,
@@ -486,7 +486,7 @@
     },
     {
       "name": "removeFavoriteBeerStyle",
-      "description": "取消收藏已确认风格。",
+      "description": "用于用户明确说“取消收藏/移出收藏/不收藏这个”且目标风格已确认时移除本机收藏；只有 API 成功返回 isFavorite=false 后才能确认。",
       "inputSchema": {
         "type": "object",
         "additionalProperties": false,
@@ -545,7 +545,7 @@
     },
     {
       "name": "findAcademyArticles",
-      "description": "按主题查找学院文章。",
+      "description": "用于“推荐入门文章/冷 IPA 和西海岸 IPA 区别/学习某概念”等学院文章发现；按概念、风格或学习主题查找小程序学院文章，回答只引用返回的文章信息。",
       "inputSchema": {
         "type": "object",
         "additionalProperties": false,

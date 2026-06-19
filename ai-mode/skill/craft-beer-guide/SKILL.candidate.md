@@ -1,5 +1,7 @@
 # craft-beer-guide candidate
 
+微信 AI 精酿啤酒小程序的 candidate Skill，用于“想喝点清爽不苦的”“配烧烤喝什么”“继续调整推荐”等连续口味推荐场景。
+
 使用 semantic-v2 完整语义快照帮助用户连续调整口味并获得可解释推荐。
 
 - 五个偏好字段必须完整，未表达使用 `unspecified`。
