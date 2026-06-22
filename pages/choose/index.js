@@ -98,8 +98,6 @@ Page({
     exactMatchesToggleLabel: '展开全部复合匹配',
     exactMatchesCountLabel: '',
     resultCountLabel: '0 个推荐',
-    showExplanation: false,
-    explanationToggleLabel: '展开推荐依据',
     explanationSummary: '',
     wheelChartStyle: '',
     wheelLabels: [],
@@ -154,20 +152,6 @@ Page({
     });
     this.refreshTasteMatches(nextFilterState, this.data.activeSceneId, {
       preserveInteractionState: true,
-    });
-  },
-
-  toggleExplanation(event) {
-    const showExplanation = !this.data.showExplanation;
-
-    trackEvent('choose_explanation_toggle', {
-      expanded: showExplanation,
-      source: event && event.currentTarget ? 'toggle' : 'unknown',
-      sceneId: this.data.activeSceneId,
-    });
-    this.setData({
-      showExplanation,
-      explanationToggleLabel: showExplanation ? '收起推荐依据' : '展开推荐依据',
     });
   },
 
@@ -235,7 +219,6 @@ Page({
     const alternativeResults = visibleResults.slice(1);
     const visualData = buildVisualData(filters, filterState, results);
     const isTasteAdjusted = hasFilterAdjustments(filterState, scene.filterState);
-    const showExplanation = options.preserveInteractionState ? this.data.showExplanation : false;
     const activeVisualIndex = options.preserveInteractionState ? this.data.activeVisualIndex : 0;
 
     this.setData({
@@ -257,8 +240,6 @@ Page({
       exactMatchesToggleLabel: buildExactMatchesToggleLabel(false, exactMatchResults.length),
       exactMatchesCountLabel: buildExactMatchesCountLabel(exactMatchResults, filters, filterState),
       resultCountLabel: `${visibleResults.length} 个推荐`,
-      showExplanation,
-      explanationToggleLabel: showExplanation ? '收起推荐依据' : '展开推荐依据',
       explanationSummary: buildExplanationSummary(primaryPick, alternativeResults, scene),
       activeVisualIndex,
       ...visualData,

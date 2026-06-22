@@ -1012,8 +1012,6 @@ test('choose tab frames matches as a tonight decision workbench', () => {
   assert.match(chooseJs, /choose_scene_select/);
   assert.match(chooseJs, /primaryPick/);
   assert.match(chooseJs, /alternativeResults/);
-  assert.match(chooseJs, /toggleExplanation\(event\)/);
-  assert.match(chooseJs, /choose_explanation_toggle/);
 
   assert.match(chooseWxml, /class="scene-grid"/);
   assert.match(chooseWxml, /bindtap="changeScene"/);
@@ -1022,13 +1020,38 @@ test('choose tab frames matches as a tonight decision workbench', () => {
   assert.match(chooseWxml, /class="alternative-grid"/);
   assert.match(chooseWxml, /wx:for="{{alternativeResults}}"/);
   assert.match(chooseWxml, /class="why-recommendation"/);
-  assert.match(chooseWxml, /bindtap="toggleExplanation"/);
-  assert.match(chooseWxml, /wx:if="{{showExplanation}}"/);
+  assert.doesNotMatch(chooseWxml, /bindtap="toggleExplanation"/);
+  assert.doesNotMatch(chooseWxml, /wx:if="{{showExplanation}}"/);
 
   assert.match(chooseWxss, /\.scene-grid/);
   assert.match(chooseWxss, /\.primary-pick-card/);
   assert.match(chooseWxss, /\.alternative-grid/);
   assert.match(chooseWxss, /\.why-recommendation/);
+});
+
+test('choose scene heading keeps only the section title', () => {
+  const chooseWxml = readMiniPage('pages/choose/index.wxml');
+
+  assert.match(chooseWxml, /class="section-headline"/);
+  assert.equal(chooseWxml.includes('今晚的场景'), true);
+  assert.equal(chooseWxml.includes('选一个最接近的'), false);
+});
+
+test('choose primary result heading keeps only the section title', () => {
+  const chooseWxml = readMiniPage('pages/choose/index.wxml');
+
+  assert.match(chooseWxml, /<view class="result-head">\s*<text>今晚首选<\/text>\s*<\/view>/);
+  assert.match(chooseWxml, /class="primary-pick-score">{{primaryPick\.matchLabel}}<\/text>/);
+});
+
+test('choose alternative card heads keep only the style code', () => {
+  const chooseWxml = readMiniPage('pages/choose/index.wxml');
+
+  assert.match(
+    chooseWxml,
+    /<view class="alternative-card-head">\s*<text class="alternative-code">{{item\.codeLabel}}<\/text>\s*<\/view>/,
+  );
+  assert.doesNotMatch(chooseWxml, /class="alternative-score"/);
 });
 
 test('choose tab uses qualitative match labels and hides explanations without results', () => {
@@ -1046,6 +1069,27 @@ test('choose tab uses qualitative match labels and hides explanations without re
     chooseWxml,
     /wx:if="{{hasResults}}" class="result-region"[\s\S]*class="why-recommendation"[\s\S]*wx:else class="choose-empty"/,
   );
+});
+
+test('choose recommendation basis is expanded by default without a collapse action', () => {
+  const chooseJs = readMiniPage('pages/choose/index.js');
+  const chooseWxml = readMiniPage('pages/choose/index.wxml');
+  const chooseWxss = readMiniPage('pages/choose/index.wxss');
+  const page = createChoosePage();
+
+  page.refreshTasteMatches(page.data.filterState, page.data.activeSceneId);
+
+  assert.equal(chooseJs.includes('showExplanation'), false);
+  assert.equal(chooseJs.includes('explanationToggleLabel'), false);
+  assert.equal(chooseJs.includes('toggleExplanation'), false);
+  assert.equal(chooseJs.includes('choose_explanation_toggle'), false);
+  assert.equal(chooseWxml.includes('展开推荐依据'), false);
+  assert.equal(chooseWxml.includes('收起推荐依据'), false);
+  assert.doesNotMatch(chooseWxml, /class="why-toggle-action"/);
+  assert.doesNotMatch(chooseWxss, /\.why-toggle-action/);
+  assert.match(chooseWxml, /class="why-recommendation"[\s\S]*class="visual-region"/);
+  assert.equal(Object.hasOwn(page.data, 'showExplanation'), false);
+  assert.equal(Object.hasOwn(page.data, 'explanationToggleLabel'), false);
 });
 
 test('choose tab expands all exact compound taste matches below related styles', () => {
@@ -1098,10 +1142,9 @@ test('choose exact compound matches exclude the visible recommendations', () => 
   });
 });
 
-test('choose taste refinement marks the scene and preserves explanation and visual state', () => {
+test('choose taste refinement marks the scene and preserves visual state', () => {
   const page = createChoosePage();
   page.refreshTasteMatches(page.data.filterState, page.data.activeSceneId);
-  page.data.showExplanation = true;
   page.data.activeVisualIndex = 2;
 
   page.changeFilter({
@@ -1114,8 +1157,6 @@ test('choose taste refinement marks the scene and preserves explanation and visu
   });
 
   assert.equal(page.data.activeSceneLabel, '轻松畅饮 · 已微调');
-  assert.equal(page.data.showExplanation, true);
-  assert.equal(page.data.explanationToggleLabel, '收起推荐依据');
   assert.equal(page.data.activeVisualIndex, 2);
 });
 
@@ -1146,7 +1187,6 @@ test('choose taste refinement clears the adjusted label after returning to the s
 test('choose scene changes restore the preset and reset explanation and visual state', () => {
   const page = createChoosePage();
   page.refreshTasteMatches(page.data.filterState, page.data.activeSceneId);
-  page.data.showExplanation = true;
   page.data.activeVisualIndex = 2;
   page.data.filterState = {
     ...page.data.filterState,
@@ -1169,8 +1209,6 @@ test('choose scene changes restore the preset and reset explanation and visual s
     body: 0,
     strength: 0,
   });
-  assert.equal(page.data.showExplanation, false);
-  assert.equal(page.data.explanationToggleLabel, '展开推荐依据');
   assert.equal(page.data.activeVisualIndex, 0);
 });
 

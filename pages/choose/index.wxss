@@ -266,13 +266,6 @@
   line-height: 1.38;
 }
 
-.why-toggle-action {
-  flex: 0 0 auto;
-  color: #ffcf85;
-  font-size: 21rpx;
-  font-weight: 950;
-}
-
 .visual-region {
   margin-top: 12rpx;
   padding: 12rpx;

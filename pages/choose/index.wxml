@@ -16,7 +16,6 @@
   <view class="scene-section">
     <view class="section-headline">
       <text>今晚的场景</text>
-      <text>选一个最接近的</text>
     </view>
     <view class="scene-grid">
       <view
@@ -63,7 +62,6 @@
   <view wx:if="{{hasResults}}" class="result-region">
     <view class="result-head">
       <text>今晚首选</text>
-      <text>{{primaryPick.matchLabel}}</text>
     </view>
 
     <view
@@ -113,7 +111,6 @@
         >
           <view class="alternative-card-head">
             <text class="alternative-code">{{item.codeLabel}}</text>
-            <text class="alternative-score">{{item.matchLabel}}</text>
           </view>
           <text class="alternative-name">{{item.displayName}}</text>
           <text class="alternative-reason">{{item.reasonText}}</text>
@@ -157,120 +154,114 @@
       </view>
     </view>
     <view class="why-recommendation">
-    <view
-      class="why-toggle"
-      hover-class="tap-hover"
-      hover-stay-time="80"
-      bindtap="toggleExplanation"
-    >
-      <view class="why-toggle-copy">
-        <text>为什么推荐这三款？</text>
-        <text>{{explanationSummary}}</text>
-      </view>
-      <text class="why-toggle-action">{{explanationToggleLabel}}</text>
-    </view>
-
-    <view wx:if="{{showExplanation}}" class="visual-region">
-      <view class="visual-tabs">
-        <view
-          wx:for="{{visualTabs}}"
-          wx:for-index="index"
-          wx:key="id"
-          class="visual-tab {{activeVisualIndex === index ? 'visual-tab-active' : ''}}"
-          hover-class="tap-hover"
-          hover-stay-time="80"
-          data-visual-index="{{index}}"
-          bindtap="tapVisualTab"
-        >
-          <text>{{item.label}}</text>
+      <view class="why-toggle">
+        <view class="why-toggle-copy">
+          <text>为什么推荐这三款？</text>
+          <text>{{explanationSummary}}</text>
         </view>
       </view>
 
-      <swiper
-        class="visual-swiper"
-        current="{{activeVisualIndex}}"
-        duration="260"
-        bindchange="switchVisualView"
-      >
-        <swiper-item>
-          <view class="visual-panel">
-            <view class="visual-head">
-              <text>命中的风味方向</text>
-              <text>颜色=筛选维度</text>
-            </view>
-            <text class="wheel-summary">{{wheelSummary}}</text>
-            <view class="wheel-chart" style="{{wheelChartStyle}}">
-              <view class="wheel-core"></view>
-              <text
-                wx:for="{{wheelLabels}}"
-                wx:key="id"
-                class="wheel-label {{item.className}}"
-                style="border-color: {{item.color}}"
-              >{{item.dimension}} · {{item.label}}</text>
-            </view>
-            <view class="wheel-legend">
-              <view
-                wx:for="{{wheelLegend}}"
-                wx:key="id"
-                class="wheel-legend-item {{item.active ? 'wheel-legend-active' : ''}} {{item.muted ? 'wheel-legend-muted' : ''}}"
-              >
-                <view class="wheel-swatch" style="{{item.swatchStyle}}"></view>
-                <view class="wheel-legend-copy">
-                  <text class="wheel-legend-main">{{item.dimension}} · {{item.valueLabel}}</text>
-                  <text class="wheel-legend-source">{{item.sourceLabel}}</text>
+      <view class="visual-region">
+        <view class="visual-tabs">
+          <view
+            wx:for="{{visualTabs}}"
+            wx:for-index="index"
+            wx:key="id"
+            class="visual-tab {{activeVisualIndex === index ? 'visual-tab-active' : ''}}"
+            hover-class="tap-hover"
+            hover-stay-time="80"
+            data-visual-index="{{index}}"
+            bindtap="tapVisualTab"
+          >
+            <text>{{item.label}}</text>
+          </view>
+        </view>
+
+        <swiper
+          class="visual-swiper"
+          current="{{activeVisualIndex}}"
+          duration="260"
+          bindchange="switchVisualView"
+        >
+          <swiper-item>
+            <view class="visual-panel">
+              <view class="visual-head">
+                <text>命中的风味方向</text>
+                <text>颜色=筛选维度</text>
+              </view>
+              <text class="wheel-summary">{{wheelSummary}}</text>
+              <view class="wheel-chart" style="{{wheelChartStyle}}">
+                <view class="wheel-core"></view>
+                <text
+                  wx:for="{{wheelLabels}}"
+                  wx:key="id"
+                  class="wheel-label {{item.className}}"
+                  style="border-color: {{item.color}}"
+                >{{item.dimension}} · {{item.label}}</text>
+              </view>
+              <view class="wheel-legend">
+                <view
+                  wx:for="{{wheelLegend}}"
+                  wx:key="id"
+                  class="wheel-legend-item {{item.active ? 'wheel-legend-active' : ''}} {{item.muted ? 'wheel-legend-muted' : ''}}"
+                >
+                  <view class="wheel-swatch" style="{{item.swatchStyle}}"></view>
+                  <view class="wheel-legend-copy">
+                    <text class="wheel-legend-main">{{item.dimension}} · {{item.valueLabel}}</text>
+                    <text class="wheel-legend-source">{{item.sourceLabel}}</text>
+                  </view>
                 </view>
               </view>
             </view>
-          </view>
-        </swiper-item>
+          </swiper-item>
 
-        <swiper-item>
-          <view class="visual-panel">
-            <view class="visual-head">
-              <text>推荐理由画像</text>
-              <text>Taste radar</text>
-            </view>
-            <view class="radar-chart">
-              <view class="radar-ring radar-ring-one"></view>
-              <view class="radar-ring radar-ring-two"></view>
-              <view class="radar-ring radar-ring-three"></view>
-              <view
-                wx:for="{{radarMetrics}}"
-                wx:key="id"
-                class="radar-metric {{item.className}}"
-              >
-                <view class="radar-bar" style="height: {{item.level}}rpx"></view>
-                <text>{{item.label}}</text>
+          <swiper-item>
+            <view class="visual-panel">
+              <view class="visual-head">
+                <text>推荐理由画像</text>
+                <text>Taste radar</text>
+              </view>
+              <view class="radar-chart">
+                <view class="radar-ring radar-ring-one"></view>
+                <view class="radar-ring radar-ring-two"></view>
+                <view class="radar-ring radar-ring-three"></view>
+                <view
+                  wx:for="{{radarMetrics}}"
+                  wx:key="id"
+                  class="radar-metric {{item.className}}"
+                >
+                  <view class="radar-bar" style="height: {{item.level}}rpx"></view>
+                  <text>{{item.label}}</text>
+                </view>
               </view>
             </view>
-          </view>
-        </swiper-item>
+          </swiper-item>
 
-        <swiper-item>
-          <view class="visual-panel">
-            <view class="visual-head">
-              <text>风格探索星图</text>
-              <text>Style stars</text>
-            </view>
-            <view class="star-map">
-              <view
-                wx:for="{{starNodes}}"
-                wx:key="id"
-                class="star-node {{item.nodeClass}}"
-                style="left: {{item.x}}%; top: {{item.y}}%;"
-                hover-class="tap-hover"
-                hover-stay-time="80"
-                data-style-id="{{item.id}}"
-                data-item-kind="{{item.kind}}"
-                bindtap="openStyle"
-              >
-                <text class="star-node-label">{{item.starLabel}}</text>
+          <swiper-item>
+            <view class="visual-panel">
+              <view class="visual-head">
+                <text>风格探索星图</text>
+                <text>Style stars</text>
+              </view>
+              <view class="star-map">
+                <view
+                  wx:for="{{starNodes}}"
+                  wx:key="id"
+                  class="star-node {{item.nodeClass}}"
+                  style="left: {{item.x}}%; top: {{item.y}}%;"
+                  hover-class="tap-hover"
+                  hover-stay-time="80"
+                  data-style-id="{{item.id}}"
+                  data-item-kind="{{item.kind}}"
+                  bindtap="openStyle"
+                >
+                  <text class="star-node-label">{{item.starLabel}}</text>
+                </view>
               </view>
             </view>
-          </view>
-        </swiper-item>
-      </swiper>
-    </view>
+          </swiper-item>
+        </swiper>
+      </view>
     </view>
   </view>
 
