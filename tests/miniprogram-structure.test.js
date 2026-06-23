@@ -1029,6 +1029,18 @@ test('choose tab frames matches as a tonight decision workbench', () => {
   assert.match(chooseWxss, /\.why-recommendation/);
 });
 
+test('choose hero omits the recommendation count badge', () => {
+  const chooseWxml = readMiniPage('pages/choose/index.wxml');
+
+  assert.doesNotMatch(chooseWxml, /class="match-count"/);
+});
+
+test('choose taste filter heading omits the inline taste summary', () => {
+  const chooseWxml = readMiniPage('pages/choose/index.wxml');
+
+  assert.match(chooseWxml, /<view class="filter-panel-head">\s*<text>口味微调<\/text>\s*<\/view>/);
+});
+
 test('choose scene heading keeps only the section title', () => {
   const chooseWxml = readMiniPage('pages/choose/index.wxml');
 
@@ -1125,6 +1137,28 @@ test('choose count reflects only the visible recommendations', () => {
   assert.equal(visibleResults.length, 3);
   assert.equal(page.data.alternativeResults.length, 2);
   assert.equal(page.data.resultCountLabel, `${visibleResults.length} 个推荐`);
+});
+
+test('choose taste summary omits neutral flavor labels', () => {
+  const chooseWxml = readMiniPage('pages/choose/index.wxml');
+  const page = createChoosePage();
+
+  page.refreshTasteMatches(page.data.filterState, page.data.activeSceneId);
+
+  assert.equal(page.data.filterSummary, '不甜 · 不酸 · 轻盈');
+  assert.equal(page.data.hasFilterSummary, true);
+  assert.match(chooseWxml, /wx:if="{{hasFilterSummary}}">{{filterSummary}}/);
+
+  page.changeScene({
+    currentTarget: {
+      dataset: {
+        sceneId: 'new',
+      },
+    },
+  });
+
+  assert.equal(page.data.filterSummary, '');
+  assert.equal(page.data.hasFilterSummary, false);
 });
 
 test('choose exact compound matches exclude the visible recommendations', () => {

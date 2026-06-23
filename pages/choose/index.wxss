@@ -27,17 +27,6 @@
   min-width: 0;
 }
 
-.match-count {
-  flex: 0 0 auto;
-  margin-left: 18rpx;
-  padding: 10rpx 16rpx;
-  border-radius: 999rpx;
-  background: rgba(83, 212, 218, 0.14);
-  color: #53d4da;
-  font-size: 21rpx;
-  font-weight: 900;
-}
-
 .scene-intent {
   display: flex;
   align-items: center;
@@ -168,17 +157,6 @@
   color: #f8fafc;
   font-size: 28rpx;
   font-weight: 950;
-}
-
-.filter-panel-head text:last-child {
-  max-width: 480rpx;
-  overflow: hidden;
-  color: #8798ad;
-  font-size: 20rpx;
-  font-weight: 700;
-  text-align: right;
-  text-overflow: ellipsis;
-  white-space: nowrap;
 }
 
 .filter-row {

@@ -85,6 +85,7 @@ Page({
     filterRows: [],
     filterState: DEFAULT_FILTER_STATE,
     filterSummary: '',
+    hasFilterSummary: false,
     visualTabs: VISUAL_TABS,
     activeVisualIndex: 0,
     results: [],
@@ -220,6 +221,7 @@ Page({
     const visualData = buildVisualData(filters, filterState, results);
     const isTasteAdjusted = hasFilterAdjustments(filterState, scene.filterState);
     const activeVisualIndex = options.preserveInteractionState ? this.data.activeVisualIndex : 0;
+    const filterSummary = buildFilterSummary(filters, filterState);
 
     this.setData({
       activeSceneId: scene.id,
@@ -228,7 +230,8 @@ Page({
       scenePresets: buildScenePresets(scene.id),
       filterState,
       filterRows: buildFilterRows(filters, filterState),
-      filterSummary: buildFilterSummary(filters, filterState),
+      filterSummary,
+      hasFilterSummary: Boolean(filterSummary),
       results,
       hasResults: results.length > 0,
       primaryPick,
@@ -294,10 +297,15 @@ function buildFilterRows(filters, filterState) {
 }
 
 function buildFilterSummary(filters, filterState) {
-  return filters.map((filter) => {
-    const selected = filter.options.find((option) => option.value === Number(filterState[filter.id]));
-    return selected ? selected.label : '中立';
-  }).join(' · ');
+  return filters
+    .map((filter) => {
+      const value = Number(filterState[filter.id]);
+      if (value === 0) return '';
+      const selected = filter.options.find((option) => option.value === value);
+      return selected ? selected.label : '';
+    })
+    .filter(Boolean)
+    .join(' · ');
 }
 
 function buildExplanationSummary(primaryPick, alternativeResults, scene) {
