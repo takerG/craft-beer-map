@@ -21,7 +21,7 @@ export async function getAcademyHome() {
 
   return {
     title: '学院',
-    subtitle: '按发布时间更新的精酿互动文章。',
+    subtitle: '喝个明白，吹个痛快',
     feedSites,
     filterOptions: buildAcademyTypeFilters(feedSites, 'all'),
     stats: {

@@ -163,7 +163,7 @@ test('generated academy data omits local cover image payload', async () => {
 test('academy home exposes feed type filters with counts', async () => {
   const home = await getAcademyHome();
 
-  assert.equal(home.subtitle, '按发布时间更新的精酿互动文章。');
+  assert.equal(home.subtitle, '喝个明白，吹个痛快');
   assert.deepEqual(
     home.filterOptions.map((option) => [option.type, option.label, option.count]),
     [
