@@ -1,7 +1,9 @@
 <view class="page academy-page">
   <view class="academy-head">
-    <text class="page-title">{{title}}</text>
-    <text class="page-subtitle">{{subtitle}}</text>
+    <view class="academy-title-line">
+      <text class="page-title">{{title}}</text>
+      <text class="page-subtitle academy-title-subtitle">{{subtitle}}</text>
+    </view>
   </view>
 
   <view wx:if="{{isLoading}}" class="academy-empty">

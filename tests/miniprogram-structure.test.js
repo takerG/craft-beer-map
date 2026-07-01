@@ -506,8 +506,10 @@ test('academy page renders a simple publish-sorted feed', () => {
   const academyJs = readMiniPage('pages/academy/index.js');
 
   assert.doesNotMatch(academyWxml, /class="feed-head"/);
-  assert.match(academyWxml, /class="page-title">\{\{title\}\}/);
-  assert.match(academyWxml, /class="page-subtitle">\{\{subtitle\}\}/);
+  assert.match(
+    academyWxml,
+    /<view class="academy-title-line">\s*<text class="page-title">\{\{title\}\}<\/text>\s*<text class="page-subtitle academy-title-subtitle">\{\{subtitle\}\}<\/text>\s*<\/view>/,
+  );
   assert.doesNotMatch(academyWxml, /class="feed-count"/);
   assert.doesNotMatch(academyJs, /articleCountLabel/);
   assert.match(academyJs, /loadAcademyHome/);
@@ -521,6 +523,8 @@ test('academy page renders a simple publish-sorted feed', () => {
   assert.match(academyWxml, /data-type="{{item\.type}}"/);
   assert.match(academyWxml, /class="feed-list"/);
   assert.match(academyWxml, /wx:for="{{feedSites}}"/);
+  assert.match(academyWxss, /\.academy-title-line\s*\{[^}]*display:\s*flex;[^}]*flex-wrap:\s*wrap;/s);
+  assert.match(academyWxss, /\.academy-title-subtitle\s*\{[^}]*margin-top:\s*0;[^}]*margin-left:\s*16rpx;/s);
   assert.doesNotMatch(academyWxml, /class="feed-cover"/);
   assert.doesNotMatch(academyWxml, /src="{{item\.coverImage}}"/);
   assert.doesNotMatch(academyWxml, /<image\b/);
